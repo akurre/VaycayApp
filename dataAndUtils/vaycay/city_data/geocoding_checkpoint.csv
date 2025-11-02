@@ -35799,3 +35799,1803 @@ lat,long,city,country,state,suburb,city_ascii,iso2,iso3,capital,population,world
 35.488,-96.73,,,,,,,,,,,failed
 35.899,-98.96,,,,,,,,,,,failed
 36.504,-96.744,Ralston,United States,Oklahoma,,,US,,,,,nominatim
+36.356,-97.153,,,,,,,,,,,failed
+35.158,-99.366,,,,,,,,,,,failed
+34.194,-97.588,,,,,,,,,,,failed
+34.851,-99.021,Roosevelt,United States,Oklahoma,,,US,,,,,nominatim
+35.306,-99.628,Sayre,United States,Oklahoma,,,US,,,,,nominatim
+36.19,-99.04,,,,,,,,,,,failed
+35.232,-96.653,Seminole,United States,Oklahoma,,,US,,,,,nominatim
+35.355,-96.92,Shawnee,United States,Oklahoma,,,US,,,,,nominatim
+35.365,-96.948,Shawnee,United States,Oklahoma,,,US,,,,,nominatim
+36.389,-95.06,,,,,,,,,,,failed
+35.542,-97.341,Oklahoma City,United States,Oklahoma,,,US,,,,,nominatim
+36.121,-97.095,Stillwater,United States,Oklahoma,,,US,,,,,nominatim
+36.118,-97.095,Stillwater,United States,Oklahoma,,,US,,,,,nominatim
+35.798,-96.666,Stroud,United States,Oklahoma,,,US,,,,,nominatim
+34.566,-96.95,,,,,,,,,,,failed
+36.041,-98.962,Taloga,United States,Oklahoma,,,US,,,,,nominatim
+34.44,-99.138,,,,,,,,,,,failed
+34.207,-96.642,,,,,,,,,,,failed
+34.332,-96.679,,,,,,,,,,,failed
+35.367,-97.887,Union City,United States,Oklahoma,,,US,,,,,nominatim
+36.348,-94.824,,,,,,,,,,,failed
+34.529,-97.765,Bray,United States,Oklahoma,,,US,,,,,nominatim
+36.166,-99.304,,,,,,,,,,,failed
+34.958,-99.941,,,,,,,,,,,failed
+34.4,-98.346,Walters,United States,Oklahoma,,,US,,,,,nominatim
+34.982,-97.521,,,,,,,,,,,failed
+35.858,-98.414,Watonga,United States,Oklahoma,,,US,,,,,nominatim
+35.842,-98.526,,,,,,,,,,,failed
+34.168,-97.988,,,,,,,,,,,failed
+36.576,-98.88,,,,,,,,,,,failed
+35.52,-98.699,Weatherford,United States,Oklahoma,,,US,,,,,nominatim
+35.508,-98.775,,,,,,,,,,,failed
+35.131,-96.539,,,,,,,,,,,failed
+34.732,-98.712,Indiahoma,United States,Oklahoma,,,US,,,,,nominatim
+35.052,-99.512,Willow,United States,Oklahoma,,,US,,,,,nominatim
+34.942,-94.704,Poteau,United States,Oklahoma,,,US,,,,,nominatim
+36.441,-99.382,Woodward,United States,Oklahoma,,,US,,,,,nominatim
+36.423,-99.417,Woodward,United States,Oklahoma,,,US,,,,,nominatim
+42.176,-119.896,,,,,,,,,,,failed
+42.969,-119.993,,,,,,,,,,,failed
+44.404,-123.753,,,,,,,,,,,failed
+44.82,-120.753,,,,,,,,,,,failed
+45.721,-120.206,Arlington,United States,Oregon,,,US,,,,,nominatim
+42.213,-122.715,Ashland,United States,Oregon,,,US,,,,,nominatim
+43.15,-124.401,,,,,,,,,,,failed
+43.946,-120.217,,,,,,,,,,,failed
+44.287,-122.039,,,,,,,,,,,failed
+44.057,-121.285,Bend,United States,Oregon,,,US,,,,,nominatim
+44.118,-121.21,,,,,,,,,,,failed
+45.847,-119.693,Boardman,United States,Oregon,,,US,,,,,nominatim
+45.635,-121.952,,,,,,,,,,,failed
+42.046,-124.288,Brookings,United States,Oregon,,,US,,,,,nominatim
+42.18,-122.985,,,,,,,,,,,failed
+42.942,-123.28,Canyonville,United States,Oregon,,,US,,,,,nominatim
+45.678,-121.874,Cascade Locks,United States,Oregon,,,US,,,,,nominatim
+42.16,-123.642,Cave Junction,United States,Oregon,,,US,,,,,nominatim
+43.229,-121.789,,,,,,,,,,,failed
+42.704,-121.995,Fort Klamath,United States,Oregon,,,US,,,,,nominatim
+46.108,-123.206,Clatskanie,United States,Oregon,,,US,,,,,nominatim
+45.205,-123.892,Cloverdale,United States,Oregon,,,US,,,,,nominatim
+45.135,-122.464,,,,,,,,,,,failed
+45.241,-120.179,Condon,United States,Oregon,,,US,,,,,nominatim
+43.187,-124.202,Coquille,United States,Oregon,,,US,,,,,nominatim
+44.634,-123.19,,,,,,,,,,,failed
+44.508,-123.458,,,,,,,,,,,failed
+43.792,-123.028,Cottage Grove,United States,Oregon,,,US,,,,,nominatim
+43.718,-123.058,Cottage Grove,United States,Oregon,,,US,,,,,nominatim
+44.131,-122.242,,,,,,,,,,,failed
+42.898,-122.134,,,,,,,,,,,failed
+44.946,-123.291,,,,,,,,,,,failed
+44.556,-119.645,,,,,,,,,,,failed
+44.724,-122.255,,,,,,,,,,,failed
+45.463,-123.114,Gaston,United States,Oregon,,,US,,,,,nominatim
+43.782,-122.963,,,,,,,,,,,failed
+43.659,-123.325,Drain,United States,Oregon,,,US,,,,,nominatim
+45.276,-122.202,,,,,,,,,,,failed
+43.642,-123.583,,,,,,,,,,,failed
+45.558,-118.464,,,,,,,,,,,failed
+45.269,-122.317,,,,,,,,,,,failed
+43.259,-124.023,,,,,,,,,,,failed
+44.836,-123.452,,,,,,,,,,,failed
+44.049,-123.37,Veneta,United States,Oregon,,,US,,,,,nominatim
+44.004,-124.095,Florence,United States,Oregon,,,US,,,,,nominatim
+45.525,-123.102,Forest Grove,United States,Oregon,,,US,,,,,nominatim
+46.136,-123.878,,,,,,,,,,,failed
+44.998,-120.218,Fossil,United States,Oregon,,,US,,,,,nominatim
+44.414,-122.673,Sweet Home,United States,Oregon,,,US,,,,,nominatim
+43.681,-124.178,,,,,,,,,,,failed
+43.295,-123.103,Glide,United States,Oregon,,,US,,,,,nominatim
+42.404,-124.424,Gold Beach,United States,Oregon,,,US,,,,,nominatim
+45.301,-121.742,Government Camp,United States,Oregon,,,US,,,,,nominatim
+42.424,-123.322,Grants Pass,United States,Oregon,,,US,,,,,nominatim
+42.121,-122.548,,,,,,,,,,,failed
+45.48,-122.466,Gresham,United States,Oregon,Southwest,,US,,,,,nominatim
+44.518,-120.939,,,,,,,,,,,failed
+44.877,-117.109,Halfway,United States,Oregon,,,US,,,,,nominatim
+42.549,-119.656,,,,,,,,,,,failed
+45.313,-123.35,,,,,,,,,,,failed
+45.449,-122.155,,,,,,,,,,,failed
+45.862,-119.312,Hermiston,United States,Oregon,,,US,,,,,nominatim
+45.365,-119.564,Heppner,United States,Oregon,,,US,,,,,nominatim
+44.352,-122.784,Sweet Home,United States,Oregon,,,US,,,,,nominatim
+43.928,-124.107,Dunes City,United States,Oregon,,,US,,,,,nominatim
+45.685,-121.518,,,,,,,,,,,failed
+42.229,-122.381,,,,,,,,,,,failed
+44.356,-117.255,Huntington,United States,Oregon,,,US,,,,,nominatim
+44.423,-118.959,John Day,United States,Oregon,,,US,,,,,nominatim
+42.094,-121.902,,,,,,,,,,,failed
+44.625,-122.719,,,,,,,,,,,failed
+45.317,-118.075,,,,,,,,,,,failed
+42.924,-124.453,,,,,,,,,,,failed
+44.923,-123.575,,,,,,,,,,,failed
+44.101,-122.689,,,,,,,,,,,failed
+44.533,-122.901,Lebanon,United States,Oregon,,,US,,,,,nominatim
+43.36,-122.221,,,,,,,,,,,failed
+44.714,-119.102,Long Creek,United States,Oregon,,,US,,,,,nominatim
+43.192,-123.469,,,,,,,,,,,failed
+43.914,-122.76,Lowell,United States,Oregon,,,US,,,,,nominatim
+42.672,-122.675,,,,,,,,,,,failed
+45.523,-117.374,,,,,,,,,,,failed
+44.733,-120.975,,,,,,,,,,,failed
+44.794,-122.595,,,,,,,,,,,failed
+44.617,-121.001,,,,,,,,,,,failed
+43.979,-117.025,,,,,,,,,,,failed
+44.037,-123.863,Mapleton,United States,Oregon,,,US,,,,,nominatim
+44.612,-121.949,,,,,,,,,,,failed
+44.179,-122.116,,,,,,,,,,,failed
+45.931,-119.296,,,,,,,,,,,failed
+45.943,-118.409,Milton-Freewater,United States,Oregon,,,US,,,,,nominatim
+44.568,-120.116,Mitchell,United States,Oregon,,,US,,,,,nominatim
+45.178,-122.506,,,,,,,,,,,failed
+44.819,-119.42,Monument,United States,Oregon,,,US,,,,,nominatim
+45.482,-120.724,,,,,,,,,,,failed
+43.039,-123.266,Myrtle Creek,United States,Oregon,,,US,,,,,nominatim
+45.498,-122.839,Beaverton,United States,Oregon,Five Oaks/Triple Creek,,US,,,,,nominatim
+45.813,-123.775,,,,,,,,,,,failed
+44.625,-124.047,Newport,United States,Oregon,South Beach,,US,,,,,nominatim
+44.683,-124.055,Newport,United States,Oregon,,,US,,,,,nominatim
+43.876,-116.99,Nyssa,United States,Oregon,,,US,,,,,nominatim
+43.423,-123.3,Oakland,United States,Oregon,,,US,,,,,nominatim
+43.743,-122.443,Oakridge,United States,Oregon,,,US,,,,,nominatim
+43.549,-121.964,,,,,,,,,,,failed
+45.356,-122.605,Oregon City,United States,Oregon,,,US,,,,,nominatim
+45.033,-123.924,,,,,,,,,,,failed
+43.65,-117.247,,,,,,,,,,,failed
+42.692,-120.54,Paisley,United States,Oregon,,,US,,,,,nominatim
+44.728,-121.251,,,,,,,,,,,failed
+45.721,-118.626,,,,,,,,,,,failed
+45.67,-118.796,Pendleton,United States,Oregon,,,US,,,,,nominatim
+45.691,-118.852,Pendleton,United States,Oregon,,,US,,,,,nominatim
+45.476,-118.825,,,,,,,,,,,failed
+45.518,-122.689,Portland,United States,Oregon,Goose Hollow,,US,,,,,nominatim
+45.561,-122.538,Portland,United States,Oregon,Parkrose,,US,,,,,nominatim
+42.752,-124.501,Port Orford,United States,Oregon,,,US,,,,,nominatim
+42.739,-124.403,,,,,,,,,,,failed
+42.889,-124.069,Powers,United States,Oregon,,,US,,,,,nominatim
+44.301,-120.841,Prineville,United States,Oregon,,,US,,,,,nominatim
+42.734,-122.516,,,,,,,,,,,failed
+44.26,-121.148,Redmond,United States,Oregon,,,US,,,,,nominatim
+45.303,-122.913,,,,,,,,,,,failed
+42.951,-123.357,Riddle,United States,Oregon,,,US,,,,,nominatim
+42.859,-117.657,,,,,,,,,,,failed
+43.213,-123.366,Roseburg,United States,Oregon,,,US,,,,,nominatim
+42.223,-123.047,,,,,,,,,,,failed
+44.436,-121.943,,,,,,,,,,,failed
+45.987,-123.924,Seaside,United States,Oregon,,,US,,,,,nominatim
+44.138,-118.975,Seneca,United States,Oregon,,,US,,,,,nominatim
+44.873,-122.649,,,,,,,,,,,failed
+43.125,-121.062,,,,,,,,,,,failed
+45.006,-122.774,Silverton,United States,Oregon,,,US,,,,,nominatim
+44.284,-121.549,Sisters,United States,Oregon,,,US,,,,,nominatim
+43.171,-123.225,,,,,,,,,,,failed
+44.819,-119.776,Spray,United States,Oregon,,,US,,,,,nominatim
+43.487,-119.721,,,,,,,,,,,failed
+44.789,-122.815,Stayton,United States,Oregon,,,US,,,,,nominatim
+42.959,-120.79,,,,,,,,,,,failed
+43.893,-121.412,Sunriver,United States,Oregon,,,US,,,,,nominatim
+43.396,-123.36,,,,,,,,,,,failed
+45.607,-121.205,The Dalles,United States,Oregon,,,US,,,,,nominatim
+43.264,-120.945,,,,,,,,,,,failed
+45.122,-122.07,,,,,,,,,,,failed
+45.454,-123.852,Tillamook,United States,Oregon,,,US,,,,,nominatim
+45.429,-123.762,,,,,,,,,,,failed
+43.275,-122.45,,,,,,,,,,,failed
+45.553,-122.389,Troutdale,United States,Oregon,,,US,,,,,nominatim
+43.074,-123.588,,,,,,,,,,,failed
+45.865,-123.19,Vernonia,United States,Oregon,,,US,,,,,nominatim
+45.572,-117.531,Wallowa,United States,Oregon,,,US,,,,,nominatim
+46.156,-123.402,,,,,,,,,,,failed
+43.682,-121.688,,,,,,,,,,,failed
+45.075,-123.48,Willamina,United States,Oregon,,,US,,,,,nominatim
+42.228,-123.286,,,,,,,,,,,failed
+43.283,-123.354,Winchester,United States,Oregon,,,US,,,,,nominatim
+44.33,-124.098,Yachats,United States,Oregon,,,US,,,,,nominatim
+40.536,-79.815,Jefferson Hills,United States,Pennsylvania,,Jefferson Hills,US,USA,,11101.0,1840001280,worldcities_small
+41.004,-75.486,Stroudsburg,United States,Pennsylvania,,Stroudsburg,US,USA,,5558.0,1840003509,worldcities_small
+40.419,-78.42,Allegheny,United States,Pennsylvania,,Allegheny,US,USA,,6553.0,1840152336,worldcities_small
+40.495,-78.467,Antis,United States,Pennsylvania,,Antis,US,USA,,6262.0,1840152337,worldcities_small
+40.821,-76.498,Selinsgrove,United States,Pennsylvania,,Selinsgrove,US,USA,,5902.0,1840002799,worldcities_small
+40.763,-80.313,Economy,United States,Pennsylvania,,Economy,US,USA,,9098.0,1840066074,worldcities_small
+40.862,-75.643,Penn Estates,United States,Pennsylvania,,Penn Estates,US,USA,,5363.0,1840035454,worldcities_small
+41.232,-76.342,Benton Township,United States,Pennsylvania,,,US,,,,,nominatim
+39.935,-77.255,Biglerville,United States,Pennsylvania,,,US,,,,,nominatim
+41.007,-76.448,Kelly,United States,Pennsylvania,,Kelly,US,USA,,5301.0,1840149929,worldcities_small
+40.38,-76.028,West Earl,United States,Pennsylvania,,West Earl,US,USA,,8311.0,1840152739,worldcities_small
+40.392,-79.859,Lower Burrell,United States,Pennsylvania,,Lower Burrell,US,USA,,11078.0,1840001132,worldcities_small
+41.898,-78.714,Bradford Township,United States,Pennsylvania,,,US,,,,,nominatim
+39.965,-75.359,Pike Creek,United States,Delaware,,Pike Creek,US,USA,,7613.0,1840028618,worldcities_small
+40.5,-75.204,Ambler,United States,Pennsylvania,,Ambler,US,USA,,6491.0,1840003693,worldcities_small
+40.841,-79.916,O'Hara,United States,Pennsylvania,,O'Hara,US,USA,,8892.0,1840146056,worldcities_small
+41.652,-76.846,South Williamsport,United States,Pennsylvania,,South Williamsport,US,USA,,6068.0,1840000636,worldcities_small
+39.848,-79.59,East Huntingdon,United States,Pennsylvania,,East Huntingdon,US,USA,,7733.0,1840144808,worldcities_small
+39.935,-77.639,Chambersburg,United States,Pennsylvania,,,US,,,,,nominatim
+41.93,-79.297,Corry,United States,Pennsylvania,,Corry,US,USA,,6208.0,1840000474,worldcities_small
+40.147,-79.899,Munhall,United States,Pennsylvania,,Munhall,US,USA,,11006.0,1840001247,worldcities_small
+41.049,-77.941,Benner,United States,Pennsylvania,,Benner,US,USA,,9273.0,1840143700,worldcities_small
+41.192,-79.436,Piney Township,United States,Pennsylvania,,,US,,,,,nominatim
+41.7,-78.498,Sergeant Township,United States,Pennsylvania,,,US,,,,,nominatim
+39.997,-75.798,London Grove,United States,Pennsylvania,,London Grove,US,USA,,8696.0,1840151981,worldcities_small
+39.799,-79.366,Connellsville,United States,Pennsylvania,,Connellsville,US,USA,,7290.0,1840001501,worldcities_small
+39.997,-79.596,Bullskin,United States,Pennsylvania,,Bullskin,US,USA,,6697.0,1840147205,worldcities_small
+40.074,-75.318,East Vincent,United States,Pennsylvania,,East Vincent,US,USA,,7162.0,1840150923,worldcities_small
+41.356,-79.217,Farmington Township,United States,Pennsylvania,,,US,,,,,nominatim
+41.758,-78.041,Eulalia Township,United States,Pennsylvania,,,US,,,,,nominatim
+41.739,-77.971,Eulalia Township,United States,Pennsylvania,,,US,,,,,nominatim
+41.738,-77.116,Covington Township,United States,Pennsylvania,,,US,,,,,nominatim
+41.991,-77.157,Lawrence Township,United States,Pennsylvania,,,US,,,,,nominatim
+40.226,-77.189,Enola,United States,Pennsylvania,,Enola,US,USA,,6251.0,1840005483,worldcities_small
+40.461,-76.749,Steelton,United States,Pennsylvania,,Steelton,US,USA,,5962.0,1840001297,worldcities_small
+40.128,-79.406,Sewickley,United States,Pennsylvania,,Sewickley,US,USA,,5777.0,1840149354,worldcities_small
+40.164,-79.869,Canonsburg,United States,Pennsylvania,,Canonsburg,US,USA,,8760.0,1840003643,worldcities_small
+41.522,-76.404,Dushore,United States,Pennsylvania,,,US,,,,,nominatim
+40.468,-78.731,Northern Cambria,United States,Pennsylvania,,Northern Cambria,US,USA,,5981.0,1840001097,worldcities_small
+40.504,-80.089,Aliquippa,United States,Pennsylvania,,Aliquippa,US,USA,,8844.0,1840001009,worldcities_small
+40.014,-78.365,West Providence Township,United States,Pennsylvania,,,US,,,,,nominatim
+40.715,-79.513,Oakmont,United States,Pennsylvania,,Oakmont,US,USA,,6541.0,1840001250,worldcities_small
+41.118,-75.728,Palmerton,United States,Pennsylvania,,Palmerton,US,USA,,5336.0,1840003564,worldcities_small
+41.4,-79.831,Franklin,United States,Pennsylvania,,,US,,,,,nominatim
+41.736,-77.652,Galeton,United States,Pennsylvania,,,US,,,,,nominatim
+39.881,-77.351,Franklin Township,United States,Pennsylvania,,,US,,,,,nominatim
+39.826,-78.83,Northampton Township,United States,Pennsylvania,,,US,,,,,nominatim
+41.561,-78.599,Jones Township,United States,Pennsylvania,,,US,,,,,nominatim
+40.096,-75.751,Leola,United States,Pennsylvania,,Leola,US,USA,,7576.0,1840005492,worldcities_small
+40.549,-80.206,Glenshaw,United States,Pennsylvania,,Glenshaw,US,USA,,8669.0,1840026474,worldcities_small
+40.967,-78.587,Penn Township,United States,Pennsylvania,,,US,,,,,nominatim
+40.229,-75.424,West Brandywine,United States,Pennsylvania,,West Brandywine,US,USA,,7470.0,1840145642,worldcities_small
+39.783,-79.917,Luzerne,United States,Pennsylvania,,Luzerne,US,USA,,5909.0,1840142192,worldcities_small
+40.342,-75.478,Robeson,United States,Pennsylvania,,Robeson,US,USA,,7379.0,1840144018,worldcities_small
+40.552,-75.991,Brecknock,United States,Pennsylvania,,Brecknock,US,USA,,7531.0,1840145617,worldcities_small
+39.771,-77.032,Stewartstown,United States,Pennsylvania,,Stewartstown,US,USA,,5057.0,1840001465,worldcities_small
+40.282,-76.871,Hellam,United States,Pennsylvania,,Hellam,US,USA,,5973.0,1840151962,worldcities_small
+41.476,-75.165,Palmyra Township,United States,Pennsylvania,,,US,,,,,nominatim
+40.597,-79.119,Upper Yoder,United States,Pennsylvania,,Upper Yoder,US,USA,,5143.0,1840143649,worldcities_small
+41.499,-80.468,Howland Center,United States,Ohio,,Howland Center,US,USA,,6269.0,1840034386,worldcities_small
+41.677,-78.804,Wetmore Township,United States,Pennsylvania,,,US,,,,,nominatim
+40.05,-76.274,Quarryville,United States,Pennsylvania,,Quarryville,US,USA,,7741.0,1840003726,worldcities_small
+40.119,-76.426,West Cocalico,United States,Pennsylvania,,West Cocalico,US,USA,,7448.0,1840142497,worldcities_small
+41.423,-76.493,Laporte,United States,Pennsylvania,,,US,,,,,nominatim
+40.169,-79.141,Ligonier Township,United States,Pennsylvania,,,US,,,,,nominatim
+40.333,-76.467,Earl,United States,Pennsylvania,,Earl,US,USA,,7186.0,1840150411,worldcities_small
+40.822,-75.696,Longswamp,United States,Pennsylvania,,Longswamp,US,USA,,5725.0,1840100169,worldcities_small
+40.948,-76.879,East Buffalo Township,United States,Pennsylvania,,,US,,,,,nominatim
+40.586,-77.569,Harris,United States,Pennsylvania,,Harris,US,USA,,5770.0,1840144817,worldcities_small
+41.646,-80.425,Pine Township,United States,Pennsylvania,,,US,,,,,nominatim
+41.131,-77.434,Jersey Shore,United States,Pennsylvania,,Jersey Shore,US,USA,,9116.0,1840000630,worldcities_small
+40.459,-79.45,Swissvale,United States,Pennsylvania,,Swissvale,US,USA,,8647.0,1840001264,worldcities_small
+40.834,-76.144,Orwigsburg,United States,Pennsylvania,,Orwigsburg,US,USA,,5376.0,1840002770,worldcities_small
+40.339,-79.86,Dormont,United States,Pennsylvania,,Dormont,US,USA,,8282.0,1840001222,worldcities_small
+39.781,-79.041,Summit Township,United States,Pennsylvania,,,US,,,,,nominatim
+40.93,-77.067,West Buffalo Township,United States,Pennsylvania,,,US,,,,,nominatim
+41.672,-75.064,Damascus Township,United States,Pennsylvania,,,US,,,,,nominatim
+40.885,-77.475,Millheim,United States,Pennsylvania,,,US,,,,,nominatim
+40.648,-80.386,Beaver Falls,United States,Pennsylvania,,Beaver Falls,US,USA,,8332.0,1840001013,worldcities_small
+40.532,-80.217,Castle Shannon,United States,Pennsylvania,,Castle Shannon,US,USA,,8216.0,1840001215,worldcities_small
+40.158,-75.886,East Fallowfield,United States,Pennsylvania,,East Fallowfield,US,USA,,7560.0,1840150926,worldcities_small
+40.412,-79.724,Kennedy,United States,Pennsylvania,,Kennedy,US,USA,,8119.0,1840146792,worldcities_small
+40.368,-76.306,Bern,United States,Pennsylvania,,Bern,US,USA,,6921.0,1840145744,worldcities_small
+40.614,-79.719,Pleasant Hills,United States,Pennsylvania,,Pleasant Hills,US,USA,,8026.0,1840001255,worldcities_small
+40.148,-74.953,Richboro,United States,Pennsylvania,,Richboro,US,USA,,6378.0,1840005407,worldcities_small
+41.017,-80.361,Chippewa,United States,Pennsylvania,,Chippewa,US,USA,,7644.0,1840144997,worldcities_small
+40.075,-76.071,East Marlborough,United States,Pennsylvania,,East Marlborough,US,USA,,7388.0,1840150928,worldcities_small
+41.858,-75.81,Bridgewater Township,United States,Pennsylvania,,,US,,,,,nominatim
+39.734,-76.504,White Marsh,United States,Maryland,,White Marsh,US,USA,,9216.0,1840005696,worldcities_small
+41.413,-75.824,Newton Township,United States,Pennsylvania,,,US,,,,,nominatim
+40.203,-79.628,Clairton,United States,Pennsylvania,,Clairton,US,USA,,6541.0,1840001219,worldcities_small
+40.11,-75.337,East Coventry,United States,Pennsylvania,,East Coventry,US,USA,,6759.0,1840149886,worldcities_small
+39.796,-76.044,North Star,United States,Delaware,,North Star,US,USA,,7503.0,1840028615,worldcities_small
+41.924,-78.007,Oswayo Township,United States,Pennsylvania,,,US,,,,,nominatim
+39.867,-75.232,Prospect Park,United States,Pennsylvania,,Prospect Park,US,USA,,6492.0,1840000707,worldcities_small
+39.959,-75.173,Swarthmore,United States,Pennsylvania,,Swarthmore,US,USA,,6346.0,1840000712,worldcities_small
+40.873,-78.216,Philipsburg,United States,Pennsylvania,,,US,,,,,nominatim
+40.121,-75.494,Lionville,United States,Pennsylvania,,Lionville,US,USA,,6398.0,1840005502,worldcities_small
+40.033,-77.304,Cooke Township,United States,Pennsylvania,,,US,,,,,nominatim
+41.739,-75.446,Mount Pleasant Township,United States,Pennsylvania,,,US,,,,,nominatim
+39.728,-79.913,Redstone,United States,Pennsylvania,,Redstone,US,USA,,5352.0,1840149585,worldcities_small
+41.816,-78.287,Port Allegany,United States,Pennsylvania,,,US,,,,,nominatim
+40.651,-78.555,Hollidaysburg,United States,Pennsylvania,,Hollidaysburg,US,USA,,5674.0,1840001083,worldcities_small
+41.589,-75.33,Prompton,United States,Pennsylvania,,,US,,,,,nominatim
+40.925,-79.282,Redbank Township,United States,Pennsylvania,,,US,,,,,nominatim
+40.381,-78.075,Penn Township,United States,Pennsylvania,,,US,,,,,nominatim
+41.33,-77.738,,,,,,,,,,,failed
+41.42,-78.749,Ridgway Township,United States,Pennsylvania,,,US,,,,,nominatim
+39.925,-76.389,East Earl,United States,Pennsylvania,,East Earl,US,USA,,6845.0,1840034939,worldcities_small
+40.782,-79.238,Cowanshannock Township,United States,Pennsylvania,,,US,,,,,nominatim
+40.51,-79.546,Wilkins,United States,Pennsylvania,,Wilkins,US,USA,,6204.0,1840150316,worldcities_small
+40.683,-79.668,Ohio,United States,Pennsylvania,,Ohio,US,USA,,6565.0,1840141803,worldcities_small
+40.783,-76.862,Penn Township,United States,Pennsylvania,,,US,,,,,nominatim
+40.355,-75.313,Blue Bell,United States,Pennsylvania,,Blue Bell,US,USA,,6250.0,1840034868,worldcities_small
+41.183,-76.149,Union Township,United States,Pennsylvania,,,US,,,,,nominatim
+40.059,-77.521,Shippensburg Township,United States,Pennsylvania,,,US,,,,,nominatim
+41.056,-80.059,New Sewickley,United States,Pennsylvania,,New Sewickley,US,USA,,7276.0,1840145553,worldcities_small
+39.997,-79.083,Somerset,United States,Pennsylvania,,,US,,,,,nominatim
+39.851,-77.504,Guilford Township,United States,Pennsylvania,,,US,,,,,nominatim
+39.869,-76.863,Chanceford,United States,Pennsylvania,,Chanceford,US,USA,,6154.0,1840150918,worldcities_small
+40.571,-75.278,Gilbertsville,United States,Pennsylvania,,Gilbertsville,US,USA,,5438.0,1840005461,worldcities_small
+40.793,-77.867,State College,United States,Pennsylvania,,,US,,,,,nominatim
+41.404,-78.018,Grove Township,United States,Pennsylvania,,,US,,,,,nominatim
+41.015,-75.207,Stroud Township,United States,Pennsylvania,,,US,,,,,nominatim
+40.853,-76.789,Sunbury,United States,Pennsylvania,,,US,,,,,nominatim
+41.948,-75.605,Susquehanna Depot,United States,Pennsylvania,,,US,,,,,nominatim
+40.848,-75.999,Lehighton,United States,Pennsylvania,,Lehighton,US,USA,,5313.0,1840000933,worldcities_small
+41.898,-77.142,Tioga Township,United States,Pennsylvania,,,US,,,,,nominatim
+41.479,-79.443,Tionesta Township,United States,Pennsylvania,,,US,,,,,nominatim
+41.631,-79.693,Oil Creek Township,United States,Pennsylvania,,,US,,,,,nominatim
+41.751,-76.443,Towanda Township,United States,Pennsylvania,,,US,,,,,nominatim
+40.664,-78.219,Tyrone,United States,Pennsylvania,,,US,,,,,nominatim
+41.9,-79.861,Union Township,United States,Pennsylvania,,,US,,,,,nominatim
+39.915,-79.719,South Huntingdon,United States,Pennsylvania,,South Huntingdon,US,USA,,5527.0,1840144812,worldcities_small
+40.023,-75.371,Boothwyn,United States,Pennsylvania,,Boothwyn,US,USA,,6236.0,1840005548,worldcities_small
+39.766,-78.235,Bethel Township,United States,Pennsylvania,,,US,,,,,nominatim
+41.847,-79.149,Warren,United States,Pennsylvania,,,US,,,,,nominatim
+39.899,-80.166,Chartiers,United States,Pennsylvania,,Chartiers,US,USA,,7964.0,1840151797,worldcities_small
+41.7,-77.387,Delmar Township,United States,Pennsylvania,,,US,,,,,nominatim
+39.971,-75.635,Kennett Square,United States,Pennsylvania,,Kennett Square,US,USA,,6202.0,1840001428,worldcities_small
+40.467,-78.2,Catharine Township,United States,Pennsylvania,,,US,,,,,nominatim
+41.249,-76.983,Williamsport,United States,Pennsylvania,,,US,,,,,nominatim
+40.039,-78.524,Bedford Township,United States,Pennsylvania,,,US,,,,,nominatim
+41.539,-75.927,Tunkhannock Township,United States,Pennsylvania,,,US,,,,,nominatim
+40.114,-76.712,Linglestown,United States,Pennsylvania,,Linglestown,US,USA,,5688.0,1840005401,worldcities_small
+41.158,-71.568,New Shoreham,United States,Rhode Island,,,US,,,,,nominatim
+41.7,-71.592,Coventry,United States,Rhode Island,,,US,,,,,nominatim
+41.668,-71.557,Coventry,United States,Rhode Island,,,US,,,,,nominatim
+41.49,-71.543,South Kingstown,United States,Rhode Island,,,US,,,,,nominatim
+41.856,-71.733,Glocester,United States,Rhode Island,,,US,,,,,nominatim
+41.627,-71.209,Tiverton,United States,Rhode Island,,,US,,,,,nominatim
+41.984,-71.491,Woonsocket,United States,Rhode Island,,,US,,,,,nominatim
+33.55,-81.697,Aiken,United States,South Carolina,,,US,,,,,nominatim
+34.528,-82.661,Anderson,United States,South Carolina,,,US,,,,,nominatim
+33.441,-79.567,Andrews,United States,South Carolina,,,US,,,,,nominatim
+34.294,-82.533,,,,,,,,,,,failed
+33.291,-81.033,Bamberg,United States,South Carolina,,,US,,,,,nominatim
+33.255,-81.236,,,,,,,,,,,failed
+33.9,-81.539,Batesburg-Leesville,United States,South Carolina,,,US,,,,,nominatim
+34.601,-82.433,,,,,,,,,,,failed
+34.211,-80.23,,,,,,,,,,,failed
+33.521,-79.098,,,,,,,,,,,failed
+33.808,-79.857,,,,,,,,,,,failed
+35.107,-82.626,,,,,,,,,,,failed
+34.091,-82.588,Calhoun Falls,United States,South Carolina,,,US,,,,,nominatim
+34.857,-80.913,,,,,,,,,,,failed
+34.217,-81.076,,,,,,,,,,,failed
+34.703,-79.882,Cheraw,United States,South Carolina,,,US,,,,,nominatim
+35.111,-81.968,,,,,,,,,,,failed
+34.684,-81.196,,,,,,,,,,,failed
+34.727,-80.038,,,,,,,,,,,failed
+33.663,-82.19,,,,,,,,,,,failed
+34.66,-82.823,Clemson,United States,South Carolina,,,US,,,,,nominatim
+35.027,-82.501,Slater-Marietta,United States,South Carolina,,,US,,,,,nominatim
+34.471,-81.885,Clinton,United States,South Carolina,,,US,,,,,nominatim
+33.992,-81.024,Columbia,United States,South Carolina,,,US,,,,,nominatim
+34.301,-79.877,Darlington,United States,South Carolina,,,US,,,,,nominatim
+34.409,-79.356,Dillon,United States,South Carolina,,,US,,,,,nominatim
+32.505,-80.295,Edisto Beach,United States,South Carolina,,,US,,,,,nominatim
+32.607,-80.326,,,,,,,,,,,failed
+34.675,-82.227,Fountain Inn,United States,South Carolina,,,US,,,,,nominatim
+35.022,-81.008,Tega Cay,United States,South Carolina,,,US,,,,,nominatim
+35.138,-81.597,,,,,,,,,,,failed
+33.317,-79.323,,,,,,,,,,,failed
+34.559,-80.891,Great Falls,United States,South Carolina,,,US,,,,,nominatim
+34.252,-82.035,,,,,,,,,,,failed
+34.395,-80.049,North Hartsville,United States,South Carolina,,,US,,,,,nominatim
+33.679,-79.381,,,,,,,,,,,failed
+33.317,-80.418,Holly Hill,United States,South Carolina,,,US,,,,,nominatim
+33.284,-79.696,Jamestown,United States,South Carolina,,,US,,,,,nominatim
+34.986,-83.071,,,,,,,,,,,failed
+33.776,-81.844,,,,,,,,,,,failed
+33.864,-79.73,Lake City,United States,South Carolina,,,US,,,,,nominatim
+34.169,-81.903,,,,,,,,,,,failed
+34.499,-82.022,Laurens,United States,South Carolina,,,US,,,,,nominatim
+34.199,-81.414,Little Mountain,United States,South Carolina,,,US,,,,,nominatim
+34.779,-81.456,,,,,,,,,,,failed
+34.768,-83.254,,,,,,,,,,,failed
+34.349,-80.835,,,,,,,,,,,failed
+34.249,-80.67,,,,,,,,,,,failed
+33.699,-80.199,Manning,United States,South Carolina,,,US,,,,,nominatim
+34.165,-79.388,Marion,United States,South Carolina,,,US,,,,,nominatim
+34.706,-79.568,,,,,,,,,,,failed
+33.912,-82.288,McCormick,United States,South Carolina,,,US,,,,,nominatim
+33.242,-79.987,,,,,,,,,,,failed
+34.194,-79.247,Mullins,United States,South Carolina,,,US,,,,,nominatim
+33.754,-78.822,Myrtle Beach,United States,South Carolina,,,US,,,,,nominatim
+34.292,-81.621,Newberry,United States,South Carolina,,,US,,,,,nominatim
+35.032,-81.493,Blacksburg,United States,South Carolina,,,US,,,,,nominatim
+33.489,-80.874,Orangeburg,United States,South Carolina,,,US,,,,,nominatim
+33.772,-81.258,Pelion,United States,South Carolina,,,US,,,,,nominatim
+34.881,-82.719,Pickens,United States,South Carolina,,,US,,,,,nominatim
+33.992,-81.771,Saluda,United States,South Carolina,,,US,,,,,nominatim
+34.131,-80.869,,,,,,,,,,,failed
+34.611,-82.727,,,,,,,,,,,failed
+34.635,-81.521,,,,,,,,,,,failed
+34.908,-81.914,Spartanburg,United States,South Carolina,,,US,,,,,nominatim
+33.493,-81.28,Springfield,United States,South Carolina,,,US,,,,,nominatim
+32.762,-79.857,Sullivan's Island,United States,South Carolina,,,US,,,,,nominatim
+33.037,-80.232,Summerville,United States,South Carolina,,,US,,,,,nominatim
+33.936,-80.357,Sumter,United States,South Carolina,,,US,,,,,nominatim
+35.02,-82.693,,,,,,,,,,,failed
+34.984,-82.4,Travelers Rest,United States,South Carolina,,,US,,,,,nominatim
+34.605,-81.663,,,,,,,,,,,failed
+34.754,-83.075,Walhalla,United States,South Carolina,,,US,,,,,nominatim
+32.885,-80.676,Walterboro,United States,South Carolina,,,US,,,,,nominatim
+34.405,-82.249,Ware Shoals,United States,South Carolina,,,US,,,,,nominatim
+34.335,-80.703,,,,,,,,,,,failed
+34.643,-82.455,Pelzer,United States,South Carolina,,,US,,,,,nominatim
+34.371,-81.082,Winnsboro,United States,South Carolina,,,US,,,,,nominatim
+34.939,-81.033,Rock Hill,United States,South Carolina,,,US,,,,,nominatim
+34.764,-82.106,Woodruff,United States,South Carolina,,,US,,,,,nominatim
+32.702,-80.852,Yemassee,United States,South Carolina,,,US,,,,,nominatim
+34.922,-81.197,,,,,,,,,,,failed
+45.455,-98.414,Aberdeen,United States,South Dakota,Aberdeen Township,,US,,,,,nominatim
+43.489,-99.063,,,,,,,,,,,failed
+45.413,-97.907,,,,,,,,,,,failed
+43.651,-97.798,,,,,,,,,,,failed
+45.881,-99.798,,,,,,,,,,,failed
+45.474,-98.307,Bath,United States,South Dakota,Bath Township,,US,,,,,nominatim
+44.499,-104.035,,,,,,,,,,,failed
+44.671,-103.851,Belle Fourche,United States,South Dakota,,,US,,,,,nominatim
+44.991,-103.934,,,,,,,,,,,failed
+45.299,-96.5,,,,,,,,,,,failed
+45.529,-102.465,Bison,United States,South Dakota,,,US,,,,,nominatim
+45.451,-99.652,Bowdle,United States,South Dakota,,,US,,,,,nominatim
+43.552,-97.502,Bridgewater,United States,South Dakota,Bridgewater Township,,US,,,,,nominatim
+45.239,-97.754,,,,,,,,,,,failed
+45.789,-97.749,Britton,United States,South Dakota,Miller Township,,US,,,,,nominatim
+45.922,-97.933,,,,,,,,,,,failed
+44.325,-96.769,Brookings,United States,South Dakota,Brookings Township,,US,,,,,nominatim
+44.555,-97.469,,,,,,,,,,,failed
+45.549,-103.974,Camp Crook,United States,South Dakota,,,US,,,,,nominatim
+43.311,-96.588,Canton,United States,South Dakota,Canton Township,,US,,,,,nominatim
+44.727,-97.029,Castlewood,United States,South Dakota,Castlewood Township,,US,,,,,nominatim
+43.577,-101.019,,,,,,,,,,,failed
+43.043,-96.903,,,,,,,,,,,failed
+43.735,-99.312,,,,,,,,,,,failed
+43.928,-96.932,,,,,,,,,,,failed
+44.882,-97.734,Clark,United States,South Dakota,Day Township,,US,,,,,nominatim
+44.758,-96.683,Clear Lake,United States,South Dakota,Clear Lake Township,,US,,,,,nominatim
+43.785,-96.928,Colton,United States,South Dakota,Taopi Township,,US,,,,,nominatim
+45.723,-98.303,,,,,,,,,,,failed
+43.961,-101.861,,,,,,,,,,,failed
+43.774,-103.612,Custer,United States,South Dakota,,,US,,,,,nominatim
+44.382,-97.55,De Smet,United States,South Dakota,De Smet Township,,US,,,,,nominatim
+44.896,-98.101,Doland,United States,South Dakota,Spring Township,,US,,,,,nominatim
+45.047,-101.602,Dupree,United States,South Dakota,,,US,,,,,nominatim
+44.866,-101.467,,,,,,,,,,,failed
+43.314,-103.821,,,,,,,,,,,failed
+43.624,-103.917,,,,,,,,,,,failed
+45.932,-98.765,,,,,,,,,,,failed
+44.319,-102.468,,,,,,,,,,,failed
+45.766,-99.622,Eureka,United States,South Dakota,,,US,,,,,nominatim
+45.036,-99.134,Faulkton,United States,South Dakota,,,US,,,,,nominatim
+44.052,-96.593,Flandreau,United States,South Dakota,Flandreau Township,,US,,,,,nominatim
+44.068,-98.083,,,,,,,,,,,failed
+44.411,-103.477,Fort Meade,United States,South Dakota,,,US,,,,,nominatim
+44.244,-100.659,,,,,,,,,,,failed
+44.218,-100.719,,,,,,,,,,,failed
+44.08,-98.973,,,,,,,,,,,failed
+45.019,-99.94,,,,,,,,,,,failed
+45.401,-101.81,,,,,,,,,,,failed
+43.236,-99.434,Gregory,United States,South Dakota,,,US,,,,,nominatim
+45.447,-98.095,Groton,United States,South Dakota,Groton Township,,US,,,,,nominatim
+45.36,-103.812,,,,,,,,,,,failed
+44.363,-99.803,,,,,,,,,,,failed
+44.663,-97.227,Hayti,United States,South Dakota,Hayti Township,,US,,,,,nominatim
+44.326,-103.109,,,,,,,,,,,failed
+44.522,-99.455,Highmore,United States,South Dakota,Highmore Township,,US,,,,,nominatim
+43.934,-103.557,Hill City,United States,South Dakota,,,US,,,,,nominatim
+45.112,-103.268,,,,,,,,,,,failed
+43.438,-103.474,Hot Springs,United States,South Dakota,,,US,,,,,nominatim
+44.012,-97.532,Howard,United States,South Dakota,Howard Township,,US,,,,,nominatim
+43.748,-101.941,Interior,United States,South Dakota,,,US,,,,,nominatim
+45.447,-99.039,Ipswich,United States,South Dakota,,,US,,,,,nominatim
+44.365,-97.849,Iroquois,United States,South Dakota,Iroquois Township,,US,,,,,nominatim
+45.602,-101.349,,,,,,,,,,,failed
+45.836,-101.866,,,,,,,,,,,failed
+44.612,-101.337,,,,,,,,,,,failed
+43.44,-102.143,Kyle,United States,South Dakota,,,US,,,,,nominatim
+45.773,-103.879,,,,,,,,,,,failed
+44.064,-99.46,,,,,,,,,,,failed
+44.354,-103.743,Lead,United States,South Dakota,,,US,,,,,nominatim
+45.94,-102.158,Lemmon,United States,South Dakota,,,US,,,,,nominatim
+45.719,-98.938,Leola,United States,South Dakota,,,US,,,,,nominatim
+45.748,-102.797,,,,,,,,,,,failed
+43.991,-97.092,Madison,United States,South Dakota,Lakeview Township,,US,,,,,nominatim
+43.421,-97.254,Marion,United States,South Dakota,Marion Township,,US,,,,,nominatim
+44.866,-102.566,,,,,,,,,,,failed
+43.745,-97.308,,,,,,,,,,,failed
+45.838,-101.277,,,,,,,,,,,failed
+45.813,-100.807,McLaughlin,United States,South Dakota,,,US,,,,,nominatim
+45.155,-98.582,Northville,United States,South Dakota,Northville Township,,US,,,,,nominatim
+43.236,-97.571,Menno,United States,South Dakota,Sweet Township,,US,,,,,nominatim
+45.227,-96.623,Milbank,United States,South Dakota,Alban Township,,US,,,,,nominatim
+44.517,-101.618,,,,,,,,,,,failed
+44.518,-98.981,Miller,United States,South Dakota,Miller Township,,US,,,,,nominatim
+43.112,-100.611,,,,,,,,,,,failed
+44.734,-100.804,,,,,,,,,,,failed
+43.764,-98.071,Mitchell,United States,South Dakota,Perry Township,,US,,,,,nominatim
+45.566,-100.449,,,,,,,,,,,failed
+43.705,-97.188,Montrose,United States,South Dakota,Montrose Township,,US,,,,,nominatim
+43.877,-103.458,,,,,,,,,,,failed
+43.888,-100.708,Murdo,United States,South Dakota,,,US,,,,,nominatim
+44.714,-103.426,Newell,United States,South Dakota,,,US,,,,,nominatim
+43.188,-103.237,,,,,,,,,,,failed
+43.175,-102.746,Oglala,United States,South Dakota,,,US,,,,,nominatim
+44.732,-100.145,,,,,,,,,,,failed
+43.403,-103.268,,,,,,,,,,,failed
+44.898,-99.086,,,,,,,,,,,failed
+44.062,-103.482,,,,,,,,,,,failed
+43.069,-98.532,Pickstown,United States,South Dakota,White Swan Township,,US,,,,,nominatim
+44.24,-103.404,,,,,,,,,,,failed
+44.517,-102.215,,,,,,,,,,,failed
+43.389,-98.841,Platte,United States,South Dakota,Platte Township,,US,,,,,nominatim
+45.903,-100.288,Pollock,United States,South Dakota,,,US,,,,,nominatim
+44.121,-103.284,,,,,,,,,,,failed
+44.073,-103.211,Rapid City,United States,South Dakota,,,US,,,,,nominatim
+44.973,-97.149,,,,,,,,,,,failed
+44.698,-102.561,,,,,,,,,,,failed
+44.517,-99.199,,,,,,,,,,,failed
+45.453,-99.336,Roscoe,United States,South Dakota,,,US,,,,,nominatim
+45.709,-97.434,,,,,,,,,,,failed
+45.51,-100.036,Selby,United States,South Dakota,,,US,,,,,nominatim
+45.061,-99.51,,,,,,,,,,,failed
+43.588,-96.73,Sioux Falls,United States,South Dakota,Mapleton Township,,US,,,,,nominatim
+45.666,-97.039,Sisseton,United States,South Dakota,Sisseton Township,,US,,,,,nominatim
+44.498,-103.872,Spearfish,United States,South Dakota,,,US,,,,,nominatim
+45.234,-98.4,,,,,,,,,,,failed
+45.304,-97.062,,,,,,,,,,,failed
+45.428,-101.076,Timber Lake,United States,South Dakota,,,US,,,,,nominatim
+42.992,-97.87,Tyndall,United States,South Dakota,Cleveland Township,,US,,,,,nominatim
+42.762,-96.919,,,,,,,,,,,failed
+45.92,-96.831,,,,,,,,,,,failed
+44.068,-102.45,Wasta,United States,South Dakota,,,US,,,,,nominatim
+44.87,-97.116,Watertown,United States,South Dakota,Sheridan Township,,US,,,,,nominatim
+45.425,-97.327,Enemy Swim,United States,South Dakota,Waubay Township,,US,,,,,nominatim
+45.333,-97.523,Webster,United States,South Dakota,Webster Township,,US,,,,,nominatim
+44.425,-98.685,,,,,,,,,,,failed
+44.076,-98.571,Wessington Springs,United States,South Dakota,Media Township,,US,,,,,nominatim
+45.676,-98.53,,,,,,,,,,,failed
+43.687,-98.672,,,,,,,,,,,failed
+45.408,-96.862,Wilmot,United States,South Dakota,Garfield Township,,US,,,,,nominatim
+43.556,-103.479,,,,,,,,,,,failed
+43.971,-97.349,Winfred,United States,South Dakota,Winfred Township,,US,,,,,nominatim
+43.369,-99.84,Winner,United States,South Dakota,,,US,,,,,nominatim
+43.499,-100.481,,,,,,,,,,,failed
+35.798,-89.118,,,,,,,,,,,failed
+36.381,-84.874,Allardt,United States,Tennessee,,,US,,,,,nominatim
+35.113,-89.212,,,,,,,,,,,failed
+34.992,-86.856,Ardmore,United States,Tennessee,,,US,,,,,nominatim
+35.432,-84.583,Athens,United States,Tennessee,,,US,,,,,nominatim
+36.157,-86.925,Nashville,United States,Tennessee,,,US,,,,,nominatim
+36.458,-86.324,,,,,,,,,,,failed
+36.235,-88.091,Big Sandy,United States,Tennessee,,,US,,,,,nominatim
+35.262,-88.989,Bolivar,United States,Tennessee,,,US,,,,,nominatim
+35.99,-86.779,Brentwood,United States,Tennessee,,,US,,,,,nominatim
+35.589,-89.259,Brownsville,United States,Tennessee,,,US,,,,,nominatim
+36.58,-85.126,Byrdstown,United States,Tennessee,,,US,,,,,nominatim
+36.052,-88.083,Camden,United States,Tennessee,,,US,,,,,nominatim
+36.246,-85.945,Carthage,United States,Tennessee,,,US,,,,,nominatim
+36.541,-85.46,,,,,,,,,,,failed
+35.832,-87.422,Centerville,United States,Tennessee,,,US,,,,,nominatim
+36.172,-87.18,,,,,,,,,,,failed
+36.321,-87.222,,,,,,,,,,,failed
+35.705,-86.487,,,,,,,,,,,failed
+36.547,-87.335,Clarksville,United States,Tennessee,,,US,,,,,nominatim
+36.498,-87.336,Clarksville,United States,Tennessee,,,US,,,,,nominatim
+35.219,-84.792,,,,,,,,,,,failed
+35.368,-85.701,Coalmont,United States,Tennessee,,,US,,,,,nominatim
+35.078,-89.665,Collierville,United States,Tennessee,,,US,,,,,nominatim
+35.638,-87.086,Columbia,United States,Tennessee,,,US,,,,,nominatim
+36.108,-85.503,Cookeville,United States,Tennessee,,,US,,,,,nominatim
+35.55,-89.7,,,,,,,,,,,failed
+35.918,-84.869,Crab Orchard,United States,Tennessee,,,US,,,,,nominatim
+36.015,-85.131,,,,,,,,,,,failed
+35.472,-84.996,Dayton,United States,Tennessee,,,US,,,,,nominatim
+35.639,-84.665,,,,,,,,,,,failed
+35.595,-88.118,Decaturville,United States,Tennessee,,,US,,,,,nominatim
+36.075,-87.396,Dickson,United States,Tennessee,,,US,,,,,nominatim
+36.482,-87.863,Dover,United States,Tennessee,,,US,,,,,nominatim
+35.999,-89.409,Dyersburg,United States,Tennessee,,,US,,,,,nominatim
+36.354,-82.249,Elizabethton,United States,Tennessee,,,US,,,,,nominatim
+36.142,-82.426,Erwin,United States,Tennessee,,,US,,,,,nominatim
+35.969,-87.136,Fairview,United States,Tennessee,,,US,,,,,nominatim
+35.639,-85.359,,,,,,,,,,,failed
+35.134,-86.542,,,,,,,,,,,failed
+35.942,-86.869,Franklin,United States,Tennessee,,,US,,,,,nominatim
+36.366,-85.655,Gainesboro,United States,Tennessee,,,US,,,,,nominatim
+35.688,-83.537,,,,,,,,,,,failed
+35.076,-89.743,Germantown,United States,Tennessee,,,US,,,,,nominatim
+36.065,-86.418,,,,,,,,,,,failed
+36.341,-86.828,Nashville,United States,Tennessee,,,US,,,,,nominatim
+36.106,-82.844,,,,,,,,,,,failed
+35.832,-83.116,,,,,,,,,,,failed
+35.444,-88.724,,,,,,,,,,,failed
+35.557,-87.541,Hohenwald,United States,Tennessee,,,US,,,,,nominatim
+36.003,-88.425,Huntingdon,United States,Tennessee,,,US,,,,,nominatim
+35.621,-88.846,Jackson,United States,Tennessee,,,US,,,,,nominatim
+35.55,-88.717,,,,,,,,,,,failed
+35.71,-88.822,Jackson,United States,Tennessee,,,US,,,,,nominatim
+36.426,-84.942,Jamestown,United States,Tennessee,,,US,,,,,nominatim
+36.347,-82.346,Johnson City,United States,Tennessee,,,US,,,,,nominatim
+36.519,-82.528,Kingsport,United States,Tennessee,,,US,,,,,nominatim
+35.857,-84.528,Kingston,United States,Tennessee,,,US,,,,,nominatim
+36.103,-87.115,Kingston Springs,United States,Tennessee,,,US,,,,,nominatim
+35.898,-83.957,Knoxville,United States,Tennessee,,,US,,,,,nominatim
+36.519,-86.03,Lafayette,United States,Tennessee,,,US,,,,,nominatim
+36.083,-85.826,,,,,,,,,,,failed
+35.242,-87.352,Lawrenceburg,United States,Tennessee,,,US,,,,,nominatim
+35.244,-87.351,Lawrenceburg,United States,Tennessee,,,US,,,,,nominatim
+36.229,-86.318,Lebanon,United States,Tennessee,,,US,,,,,nominatim
+36.298,-86.263,Lebanon,United States,Tennessee,,,US,,,,,nominatim
+35.788,-84.262,Lenoir City,United States,Tennessee,,,US,,,,,nominatim
+35.414,-86.809,,,,,,,,,,,failed
+35.65,-88.39,Lexington,United States,Tennessee,,,US,,,,,nominatim
+35.605,-87.841,Linden,United States,Tennessee,,,US,,,,,nominatim
+36.378,-85.336,Livingston,United States,Tennessee,,,US,,,,,nominatim
+35.752,-87.796,Lobelville,United States,Tennessee,,,US,,,,,nominatim
+35.01,-85.344,Lookout Mountain,United States,Tennessee,,,US,,,,,nominatim
+35.298,-86.363,Lynchburg,United States,Tennessee,,,US,,,,,nominatim
+35.516,-86.088,,,,,,,,,,,failed
+36.344,-88.864,Martin,United States,Tennessee,,,US,,,,,nominatim
+35.672,-85.781,McMinnville,United States,Tennessee,,,US,,,,,nominatim
+35.13,-89.804,Memphis,United States,Tennessee,,,US,,,,,nominatim
+35.933,-88.727,Milan,United States,Tennessee,,,US,,,,,nominatim
+35.224,-85.841,Monteagle,United States,Tennessee,,,US,,,,,nominatim
+36.148,-85.265,Monterey,United States,Tennessee,,,US,,,,,nominatim
+36.101,-87.285,,,,,,,,,,,failed
+36.207,-83.332,Morristown,United States,Tennessee,Westview,,US,,,,,nominatim
+36.168,-83.403,Morristown,United States,Tennessee,,,US,,,,,nominatim
+36.474,-81.803,Mountain City,United States,Tennessee,,,US,,,,,nominatim
+35.656,-88.006,,,,,,,,,,,failed
+35.655,-83.441,,,,,,,,,,,failed
+35.968,-88.046,,,,,,,,,,,failed
+35.557,-87.202,Mount Pleasant,United States,Tennessee,,,US,,,,,nominatim
+35.92,-86.373,,,,,,,,,,,failed
+35.88,-86.435,Murfreesboro,United States,Tennessee,,,US,,,,,nominatim
+36.114,-86.678,Nashville,United States,Tennessee,,,US,,,,,nominatim
+35.72,-86.965,Spring Hill,United States,Tennessee,,,US,,,,,nominatim
+36.552,-84.173,,,,,,,,,,,failed
+35.611,-83.429,,,,,,,,,,,failed
+35.983,-83.201,Newport,United States,Tennessee,,,US,,,,,nominatim
+36.213,-84.06,Norris,United States,Tennessee,,,US,,,,,nominatim
+36.295,-86.657,Nashville,United States,Tennessee,,,US,,,,,nominatim
+36.247,-86.563,,,,,,,,,,,failed
+36.503,-84.531,Oneida,United States,Tennessee,,,US,,,,,nominatim
+36.287,-88.296,Paris,United States,Tennessee,,,US,,,,,nominatim
+35.608,-88.12,,,,,,,,,,,failed
+36.551,-84.797,,,,,,,,,,,failed
+35.598,-85.194,Pikeville,United States,Tennessee,,,US,,,,,nominatim
+36.588,-86.526,Portland,United States,Tennessee,,,US,,,,,nominatim
+36.534,-87.219,Clarksville,United States,Tennessee,,,US,,,,,nominatim
+35.184,-87.042,Pulaski,United States,Tennessee,,,US,,,,,nominatim
+35.718,-89.499,Ripley,United States,Tennessee,,,US,,,,,nominatim
+36.164,-82.095,,,,,,,,,,,failed
+35.809,-85.642,,,,,,,,,,,failed
+35.836,-84.692,Rockwood,United States,Tennessee,,,US,,,,,nominatim
+36.416,-82.984,Rogersville,United States,Tennessee,,,US,,,,,nominatim
+36.453,-89.303,,,,,,,,,,,failed
+35.152,-88.321,,,,,,,,,,,failed
+35.165,-88.599,Selmer,United States,Tennessee,,,US,,,,,nominatim
+35.93,-83.598,Sevierville,United States,Tennessee,,,US,,,,,nominatim
+35.203,-85.917,Sewanee,United States,Tennessee,,,US,,,,,nominatim
+36.166,-86.725,Nashville,United States,Tennessee,,,US,,,,,nominatim
+35.561,-86.446,Shelbyville,United States,Tennessee,,,US,,,,,nominatim
+35.492,-86.478,Shelbyville,United States,Tennessee,,,US,,,,,nominatim
+35.942,-85.789,,,,,,,,,,,failed
+35.28,-85.241,,,,,,,,,,,failed
+35.388,-89.372,,,,,,,,,,,failed
+35.815,-85.424,,,,,,,,,,,failed
+35.907,-85.475,Sparta,United States,Tennessee,,,US,,,,,nominatim
+35.676,-84.855,Spring City,United States,Tennessee,,,US,,,,,nominatim
+36.471,-86.841,Springfield,United States,Tennessee,,,US,,,,,nominatim
+36.465,-83.56,Tazewell,United States,Tennessee,,,US,,,,,nominatim
+35.37,-84.3,Tellico Plains,United States,Tennessee,,,US,,,,,nominatim
+36.325,-87.789,Tennessee Ridge,United States,Tennessee,,,US,,,,,nominatim
+35.965,-87.964,,,,,,,,,,,failed
+35.764,-86.932,Spring Hill,United States,Tennessee,,,US,,,,,nominatim
+35.603,-83.777,,,,,,,,,,,failed
+35.345,-86.209,Tullahoma,United States,Tennessee,,,US,,,,,nominatim
+35.429,-86.197,,,,,,,,,,,failed
+36.392,-89.032,Union City,United States,Tennessee,,,US,,,,,nominatim
+36.061,-86.906,Nashville,United States,Tennessee,,,US,,,,,nominatim
+35.539,-86.228,,,,,,,,,,,failed
+36.097,-86.14,Watertown,United States,Tennessee,,,US,,,,,nominatim
+35.304,-87.759,,,,,,,,,,,failed
+35.29,-85.474,,,,,,,,,,,failed
+36.451,-86.646,White House,United States,Tennessee,,,US,,,,,nominatim
+35.161,-86.031,Cowan,United States,Tennessee,,,US,,,,,nominatim
+35.838,-86.089,Woodbury,United States,Tennessee,,,US,,,,,nominatim
+33.834,-101.844,Abernathy,United States,Texas,,,US,,,,,nominatim
+32.432,-99.632,Abilene,United States,Texas,,,US,,,,,nominatim
+30.352,-101.252,,,,,,,,,,,failed
+35.349,-102.647,,,,,,,,,,,failed
+32.705,-99.301,Albany,United States,Texas,,,US,,,,,nominatim
+35.61,-100.102,Allison,United States,Texas,,,US,,,,,nominatim
+30.376,-103.66,Alpine,United States,Texas,,,US,,,,,nominatim
+30.37,-103.781,,,,,,,,,,,failed
+32.464,-97.183,,,,,,,,,,,failed
+33.387,-97.716,,,,,,,,,,,failed
+29.461,-101.029,,,,,,,,,,,failed
+29.788,-94.634,,,,,,,,,,,failed
+30.758,-97.861,,,,,,,,,,,failed
+32.312,-102.561,Andrews,United States,Texas,,Andrews,US,USA,,15708.0,1840019474,worldcities_small
+29.157,-95.459,Angleton,United States,Texas,,,US,,,,,nominatim
+32.767,-99.89,Anson,United States,Texas,,,US,,,,,nominatim
+33.441,-98.369,,,,,,,,,,,failed
+31.841,-97.211,,,,,,,,,,,failed
+33.599,-98.654,Archer City,United States,Texas,,,US,,,,,nominatim
+32.757,-97.074,Arlington,United States,Texas,,,US,,,,,nominatim
+26.834,-97.708,,,,,,,,,,,failed
+33.152,-100.233,Aspermont,United States,Texas,,,US,,,,,nominatim
+32.163,-95.83,Athens,United States,Texas,,,US,,,,,nominatim
+33.124,-94.166,Atlanta,United States,Texas,,,US,,,,,nominatim
+30.225,-97.733,Austin,United States,Texas,,,US,,,,,nominatim
+28.389,-96.839,Austwell,United States,Texas,,,US,,,,,nominatim
+33.625,-94.808,,,,,,,,,,,failed
+30.888,-102.301,,,,,,,,,,,failed
+31.741,-99.976,,,,,,,,,,,failed
+30.984,-103.74,Pecos,United States,Texas,,Pecos,US,USA,,14040.0,1840020806,worldcities_small
+30.12,-98.787,,,,,,,,,,,failed
+32.263,-96.637,,,,,,,,,,,failed
+28.98,-95.975,Bay City,United States,Texas,,,US,,,,,nominatim
+29.914,-94.991,,,,,,,,,,,failed
+30.097,-94.1,Beaumont,United States,Texas,,,US,,,,,nominatim
+30.069,-94.293,,,,,,,,,,,failed
+28.458,-97.706,,,,,,,,,,,failed
+30.032,-96.217,,,,,,,,,,,failed
+27.597,-98.416,Benavides,United States,Texas,,,US,,,,,nominatim
+32.648,-97.444,Fort Worth,United States,Texas,,,US,,,,,nominatim
+30.762,-98.021,,,,,,,,,,,failed
+29.437,-103.958,,,,,,,,,,,failed
+31.2,-101.462,Big Lake,United States,Texas,,,US,,,,,nominatim
+32.374,-101.418,Big Spring,United States,Texas,,Big Spring,US,USA,,28913.0,1840019471,worldcities_small
+32.268,-101.486,Big Spring,United States,Texas,,,US,,,,,nominatim
+30.095,-98.414,Blanco,United States,Texas,,,US,,,,,nominatim
+29.799,-98.735,Boerne,United States,Texas,,,US,,,,,nominatim
+33.64,-96.166,Bonham,United States,Texas,,,US,,,,,nominatim
+33.819,-97.734,,,,,,,,,,,failed
+36.453,-100.539,Booker,United States,Texas,,,US,,,,,nominatim
+35.669,-101.402,Borger,United States,Texas,,,US,,,,,nominatim
+33.551,-97.847,Bowie,United States,Texas,,,US,,,,,nominatim
+35.53,-102.256,,,,,,,,,,,failed
+29.317,-100.414,Brackettville,United States,Texas,,,US,,,,,nominatim
+29.61,-100.452,,,,,,,,,,,failed
+31.144,-99.349,Brady,United States,Texas,,,US,,,,,nominatim
+35.62,-103.007,,,,,,,,,,,failed
+32.75,-98.902,Breckenridge,United States,Texas,,,US,,,,,nominatim
+31.159,-96.682,Bremond,United States,Texas,,,US,,,,,nominatim
+30.159,-96.397,Brenham,United States,Texas,,,US,,,,,nominatim
+33.206,-97.776,,,,,,,,,,,failed
+33.191,-102.268,Brownfield,United States,Texas,,,US,,,,,nominatim
+31.738,-98.946,Early,United States,Texas,,,US,,,,,nominatim
+27.439,-98.836,Bruni,United States,Texas,,,US,,,,,nominatim
+29.738,-98.452,Bulverde,United States,Texas,,,US,,,,,nominatim
+31.992,-99.22,,,,,,,,,,,failed
+32.507,-97.344,Burleson,United States,Texas,,,US,,,,,nominatim
+30.759,-98.234,Burnet,United States,Texas,,,US,,,,,nominatim
+35.187,-102.08,,,,,,,,,,,failed
+30.533,-96.702,Caldwell,United States,Texas,,,US,,,,,nominatim
+28.466,-98.354,Calliham,United States,Texas,,,US,,,,,nominatim
+29.895,-99.104,,,,,,,,,,,failed
+36.024,-100.42,,,,,,,,,,,failed
+29.861,-98.196,,,,,,,,,,,failed
+34.981,-101.926,Canyon,United States,Texas,,,US,,,,,nominatim
+29.946,-98.397,,,,,,,,,,,failed
+29.911,-98.371,Spring Branch,United States,Texas,,,US,,,,,nominatim
+28.489,-99.873,,,,,,,,,,,failed
+32.161,-94.34,Carthage,United States,Texas,,,US,,,,,nominatim
+29.133,-103.514,,,,,,,,,,,failed
+31.808,-94.164,Center,United States,Texas,,,US,,,,,nominatim
+31.258,-95.974,Centerville,United States,Texas,,,US,,,,,nominatim
+29.309,-97.406,,,,,,,,,,,failed
+34.439,-100.218,Childress,United States,Texas,,,US,,,,,nominatim
+29.27,-103.3,,,,,,,,,,,failed
+28.468,-98.252,,,,,,,,,,,failed
+32.314,-97.406,Cleburne,United States,Texas,,,US,,,,,nominatim
+30.364,-95.084,Cleveland,United States,Texas,,,US,,,,,nominatim
+31.828,-99.432,Coleman,United States,Texas,,,US,,,,,nominatim
+28.716,-97.174,,,,,,,,,,,failed
+29.699,-96.573,Columbus,United States,Texas,,,US,,,,,nominatim
+29.961,-98.894,Comfort,United States,Texas,,,US,,,,,nominatim
+33.2,-95.928,,,,,,,,,,,failed
+31.552,-99.708,,,,,,,,,,,failed
+36.235,-102.241,,,,,,,,,,,failed
+30.33,-95.483,Conroe,United States,Texas,,,US,,,,,nominatim
+33.319,-95.604,,,,,,,,,,,failed
+33.374,-95.693,Cooper,United States,Texas,,,US,,,,,nominatim
+31.533,-101.284,,,,,,,,,,,failed
+31.16,-97.956,Copperas Cove,United States,Texas,,,US,,,,,nominatim
+27.779,-97.506,Corpus Christi,United States,Texas,,,US,,,,,nominatim
+27.661,-97.398,Corpus Christi,United States,Texas,,,US,,,,,nominatim
+32.123,-96.487,Corsicana,United States,Texas,,,US,,,,,nominatim
+30.181,-99.154,,,,,,,,,,,failed
+31.407,-102.358,,,,,,,,,,,failed
+31.673,-102.413,Pleasant Farms,United States,Texas,,,US,,,,,nominatim
+31.773,-97.826,Cranfills Gap,United States,Texas,,,US,,,,,nominatim
+31.533,-97.452,Crawford,United States,Texas,,,US,,,,,nominatim
+32.529,-97.619,Cresson,United States,Texas,,,US,,,,,nominatim
+31.307,-95.451,Crockett,United States,Texas,,,US,,,,,nominatim
+33.652,-101.245,Crosbyton,United States,Texas,,,US,,,,,nominatim
+28.598,-98.555,,,,,,,,,,,failed
+33.99,-99.73,Crowell,United States,Texas,,,US,,,,,nominatim
+29.089,-97.343,,,,,,,,,,,failed
+30.021,-95.707,Cypress,United States,Texas,,,US,,,,,nominatim
+32.92,-94.722,Lone Star,United States,Texas,,,US,,,,,nominatim
+36.061,-102.521,Dalhart,United States,Texas,,,US,,,,,nominatim
+29.057,-96.232,,,,,,,,,,,failed
+36.444,-100.332,Darrouzett,United States,Texas,,,US,,,,,nominatim
+30.801,-97.269,,,,,,,,,,,failed
+33.233,-97.622,,,,,,,,,,,failed
+33.48,-94.618,,,,,,,,,,,failed
+31.915,-105.21,,,,,,,,,,,failed
+33.199,-97.105,Denton,United States,Texas,,,US,,,,,nominatim
+32.962,-102.822,Denver City,United States,Texas,,,US,,,,,nominatim
+28.753,-99.135,Derby,United States,Texas,,,US,,,,,nominatim
+31.861,-95.262,,,,,,,,,,,failed
+30.356,-96.829,Dime Box,United States,Texas,,,US,,,,,nominatim
+34.586,-102.312,,,,,,,,,,,failed
+30.219,-97.988,,,,,,,,,,,failed
+35.873,-101.972,Dumas,United States,Texas,,,US,,,,,nominatim
+33.809,-100.517,,,,,,,,,,,failed
+29.621,-96.366,Eagle Lake,United States,Texas,,,US,,,,,nominatim
+28.757,-100.479,Eidson Road,United States,Texas,,Eidson Road,US,USA,,9714.0,1840037044,worldcities_small
+31.221,-99.849,Eden,United States,Texas,,,US,,,,,nominatim
+26.298,-98.158,Palmview South,United States,Texas,,Palmview South,US,USA,,5589.0,1840073265,worldcities_small
+29.062,-96.771,,,,,,,,,,,failed
+29.2,-96.265,El Campo,United States,Texas,,,US,,,,,nominatim
+30.869,-100.599,Eldorado,United States,Texas,,,US,,,,,nominatim
+30.364,-97.37,Elgin,United States,Texas,,,US,,,,,nominatim
+28.475,-100.215,,,,,,,,,,,failed
+27.978,-99.385,,,,,,,,,,,failed
+27.027,-98.981,Zapata,United States,Texas,,Zapata,US,USA,,5717.0,1840019723,worldcities_small
+26.558,-99.137,,,,,,,,,,,failed
+27.135,-98.12,,,,,,,,,,,failed
+28.961,-98.11,,,,,,,,,,,failed
+30.276,-97.019,,,,,,,,,,,failed
+32.534,-96.661,Ferris,United States,Texas,,,US,,,,,nominatim
+29.974,-98.267,,,,,,,,,,,failed
+29.634,-97.064,,,,,,,,,,,failed
+34.232,-100.956,,,,,,,,,,,failed
+34.268,-100.934,,,,,,,,,,,failed
+30.839,-97.793,Florence,United States,Texas,,,US,,,,,nominatim
+29.133,-98.163,Floresville,United States,Texas,,,US,,,,,nominatim
+33.985,-101.334,Floydada,United States,Texas,,,US,,,,,nominatim
+33.876,-101.246,,,,,,,,,,,failed
+36.433,-100.137,Follett,United States,Texas,,,US,,,,,nominatim
+33.466,-97.58,,,,,,,,,,,failed
+30.827,-100.11,,,,,,,,,,,failed
+30.6,-103.887,Fort Davis,United States,Texas,,,US,,,,,nominatim
+32.926,-99.234,,,,,,,,,,,failed
+31.185,-105.741,,,,,,,,,,,failed
+30.907,-102.915,Fort Stockton,United States,Texas,,,US,,,,,nominatim
+32.834,-97.298,Fort Worth,United States,Texas,,,US,,,,,nominatim
+32.847,-97.476,Fort Worth,United States,Texas,,,US,,,,,nominatim
+32.734,-97.368,Fort Worth,United States,Texas,,,US,,,,,nominatim
+30.56,-102.365,,,,,,,,,,,failed
+30.239,-98.909,Fredericksburg,United States,Texas,,,US,,,,,nominatim
+28.984,-95.381,Lake Jackson,United States,Texas,,,US,,,,,nominatim
+27.872,-98.618,Freer,United States,Texas,,,US,,,,,nominatim
+34.64,-102.723,Friona,United States,Texas,,,US,,,,,nominatim
+33.192,-96.793,Frisco,United States,Texas,,,US,,,,,nominatim
+32.774,-101.454,Lamesa,United States,Texas,,Lamesa,US,USA,,11241.0,1840020725,worldcities_small
+33.646,-97.059,,,,,,,,,,,failed
+31.414,-97.702,Gatesville,United States,Texas,,,US,,,,,nominatim
+30.676,-97.721,Georgetown,United States,Texas,,,US,,,,,nominatim
+28.306,-98.122,George West,United States,Texas,,,US,,,,,nominatim
+30.187,-96.859,,,,,,,,,,,failed
+36.009,-100.269,Glazier,United States,Texas,,,US,,,,,nominatim
+31.89,-99.629,,,,,,,,,,,failed
+30.348,-98.686,,,,,,,,,,,failed
+31.441,-98.59,Goldthwaite,United States,Texas,,,US,,,,,nominatim
+29.474,-97.448,Gonzales,United States,Texas,,,US,,,,,nominatim
+29.436,-97.518,Gonzales,United States,Texas,,,US,,,,,nominatim
+32.522,-97.807,,,,,,,,,,,failed
+30.719,-97.321,,,,,,,,,,,failed
+32.951,-97.055,Grapevine,United States,Texas,,,US,,,,,nominatim
+33.168,-96.098,Greenville,United States,Texas,,,US,,,,,nominatim
+36.263,-101.405,Gruver,United States,Texas,,,US,,,,,nominatim
+33.627,-100.337,Guthrie,United States,Texas,,,US,,,,,nominatim
+29.471,-96.94,Hallettsville,United States,Texas,,,US,,,,,nominatim
+32.448,-94.596,,,,,,,,,,,failed
+31.709,-98.115,Hamilton,United States,Texas,,,US,,,,,nominatim
+34.786,-101.895,,,,,,,,,,,failed
+26.203,-97.673,Harlingen,United States,Texas,,,US,,,,,nominatim
+30.309,-99.203,,,,,,,,,,,failed
+34.37,-102.118,,,,,,,,,,,failed
+35.878,-102.385,Hartley,United States,Texas,,,US,,,,,nominatim
+33.164,-99.739,Haskell,United States,Texas,,,US,,,,,nominatim
+32.578,-95.203,Hawkins,United States,Texas,,,US,,,,,nominatim
+27.319,-98.678,Hebbronville,United States,Texas,,,US,,,,,nominatim
+32.181,-94.796,Henderson,United States,Texas,,,US,,,,,nominatim
+34.817,-102.4,Hereford,United States,Texas,,,US,,,,,nominatim
+36.116,-100.024,Higgins,United States,Texas,,,US,,,,,nominatim
+32.016,-97.109,Hillsboro,United States,Texas,,,US,,,,,nominatim
+32.728,-95.192,Holly Lake Ranch,United States,Texas,,,US,,,,,nominatim
+29.336,-99.139,Hondo,United States,Texas,,,US,,,,,nominatim
+33.587,-95.908,Honey Grove,United States,Texas,,,US,,,,,nominatim
+31.846,-99.561,,,,,,,,,,,failed
+29.66,-95.628,,,,,,,,,,,failed
+29.873,-95.528,,,,,,,,,,,failed
+29.472,-95.083,Dickinson,United States,Texas,,,US,,,,,nominatim
+30.005,-101.177,,,,,,,,,,,failed
+30.361,-100.305,,,,,,,,,,,failed
+30.063,-99.505,,,,,,,,,,,failed
+30.706,-95.542,Huntsville,United States,Texas,,,US,,,,,nominatim
+30.253,-98.571,,,,,,,,,,,failed
+30.093,-99.245,Ingram,United States,Texas,,,US,,,,,nominatim
+32.091,-97.121,,,,,,,,,,,failed
+33.206,-98.169,Jacksboro,United States,Texas,,,US,,,,,nominatim
+31.962,-95.274,Jacksonville,United States,Texas,,,US,,,,,nominatim
+30.829,-97.601,Jarrell,United States,Texas,,,US,,,,,nominatim
+30.915,-94.01,Jasper,United States,Texas,,,US,,,,,nominatim
+33.254,-100.573,Jayton,United States,Texas,,,US,,,,,nominatim
+29.766,-97.316,,,,,,,,,,,failed
+32.769,-94.359,Jefferson,United States,Texas,,,US,,,,,nominatim
+35.188,-100.929,,,,,,,,,,,failed
+32.641,-96.975,Dallas,United States,Texas,,,US,,,,,nominatim
+30.445,-99.804,,,,,,,,,,,failed
+33.081,-97.297,Justin,United States,Texas,,,US,,,,,nominatim
+29.802,-95.82,Katy,United States,Texas,,,US,,,,,nominatim
+29.964,-98.529,,,,,,,,,,,failed
+31.016,-104.111,,,,,,,,,,,failed
+31.841,-103.089,Monahans,United States,Texas,,Monahans,US,USA,,8639.0,1840036514,worldcities_small
+30.074,-99.109,Kerrville,United States,Texas,,,US,,,,,nominatim
+29.683,-97.767,Kingsbury,United States,Texas,,,US,,,,,nominatim
+27.531,-97.85,Kingsville,United States,Texas,,,US,,,,,nominatim
+30.375,-94.299,Kountze,United States,Texas,,,US,,,,,nominatim
+26.323,-98.323,Alton,United States,Texas,,,US,,,,,nominatim
+28.984,-99.868,La Pryor,United States,Texas,,,US,,,,,nominatim
+29.269,-103.758,Terlingua,United States,Texas,,,US,,,,,nominatim
+32.226,-99.817,,,,,,,,,,,failed
+33.064,-101.049,,,,,,,,,,,failed
+29.459,-103.499,,,,,,,,,,,failed
+33.225,-97.832,Lake Bridgeport,United States,Texas,,,US,,,,,nominatim
+32.824,-95.528,,,,,,,,,,,failed
+32.852,-95.886,,,,,,,,,,,failed
+33.754,-99.144,,,,,,,,,,,failed
+32.723,-101.946,Lamesa,United States,Texas,,,US,,,,,nominatim
+29.81,-101.56,,,,,,,,,,,failed
+27.568,-99.498,Laredo,United States,Texas,Del Mar,,US,,,,,nominatim
+33.035,-96.486,Wylie,United States,Texas,,,US,,,,,nominatim
+29.739,-99.761,,,,,,,,,,,failed
+32.082,-101.484,Garden City,United States,Texas,,,US,,,,,nominatim
+35.442,-100.811,Lefors,United States,Texas,,,US,,,,,nominatim
+32.308,-101.878,Lenorah,United States,Texas,,,US,,,,,nominatim
+33.55,-102.376,,,,,,,,,,,failed
+33.069,-97.009,Lewisville,United States,Texas,,,US,,,,,nominatim
+30.406,-97.013,,,,,,,,,,,failed
+30.059,-94.795,Liberty,United States,Texas,,,US,,,,,nominatim
+32.54,-95.376,Lindale,United States,Texas,,,US,,,,,nominatim
+33.016,-94.368,Linden,United States,Texas,,,US,,,,,nominatim
+32.572,-98.08,,,,,,,,,,,failed
+36.236,-100.271,Lipscomb,United States,Texas,,,US,,,,,nominatim
+33.869,-102.259,,,,,,,,,,,failed
+30.739,-94.926,,,,,,,,,,,failed
+30.742,-98.654,Llano,United States,Texas,,,US,,,,,nominatim
+29.857,-97.696,Lockhart,United States,Texas,,,US,,,,,nominatim
+28.157,-98.514,,,,,,,,,,,failed
+30.713,-99.568,,,,,,,,,,,failed
+32.472,-94.717,Longview,United States,Texas,,,US,,,,,nominatim
+32.518,-94.719,Longview,United States,Texas,,,US,,,,,nominatim
+28.448,-99.066,,,,,,,,,,,failed
+33.69,-101.822,Lubbock,United States,Texas,,,US,,,,,nominatim
+31.427,-94.894,,,,,,,,,,,failed
+31.342,-94.732,Lufkin,United States,Texas,,,US,,,,,nominatim
+29.676,-97.658,Luling,United States,Texas,,,US,,,,,nominatim
+29.84,-97.567,,,,,,,,,,,failed
+30.25,-94.179,Lumberton,United States,Texas,,,US,,,,,nominatim
+30.939,-95.92,Madisonville,United States,Texas,,,US,,,,,nominatim
+29.644,-103.079,,,,,,,,,,,failed
+30.192,-103.272,Marathon,United States,Texas,,,US,,,,,nominatim
+31.305,-96.877,Marlin,United States,Texas,,,US,,,,,nominatim
+32.489,-94.329,,,,,,,,,,,failed
+30.748,-99.231,Mason,United States,Texas,,,US,,,,,nominatim
+34.025,-100.812,Matador,United States,Texas,,,US,,,,,nominatim
+28.684,-95.973,Matagorda,United States,Texas,,,US,,,,,nominatim
+28.037,-97.872,,,,,,,,,,,failed
+33.332,-94.344,Maud,United States,Texas,,,US,,,,,nominatim
+26.192,-98.251,McAllen,United States,Texas,,,US,,,,,nominatim
+31.133,-102.222,McCamey,United States,Texas,,,US,,,,,nominatim
+26.565,-98.124,,,,,,,,,,,failed
+29.81,-99.25,Medina,United States,Texas,,,US,,,,,nominatim
+34.726,-100.537,Memphis,United States,Texas,,,US,,,,,nominatim
+30.904,-99.787,Menard,United States,Texas,,,US,,,,,nominatim
+32.32,-100.122,,,,,,,,,,,failed
+31.436,-100.878,,,,,,,,,,,failed
+32.019,-102.026,Chub,United States,Texas,,,US,,,,,nominatim
+32.484,-96.994,Midlothian,United States,Texas,,,US,,,,,nominatim
+32.635,-95.482,Mineola,United States,Texas,,,US,,,,,nominatim
+35.625,-100.446,,,,,,,,,,,failed
+30.391,-95.697,Montgomery,United States,Texas,,,US,,,,,nominatim
+32.014,-97.613,Morgan,United States,Texas,,,US,,,,,nominatim
+32.384,-98.17,,,,,,,,,,,failed
+33.719,-102.759,Morton,United States,Texas,,,US,,,,,nominatim
+30.705,-104.023,,,,,,,,,,,failed
+33.169,-95.006,Mount Pleasant,United States,Texas,,,US,,,,,nominatim
+33.196,-95.224,Mount Vernon,United States,Texas,,,US,,,,,nominatim
+33.656,-97.377,Muenster,United States,Texas,,,US,,,,,nominatim
+34.219,-102.733,Muleshoe,United States,Texas,,,US,,,,,nominatim
+33.954,-102.778,,,,,,,,,,,failed
+33.45,-99.636,Munday,United States,Texas,,,US,,,,,nominatim
+31.616,-94.643,Nacogdoches,United States,Texas,,,US,,,,,nominatim
+31.961,-96.688,,,,,,,,,,,failed
+33.455,-94.409,New Boston,United States,Texas,,,US,,,,,nominatim
+29.705,-98.029,New Braunfels,United States,Texas,,,US,,,,,nominatim
+29.66,-98.164,New Braunfels,United States,Texas,,,US,,,,,nominatim
+30.138,-95.178,,,,,,,,,,,failed
+31.975,-95.138,New Summerfield,United States,Texas,,,US,,,,,nominatim
+31.108,-98.379,Lampasas,United States,Texas,,,US,,,,,nominatim
+29.283,-97.768,Nixon,United States,Texas,,,US,,,,,nominatim
+34.261,-100.601,,,,,,,,,,,failed
+29.865,-98.658,,,,,,,,,,,failed
+36.101,-100.589,,,,,,,,,,,failed
+31.88,-102.359,Odessa,United States,Texas,,,US,,,,,nominatim
+31.837,-102.359,Odessa,United States,Texas,,,US,,,,,nominatim
+31.825,-102.444,,,,,,,,,,,failed
+34.18,-102.136,Olton,United States,Texas,,,US,,,,,nominatim
+30.086,-93.742,Orange,United States,Texas,,,US,,,,,nominatim
+30.226,-93.739,Orange,United States,Texas,,,US,,,,,nominatim
+30.427,-101.037,,,,,,,,,,,failed
+27.447,-97.297,,,,,,,,,,,failed
+34.007,-100.299,Paducah,United States,Texas,,,US,,,,,nominatim
+33.808,-100.298,,,,,,,,,,,failed
+33.876,-100.383,,,,,,,,,,,failed
+31.506,-99.93,Paint Rock,United States,Texas,,,US,,,,,nominatim
+35.554,-100.974,Pampa,United States,Texas,,,US,,,,,nominatim
+35.566,-100.929,Pampa,United States,Texas,,,US,,,,,nominatim
+35.351,-101.39,Panhandle,United States,Texas,,,US,,,,,nominatim
+29.327,-103.206,,,,,,,,,,,failed
+33.674,-95.559,Paris,United States,Texas,,,US,,,,,nominatim
+28.889,-99.09,Pearsall,United States,Texas,,,US,,,,,nominatim
+31.378,-103.633,,,,,,,,,,,failed
+36.39,-100.824,Perryton,United States,Texas,,,US,,,,,nominatim
+36.102,-100.739,,,,,,,,,,,failed
+36.441,-100.996,,,,,,,,,,,failed
+29.66,-103.174,,,,,,,,,,,failed
+31.245,-93.966,Pineland,United States,Texas,,,US,,,,,nominatim
+33.599,-100.532,,,,,,,,,,,failed
+32.926,-94.939,,,,,,,,,,,failed
+33.187,-102.828,Plains,United States,Texas,,,US,,,,,nominatim
+34.189,-101.702,Plainview,United States,Texas,,,US,,,,,nominatim
+34.198,-101.746,Plainview,United States,Texas,,,US,,,,,nominatim
+28.961,-98.477,Pleasanton,United States,Texas,,,US,,,,,nominatim
+28.658,-96.555,Point Comfort,United States,Texas,,,US,,,,,nominatim
+27.838,-97.059,Port Aransas,United States,Texas,,,US,,,,,nominatim
+29.904,-93.971,Port Arthur,United States,Texas,,,US,,,,,nominatim
+27.7,-97.158,Corpus Christi,United States,Texas,,,US,,,,,nominatim
+26.558,-97.426,Port Mansfield,United States,Texas,,,US,,,,,nominatim
+27.892,-97.339,Portland,United States,Texas,,,US,,,,,nominatim
+33.199,-101.374,Post,United States,Texas,,,US,,,,,nominatim
+29.028,-98.569,Poteet,United States,Texas,,,US,,,,,nominatim
+29.917,-99.791,,,,,,,,,,,failed
+30.577,-98.877,,,,,,,,,,,failed
+31.963,-98.494,,,,,,,,,,,failed
+32.366,-99.192,Putnam,United States,Texas,,,US,,,,,nominatim
+32.262,-97.706,Glen Rose,United States,Texas,,,US,,,,,nominatim
+26.464,-97.785,Raymondville,United States,Texas,,,US,,,,,nominatim
+31.218,-98.583,,,,,,,,,,,failed
+28.294,-97.33,,,,,,,,,,,failed
+32.996,-96.743,Richardson,United States,Texas,,,US,,,,,nominatim
+29.584,-95.755,Richmond,United States,Texas,,,US,,,,,nominatim
+26.377,-98.812,Rio Grande City,United States,Texas,,,US,,,,,nominatim
+29.185,-102.962,,,,,,,,,,,failed
+29.442,-98.88,Rio Medina,United States,Texas,,,US,,,,,nominatim
+33.005,-97.233,Roanoke,United States,Texas,,,US,,,,,nominatim
+33.898,-100.86,Roaring Springs,United States,Texas,,,US,,,,,nominatim
+31.884,-100.536,,,,,,,,,,,failed
+27.789,-97.662,Robstown,United States,Texas,,,US,,,,,nominatim
+29.688,-100.422,,,,,,,,,,,failed
+32.448,-100.526,Roscoe,United States,Texas,,,US,,,,,nominatim
+32.461,-96.449,Rosser,United States,Texas,,,US,,,,,nominatim
+32.856,-100.461,Rotan,United States,Texas,,,US,,,,,nominatim
+28.83,-97.713,,,,,,,,,,,failed
+31.809,-95.143,Rusk,United States,Texas,,,US,,,,,nominatim
+31.062,-94.101,,,,,,,,,,,failed
+31.371,-100.494,San Angelo,United States,Texas,,,US,,,,,nominatim
+31.519,-94.119,San Augustine,United States,Texas,,,US,,,,,nominatim
+26.565,-98.12,,,,,,,,,,,failed
+29.883,-97.949,San Marcos,United States,Texas,,,US,,,,,nominatim
+31.284,-98.759,,,,,,,,,,,failed
+35.705,-101.549,,,,,,,,,,,failed
+31.591,-99.226,,,,,,,,,,,failed
+26.266,-97.871,,,,,,,,,,,failed
+27.217,-97.696,,,,,,,,,,,failed
+29.682,-96.856,,,,,,,,,,,failed
+33.663,-98.47,Scotland,United States,Texas,,,US,,,,,nominatim
+29.552,-97.97,Seguin,United States,Texas,,,US,,,,,nominatim
+32.713,-102.66,Seminole,United States,Texas,,,US,,,,,nominatim
+33.642,-99.289,Seymour,United States,Texas,,,US,,,,,nominatim
+35.215,-100.25,Shamrock,United States,Texas,,,US,,,,,nominatim
+33.703,-96.642,,,,,,,,,,,failed
+30.37,-94.202,Silsbee,United States,Texas,,,US,,,,,nominatim
+34.472,-101.301,Silverton,United States,Texas,,,US,,,,,nominatim
+31.955,-99.544,,,,,,,,,,,failed
+29.952,-98.712,,,,,,,,,,,failed
+33.437,-101.647,Slaton,United States,Texas,,,US,,,,,nominatim
+30.009,-97.164,Smithville,United States,Texas,,,US,,,,,nominatim
+32.71,-100.911,Snyder,United States,Texas,,,US,,,,,nominatim
+30.337,-96.54,Somerville,United States,Texas,,,US,,,,,nominatim
+30.583,-100.65,Sonora,United States,Texas,,,US,,,,,nominatim
+26.081,-97.103,,,,,,,,,,,failed
+29.273,-96.686,,,,,,,,,,,failed
+30.481,-98.161,Spicewood,United States,Texas,,,US,,,,,nominatim
+29.865,-98.38,,,,,,,,,,,failed
+33.479,-100.876,,,,,,,,,,,failed
+32.94,-99.804,Stamford,United States,Texas,,,US,,,,,nominatim
+31.835,-100.983,Sterling City,United States,Texas,,,US,,,,,nominatim
+31.037,-97.528,,,,,,,,,,,failed
+29.326,-97.975,,,,,,,,,,,failed
+36.441,-102.078,,,,,,,,,,,failed
+32.659,-98.468,,,,,,,,,,,failed
+33.148,-95.627,Sulphur Springs,United States,Texas,,,US,,,,,nominatim
+33.171,-101.798,Tahoka,United States,Texas,,,US,,,,,nominatim
+29.608,-99.28,,,,,,,,,,,failed
+30.973,-98.943,,,,,,,,,,,failed
+30.433,-98.81,,,,,,,,,,,failed
+29.349,-103.595,,,,,,,,,,,failed
+32.734,-96.322,Terrell,United States,Texas,,,US,,,,,nominatim
+33.437,-94.077,Texarkana,United States,Texas,,,US,,,,,nominatim
+36.379,-103.024,Texline,United States,Texas,,,US,,,,,nominatim
+29.482,-95.631,Thompsons,United States,Texas,,,US,,,,,nominatim
+30.615,-97.209,Thorndale,United States,Texas,,,US,,,,,nominatim
+31.392,-96.566,,,,,,,,,,,failed
+28.582,-98.144,,,,,,,,,,,failed
+33.314,-99.201,,,,,,,,,,,failed
+31.403,-106.058,,,,,,,,,,,failed
+30.884,-98.471,,,,,,,,,,,failed
+30.793,-94.182,,,,,,,,,,,failed
+33.431,-96.34,Trenton,United States,Texas,,,US,,,,,nominatim
+33.757,-99.862,,,,,,,,,,,failed
+34.548,-101.761,Tulia,United States,Texas,,,US,,,,,nominatim
+34.396,-100.897,Turkey,United States,Texas,,,US,,,,,nominatim
+32.307,-95.297,Tyler,United States,Texas,,,US,,,,,nominatim
+30.586,-104.5,Valentine,United States,Texas,,,US,,,,,nominatim
+30.669,-104.821,,,,,,,,,,,failed
+30.552,-104.647,,,,,,,,,,,failed
+31.042,-104.837,Van Horn,United States,Texas,,,US,,,,,nominatim
+29.845,-99.552,,,,,,,,,,,failed
+29.808,-99.576,,,,,,,,,,,failed
+35.278,-102.463,,,,,,,,,,,failed
+34.152,-99.326,Vernon,United States,Texas,,,US,,,,,nominatim
+28.861,-97.018,Victoria,United States,Texas,,,US,,,,,nominatim
+28.844,-96.921,,,,,,,,,,,failed
+34.652,-101.497,,,,,,,,,,,failed
+31.6,-97.217,Waco,United States,Texas,,,US,,,,,nominatim
+30.324,-96.159,,,,,,,,,,,failed
+31.672,-100.728,,,,,,,,,,,failed
+31.814,-100.629,,,,,,,,,,,failed
+30.93,-98.022,,,,,,,,,,,failed
+32.748,-97.77,Weatherford,United States,Texas,,,US,,,,,nominatim
+28.114,-97.418,,,,,,,,,,,failed
+34.842,-100.21,Wellington,United States,Texas,,,US,,,,,nominatim
+26.178,-97.971,Weslaco,United States,Texas,,,US,,,,,nominatim
+31.811,-97.08,West,United States,Texas,,,US,,,,,nominatim
+29.138,-95.625,,,,,,,,,,,failed
+29.51,-103.434,,,,,,,,,,,failed
+25.916,-97.419,Brownsville,United States,Texas,,,US,,,,,nominatim
+29.318,-96.085,Wharton,United States,Texas,,,US,,,,,nominatim
+35.443,-100.293,Wheeler,United States,Texas,,,US,,,,,nominatim
+35.431,-101.176,White Deer,United States,Texas,,,US,,,,,nominatim
+33.456,-101.092,,,,,,,,,,,failed
+31.861,-97.375,,,,,,,,,,,failed
+30.535,-94.446,,,,,,,,,,,failed
+32.702,-96.015,Wills Point,United States,Texas,,,US,,,,,nominatim
+30.002,-98.105,Wimberley,United States,Texas,,,US,,,,,nominatim
+32.044,-100.108,Wingate,United States,Texas,,,US,,,,,nominatim
+33.018,-99.054,Woodson,United States,Texas,,,US,,,,,nominatim
+30.768,-94.412,Woodville,United States,Texas,,,US,,,,,nominatim
+29.274,-97.156,Yoakum,United States,Texas,,,US,,,,,nominatim
+40.464,-111.771,Alpine,United States,Utah,,,US,,,,,nominatim
+40.591,-111.637,Alta,United States,Utah,,,US,,,,,nominatim
+40.367,-110.299,,,,,,,,,,,failed
+37.44,-112.482,Alton,United States,Utah,,,US,,,,,nominatim
+38.249,-111.961,,,,,,,,,,,failed
+38.616,-109.619,,,,,,,,,,,failed
+41.964,-111.398,,,,,,,,,,,failed
+38.268,-112.482,,,,,,,,,,,failed
+37.077,-111.664,Big Water,United States,Utah,,,US,,,,,nominatim
+38.708,-112.954,,,,,,,,,,,failed
+37.613,-109.485,Blanding,United States,Utah,,,US,,,,,nominatim
+37.282,-109.558,Bluff,United States,Utah,,,US,,,,,nominatim
+40.891,-111.85,Fruit Heights,United States,Utah,,Fruit Heights,US,USA,,6221.0,1840020143,worldcities_small
+37.905,-111.42,Boulder,United States,Utah,,,US,,,,,nominatim
+41.524,-112.044,Farr West,United States,Utah,,Farr West,US,USA,,7385.0,1840020128,worldcities_small
+37.641,-112.17,,,,,,,,,,,failed
+37.527,-110.717,,,,,,,,,,,failed
+39.9,-113.713,Callao,United States,Utah,,,US,,,,,nominatim
+38.46,-109.821,,,,,,,,,,,failed
+38.168,-109.76,,,,,,,,,,,failed
+38.291,-111.262,,,,,,,,,,,failed
+39.208,-111.013,Price,United States,Utah,,Price,US,USA,,13564.0,1840020201,worldcities_small
+38.622,-109.392,Castle Valley,United States,Utah,,,US,,,,,nominatim
+37.666,-113.084,Cedar City,United States,Utah,,,US,,,,,nominatim
+37.656,-112.992,,,,,,,,,,,failed
+37.716,-109.083,,,,,,,,,,,failed
+40.815,-111.832,West Bountiful,United States,Utah,,West Bountiful,US,USA,,5800.0,1840021353,worldcities_small
+40.938,-111.147,,,,,,,,,,,failed
+40.619,-111.784,Cottonwood Heights,United States,Utah,,,US,,,,,nominatim
+41.833,-112.058,,,,,,,,,,,failed
+40.404,-111.529,,,,,,,,,,,failed
+39.287,-112.652,Deseret,United States,Utah,,,US,,,,,nominatim
+40.438,-109.307,,,,,,,,,,,failed
+40.17,-110.398,Duchesne,United States,Utah,,,US,,,,,nominatim
+40.966,-111.434,,,,,,,,,,,failed
+41.344,-111.85,Harrisville,United States,Utah,,Harrisville,US,USA,,6872.0,1840020129,worldcities_small
+37.576,-113.715,Enterprise,United States,Utah,,,US,,,,,nominatim
+39.358,-111.599,Ephraim,United States,Utah,,Ephraim,US,USA,,7308.0,1840020202,worldcities_small
+37.769,-111.598,Escalante,United States,Utah,,,US,,,,,nominatim
+39.108,-113.953,,,,,,,,,,,failed
+40.262,-112.09,Fairfield,United States,Utah,,,US,,,,,nominatim
+41.02,-111.933,Sunset,United States,Utah,,Sunset,US,USA,,5364.0,1840021351,worldcities_small
+39.088,-111.132,Ferron,United States,Utah,,,US,,,,,nominatim
+39.84,-113.398,Callao,United States,Utah,,,US,,,,,nominatim
+40.932,-109.412,Dutch John,United States,Utah,,,US,,,,,nominatim
+40.284,-109.861,,,,,,,,,,,failed
+38.578,-112.335,,,,,,,,,,,failed
+38.578,-110.708,,,,,,,,,,,failed
+40.602,-112.508,Grantsville,United States,Utah,,,US,,,,,nominatim
+37.281,-113.728,,,,,,,,,,,failed
+38.255,-110.18,,,,,,,,,,,failed
+37.652,-112.436,Hatch,United States,Utah,,,US,,,,,nominatim
+37.875,-110.388,,,,,,,,,,,failed
+37.386,-109.075,,,,,,,,,,,failed
+40.038,-113.989,Ibapah,United States,Utah,,,US,,,,,nominatim
+40.899,-109.179,,,,,,,,,,,failed
+40.884,-109.18,Browns Park,United States,Utah,,,US,,,,,nominatim
+40.361,-109.346,,,,,,,,,,,failed
+40.644,-111.282,Kamas,United States,Utah,,,US,,,,,nominatim
+37.029,-112.536,Kanab,United States,Utah,,,US,,,,,nominatim
+37.514,-111.988,,,,,,,,,,,failed
+41.825,-111.321,,,,,,,,,,,failed
+38.301,-109.266,,,,,,,,,,,failed
+37.201,-113.269,La Verkin,United States,Utah,,,US,,,,,nominatim
+39.561,-111.865,Levan,United States,Utah,,,US,,,,,nominatim
+39.727,-112.307,,,,,,,,,,,failed
+38.406,-111.643,Loa,United States,Utah,,,US,,,,,nominatim
+41.735,-111.856,Logan,United States,Utah,,,US,,,,,nominatim
+41.746,-111.803,Logan,United States,Utah,,,US,,,,,nominatim
+41.666,-111.891,College Ward,United States,Utah,,,US,,,,,nominatim
+37.143,-114.021,,,,,,,,,,,failed
+40.99,-109.726,Manila,United States,Utah,,,US,,,,,nominatim
+39.258,-111.631,Manti,United States,Utah,,,US,,,,,nominatim
+39.273,-111.658,Manti,United States,Utah,,,US,,,,,nominatim
+38.449,-112.224,Marysvale,United States,Utah,,,US,,,,,nominatim
+37.15,-109.868,Mexican Hat,United States,Utah,,,US,,,,,nominatim
+38.402,-113.016,Milford,United States,Utah,,,US,,,,,nominatim
+38.574,-109.546,Moab,United States,Utah,,,US,,,,,nominatim
+37.868,-109.351,Monticello,United States,Utah,,,US,,,,,nominatim
+39.527,-111.587,Moroni,United States,Utah,,,US,,,,,nominatim
+40.749,-111.723,,,,,,,,,,,failed
+40.194,-110.061,Myton,United States,Utah,,,US,,,,,nominatim
+37.609,-109.977,,,,,,,,,,,failed
+40.418,-110.051,,,,,,,,,,,failed
+39.712,-111.832,Nephi,United States,Utah,,,US,,,,,nominatim
+37.464,-113.29,,,,,,,,,,,failed
+39.383,-112.3,,,,,,,,,,,failed
+41.246,-111.937,Ogden,United States,Utah,,,US,,,,,nominatim
+40.134,-109.644,,,,,,,,,,,failed
+37.816,-112.439,Panguitch,United States,Utah,,,US,,,,,nominatim
+37.104,-111.9,,,,,,,,,,,failed
+40.656,-111.505,Park City,United States,Utah,,,US,,,,,nominatim
+39.631,-113.886,Partoun,United States,Utah,,,US,,,,,nominatim
+41.258,-111.838,,,,,,,,,,,failed
+40.368,-111.733,Pleasant Grove,United States,Utah,,,US,,,,,nominatim
+41.874,-112.149,Plymouth,United States,Utah,,,US,,,,,nominatim
+39.599,-110.819,Price,United States,Utah,,,US,,,,,nominatim
+40.246,-111.651,Provo,United States,Utah,,,US,,,,,nominatim
+41.661,-111.187,Randolph,United States,Utah,,,US,,,,,nominatim
+38.762,-112.078,Richfield,United States,Utah,,,US,,,,,nominatim
+41.906,-111.81,Richmond,United States,Utah,,,US,,,,,nominatim
+40.288,-109.959,Ballard,United States,Utah,,,US,,,,,nominatim
+41.819,-113.413,,,,,,,,,,,failed
+37.119,-113.607,St. George,United States,Utah,,,US,,,,,nominatim
+38.913,-111.416,,,,,,,,,,,failed
+39.958,-111.779,Santaquin,United States,Utah,,,US,,,,,nominatim
+39.245,-112.107,Scipio,United States,Utah,,,US,,,,,nominatim
+39.684,-111.206,,,,,,,,,,,failed
+40.601,-111.584,Brighton,United States,Utah,,,US,,,,,nominatim
+40.704,-111.537,,,,,,,,,,,failed
+40.08,-111.605,Spanish Fork,United States,Utah,,,US,,,,,nominatim
+37.801,-112.933,,,,,,,,,,,failed
+39.551,-110.39,East Carbon,United States,Utah,,,US,,,,,nominatim
+40.445,-111.708,,,,,,,,,,,failed
+40.535,-112.322,Tooele,United States,Utah,,,US,,,,,nominatim
+41.915,-111.913,Trenton,United States,Utah,,,US,,,,,nominatim
+40.36,-111.897,Saratoga Springs,United States,Utah,,,US,,,,,nominatim
+41.05,-112.937,,,,,,,,,,,failed
+37.268,-109.927,,,,,,,,,,,failed
+40.096,-112.436,Vernon,United States,Utah,,,US,,,,,nominatim
+37.352,-113.667,,,,,,,,,,,failed
+40.791,-111.408,,,,,,,,,,,failed
+41.109,-111.912,Layton,United States,Utah,,,US,,,,,nominatim
+39.545,-110.686,Wellington,United States,Utah,,,US,,,,,nominatim
+40.729,-114.038,West Wendover,United States,Nevada,,West Wendover,US,USA,,5197.0,1840021336,worldcities_small
+41.525,-111.149,,,,,,,,,,,failed
+37.209,-112.981,,,,,,,,,,,failed
+45.006,-71.69,Canaan,United States,Vermont,,,US,,,,,nominatim
+43.1,-72.784,Jamaica,United States,Vermont,,,US,,,,,nominatim
+43.706,-72.962,Chittenden,United States,Vermont,,,US,,,,,nominatim
+44.007,-72.319,Corinth,United States,Vermont,,,US,,,,,nominatim
+43.957,-73.211,Cornwall,United States,Vermont,,,US,,,,,nominatim
+43.344,-73.052,Danby,United States,Vermont,,,US,,,,,nominatim
+44.642,-71.891,East Haven,United States,Vermont,,,US,,,,,nominatim
+44.909,-72.808,Enosburgh,United States,Vermont,,,US,,,,,nominatim
+44.91,-72.814,Enosburgh,United States,Vermont,,,US,,,,,nominatim
+44.411,-71.719,Lunenburg,United States,Vermont,,,US,,,,,nominatim
+44.813,-71.89,Brighton,United States,Vermont,,,US,,,,,nominatim
+44.584,-72.787,Cambridge,United States,Vermont,,,US,,,,,nominatim
+44.658,-72.679,Johnson,United States,Vermont,,,US,,,,,nominatim
+43.392,-72.679,Ludlow,United States,Vermont,,,US,,,,,nominatim
+44.255,-72.601,Montpelier,United States,Vermont,,,US,,,,,nominatim
+44.525,-72.815,Stowe,United States,Vermont,,,US,,,,,nominatim
+44.949,-72.191,Newport City,United States,Vermont,,,US,,,,,nominatim
+44.165,-72.657,Northfield,United States,Vermont,,,US,,,,,nominatim
+43.603,-72.362,Hartland,United States,Vermont,,,US,,,,,nominatim
+43.339,-72.506,Springfield,United States,Vermont,,,US,,,,,nominatim
+43.263,-72.906,Peru,United States,Vermont,,,US,,,,,nominatim
+44.276,-72.415,Plainfield,United States,Vermont,,,US,,,,,nominatim
+43.858,-72.804,Rochester,United States,Vermont,,,US,,,,,nominatim
+44.42,-72.019,Saint Johnsbury,United States,Vermont,,,US,,,,,nominatim
+44.626,-73.303,South Hero,United States,Vermont,,,US,,,,,nominatim
+44.072,-72.974,Lincoln,United States,Vermont,,,US,,,,,nominatim
+44.612,-72.048,Sutton,United States,Vermont,,,US,,,,,nominatim
+44.665,-72.023,West Burke,United States,Vermont,,,US,,,,,nominatim
+43.792,-72.258,,,,,,,,,,,failed
+44.172,-73.247,Vergennes,United States,Vermont,,,US,,,,,nominatim
+44.176,-72.796,Waitsfield,United States,Vermont,,,US,,,,,nominatim
+44.503,-72.22,Walden,United States,Vermont,,,US,,,,,nominatim
+43.63,-72.507,Woodstock,United States,Vermont,,,US,,,,,nominatim
+44.375,-72.582,Worcester,United States,Vermont,,,US,,,,,nominatim
+36.669,-81.965,,,,,,,,,,,failed
+36.94,-77.898,,,,,,,,,,,failed
+37.112,-79.275,Altavista,United States,Virginia,,,US,,,,,nominatim
+37.345,-77.978,Amelia,United States,Virginia,,,US,,,,,nominatim
+37.326,-78.828,Appomattox,United States,Virginia,,,US,,,,,nominatim
+37.755,-77.485,Ashland,United States,Virginia,,,US,,,,,nominatim
+37.379,-79.559,,,,,,,,,,,failed
+36.857,-82.8,Big Stone Gap,United States,Virginia,,,US,,,,,nominatim
+37.204,-80.414,Blacksburg,United States,Virginia,,,US,,,,,nominatim
+37.709,-78.289,,,,,,,,,,,failed
+37.068,-78.952,Brookneal,United States,Virginia,,,US,,,,,nominatim
+37.508,-78.533,,,,,,,,,,,failed
+37.727,-79.363,Buena Vista,United States,Virginia,,,US,,,,,nominatim
+37.091,-81.336,,,,,,,,,,,failed
+37.038,-77.946,,,,,,,,,,,failed
+38.033,-78.522,,,,,,,,,,,failed
+36.778,-78.476,,,,,,,,,,,failed
+36.822,-79.41,,,,,,,,,,,failed
+37.128,-80.403,Christiansburg,United States,Virginia,Cambria,,US,,,,,nominatim
+36.621,-78.551,Clarksville,United States,Virginia,,,US,,,,,nominatim
+37.146,-82.491,Clintwood,United States,Virginia,,,US,,,,,nominatim
+37.282,-78.959,Concord,United States,Virginia,,,US,,,,,nominatim
+37.082,-80.135,,,,,,,,,,,failed
+38.202,-77.375,,,,,,,,,,,failed
+37.811,-79.988,Covington,United States,Virginia,,,US,,,,,nominatim
+37.666,-77.877,,,,,,,,,,,failed
+38.455,-78.935,Belmont Estates,United States,Virginia,,,US,,,,,nominatim
+37.112,-77.202,,,,,,,,,,,failed
+36.698,-77.56,Emporia,United States,Virginia,,,US,,,,,nominatim
+37.326,-78.386,,,,,,,,,,,failed
+38.288,-77.451,Dumfries,United States,Virginia,,Dumfries,US,USA,,5922.0,1840006102,worldcities_small
+38.091,-78.589,,,,,,,,,,,failed
+38.904,-78.182,Front Royal,United States,Virginia,,,US,,,,,nominatim
+36.663,-80.914,Galax,United States,Virginia,,,US,,,,,nominatim
+36.654,-80.917,Galax,United States,Virginia,,,US,,,,,nominatim
+37.946,-79.954,,,,,,,,,,,failed
+37.618,-79.436,Buena Vista,United States,Virginia,,,US,,,,,nominatim
+37.282,-82.089,Grundy,United States,Virginia,,,US,,,,,nominatim
+37.544,-79.403,Big Island,United States,Virginia,,,US,,,,,nominatim
+36.683,-76.768,Suffolk,United States,Virginia,Holland,,US,,,,,nominatim
+37.299,-77.278,Hopewell,United States,Virginia,,,US,,,,,nominatim
+37.999,-79.832,Hot Springs,United States,Virginia,,,US,,,,,nominatim
+37.126,-79.525,,,,,,,,,,,failed
+37.232,-82.346,,,,,,,,,,,failed
+36.6,-78.301,,,,,,,,,,,failed
+37.018,-78.48,,,,,,,,,,,failed
+37.239,-80.199,,,,,,,,,,,failed
+36.903,-82.038,Lebanon,United States,Virginia,,,US,,,,,nominatim
+37.777,-79.439,Lexington,United States,Virginia,,,US,,,,,nominatim
+39.142,-77.709,Darnestown,United States,Maryland,,Darnestown,US,USA,,6462.0,1840005833,worldcities_small
+38.042,-78.006,Louisa,United States,Virginia,,,US,,,,,nominatim
+38.666,-78.373,,,,,,,,,,,failed
+38.368,-78.25,,,,,,,,,,,failed
+38.733,-77.492,Potomac Mills,United States,Virginia,,Potomac Mills,US,USA,,6664.0,1840026711,worldcities_small
+36.705,-79.865,Martinsville,United States,Virginia,,,US,,,,,nominatim
+36.667,-80.448,,,,,,,,,,,failed
+38.306,-79.72,Monterey,United States,Virginia,,,US,,,,,nominatim
+37.844,-79.13,,,,,,,,,,,failed
+38.011,-78.449,,,,,,,,,,,failed
+38.102,-79.887,,,,,,,,,,,failed
+39.064,-77.888,,,,,,,,,,,failed
+38.314,-79.659,Monterey,United States,Virginia,,,US,,,,,nominatim
+37.509,-80.098,,,,,,,,,,,failed
+37.015,-82.32,,,,,,,,,,,failed
+36.871,-76.229,Norfolk,United States,Virginia,,,US,,,,,nominatim
+37.434,-76.441,,,,,,,,,,,failed
+37.124,-82.634,Pound,United States,Virginia,,,US,,,,,nominatim
+37.584,-75.822,,,,,,,,,,,failed
+37.814,-78.264,,,,,,,,,,,failed
+37.669,-79.278,,,,,,,,,,,failed
+36.759,-83.011,Pennington Gap,United States,Virginia,,,US,,,,,nominatim
+37.239,-77.392,Petersburg,United States,Virginia,,,US,,,,,nominatim
+38.232,-78.12,Orange,United States,Virginia,,,US,,,,,nominatim
+37.056,-80.784,Pulaski,United States,Virginia,,,US,,,,,nominatim
+37.201,-80.586,,,,,,,,,,,failed
+37.092,-81.794,Richlands,United States,Virginia,,,US,,,,,nominatim
+37.362,-79.959,Hollins,United States,Virginia,,,US,,,,,nominatim
+36.977,-79.896,Rocky Mount,United States,Virginia,,,US,,,,,nominatim
+36.889,-81.771,Saltville,United States,Virginia,,,US,,,,,nominatim
+37.544,-77.276,,,,,,,,,,,failed
+38.246,-78.27,,,,,,,,,,,failed
+36.695,-78.881,South Boston,United States,Virginia,,,US,,,,,nominatim
+38.655,-78.227,Sperryville,United States,Virginia,,,US,,,,,nominatim
+37.279,-80.689,,,,,,,,,,,failed
+38.169,-79.084,Staunton,United States,Virginia,,,US,,,,,nominatim
+38.976,-77.487,Forest Glen,United States,Maryland,,Forest Glen,US,USA,,6469.0,1840005824,worldcities_small
+36.974,-77.404,,,,,,,,,,,failed
+36.636,-80.254,Stuart,United States,Virginia,,,US,,,,,nominatim
+36.73,-76.601,Suffolk,United States,Virginia,,,US,,,,,nominatim
+37.636,-78.934,,,,,,,,,,,failed
+38.892,-77.289,Temple Hills,United States,Maryland,,Temple Hills,US,USA,,7926.0,1840005967,worldcities_small
+36.984,-77.008,Wakefield,United States,Virginia,,,US,,,,,nominatim
+37.743,-77.04,,,,,,,,,,,failed
+36.595,-76.439,Chesapeake,United States,Virginia,,,US,,,,,nominatim
+38.681,-77.768,,,,,,,,,,,failed
+37.988,-76.777,Warsaw,United States,Virginia,,,US,,,,,nominatim
+38.08,-78.875,Waynesboro,United States,Virginia,,,US,,,,,nominatim
+37.566,-76.8,West Point,United States,Virginia,,,US,,,,,nominatim
+37.302,-76.704,,,,,,,,,,,failed
+36.914,-80.508,,,,,,,,,,,failed
+39.188,-78.152,Winchester,United States,Virginia,,,US,,,,,nominatim
+39.183,-78.117,,,,,,,,,,,failed
+36.972,-82.558,,,,,,,,,,,failed
+38.897,-78.468,,,,,,,,,,,failed
+36.774,-80.262,,,,,,,,,,,failed
+36.962,-81.087,Wytheville,United States,Virginia,,,US,,,,,nominatim
+46.966,-123.829,Aberdeen,United States,Washington,,,US,,,,,nominatim
+48.512,-122.614,Anacortes,United States,Washington,,,US,,,,,nominatim
+48.201,-122.128,Arlington,United States,Washington,,,US,,,,,nominatim
+46.204,-117.247,,,,,,,,,,,failed
+47.772,-121.482,,,,,,,,,,,failed
+45.772,-122.529,Battle Ground,United States,Washington,,,US,,,,,nominatim
+48.718,-122.511,Bellingham,United States,Washington,Fairhaven,,US,,,,,nominatim
+45.998,-120.301,,,,,,,,,,,failed
+48.978,-122.793,Blaine,United States,Washington,,,US,,,,,nominatim
+48.995,-117.354,,,,,,,,,,,failed
+47.569,-122.683,Bremerton,United States,Washington,,,US,,,,,nominatim
+45.868,-121.973,,,,,,,,,,,failed
+47.414,-121.756,,,,,,,,,,,failed
+46.72,-122.953,Centralia,United States,Washington,,,US,,,,,nominatim
+47.834,-120.001,,,,,,,,,,,failed
+48.273,-117.741,,,,,,,,,,,failed
+47.997,-119.648,Bridgeport,United States,Washington,,,US,,,,,nominatim
+47.952,-122.791,,,,,,,,,,,failed
+48.967,-122.329,,,,,,,,,,,failed
+47.571,-124.292,,,,,,,,,,,failed
+47.189,-120.913,Cle Elum,United States,Washington,,,US,,,,,nominatim
+48.568,-117.936,,,,,,,,,,,failed
+48.54,-121.742,Concrete,United States,Washington,,,US,,,,,nominatim
+46.509,-118.788,Connell,United States,Washington,,Connell,US,USA,,5545.0,1840018479,worldcities_small
+46.062,-122.204,,,,,,,,,,,failed
+47.954,-119.0,Grand Coulee,United States,Washington,,,US,,,,,nominatim
+48.207,-122.691,Coupeville,United States,Washington,,,US,,,,,nominatim
+47.371,-123.16,,,,,,,,,,,failed
+48.26,-121.604,Darrington,United States,Washington,,,US,,,,,nominatim
+47.658,-118.161,Davenport,United States,Washington,,,US,,,,,nominatim
+46.315,-118.002,,,,,,,,,,,failed
+48.714,-121.143,,,,,,,,,,,failed
+46.636,-123.26,,,,,,,,,,,failed
+47.242,-121.187,Easton,United States,Washington,,,US,,,,,nominatim
+46.969,-120.54,Ellensburg,United States,Washington,,,US,,,,,nominatim
+47.029,-120.539,Ellensburg,United States,Washington,,,US,,,,,nominatim
+47.009,-123.401,Elma,United States,Washington,,,US,,,,,nominatim
+48.016,-123.591,,,,,,,,,,,failed
+47.698,-120.323,,,,,,,,,,,failed
+47.975,-122.195,Everett,United States,Washington,Port Gardner,,US,,,,,nominatim
+47.956,-124.354,Forks,United States,Washington,,,US,,,,,nominatim
+45.808,-120.843,,,,,,,,,,,failed
+46.387,-123.56,,,,,,,,,,,failed
+47.483,-118.252,Harrington,United States,Washington,,,US,,,,,nominatim
+47.689,-119.106,Hartline,United States,Washington,,,US,,,,,nominatim
+46.722,-118.652,,,,,,,,,,,failed
+47.899,-122.571,,,,,,,,,,,failed
+47.861,-123.932,,,,,,,,,,,failed
+48.199,-120.774,,,,,,,,,,,failed
+47.234,-123.99,,,,,,,,,,,failed
+46.245,-118.879,,,,,,,,,,,failed
+46.016,-122.732,,,,,,,,,,,failed
+46.211,-119.101,Kennewick,United States,Washington,,,US,,,,,nominatim
+47.417,-122.243,Kent,United States,Washington,,,US,,,,,nominatim
+46.817,-117.883,LaCrosse,United States,Washington,,,US,,,,,nominatim
+47.377,-121.961,Maple Valley,United States,Washington,,,US,,,,,nominatim
+47.559,-120.675,Leavenworth,United States,Washington,,,US,,,,,nominatim
+47.002,-118.566,Lind,United States,Washington,,,US,,,,,nominatim
+46.368,-124.038,Long Beach,United States,Washington,,,US,,,,,nominatim
+46.749,-121.812,,,,,,,,,,,failed
+46.151,-122.916,Kelso,United States,Washington,West Kelso,,US,,,,,nominatim
+47.146,-123.401,Elma,United States,Washington,,,US,,,,,nominatim
+46.504,-122.594,,,,,,,,,,,failed
+48.601,-120.428,,,,,,,,,,,failed
+47.136,-122.256,South Hill,United States,Washington,,,US,,,,,nominatim
+45.955,-122.564,,,,,,,,,,,failed
+48.108,-120.008,,,,,,,,,,,failed
+46.076,-118.273,,,,,,,,,,,failed
+47.845,-121.994,Monroe,United States,Washington,,,US,,,,,nominatim
+46.0,-121.54,Trout Lake,United States,Washington,,,US,,,,,nominatim
+46.505,-120.168,Mattawa,United States,Washington,,Mattawa,US,USA,,5349.0,1840022292,worldcities_small
+47.141,-121.936,,,,,,,,,,,failed
+46.372,-123.753,,,,,,,,,,,failed
+48.676,-121.242,,,,,,,,,,,failed
+48.184,-117.048,Newport,United States,Washington,,,US,,,,,nominatim
+48.899,-117.829,,,,,,,,,,,failed
+47.333,-118.696,Odessa,United States,Washington,,,US,,,,,nominatim
+48.612,-122.806,,,,,,,,,,,failed
+46.609,-121.674,Packwood,United States,Washington,,,US,,,,,nominatim
+47.306,-121.851,,,,,,,,,,,failed
+47.785,-120.646,,,,,,,,,,,failed
+46.467,-117.588,Pomeroy,United States,Washington,,,US,,,,,nominatim
+46.646,-119.906,,,,,,,,,,,failed
+46.201,-119.758,Prosser,United States,Washington,,,US,,,,,nominatim
+46.76,-117.186,Pullman,United States,Washington,Military Hill,,US,,,,,nominatim
+47.809,-122.914,Quilcene,United States,Washington,,,US,,,,,nominatim
+47.224,-119.852,Quincy,United States,Washington,,,US,,,,,nominatim
+46.786,-121.742,,,,,,,,,,,failed
+46.653,-123.73,,,,,,,,,,,failed
+48.646,-118.737,Republic,United States,Washington,,,US,,,,,nominatim
+46.312,-119.263,Richland,United States,Washington,,,US,,,,,nominatim
+47.118,-118.371,Ritzville,United States,Washington,,,US,,,,,nominatim
+47.235,-117.364,Rosalia,United States,Washington,,,US,,,,,nominatim
+48.727,-121.072,,,,,,,,,,,failed
+46.395,-119.071,,,,,,,,,,,failed
+47.093,-117.588,Saint John,United States,Washington,,,US,,,,,nominatim
+45.948,-120.667,,,,,,,,,,,failed
+48.496,-122.236,Sedro-Woolley,United States,Washington,,,US,,,,,nominatim
+46.672,-120.499,,,,,,,,,,,failed
+48.085,-123.064,,,,,,,,,,,failed
+45.622,-122.218,Washougal,United States,Washington,,,US,,,,,nominatim
+47.541,-121.836,Snoqualmie,United States,Washington,,,US,,,,,nominatim
+45.818,-121.353,,,,,,,,,,,failed
+47.681,-117.627,,,,,,,,,,,failed
+47.866,-121.718,Sultan,United States,Washington,,,US,,,,,nominatim
+48.351,-120.726,,,,,,,,,,,failed
+46.345,-120.029,,,,,,,,,,,failed
+47.247,-122.412,Tacoma,United States,Washington,,,US,,,,,nominatim
+47.7,-121.691,,,,,,,,,,,failed
+48.798,-119.26,,,,,,,,,,,failed
+48.652,-121.693,Concrete,United States,Washington,,,US,,,,,nominatim
+45.678,-122.651,Vancouver,United States,Washington,Hazel Dell,,US,,,,,nominatim
+46.092,-118.259,,,,,,,,,,,failed
+47.65,-120.08,Waterville,United States,Washington,,,US,,,,,nominatim
+47.429,-120.31,Wenatchee,United States,Washington,,,US,,,,,nominatim
+46.044,-118.463,,,,,,,,,,,failed
+47.768,-118.724,Wilbur,United States,Washington,,,US,,,,,nominatim
+48.474,-120.189,,,,,,,,,,,failed
+46.574,-120.601,Yakima,United States,Washington,,,US,,,,,nominatim
+46.586,-120.568,Yakima,United States,Washington,,,US,,,,,nominatim
+37.727,-80.658,Alderson,United States,West Virginia,,,US,,,,,nominatim
+38.121,-81.118,Ansted,United States,West Virginia,,,US,,,,,nominatim
+38.531,-79.771,,,,,,,,,,,failed
+39.273,-79.368,Bayard,United States,West Virginia,,,US,,,,,nominatim
+37.765,-81.194,Beckley,United States,West Virginia,,,US,,,,,nominatim
+37.256,-81.226,Bluefield,United States,West Virginia,,,US,,,,,nominatim
+37.641,-80.883,Hinton,United States,West Virginia,,,US,,,,,nominatim
+38.187,-80.134,Marlinton,United States,West Virginia,,,US,,,,,nominatim
+38.98,-80.22,Buckhannon,United States,West Virginia,,,US,,,,,nominatim
+38.846,-80.62,,,,,,,,,,,failed
+39.647,-80.407,,,,,,,,,,,failed
+39.509,-78.298,,,,,,,,,,,failed
+39.048,-79.441,,,,,,,,,,,failed
+38.313,-81.719,Charleston,United States,West Virginia,,,US,,,,,nominatim
+39.268,-80.352,Clarksburg,United States,West Virginia,,,US,,,,,nominatim
+39.098,-79.432,,,,,,,,,,,failed
+37.949,-82.405,,,,,,,,,,,failed
+38.144,-82.382,,,,,,,,,,,failed
+38.927,-79.829,,,,,,,,,,,failed
+39.458,-80.135,Fairmont,United States,West Virginia,,,US,,,,,nominatim
+38.287,-79.818,,,,,,,,,,,failed
+38.665,-80.767,Gassaway,United States,West Virginia,,,US,,,,,nominatim
+38.934,-80.832,Glenville,United States,West Virginia,,,US,,,,,nominatim
+38.91,-81.084,,,,,,,,,,,failed
+38.619,-80.382,,,,,,,,,,,failed
+39.219,-81.049,Harrisville,United States,West Virginia,,,US,,,,,nominatim
+38.684,-82.184,,,,,,,,,,,failed
+38.401,-82.527,Huntington,United States,West Virginia,,,US,,,,,nominatim
+39.421,-79.005,,,,,,,,,,,failed
+39.72,-79.856,,,,,,,,,,,failed
+37.857,-80.404,,,,,,,,,,,failed
+37.866,-81.984,Peach Creek,United States,West Virginia,,,US,,,,,nominatim
+38.193,-81.37,,,,,,,,,,,failed
+38.102,-81.846,,,,,,,,,,,failed
+37.745,-81.887,Man,United States,West Virginia,,,US,,,,,nominatim
+39.544,-80.465,,,,,,,,,,,failed
+38.218,-80.091,Marlinton,United States,West Virginia,,,US,,,,,nominatim
+39.466,-77.967,Martinsburg,United States,West Virginia,,,US,,,,,nominatim
+38.018,-80.682,Rupert,United States,West Virginia,,,US,,,,,nominatim
+39.046,-78.966,Moorefield,United States,West Virginia,,,US,,,,,nominatim
+39.62,-79.97,,,,,,,,,,,failed
+39.906,-80.755,Moundsville,United States,West Virginia,,,US,,,,,nominatim
+38.188,-80.848,,,,,,,,,,,failed
+37.578,-81.327,,,,,,,,,,,failed
+40.526,-80.628,Ambridge,United States,Pennsylvania,,Ambridge,US,USA,,6601.0,1840001010,worldcities_small
+37.676,-81.621,,,,,,,,,,,failed
+39.074,-79.634,Hendricks,United States,West Virginia,,,US,,,,,nominatim
+38.42,-82.299,,,,,,,,,,,failed
+38.999,-79.135,Petersburg,United States,West Virginia,,,US,,,,,nominatim
+40.148,-80.701,Wheeling,United States,West Virginia,Warwood,,US,,,,,nominatim
+37.574,-81.536,Pineville,United States,West Virginia,,,US,,,,,nominatim
+37.385,-81.082,Princeton,United States,West Virginia,,,US,,,,,nominatim
+38.919,-81.911,,,,,,,,,,,failed
+37.597,-81.824,,,,,,,,,,,failed
+38.817,-81.712,Ripley,United States,West Virginia,,,US,,,,,nominatim
+38.856,-80.308,,,,,,,,,,,failed
+39.339,-78.771,,,,,,,,,,,failed
+38.778,-80.964,,,,,,,,,,,failed
+39.342,-79.67,Rowlesburg,United States,West Virginia,,,US,,,,,nominatim
+38.982,-81.566,,,,,,,,,,,failed
+38.517,-81.646,,,,,,,,,,,failed
+38.399,-79.995,Snowshoe,United States,West Virginia,,,US,,,,,nominatim
+38.801,-81.358,Spencer,United States,West Virginia,,,US,,,,,nominatim
+39.005,-80.474,,,,,,,,,,,failed
+38.22,-80.894,,,,,,,,,,,failed
+38.66,-80.696,,,,,,,,,,,failed
+39.447,-79.547,Terra Alta,United States,West Virginia,,,US,,,,,nominatim
+39.313,-80.03,,,,,,,,,,,failed
+39.106,-78.581,,,,,,,,,,,failed
+39.291,-80.769,West Union,United States,West Virginia,,,US,,,,,nominatim
+40.057,-80.728,Wheeling,United States,West Virginia,,,US,,,,,nominatim
+37.788,-80.308,,,,,,,,,,,failed
+37.673,-82.276,Williamson,United States,West Virginia,,,US,,,,,nominatim
+38.528,-81.915,Eleanor,United States,West Virginia,,,US,,,,,nominatim
+42.638,-89.064,Janesville,United States,Wisconsin,,,US,,,,,nominatim
+43.423,-88.352,Allenton,United States,Wisconsin,,,US,,,,,nominatim
+44.327,-91.919,Alma,United States,Wisconsin,,,US,,,,,nominatim
+45.301,-92.363,Amery,United States,Wisconsin,,,US,,,,,nominatim
+45.161,-89.113,Antigo,United States,Wisconsin,,Antigo,US,USA,,7767.0,1840001565,worldcities_small
+44.277,-88.438,Town of Grand Chute,United States,Wisconsin,,,US,,,,,nominatim
+43.041,-89.429,Madison,United States,Wisconsin,,,US,,,,,nominatim
+42.699,-89.869,Argyle,United States,Wisconsin,,,US,,,,,nominatim
+43.304,-89.345,Town of Leeds,United States,Wisconsin,,,US,,,,,nominatim
+46.552,-90.916,Ashland,United States,Wisconsin,,,US,,,,,nominatim
+46.583,-90.968,Town of Eileen,United States,Wisconsin,,,US,,,,,nominatim
+44.682,-91.136,Augusta,United States,Wisconsin,,,US,,,,,nominatim
+44.308,-90.131,Town of Remington,United States,Wisconsin,,,US,,,,,nominatim
+44.963,-92.391,,,,,,,,,,,failed
+43.458,-89.727,Baraboo,United States,Wisconsin,,,US,,,,,nominatim
+46.787,-90.864,Town of Bayfield,United States,Wisconsin,,,US,,,,,nominatim
+43.443,-88.845,Beaver Dam,United States,Wisconsin,,,US,,,,,nominatim
+43.513,-87.855,Belgium,United States,Wisconsin,,,US,,,,,nominatim
+42.504,-89.031,Beloit,United States,Wisconsin,,,US,,,,,nominatim
+43.99,-88.941,City of Berlin,United States,Wisconsin,,,US,,,,,nominatim
+45.556,-90.959,Town of Big Falls,United States,Wisconsin,,,US,,,,,nominatim
+44.29,-90.854,Black River Falls,United States,Wisconsin,,,US,,,,,nominatim
+45.091,-91.486,Bloomer,United States,Wisconsin,,,US,,,,,nominatim
+43.052,-88.178,Brookfield,United States,Wisconsin,,,US,,,,,nominatim
+44.161,-88.08,Brillion,United States,Wisconsin,,,US,,,,,nominatim
+42.618,-89.387,Brodhead,United States,Wisconsin,,,US,,,,,nominatim
+46.538,-91.592,Town of Brule,United States,Wisconsin,,,US,,,,,nominatim
+42.651,-88.254,Town of Burlington,United States,Wisconsin,Town of Wheatland,,US,,,,,nominatim
+45.981,-90.542,Town of Chippewa,United States,Wisconsin,,,US,,,,,nominatim
+43.786,-90.795,Town of Portland,United States,Wisconsin,,,US,,,,,nominatim
+44.936,-91.889,Town of Tainter,United States,Wisconsin,Town of Red Cedar,,US,,,,,nominatim
+43.06,-89.482,Madison,United States,Wisconsin,,,US,,,,,nominatim
+44.033,-88.147,Chilton,United States,Wisconsin,,,US,,,,,nominatim
+44.928,-91.408,Chippewa Falls,United States,Wisconsin,,,US,,,,,nominatim
+43.718,-87.709,Sheboygan,United States,Wisconsin,,,US,,,,,nominatim
+42.549,-88.876,Clinton,United States,Wisconsin,,,US,,,,,nominatim
+44.623,-88.748,Clintonville,United States,Wisconsin,,,US,,,,,nominatim
+43.312,-88.72,Clyman,United States,Wisconsin,,,US,,,,,nominatim
+43.326,-89.008,Columbus,United States,Wisconsin,,,US,,,,,nominatim
+45.8,-91.459,Stone Lake,United States,Wisconsin,,,US,,,,,nominatim
+45.358,-88.192,Town of Stephenson,United States,Wisconsin,,,US,,,,,nominatim
+42.6,-90.424,Cuba City,United States,Wisconsin,,,US,,,,,nominatim
+45.533,-92.022,Cumberland,United States,Wisconsin,,,US,,,,,nominatim
+42.678,-90.106,Darlington,United States,Wisconsin,,,US,,,,,nominatim
+42.636,-88.661,Delavan,United States,Wisconsin,,,US,,,,,nominatim
+44.351,-87.812,Denmark,United States,Wisconsin,,,US,,,,,nominatim
+42.961,-90.116,Dodgeville,United States,Wisconsin,,,US,,,,,nominatim
+44.62,-91.979,Durand,United States,Wisconsin,,,US,,,,,nominatim
+45.917,-89.256,Eagle River,United States,Wisconsin,,,US,,,,,nominatim
+44.788,-91.516,Eau Claire,United States,Wisconsin,,,US,,,,,nominatim
+44.772,-89.768,Mosinee,United States,Wisconsin,,,US,,,,,nominatim
+44.73,-92.459,Ellsworth,United States,Wisconsin,,,US,,,,,nominatim
+45.171,-87.154,Ephraim,United States,Wisconsin,,,US,,,,,nominatim
+45.934,-88.258,Town of Florence,United States,Wisconsin,,,US,,,,,nominatim
+43.795,-88.453,Fond du Lac,United States,Wisconsin,,,US,,,,,nominatim
+43.767,-88.466,Fond du Lac,United States,Wisconsin,,,US,,,,,nominatim
+44.7,-87.397,Town of Clay Banks,United States,Wisconsin,,,US,,,,,nominatim
+42.905,-88.859,Fort Atkinson,United States,Wisconsin,,,US,,,,,nominatim
+46.486,-92.288,Town of Summit,United States,Wisconsin,,,US,,,,,nominatim
+43.975,-89.831,Friendship,United States,Wisconsin,,,US,,,,,nominatim
+43.314,-90.849,Gays Mills,United States,Wisconsin,,,US,,,,,nominatim
+43.571,-91.229,Town of Genoa,United States,Wisconsin,,,US,,,,,nominatim
+43.239,-88.122,Village of Germantown,United States,Wisconsin,,,US,,,,,nominatim
+43.631,-87.8,Oostburg,United States,Wisconsin,,,US,,,,,nominatim
+46.245,-91.805,Town of Gordon,United States,Wisconsin,,,US,,,,,nominatim
+43.308,-87.955,Grafton,United States,Wisconsin,,,US,,,,,nominatim
+44.498,-88.112,Ashwaubenon,United States,Wisconsin,,,US,,,,,nominatim
+44.533,-88.098,Green Bay,United States,Wisconsin,,,US,,,,,nominatim
+46.486,-90.437,Town of Saxon,United States,Wisconsin,,,US,,,,,nominatim
+42.938,-88.03,Hales Corners,United States,Wisconsin,,,US,,,,,nominatim
+44.119,-89.536,Town of Hancock,United States,Wisconsin,,,US,,,,,nominatim
+43.332,-88.412,Hartford,United States,Wisconsin,,,US,,,,,nominatim
+46.0,-91.508,Town of Hayward,United States,Wisconsin,,,US,,,,,nominatim
+45.673,-88.904,Town of Argonne,United States,Wisconsin,,,US,,,,,nominatim
+43.634,-90.379,Town of Greenwood,United States,Wisconsin,,,US,,,,,nominatim
+43.641,-87.91,Hingham,United States,Wisconsin,,,US,,,,,nominatim
+45.224,-91.127,Town of Lake Holcombe,United States,Wisconsin,,,US,,,,,nominatim
+43.242,-88.289,Village of Richfield,United States,Wisconsin,,,US,,,,,nominatim
+43.439,-88.631,Horicon,United States,Wisconsin,,,US,,,,,nominatim
+46.462,-90.196,Town of Kimball,United States,Wisconsin,,,US,,,,,nominatim
+43.34,-88.601,Hustisford,United States,Wisconsin,,,US,,,,,nominatim
+43.319,-88.168,Jackson,United States,Wisconsin,,,US,,,,,nominatim
+45.083,-91.331,Town of Eagle Point,United States,Wisconsin,,,US,,,,,nominatim
+42.994,-88.804,Jefferson,United States,Wisconsin,,,US,,,,,nominatim
+42.561,-87.816,Kenosha,United States,Wisconsin,Southpoint,,US,,,,,nominatim
+44.463,-87.505,Kewaunee,United States,Wisconsin,,,US,,,,,nominatim
+43.867,-91.272,Town of Campbell,United States,Wisconsin,,,US,,,,,nominatim
+43.822,-91.191,La Crosse,United States,Wisconsin,,,US,,,,,nominatim
+46.121,-89.076,Town of Phelps,United States,Wisconsin,,,US,,,,,nominatim
+45.465,-91.124,Town of Flambeau,United States,Wisconsin,,,US,,,,,nominatim
+45.443,-91.09,Ladysmith,United States,Wisconsin,,,US,,,,,nominatim
+43.573,-90.632,La Farge,United States,Wisconsin,,,US,,,,,nominatim
+43.08,-88.897,Lake Mills,United States,Wisconsin,,,US,,,,,nominatim
+42.828,-90.789,Town of Beetown,United States,Wisconsin,,,US,,,,,nominatim
+43.322,-89.531,Lodi,United States,Wisconsin,,,US,,,,,nominatim
+45.573,-92.485,Luck,United States,Wisconsin,,,US,,,,,nominatim
+43.212,-91.099,Town of Seneca,United States,Wisconsin,,,US,,,,,nominatim
+46.778,-90.765,Town of La Pointe,United States,Wisconsin,,,US,,,,,nominatim
+44.087,-87.652,Manitowoc,United States,Wisconsin,,,US,,,,,nominatim
+45.098,-87.624,Marinette,United States,Wisconsin,,,US,,,,,nominatim
+43.703,-88.999,Markesan,United States,Wisconsin,,,US,,,,,nominatim
+44.641,-90.133,Marshfield,United States,Wisconsin,,,US,,,,,nominatim
+44.175,-90.348,Town of Bear Bluff,United States,Wisconsin,,,US,,,,,nominatim
+43.79,-90.06,Mauston,United States,Wisconsin,,,US,,,,,nominatim
+43.171,-89.82,,,,,,,,,,,failed
+45.131,-90.344,Medford,United States,Wisconsin,,,US,,,,,nominatim
+46.369,-90.642,Town of Morse,United States,Wisconsin,,,US,,,,,nominatim
+44.874,-91.936,Menomonie,United States,Wisconsin,,,US,,,,,nominatim
+46.168,-90.072,Town of Mercer,United States,Wisconsin,,,US,,,,,nominatim
+45.179,-89.662,Merrill,United States,Wisconsin,,,US,,,,,nominatim
+43.085,-89.517,Middleton,United States,Wisconsin,,,US,,,,,nominatim
+42.78,-88.944,Milton,United States,Wisconsin,,,US,,,,,nominatim
+43.072,-88.029,Milwaukee,United States,Wisconsin,,,US,,,,,nominatim
+43.109,-88.031,Milwaukee,United States,Wisconsin,Timmerman Airport,,US,,,,,nominatim
+45.886,-89.732,Town of Minocqua,United States,Wisconsin,,,US,,,,,nominatim
+46.101,-91.818,Minong,United States,Wisconsin,,,US,,,,,nominatim
+44.565,-91.672,Mondovi,United States,Wisconsin,,,US,,,,,nominatim
+42.599,-89.667,Monroe,United States,Wisconsin,,,US,,,,,nominatim
+43.781,-89.317,Montello,United States,Wisconsin,,,US,,,,,nominatim
+42.988,-89.742,Mount Horeb,United States,Wisconsin,,,US,,,,,nominatim
+44.538,-90.535,Town of Grant,United States,Wisconsin,,,US,,,,,nominatim
+44.359,-88.719,Town of Hortonia,United States,Wisconsin,,,US,,,,,nominatim
+43.1,-88.504,Oconomowoc,United States,Wisconsin,,,US,,,,,nominatim
+44.892,-87.955,Town of Oconto,United States,Wisconsin,,,US,,,,,nominatim
+43.719,-90.53,Town of Forest,United States,Wisconsin,,,US,,,,,nominatim
+44.021,-88.558,Oshkosh,United States,Wisconsin,,,US,,,,,nominatim
+44.946,-90.552,Owen,United States,Wisconsin,,,US,,,,,nominatim
+42.581,-88.09,Paddock Lake,United States,Wisconsin,,,US,,,,,nominatim
+43.555,-89.272,Town of Wyocena,United States,Wisconsin,,,US,,,,,nominatim
+45.934,-90.451,Park Falls,United States,Wisconsin,,,US,,,,,nominatim
+46.537,-92.119,Town of Superior,United States,Wisconsin,,,US,,,,,nominatim
+42.532,-88.332,Village of Bloomfield,United States,Wisconsin,,,US,,,,,nominatim
+45.028,-87.736,Town of Peshtigo,United States,Wisconsin,,,US,,,,,nominatim
+46.066,-89.075,Town of Phelps,United States,Wisconsin,,,US,,,,,nominatim
+43.73,-87.971,Plymouth,United States,Wisconsin,,,US,,,,,nominatim
+43.531,-89.437,Portage,United States,Wisconsin,,,US,,,,,nominatim
+43.051,-91.135,Prairie du Chien,United States,Wisconsin,,,US,,,,,nominatim
+45.545,-90.302,Town of Prentice,United States,Wisconsin,,,US,,,,,nominatim
+44.678,-88.228,Pulaski,United States,Wisconsin,,,US,,,,,nominatim
+42.702,-87.786,Racine,United States,Wisconsin,Towerview,,US,,,,,nominatim
+43.48,-90.693,Town of Kickapoo,United States,Wisconsin,,,US,,,,,nominatim
+43.523,-90.0,Reedsburg,United States,Wisconsin,,,US,,,,,nominatim
+46.122,-89.877,Town of Manitowish Waters,United States,Wisconsin,,,US,,,,,nominatim
+45.599,-89.451,Rhinelander,United States,Wisconsin,,,US,,,,,nominatim
+45.653,-89.308,Town of Pine Lake,United States,Wisconsin,,,US,,,,,nominatim
+45.622,-89.41,Town of Pelican,United States,Wisconsin,,,US,,,,,nominatim
+45.417,-91.772,Town of Barron,United States,Wisconsin,,,US,,,,,nominatim
+45.538,-89.732,Town of Bradley,United States,Wisconsin,,,US,,,,,nominatim
+43.211,-88.209,Village of Richfield,United States,Wisconsin,,,US,,,,,nominatim
+45.214,-91.888,Town of Dallas,United States,Wisconsin,,,US,,,,,nominatim
+44.854,-92.612,River Falls,United States,Wisconsin,,,US,,,,,nominatim
+44.971,-92.562,Roberts,United States,Wisconsin,,,US,,,,,nominatim
+42.727,-88.226,Rochester,United States,Wisconsin,,,US,,,,,nominatim
