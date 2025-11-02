@@ -1,6 +1,79 @@
 """
 Script to process weather station data and match it to nearest cities.
 
+DATAFRAME STRUCTURES:
+
+1. df_weather (Input - after loading and processing):
+   Columns: id, date, data_type, lat, long, name, value
+   - id: str - Weather station ID (e.g., 'AE000041196')
+   - date: datetime64[ns] - Date in YYYY-MM-DD format (e.g., '2020-01-01')
+   - data_type: str - Type of measurement (TMIN, TMAX, TAVG, PRCP)
+   - lat: float - Latitude in decimal degrees
+   - long: float - Longitude in decimal degrees
+   - name: str - Weather station name
+   - value: float - Measurement value (temperatures in tenths of degrees C, precipitation in tenths of mm)
+   Shape: ~35M rows × 7 columns (long format - one row per station/date/measurement type)
+
+2. unique_locs (Extracted locations):
+   Columns: lat, long
+   - lat: float - Latitude rounded to 3 decimals
+   - long: float - Longitude rounded to 3 decimals
+   Shape: ~41K rows × 2 columns (one row per unique weather station location)
+
+3. df_cities (Worldcities reference data):
+   Columns: city, city_ascii, lat, long, country, iso2, iso3, admin_name, capital, population, id
+   - city: str - City name
+   - city_ascii: str - ASCII version of city name
+   - lat: float - City latitude
+   - long: float - City longitude (renamed from 'lng')
+   - country: str - Country name
+   - iso2: str - 2-letter country code
+   - iso3: str - 3-letter country code
+   - admin_name: str - State/province/region name
+   - capital: str - Capital status (primary, admin, minor, or empty)
+   - population: float - City population
+   - id: str - Worldcities unique identifier
+   Shape: ~4K rows × 11 columns (filtered to cities with population ≥ 100k)
+
+4. geocoded_data (After location matching):
+   Columns: lat, long, city, country, state, suburb, city_ascii, iso2, iso3, capital, 
+            population, worldcities_id, data_source
+   - lat: float - Station latitude (rounded to 3 decimals)
+   - long: float - Station longitude (rounded to 3 decimals)
+   - city: str - Matched city name
+   - country: str - Country name
+   - state: str - State/province/region
+   - suburb: str - Suburb/municipality (if applicable)
+   - city_ascii: str - ASCII city name (from worldcities)
+   - iso2: str - 2-letter country code
+   - iso3: str - 3-letter country code
+   - capital: str - Capital status
+   - population: float - City population (from worldcities)
+   - worldcities_id: str - Worldcities ID (if matched via worldcities)
+   - data_source: str - Source of geocoding ('worldcities' or 'nominatim')
+   Shape: ~41K rows × 13 columns (one row per unique location with city info)
+
+5. df_enriched (After merging weather data with locations):
+   Columns: id, date, data_type, lat, long, name, value, city, country, state, suburb,
+            city_ascii, iso2, iso3, capital, population, worldcities_id, data_source
+   - All columns from df_weather plus all location columns from geocoded_data
+   Shape: ~35M rows × 19 columns (same as df_weather but with city information added)
+
+6. df_pivot (Final output - after pivoting and cleaning):
+   Columns: city, country, state, suburb, lat, long, date, name, city_ascii, iso2, iso3,
+            capital, population, worldcities_id, data_source, TMAX, TMIN, TAVG, PRCP
+   - city, country, state, suburb: str - Location information
+   - lat, long: float - Coordinates (rounded to 3 decimals)
+   - date: str - Date in YYYY-MM-DD format
+   - name: str - Weather station name
+   - city_ascii, iso2, iso3, capital: str - Additional location metadata
+   - population: float - City population
+   - worldcities_id: str - Worldcities identifier
+   - data_source: str - Geocoding source
+   - TMAX, TMIN, TAVG: float - Temperatures in degrees Celsius (converted from tenths)
+   - PRCP: float - Precipitation in mm (converted from tenths)
+   Shape: ~13M rows × 19 columns (wide format - one row per station/date with all measurements)
+
 INPUT FORMAT:
     CSV file with columns: id, date, data_type, lat, long, name, AVG
     Example:
@@ -101,11 +174,11 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Constants - Make these configurable
-PROJECT_ROOT = Path(__file__).parent.parent.parent
+PROJECT_ROOT = Path(__file__).parent.parent.parent.parent  # Go up to repo root
 UNCLEANED_DATA_DIR = PROJECT_ROOT / 'uncleaned_data'
-OUTPUT_DIR = PROJECT_ROOT / 'vaycay' / 'weather_data'
-CITY_DATA_DIR = PROJECT_ROOT / 'vaycay' / 'city_data'
-BATCH_OUTPUT_DIR = PROJECT_ROOT / 'worldData'  # New batch output directory
+OUTPUT_DIR = PROJECT_ROOT / 'dataAndUtils' / 'vaycay' / 'weather_data'
+CITY_DATA_DIR = PROJECT_ROOT / 'dataAndUtils' / 'vaycay' / 'city_data'
+BATCH_OUTPUT_DIR = PROJECT_ROOT / 'dataAndUtils' / 'worldData'  # New batch output directory
 WORLDCITIES_PATH = PROJECT_ROOT / 'dataAndUtils' / 'worldcities.csv'
 
 # Default processing settings
@@ -270,10 +343,23 @@ def read_from_pickle_zip(pickle_zip_path: str) -> pd.DataFrame:
     
     logger.info(f"loaded {len(df_weather):,} weather records from pickle")
     
+    # log the actual structure
+    logger.info(f"pickle file columns: {list(df_weather.columns)}")
+    logger.info(f"pickle file index: {df_weather.index.names}")
+    logger.info(f"pickle file shape: {df_weather.shape}")
+    
+    # check if id, date, data_type are in the index (multiindex)
+    if df_weather.index.names and any(name in ['id', 'date', 'data_type'] for name in df_weather.index.names):
+        logger.info("detected multiindex with id/date/data_type - resetting index to convert to columns")
+        df_weather = df_weather.reset_index()
+        logger.info(f"after reset_index, columns: {list(df_weather.columns)}")
+    
     # validate that we have the expected columns
     required_cols = ['id', 'date', 'data_type', 'lat', 'long', 'name']
     missing_cols = [col for col in required_cols if col not in df_weather.columns]
     if missing_cols:
+        logger.error(f"pickle data missing required columns: {missing_cols}")
+        logger.error(f"available columns: {list(df_weather.columns)}")
         raise ValueError(f"pickle data missing required columns: {missing_cols}")
     
     # check for value column (might be 'AVG' or 'value')
@@ -387,15 +473,15 @@ def get_unique_locations(df_weather: pd.DataFrame) -> pd.DataFrame:
     return unique_locs
 
 
-def load_worldcities(min_population: int = MIN_POPULATION) -> pd.DataFrame:
+def load_worldcities(min_population: int = MIN_POPULATION) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
-    load worldcities.csv and filter to major cities.
+    load worldcities.csv and return both major cities and all cities.
     
     args:
-        min_population: minimum population threshold for cities
+        min_population: minimum population threshold for major cities
     
     returns:
-        dataframe with major cities
+        tuple of (major_cities_df, all_cities_df)
     """
     logger.info(f"loading worldcities data from {WORLDCITIES_PATH}...")
     
@@ -417,19 +503,20 @@ def load_worldcities(min_population: int = MIN_POPULATION) -> pd.DataFrame:
         'id': 'str'
     }
     
-    df_cities = pd.read_csv(WORLDCITIES_PATH, dtype=dtype_dict)
-    logger.info(f"loaded {len(df_cities):,} cities from worldcities.csv")
-    
-    # filter to cities with population data and above threshold
-    df_cities = df_cities[df_cities['population'].notna()].copy()
-    df_cities = df_cities[df_cities['population'] >= min_population].copy()
-    
-    logger.info(f"filtered to {len(df_cities):,} cities with population ≥ {min_population:,}")
+    df_all_cities = pd.read_csv(WORLDCITIES_PATH, dtype=dtype_dict)
+    logger.info(f"loaded {len(df_all_cities):,} cities from worldcities.csv")
     
     # rename lng to long for consistency
-    df_cities.rename(columns={'lng': 'long'}, inplace=True)
+    df_all_cities.rename(columns={'lng': 'long'}, inplace=True)
     
-    return df_cities
+    # create major cities subset
+    df_major_cities = df_all_cities[df_all_cities['population'].notna()].copy()
+    df_major_cities = df_major_cities[df_major_cities['population'] >= min_population].copy()
+    
+    logger.info(f"major cities (≥{min_population:,} population): {len(df_major_cities):,}")
+    logger.info(f"all cities (any population): {len(df_all_cities):,}")
+    
+    return df_major_cities, df_all_cities
 
 
 def calculate_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
@@ -541,8 +628,8 @@ def match_station_to_major_city(
 
 def load_geocoding_progress() -> Optional[pd.DataFrame]:
     """load previous geocoding progress if it exists."""
-    checkpoint_path = CITY_DATA_DIR / 'geocoding_checkpoint.csv'
-    progress_path = CITY_DATA_DIR / 'geocoding_progress.json'
+    checkpoint_path = CITY_DATA_DIR / 'geocoding_checkpoint1.csv'
+    progress_path = CITY_DATA_DIR / 'geocoding_progress1.json'
     
     if checkpoint_path.exists():
         logger.info(f"found existing geocoding checkpoint: {checkpoint_path}")
@@ -683,22 +770,29 @@ def reverse_geocode_locations(unique_locs: pd.DataFrame,
         needs_geocoding = unique_locs.copy()
         already_geocoded = pd.DataFrame()
     
-    # load worldcities data
+    # load worldcities data - get both major cities and all cities
     logger.info("\nloading worldcities data...")
-    df_cities = load_worldcities(min_population=min_population)
+    df_major_cities, df_all_cities = load_worldcities(min_population=min_population)
     
     # initialize nominatim geocoder for fallback
     geolocator = Nominatim(user_agent="vaycay_weather_geocoder", timeout=10)
     reverse = RateLimiter(geolocator.reverse, min_delay_seconds=geocoding_delay)
     
     def safe_reverse(row):
-        """safely reverse geocode a location with error handling."""
-        try:
-            location = reverse((row['lat'], row['long']), language='en')
-            return location.raw if location else {}
-        except Exception as e:
-            logger.warning(f"error geocoding ({row['lat']}, {row['long']}): {e}")
-            return {}
+        """safely reverse geocode a location with error handling and retries."""
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                location = reverse((row['lat'], row['long']), language='en')
+                return location.raw if location else {}
+            except Exception as e:
+                if attempt < max_retries - 1:
+                    logger.debug(f"retry {attempt + 1}/{max_retries} for ({row['lat']}, {row['long']}): {e}")
+                    time.sleep(2)  # wait before retry
+                else:
+                    logger.warning(f"failed after {max_retries} attempts ({row['lat']}, {row['long']}): {e}")
+                    return {}
+        return {}
     
     def extract_city(location):
         """extract city name from geocoding result."""
@@ -769,68 +863,84 @@ def reverse_geocode_locations(unique_locs: pd.DataFrame,
         
         logger.info(f"\nprocessing batch {current_batch} (locations {actual_location_start}-{actual_location_end} of {total_locations})")
         
-        # process each location in the batch
+        # process each location in the batch with cascading fallback
         batch_results = []
         for idx, row in batch.iterrows():
-            # try worldcities matching first
+            match_result = None
+            
+            # step 1: try matching to major cities (population ≥ 100k)
             match_result = match_station_to_major_city(
                 row['lat'],
                 row['long'],
-                df_cities,
+                df_major_cities,
                 assigned_cities,
                 primary_radius_km=primary_radius_km,
                 fallback_radius_km=fallback_radius_km
             )
             
-            if match_result:
-                # matched to a major city - match_result is now a dict
-                batch_results.append({
-                    'lat': row['lat'],
-                    'long': row['long'],
-                    **match_result  # unpack all fields from worldcities match
-                })
-                stats['worldcities_matched'] += 1
-            else:
-                # fallback to nominatim
+            # step 2: if no major city match, try ALL cities (any population)
+            if not match_result:
+                match_result = match_station_to_major_city(
+                    row['lat'],
+                    row['long'],
+                    df_all_cities,
+                    assigned_cities,
+                    primary_radius_km=primary_radius_km * 2,  # use larger radius for smaller cities
+                    fallback_radius_km=fallback_radius_km * 2
+                )
+                if match_result:
+                    match_result['data_source'] = 'worldcities_small'  # mark as small city match
+            
+            # step 3: if still no match, try nominatim
+            if not match_result:
                 location = safe_reverse(row)
                 city = extract_city(location)
                 
                 if city:
-                    batch_results.append({
-                        'lat': row['lat'],
-                        'long': row['long'],
+                    match_result = {
                         'city': city,
                         'country': extract_country(location),
                         'state': extract_state(location),
                         'suburb': extract_suburb(location),
-                        'city_ascii': '',  # not available from nominatim
-                        'iso2': extract_country_code(location),
-                        'iso3': '',  # not available from nominatim
-                        'capital': '',  # not available from nominatim
-                        'population': None,  # not available from nominatim
-                        'worldcities_id': '',  # not available from nominatim
-                        'data_source': 'nominatim'
-                    })
-                    stats['nominatim_fallback'] += 1
-                else:
-                    # failed completely
-                    batch_results.append({
-                        'lat': row['lat'],
-                        'long': row['long'],
-                        'city': '',
-                        'country': '',
-                        'state': '',
-                        'suburb': '',
                         'city_ascii': '',
-                        'iso2': '',
+                        'iso2': extract_country_code(location),
                         'iso3': '',
                         'capital': '',
                         'population': None,
                         'worldcities_id': '',
-                        'data_source': 'failed'
-                    })
-                    stats['failed'] += 1
-                    failed_geocodes.append([row['lat'], row['long']])
+                        'data_source': 'nominatim'
+                    }
+            
+            # step 4: if everything failed, mark as failed but still include basic info
+            if not match_result:
+                match_result = {
+                    'city': '',
+                    'country': '',
+                    'state': '',
+                    'suburb': '',
+                    'city_ascii': '',
+                    'iso2': '',
+                    'iso3': '',
+                    'capital': '',
+                    'population': None,
+                    'worldcities_id': '',
+                    'data_source': 'failed'
+                }
+                stats['failed'] += 1
+                failed_geocodes.append([row['lat'], row['long']])
+            else:
+                # track statistics based on data source
+                if match_result['data_source'] == 'worldcities':
+                    stats['worldcities_matched'] += 1
+                elif match_result['data_source'] == 'nominatim':
+                    stats['nominatim_fallback'] += 1
+            
+            # add to batch results
+            batch_results.append({
+                'lat': row['lat'],
+                'long': row['long'],
+                **match_result
+            })
         
         # convert batch results to dataframe
         batch_df = pd.DataFrame(batch_results)
