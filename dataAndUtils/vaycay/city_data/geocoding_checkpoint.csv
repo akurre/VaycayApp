@@ -37599,3 +37599,503 @@ lat,long,city,country,state,suburb,city_ascii,iso2,iso3,capital,population,world
 44.854,-92.612,River Falls,United States,Wisconsin,,,US,,,,,nominatim
 44.971,-92.562,Roberts,United States,Wisconsin,,,US,,,,,nominatim
 42.727,-88.226,Rochester,United States,Wisconsin,,,US,,,,,nominatim
+44.751,-89.245,Town of Franzen,United States,Wisconsin,Town of Elderon,,US,,,,,nominatim
+45.412,-92.647,Saint Croix Falls,United States,Wisconsin,,,US,,,,,nominatim
+45.916,-89.489,Town of Saint Germain,United States,Wisconsin,,,US,,,,,nominatim
+43.262,-89.735,Sauk City,United States,Wisconsin,,,US,,,,,nominatim
+43.375,-87.94,Saukville,United States,Wisconsin,,,US,,,,,nominatim
+44.763,-88.618,Town of Belle Plaine,United States,Wisconsin,,,US,,,,,nominatim
+45.306,-90.961,Town of Marshall,United States,Wisconsin,,,US,,,,,nominatim
+44.439,-88.584,Shiocton,United States,Wisconsin,,,US,,,,,nominatim
+43.334,-88.298,Slinger,United States,Wisconsin,,,US,,,,,nominatim
+42.901,-87.849,South Milwaukee,United States,Wisconsin,,,US,,,,,nominatim
+43.936,-90.816,Sparta,United States,Wisconsin,,,US,,,,,nominatim
+45.824,-91.876,Spooner,United States,Wisconsin,,,US,,,,,nominatim
+43.134,-90.837,Town of Marietta,United States,Wisconsin,,,US,,,,,nominatim
+44.511,-89.585,Stevens Point,United States,Wisconsin,,,US,,,,,nominatim
+44.87,-88.904,Town of Bartelme,United States,Wisconsin,,,US,,,,,nominatim
+42.911,-89.213,Stoughton,United States,Wisconsin,,,US,,,,,nominatim
+44.818,-90.09,Town of Eau Pleine,United States,Wisconsin,,,US,,,,,nominatim
+44.88,-87.336,Town of Sevastopol,United States,Wisconsin,,,US,,,,,nominatim
+42.968,-88.55,Town of Sullivan,United States,Wisconsin,Town of Ottawa,,US,,,,,nominatim
+45.379,-89.194,Town of Upham,United States,Wisconsin,,,US,,,,,nominatim
+46.727,-92.072,City of Superior,United States,Wisconsin,,,US,,,,,nominatim
+44.996,-88.379,Suring,United States,Wisconsin,,,US,,,,,nominatim
+43.472,-88.882,Town of Westford,United States,Wisconsin,,,US,,,,,nominatim
+43.999,-91.438,Trempealeau,United States,Wisconsin,,,US,,,,,nominatim
+44.143,-87.568,Two Rivers,United States,Wisconsin,,,US,,,,,nominatim
+42.69,-88.034,Union Grove,United States,Wisconsin,,,US,,,,,nominatim
+46.368,-90.412,Town of Anderson,United States,Wisconsin,,,US,,,,,nominatim
+43.559,-90.876,Viroqua,United States,Wisconsin,,,US,,,,,nominatim
+45.358,-86.891,Town of Washington,United States,Wisconsin,,,US,,,,,nominatim
+43.188,-88.985,Waterloo,United States,Wisconsin,,,US,,,,,nominatim
+43.174,-88.736,Watertown,United States,Wisconsin,,,US,,,,,nominatim
+43.006,-88.249,Waukesha,United States,Wisconsin,,,US,,,,,nominatim
+44.355,-89.059,Waupaca,United States,Wisconsin,,,US,,,,,nominatim
+44.946,-89.622,Wausau,United States,Wisconsin,,,US,,,,,nominatim
+45.38,-87.957,Wausaukee,United States,Wisconsin,,,US,,,,,nominatim
+44.041,-89.243,Town of Marion,United States,Wisconsin,,,US,,,,,nominatim
+45.788,-92.232,Town of La Follette,United States,Wisconsin,,,US,,,,,nominatim
+43.411,-88.194,West Bend,United States,Wisconsin,,,US,,,,,nominatim
+43.432,-88.16,West Bend,United States,Wisconsin,,,US,,,,,nominatim
+43.675,-90.808,Town of Christiana,United States,Wisconsin,,,US,,,,,nominatim
+45.145,-88.742,Town of Wolf River,United States,Wisconsin,,,US,,,,,nominatim
+42.851,-88.725,Whitewater,United States,Wisconsin,,,US,,,,,nominatim
+45.709,-89.848,Town of Little Rice,United States,Wisconsin,,,US,,,,,nominatim
+45.799,-90.995,Town of Winter,United States,Wisconsin,,,US,,,,,nominatim
+43.609,-89.767,Wisconsin Dells,United States,Wisconsin,,,US,,,,,nominatim
+44.399,-89.831,Wisconsin Rapids,United States,Wisconsin,,,US,,,,,nominatim
+42.733,-110.922,Afton,United States,Wyoming,,,US,,,,,nominatim
+43.773,-111.034,,,,,,,,,,,failed
+42.501,-108.734,,,,,,,,,,,failed
+41.038,-107.658,Baggs,United States,Wyoming,,,US,,,,,nominatim
+44.38,-108.035,Basin,United States,Wyoming,,,US,,,,,nominatim
+42.623,-106.357,,,,,,,,,,,failed
+44.15,-111.046,,,,,,,,,,,failed
+42.873,-110.907,Bedford,United States,Wyoming,,,US,,,,,nominatim
+44.683,-107.009,,,,,,,,,,,failed
+41.59,-108.509,,,,,,,,,,,failed
+43.656,-107.738,,,,,,,,,,,failed
+43.209,-110.403,,,,,,,,,,,failed
+42.716,-109.689,,,,,,,,,,,failed
+43.405,-108.163,,,,,,,,,,,failed
+41.247,-109.597,,,,,,,,,,,failed
+41.084,-105.248,,,,,,,,,,,failed
+44.354,-106.699,Buffalo,United States,Wyoming,,,US,,,,,nominatim
+44.336,-106.789,,,,,,,,,,,failed
+44.508,-109.168,,,,,,,,,,,failed
+44.774,-107.522,,,,,,,,,,,failed
+43.366,-109.276,,,,,,,,,,,failed
+42.861,-106.292,Casper,United States,Wyoming,,,US,,,,,nominatim
+42.852,-106.284,Casper,United States,Wyoming,,,US,,,,,nominatim
+41.152,-104.806,Cheyenne,United States,Wyoming,,,US,,,,,nominatim
+41.195,-104.712,Ranchettes,United States,Wyoming,,,US,,,,,nominatim
+41.759,-104.822,Chugwater,United States,Wyoming,,,US,,,,,nominatim
+41.398,-110.088,,,,,,,,,,,failed
+44.936,-109.137,,,,,,,,,,,failed
+44.578,-106.447,,,,,,,,,,,failed
+44.502,-109.111,,,,,,,,,,,failed
+44.414,-108.901,,,,,,,,,,,failed
+42.928,-110.127,,,,,,,,,,,failed
+43.413,-110.163,,,,,,,,,,,failed
+44.892,-108.593,Deaver,United States,Wyoming,,,US,,,,,nominatim
+44.583,-104.715,,,,,,,,,,,failed
+44.099,-105.118,,,,,,,,,,,failed
+43.234,-108.913,,,,,,,,,,,failed
+42.747,-105.36,Douglas,United States,Wyoming,,,US,,,,,nominatim
+43.54,-109.655,Dubois,United States,Wyoming,,,US,,,,,nominatim
+43.412,-104.961,,,,,,,,,,,failed
+41.688,-106.414,Elk Mountain,United States,Wyoming,,,US,,,,,nominatim
+44.497,-108.391,,,,,,,,,,,failed
+41.265,-110.951,Evanston,United States,Wyoming,,,US,,,,,nominatim
+42.14,-109.431,,,,,,,,,,,failed
+41.986,-110.061,,,,,,,,,,,failed
+41.837,-110.771,,,,,,,,,,,failed
+44.267,-105.449,Gillette,United States,Wyoming,,,US,,,,,nominatim
+42.528,-104.915,,,,,,,,,,,failed
+42.469,-104.966,,,,,,,,,,,failed
+41.517,-109.47,Green River,United States,Wyoming,,,US,,,,,nominatim
+44.489,-108.054,Greybull,United States,Wyoming,,,US,,,,,nominatim
+42.291,-104.762,,,,,,,,,,,failed
+42.283,-104.767,,,,,,,,,,,failed
+41.15,-105.167,,,,,,,,,,,failed
+44.686,-104.603,Hulett,United States,Wyoming,,,US,,,,,nominatim
+44.781,-106.964,Sheridan,United States,Wyoming,,,US,,,,,nominatim
+43.486,-110.762,Jackson,United States,Wyoming,,,US,,,,,nominatim
+42.494,-107.829,,,,,,,,,,,failed
+43.714,-106.638,Kaycee,United States,Wyoming,,,US,,,,,nominatim
+41.818,-110.533,,,,,,,,,,,failed
+44.562,-110.399,,,,,,,,,,,failed
+44.896,-110.234,,,,,,,,,,,failed
+43.183,-104.604,,,,,,,,,,,failed
+42.845,-108.737,Lander,United States,Wyoming,,,US,,,,,nominatim
+41.285,-105.532,,,,,,,,,,,failed
+41.34,-105.606,,,,,,,,,,,failed
+44.85,-106.289,,,,,,,,,,,failed
+42.195,-106.856,,,,,,,,,,,failed
+42.13,-104.39,,,,,,,,,,,failed
+44.838,-108.404,Lovell,United States,Wyoming,,,US,,,,,nominatim
+42.937,-104.067,,,,,,,,,,,failed
+41.897,-106.206,Medicine Bow,United States,Wyoming,,,US,,,,,nominatim
+43.413,-106.277,Midwest,United States,Wyoming,,,US,,,,,nominatim
+43.654,-110.717,Moose,United States,Wyoming,,,US,,,,,nominatim
+43.857,-110.589,,,,,,,,,,,failed
+41.266,-110.338,Mountain View,United States,Wyoming,,,US,,,,,nominatim
+43.85,-104.189,Newcastle,United States,Wyoming,,,US,,,,,nominatim
+44.457,-110.833,,,,,,,,,,,failed
+42.206,-104.556,,,,,,,,,,,failed
+44.503,-109.964,,,,,,,,,,,failed
+42.472,-106.853,,,,,,,,,,,failed
+43.246,-108.694,Pavillion,United States,Wyoming,,,US,,,,,nominatim
+41.626,-104.494,,,,,,,,,,,failed
+41.18,-104.057,Pine Bluffs,United States,Wyoming,,,US,,,,,nominatim
+42.874,-109.858,Pinedale,United States,Wyoming,,,US,,,,,nominatim
+43.035,-106.989,,,,,,,,,,,failed
+44.776,-108.759,,,,,,,,,,,failed
+44.179,-107.938,,,,,,,,,,,failed
+41.804,-107.241,Rawlins,United States,Wyoming,,,US,,,,,nominatim
+43.245,-104.288,,,,,,,,,,,failed
+43.031,-108.374,Riverton,United States,Wyoming,,,US,,,,,nominatim
+41.578,-109.239,Rock Springs,United States,Wyoming,,,US,,,,,nominatim
+41.505,-106.789,Saratoga,United States,Wyoming,,,US,,,,,nominatim
+42.156,-106.914,,,,,,,,,,,failed
+44.535,-107.778,,,,,,,,,,,failed
+44.841,-106.838,,,,,,,,,,,failed
+42.37,-106.105,,,,,,,,,,,failed
+43.237,-108.11,Shoshoni,United States,Wyoming,,,US,,,,,nominatim
+44.136,-110.666,,,,,,,,,,,failed
+44.577,-106.906,Story,United States,Wyoming,,,US,,,,,nominatim
+44.076,-108.955,,,,,,,,,,,failed
+41.764,-105.375,,,,,,,,,,,failed
+44.065,-107.382,,,,,,,,,,,failed
+43.811,-107.365,,,,,,,,,,,failed
+43.648,-108.204,Thermopolis,United States,Wyoming,,,US,,,,,nominatim
+43.753,-108.143,,,,,,,,,,,failed
+42.488,-104.156,,,,,,,,,,,failed
+44.917,-110.42,,,,,,,,,,,failed
+44.093,-104.611,Upton,United States,Wyoming,,,US,,,,,nominatim
+41.672,-107.978,Wamsutter,United States,Wyoming,,,US,,,,,nominatim
+44.459,-109.416,,,,,,,,,,,failed
+44.64,-105.301,,,,,,,,,,,failed
+42.249,-104.628,,,,,,,,,,,failed
+42.111,-104.949,,,,,,,,,,,failed
+42.03,-104.761,,,,,,,,,,,failed
+44.011,-107.968,Worland,United States,Wyoming,,,US,,,,,nominatim
+43.747,-105.733,,,,,,,,,,,failed
+44.489,-110.004,,,,,,,,,,,failed
+44.977,-110.696,Mammoth,United States,Wyoming,,,US,,,,,nominatim
+70.346,-150.928,,,,,,,,,,,failed
+63.043,-147.248,,,,,,,,,,,failed
+60.958,-149.111,Anchorage,United States,Alaska,,,US,,,,,nominatim
+62.192,-150.503,,,,,,,,,,,failed
+61.156,-149.985,Anchorage,United States,Alaska,Muirwood Park,,US,,,,,nominatim
+61.102,-149.717,Anchorage,United States,Alaska,,,US,,,,,nominatim
+61.088,-149.756,Anchorage,United States,Alaska,,,US,,,,,nominatim
+58.318,-134.1,Juneau,United States,Alaska,,Juneau,US,USA,admin,31974.0,1840023306,worldcities_small
+58.381,-134.645,Juneau,United States,Alaska,,,US,,,,,nominatim
+64.855,-147.722,Chena Ridge,United States,Alaska,,Chena Ridge,US,USA,,6111.0,1840075179,worldcities_small
+55.358,-131.697,Ketchikan,United States,Alaska,,Ketchikan,US,USA,,10652.0,1840023270,worldcities_small
+61.563,-149.154,,,,,,,,,,,failed
+61.164,-149.778,Anchorage,United States,Alaska,,,US,,,,,nominatim
+61.018,-147.515,,,,,,,,,,,failed
+64.092,-141.921,,,,,,,,,,,failed
+62.826,-149.906,,,,,,,,,,,failed
+65.494,-144.642,,,,,,,,,,,failed
+64.245,-149.183,,,,,,,,,,,failed
+56.0,-132.833,Coffman Cove,United States,Alaska,,,US,,,,,nominatim
+64.86,-147.848,Farmers Loop,United States,Alaska,,Farmers Loop,US,USA,,5214.0,1840075181,worldcities_small
+70.432,-150.409,,,,,,,,,,,failed
+60.556,-145.753,Cordova,United States,Alaska,,,US,,,,,nominatim
+60.536,-145.778,Cordova,United States,Alaska,,,US,,,,,nominatim
+55.477,-133.141,Craig,United States,Alaska,,,US,,,,,nominatim
+64.117,-145.751,,,,,,,,,,,failed
+63.965,-145.105,,,,,,,,,,,failed
+63.675,-144.604,,,,,,,,,,,failed
+53.895,-166.543,Unalaska,United States,Alaska,,,US,,,,,nominatim
+64.786,-141.204,Eagle,United States,Alaska,,,US,,,,,nominatim
+58.276,-134.514,Juneau,United States,Alaska,,,US,,,,,nominatim
+61.234,-149.271,Anchorage,United States,Alaska,,,US,,,,,nominatim
+61.319,-149.544,Anchorage,United States,Alaska,Eagle River,,US,,,,,nominatim
+61.297,-149.44,Anchorage,United States,Alaska,,,US,,,,,nominatim
+61.449,-149.323,Anchorage,United States,Alaska,,,US,,,,,nominatim
+58.192,-136.344,,,,,,,,,,,failed
+64.846,-148.026,,,,,,,,,,,failed
+64.911,-147.924,,,,,,,,,,,failed
+64.817,-147.874,,,,,,,,,,,failed
+65.003,-147.341,,,,,,,,,,,failed
+61.227,-149.65,Anchorage,United States,Alaska,,,US,,,,,nominatim
+64.959,-147.626,,,,,,,,,,,failed
+64.741,-156.876,Galena,United States,Alaska,,,US,,,,,nominatim
+64.977,-147.521,,,,,,,,,,,failed
+58.456,-135.869,,,,,,,,,,,failed
+61.1,-149.694,Anchorage,United States,Alaska,,,US,,,,,nominatim
+62.109,-145.533,,,,,,,,,,,failed
+64.894,-147.875,,,,,,,,,,,failed
+59.238,-135.449,,,,,,,,,,,failed
+59.45,-136.361,,,,,,,,,,,failed
+64.439,-146.815,,,,,,,,,,,failed
+63.868,-148.994,Healy,United States,Alaska,,,US,,,,,nominatim
+57.218,-134.877,Sitka,United States,Alaska,,Sitka,US,USA,,8493.0,1840023319,worldcities_small
+55.491,-132.622,,,,,,,,,,,failed
+59.744,-151.635,,,,,,,,,,,failed
+58.107,-135.428,Hoonah,United States,Alaska,,,US,,,,,nominatim
+61.631,-149.801,Houston,United States,Alaska,,,US,,,,,nominatim
+55.916,-130.026,,,,,,,,,,,failed
+58.299,-134.411,Juneau,United States,Alaska,,,US,,,,,nominatim
+58.4,-134.569,Juneau,United States,Alaska,,,US,,,,,nominatim
+58.387,-134.766,Juneau,United States,Alaska,,,US,,,,,nominatim
+58.286,-134.385,Juneau,United States,Alaska,,,US,,,,,nominatim
+58.294,-134.675,Juneau,United States,Alaska,,,US,,,,,nominatim
+55.452,-131.818,,,,,,,,,,,failed
+64.916,-148.271,,,,,,,,,,,failed
+58.191,-152.372,Kodiak,United States,Alaska,,Kodiak,US,USA,,8851.0,1840023301,worldcities_small
+57.805,-152.356,,,,,,,,,,,failed
+70.329,-149.611,,,,,,,,,,,failed
+61.627,-149.036,,,,,,,,,,,failed
+56.383,-134.65,,,,,,,,,,,failed
+61.71,-149.232,,,,,,,,,,,failed
+60.518,-148.093,,,,,,,,,,,failed
+65.122,-150.228,,,,,,,,,,,failed
+61.566,-149.254,,,,,,,,,,,failed
+63.718,-148.969,,,,,,,,,,,failed
+63.903,-152.282,,,,,,,,,,,failed
+57.842,-152.459,,,,,,,,,,,failed
+60.503,-149.426,,,,,,,,,,,failed
+64.758,-147.325,,,,,,,,,,,failed
+61.589,-149.099,Palmer,United States,Alaska,,,US,,,,,nominatim
+57.958,-136.221,Pelican,United States,Alaska,,,US,,,,,nominatim
+56.351,-133.626,,,,,,,,,,,failed
+62.621,-141.006,,,,,,,,,,,failed
+56.247,-134.645,Port Alexander,United States,Alaska,,,US,,,,,nominatim
+60.204,-154.316,,,,,,,,,,,failed
+60.05,-148.067,,,,,,,,,,,failed
+62.091,-152.735,,,,,,,,,,,failed
+60.188,-149.628,,,,,,,,,,,failed
+59.455,-135.314,Skagway,United States,Alaska,,,US,,,,,nominatim
+58.142,-133.739,Juneau,United States,Alaska,,,US,,,,,nominatim
+60.419,-151.134,Kenai,United States,Alaska,,Kenai,US,USA,,7807.0,1840023421,worldcities_small
+60.491,-150.919,Soldotna,United States,Alaska,,Soldotna,US,USA,,7398.0,1840023415,worldcities_small
+55.692,-132.525,Thorne Bay,United States,Alaska,,,US,,,,,nominatim
+63.334,-143.037,,,,,,,,,,,failed
+63.316,-143.006,,,,,,,,,,,failed
+64.857,-147.861,Fairbanks,United States,Alaska,,,US,,,,,nominatim
+61.131,-146.382,Valdez,United States,Alaska,,,US,,,,,nominatim
+60.799,-148.087,,,,,,,,,,,failed
+64.154,-145.889,,,,,,,,,,,failed
+67.408,-150.11,,,,,,,,,,,failed
+64.76,-147.34,,,,,,,,,,,failed
+21.395,-157.91,Mililani Mauka,United States,Hawaii,,Mililani Mauka,US,USA,,20090.0,1840039224,worldcities_small
+21.96,-159.532,,,,,,,,,,,failed
+21.306,-157.853,Makakilo,United States,Hawaii,,Makakilo,US,USA,,19775.0,1840137080,worldcities_small
+21.922,-159.538,Numila,United States,Hawaii,,,US,,,,,nominatim
+21.313,-158.114,Schofield Barracks,United States,Hawaii,,Schofield Barracks,US,USA,,19499.0,1840075052,worldcities_small
+21.579,-158.224,Wahiawa,United States,Hawaii,,Wahiawa,US,USA,,17122.0,1840029550,worldcities_small
+21.434,-157.787,Ocean Pointe,United States,Hawaii,,Ocean Pointe,US,USA,,14989.0,1840039242,worldcities_small
+21.901,-159.497,Lawai,United States,Hawaii,,,US,,,,,nominatim
+21.906,-159.579,Port Allen,United States,Hawaii,,,US,,,,,nominatim
+20.833,-156.317,Kihei,United States,Hawaii,,Kihei,US,USA,,22402.0,1840029507,worldcities_small
+20.76,-156.247,Wailuku,United States,Hawaii,,Wailuku,US,USA,,17708.0,1840023239,worldcities_small
+21.965,-159.43,Puhi,United States,Hawaii,,,US,,,,,nominatim
+19.761,-155.456,,,,,,,,,,,failed
+20.923,-156.34,Waihee-Waiehu,United States,Hawaii,,Waihee-Waiehu,US,USA,,9319.0,1840037549,worldcities_small
+20.24,-155.839,Hawi,United States,Hawaii,Honomakau,,US,,,,,nominatim
+19.635,-155.908,,,,,,,,,,,failed
+19.418,-155.881,Kēōkea,United States,Hawaii,,,US,,,,,nominatim
+20.085,-155.482,Honokaa,United States,Hawaii,Haina,,US,,,,,nominatim
+19.679,-156.021,,,,,,,,,,,failed
+21.315,-157.999,Royal Kunia,United States,Hawaii,,Royal Kunia,US,USA,,14565.0,1840137108,worldcities_small
+20.794,-156.041,Haiku-Pauwela,United States,Hawaii,,Haiku-Pauwela,US,USA,,8987.0,1840074990,worldcities_small
+21.329,-157.93,Ewa Beach,United States,Hawaii,,Ewa Beach,US,USA,,14479.0,1840029470,worldcities_small
+19.671,-155.876,,,,,,,,,,,failed
+21.561,-158.238,Halawa,United States,Hawaii,,Halawa,US,USA,,14453.0,1840029579,worldcities_small
+19.858,-155.161,,,,,,,,,,,failed
+20.891,-156.213,Pukalani,United States,Hawaii,,Pukalani,US,USA,,7695.0,1840029545,worldcities_small
+19.534,-155.926,Honalo,United States,Hawaii,,,US,,,,,nominatim
+19.751,-155.136,,,,,,,,,,,failed
+21.19,-156.983,Napili-Honokowai,United States,Hawaii,,Napili-Honokowai,US,USA,,6739.0,1840075038,worldcities_small
+21.375,-157.822,Waimalu,United States,Hawaii,,Waimalu,US,USA,,14043.0,1840029588,worldcities_small
+20.058,-155.432,,,,,,,,,,,failed
+19.011,-155.659,,,,,,,,,,,failed
+21.423,-157.801,Waianae,United States,Hawaii,,Waianae,US,USA,,13609.0,1840029552,worldcities_small
+21.603,-157.902,Waipio,United States,Hawaii,,Waipio,US,USA,,11469.0,1840029589,worldcities_small
+21.339,-157.858,Nanakuli,United States,Hawaii,,Nanakuli,US,USA,,11461.0,1840029531,worldcities_small
+19.275,-155.451,,,,,,,,,,,failed
+20.962,-156.675,Makawao,United States,Hawaii,,Makawao,US,USA,,7341.0,1840023236,worldcities_small
+19.501,-154.822,,,,,,,,,,,failed
+19.504,-154.863,,,,,,,,,,,failed
+19.144,-155.849,,,,,,,,,,,failed
+20.787,-156.991,,,,,,,,,,,failed
+21.087,-157.022,Kaunakakai,United States,Hawaii,,,US,,,,,nominatim
+19.633,-155.034,Keaau,United States,Hawaii,,,US,,,,,nominatim
+20.861,-156.383,Kula,United States,Hawaii,,Kula,US,USA,,7621.0,1840039188,worldcities_small
+19.492,-155.912,Captain Cook,United States,Hawaii,,,US,,,,,nominatim
+19.511,-155.922,Kealakekua,United States,Hawaii,,,US,,,,,nominatim
+19.413,-154.952,,,,,,,,,,,failed
+20.791,-156.442,Wailea,United States,Hawaii,,Wailea,US,USA,,6218.0,1840025210,worldcities_small
+21.679,-157.945,Maili,United States,Hawaii,,Maili,US,USA,,11437.0,1840029522,worldcities_small
+22.214,-159.404,Kilauea,United States,Hawaii,,,US,,,,,nominatim
+20.225,-155.793,Halaula,United States,Hawaii,Halaula,,US,,,,,nominatim
+21.909,-159.461,Koloa,United States,Hawaii,,,US,,,,,nominatim
+21.948,-159.467,Koloa,United States,Hawaii,,,US,,,,,nominatim
+22.19,-159.385,,,,,,,,,,,failed
+19.819,-155.989,Kailua,United States,Hawaii,,,US,,,,,nominatim
+21.511,-157.862,Kaneohe Station,United States,Hawaii,,Kaneohe Station,US,USA,,11289.0,1840075025,worldcities_small
+21.53,-157.85,Aiea,United States,Hawaii,,Aiea,US,USA,,9638.0,1840029469,worldcities_small
+21.52,-157.839,Hickam Housing,United States,Hawaii,,Hickam Housing,US,USA,,9387.0,1840075009,worldcities_small
+21.891,-159.495,,,,,,,,,,,failed
+20.758,-156.321,,,,,,,,,,,failed
+20.701,-156.356,Kula,United States,Hawaii,,,US,,,,,nominatim
+19.583,-155.455,,,,,,,,,,,failed
+20.013,-155.669,Waimea/Kamuela,United States,Hawaii,Pu'u Opelu,,US,,,,,nominatim
+20.829,-156.92,Lanai City,United States,Hawaii,,,US,,,,,nominatim
+21.9,-159.421,,,,,,,,,,,failed
+20.959,-156.65,Napili,United States,Hawaii,,,US,,,,,nominatim
+21.478,-158.196,Makaha,United States,Hawaii,,Makaha,US,USA,,8404.0,1840029523,worldcities_small
+20.642,-156.44,,,,,,,,,,,failed
+21.919,-159.628,,,,,,,,,,,failed
+20.76,-156.91,,,,,,,,,,,failed
+21.311,-157.816,Ahuimanu,United States,Hawaii,,Ahuimanu,US,USA,,8023.0,1840029468,worldcities_small
+21.333,-157.802,Waikele,United States,Hawaii,,Waikele,US,USA,,7442.0,1840039259,worldcities_small
+21.132,-157.213,Maunaloa,United States,Hawaii,,,US,,,,,nominatim
+19.536,-155.577,,,,,,,,,,,failed
+20.101,-155.832,,,,,,,,,,,failed
+19.207,-155.882,Pāpā,United States,Hawaii,Pāpā Bay Estates,,US,,,,,nominatim
+21.348,-157.891,Ewa Villages,United States,Hawaii,,Ewa Villages,US,USA,,6585.0,1840029578,worldcities_small
+22.18,-159.332,,,,,,,,,,,failed
+19.061,-155.584,Nāʻālehu,United States,Hawaii,,,US,,,,,nominatim
+19.469,-155.909,Nāpō‘opo‘o,United States,Hawaii,,,US,,,,,nominatim
+21.353,-157.808,West Loch Estate,United States,Hawaii,,West Loch Estate,US,USA,,6139.0,1840039268,worldcities_small
+21.339,-157.837,Laie,United States,Hawaii,,Laie,US,USA,,5704.0,1840029514,worldcities_small
+20.662,-156.044,,,,,,,,,,,failed
+19.271,-155.875,Pāpā,United States,Hawaii,Pāpā Bay Estates,,US,,,,,nominatim
+20.814,-156.119,,,,,,,,,,,failed
+20.07,-155.444,,,,,,,,,,,failed
+20.04,-155.372,Paauilo,United States,Hawaii,,,US,,,,,nominatim
+19.204,-155.486,Pahala,United States,Hawaii,,,US,,,,,nominatim
+19.515,-154.964,,,,,,,,,,,failed
+21.28,-157.734,Waipio Acres,United States,Hawaii,,Waipio Acres,US,USA,,5451.0,1840029562,worldcities_small
+20.896,-156.379,Paia,United States,Hawaii,,,US,,,,,nominatim
+21.37,-158.093,Kapolei,United States,Hawaii,,,US,,,,,nominatim
+21.373,-157.785,East Honolulu,United States,Hawaii,,,US,,,,,nominatim
+21.323,-157.772,East Honolulu,United States,Hawaii,,,US,,,,,nominatim
+19.784,-155.094,Papaikou,United States,Hawaii,,,US,,,,,nominatim
+19.792,-155.114,,,,,,,,,,,failed
+21.345,-157.806,East Honolulu,United States,Hawaii,,,US,,,,,nominatim
+21.393,-157.975,Pearl City,United States,Hawaii,,,US,,,,,nominatim
+21.538,-158.089,,,,,,,,,,,failed
+20.677,-156.33,,,,,,,,,,,failed
+20.204,-155.735,,,,,,,,,,,failed
+20.149,-155.812,,,,,,,,,,,failed
+22.218,-159.483,Princeville,United States,Hawaii,,,US,,,,,nominatim
+21.966,-159.396,Puhi,United States,Hawaii,,,US,,,,,nominatim
+19.616,-155.084,,,,,,,,,,,failed
+21.31,-157.846,Honolulu,United States,Hawaii,Makiki Kai,,US,,,,,nominatim
+20.929,-156.674,Kaanapali,United States,Hawaii,,,US,,,,,nominatim
+20.026,-155.822,Waimea/Kamuela,United States,Hawaii,Kawailiula,,US,,,,,nominatim
+20.857,-156.431,Kahului,United States,Hawaii,,,US,,,,,nominatim
+21.145,-156.733,Pūko‘o,United States,Hawaii,,,US,,,,,nominatim
+19.418,-155.911,Hōnaunau,United States,Hawaii,,,US,,,,,nominatim
+19.082,-155.753,Hawaiian Ocean View,United States,Hawaii,Hawaiian Ocean View Estates,,US,,,,,nominatim
+20.894,-156.41,Paia,United States,Hawaii,,,US,,,,,nominatim
+20.793,-156.25,,,,,,,,,,,failed
+20.649,-156.398,,,,,,,,,,,failed
+21.298,-157.816,East Honolulu,United States,Hawaii,Mānoa,,US,,,,,nominatim
+21.897,-159.557,Numila,United States,Hawaii,,,US,,,,,nominatim
+21.471,-157.884,,,,,,,,,,,failed
+19.919,-155.798,,,,,,,,,,,failed
+19.909,-155.875,,,,,,,,,,,failed
+21.273,-157.78,East Honolulu,United States,Hawaii,Kāhala,,US,,,,,nominatim
+21.433,-158.183,Waianae,United States,Hawaii,,,US,,,,,nominatim
+20.916,-156.509,,,,,,,,,,,failed
+21.451,-157.85,,,,,,,,,,,failed
+20.941,-156.525,,,,,,,,,,,failed
+20.854,-156.509,Waikapu,United States,Hawaii,,,US,,,,,nominatim
+21.272,-157.817,Honolulu,United States,Hawaii,Waikīkī,,US,,,,,nominatim
+19.884,-155.122,,,,,,,,,,,failed
+21.336,-157.711,East Honolulu,United States,Hawaii,,,US,,,,,nominatim
+21.637,-158.054,,,,,,,,,,,failed
+21.959,-159.676,Waimea,United States,Hawaii,,,US,,,,,nominatim
+21.386,-158.007,Waipahu,United States,Hawaii,,,US,,,,,nominatim
+20.631,-156.204,,,,,,,,,,,failed
+21.894,-159.513,,,,,,,,,,,failed
+21.298,-157.785,East Honolulu,United States,Hawaii,Maunalani Heights,,US,,,,,nominatim
+62.817,-141.467,,,,,,,,,,,failed
+33.842,-109.122,,,,,,,,,,,failed
+65.02,-146.228,,,,,,,,,,,failed
+67.475,-162.266,,,,,,,,,,,failed
+34.14,-87.362,,,,,,,,,,,failed
+65.585,-144.364,,,,,,,,,,,failed
+65.283,-143.067,,,,,,,,,,,failed
+66.267,-146.517,,,,,,,,,,,failed
+61.518,-149.908,,,,,,,,,,,failed
+33.087,-109.951,,,,,,,,,,,failed
+30.253,-87.812,,,,,,,,,,,failed
+61.936,-150.986,,,,,,,,,,,failed
+35.143,-93.895,Booneville,United States,Arkansas,,,US,,,,,nominatim
+65.299,-158.905,,,,,,,,,,,failed
+36.794,-113.757,,,,,,,,,,,failed
+60.483,-149.767,,,,,,,,,,,failed
+36.931,-112.2,,,,,,,,,,,failed
+65.908,-160.874,,,,,,,,,,,failed
+31.445,-110.28,Sierra Vista,United States,Arizona,,,US,,,,,nominatim
+61.159,-149.797,Anchorage,United States,Alaska,,,US,,,,,nominatim
+36.205,-112.062,,,,,,,,,,,failed
+65.189,-147.5,,,,,,,,,,,failed
+65.017,-148.583,,,,,,,,,,,failed
+62.124,-141.845,,,,,,,,,,,failed
+34.596,-112.048,,,,,,,,,,,failed
+60.223,-153.466,,,,,,,,,,,failed
+62.133,-142.083,,,,,,,,,,,failed
+66.591,-144.341,,,,,,,,,,,failed
+67.756,-150.493,,,,,,,,,,,failed
+32.0,-109.35,,,,,,,,,,,failed
+62.565,-144.665,,,,,,,,,,,failed
+61.532,-144.44,,,,,,,,,,,failed
+64.06,-141.929,,,,,,,,,,,failed
+65.314,-143.132,,,,,,,,,,,failed
+32.704,-109.914,,,,,,,,,,,failed
+65.346,-155.936,,,,,,,,,,,failed
+58.802,-155.563,,,,,,,,,,,failed
+34.208,-112.333,,,,,,,,,,,failed
+66.276,-164.531,,,,,,,,,,,failed
+63.983,-145.65,,,,,,,,,,,failed
+33.36,-109.833,,,,,,,,,,,failed
+36.45,-112.24,,,,,,,,,,,failed
+63.268,-149.539,,,,,,,,,,,failed
+35.611,-93.333,,,,,,,,,,,failed
+64.776,-141.162,Eagle,United States,Alaska,,,US,,,,,nominatim
+63.431,-150.309,,,,,,,,,,,failed
+31.781,-110.635,,,,,,,,,,,failed
+61.272,-149.366,Anchorage,United States,Alaska,Overlook Acres,,US,,,,,nominatim
+64.837,-147.615,Fairbanks,United States,Alaska,,,US,,,,,nominatim
+33.701,-109.706,,,,,,,,,,,failed
+63.723,-154.077,,,,,,,,,,,failed
+35.145,-111.675,Flagstaff,United States,Arizona,,,US,,,,,nominatim
+36.794,-112.042,,,,,,,,,,,failed
+58.706,-153.518,,,,,,,,,,,failed
+35.846,-113.055,,,,,,,,,,,failed
+66.57,-145.251,Fort Yukon,United States,Alaska,,,US,,,,,nominatim
+61.603,-143.013,,,,,,,,,,,failed
+63.838,-144.35,,,,,,,,,,,failed
+58.456,-135.87,,,,,,,,,,,failed
+33.35,-110.652,,,,,,,,,,,failed
+34.75,-113.3,,,,,,,,,,,failed
+64.238,-145.267,,,,,,,,,,,failed
+34.06,-109.45,,,,,,,,,,,failed
+60.728,-149.287,,,,,,,,,,,failed
+61.283,-149.617,Anchorage,United States,Alaska,,,US,,,,,nominatim
+36.704,-112.583,,,,,,,,,,,failed
+32.882,-109.309,,,,,,,,,,,failed
+55.35,-132.698,,,,,,,,,,,failed
+60.149,-149.799,,,,,,,,,,,failed
+34.787,-114.562,,,,,,,,,,,failed
+65.202,-161.155,,,,,,,,,,,failed
+34.398,-110.564,,,,,,,,,,,failed
+67.741,-144.122,,,,,,,,,,,failed
+33.618,-110.42,,,,,,,,,,,failed
+55.53,-131.366,,,,,,,,,,,failed
+66.217,-155.667,,,,,,,,,,,failed
+59.746,-151.208,,,,,,,,,,,failed
+57.8,-135.133,Tenakee Springs,United States,Alaska,,,US,,,,,nominatim
+65.586,-163.408,,,,,,,,,,,failed
+32.938,-110.496,,,,,,,,,,,failed
+68.156,-156.896,,,,,,,,,,,failed
+35.81,-110.207,Keams Canyon,United States,Arizona,,,US,,,,,nominatim
+31.675,-110.88,,,,,,,,,,,failed
+34.116,-112.301,,,,,,,,,,,failed
+36.699,-113.207,,,,,,,,,,,failed
+67.546,-157.069,,,,,,,,,,,failed
+70.004,-153.084,,,,,,,,,,,failed
+63.39,-158.817,,,,,,,,,,,failed
+34.585,-112.502,Prescott,United States,Arizona,,,US,,,,,nominatim
+63.949,-145.619,Delta Junction,United States,Alaska,,,US,,,,,nominatim
+62.6,-142.083,,,,,,,,,,,failed
+61.382,-149.65,Anchorage,United States,Alaska,,,US,,,,,nominatim
+34.658,-93.07,,,,,,,,,,,failed
+64.426,-158.106,,,,,,,,,,,failed
+56.974,-133.66,,,,,,,,,,,failed
+67.573,-158.432,,,,,,,,,,,failed
+66.093,-152.17,,,,,,,,,,,failed
+67.139,-159.044,,,,,,,,,,,failed
+67.933,-162.3,,,,,,,,,,,failed
+60.592,-150.317,,,,,,,,,,,failed
