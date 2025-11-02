@@ -264,6 +264,53 @@ If ports are already in use, you can change them in `docker-compose.yml`:
 - **GraphQL API (4001)**: Under `graphql-api.ports` and `server/.env`
 - **Frontend (3000)**: Under `frontend.ports`
 
+## 🐍 Python Data Processing Scripts
+
+The `dataAndUtils/legacy/` directory contains Python scripts for processing raw weather station data and matching it to cities. These scripts are used to prepare the data that gets imported into the PostgreSQL database.
+
+### Setup Python Environment
+
+```bash
+cd dataAndUtils/legacy
+./setup.sh
+```
+
+This will:
+- Create a Python virtual environment
+- Install required dependencies (pandas, geopy, sqlalchemy, psycopg2)
+
+### Running Data Processing
+
+⚠️ **Important**: The raw weather station data file is not included in this repository due to its large size. The script requires:
+- Raw weather station CSV at: `dataAndUtils/uncleaned_data/AVERAGED_weather_station_data_ALL.csv`
+- This file must be obtained separately and placed in the correct location
+
+If you have the raw data file:
+
+```bash
+# Activate virtual environment
+cd dataAndUtils/legacy
+source venv/bin/activate
+
+# Run the main processing script
+cd utils
+python CleanData_MatchCities_ExpandDatesAndWeather.py
+
+# Or specify a custom input file
+python CleanData_MatchCities_ExpandDatesAndWeather.py --input-csv /path/to/your/data.csv
+```
+
+**For detailed documentation on the Python scripts, see [dataAndUtils/legacy/README.md](dataAndUtils/legacy/README.md)**
+
+### What the Scripts Do
+
+The main script (`CleanData_MatchCities_ExpandDatesAndWeather.py`):
+1. Reads historical weather data from weather stations
+2. Matches stations to major cities using worldcities.csv (population ≥ 100k)
+3. Falls back to Nominatim geocoding for remote/rural stations
+4. Processes and cleans weather values (temperatures, precipitation)
+5. Outputs data in batches for efficient processing
+
 ## 🗂️ Legacy Code
 
 The original Python FastAPI backend has been archived to the `legacy/` directory as of October 27, 2025.

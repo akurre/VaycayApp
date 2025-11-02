@@ -32,7 +32,7 @@ const MapViewToggle = ({ viewMode, onViewModeChange }: MapViewToggleProps) => {
           label: (
             <Tooltip label="Marker View" withArrow>
               <div className="flex items-center justify-center">
-                <IconMapPin size={16} />
+                <IconMapPin size={16} color={viewMode === 'heatmap' ? 'gray' : undefined} />
               </div>
             </Tooltip>
           ),
@@ -42,7 +42,7 @@ const MapViewToggle = ({ viewMode, onViewModeChange }: MapViewToggleProps) => {
           label: (
             <Tooltip label="Heatmap View" withArrow>
               <div className="flex items-center justify-center">
-                <IconChartBubble size={16} />
+                <IconChartBubble size={16} color={viewMode === 'markers' ? 'gray' : undefined}/>
               </div>
             </Tooltip>
           ),

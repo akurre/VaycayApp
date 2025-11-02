@@ -42,10 +42,11 @@ const CustomDateSlider: FC<CustomDateSliderProps> = ({
 
         {/* draggable thumb */}
         <div
-          className="absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white shadow-lg flex items-center justify-center cursor-grab active:cursor-grabbing transition-shadow hover:shadow-xl"
+          className="absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full shadow-lg flex items-center justify-center cursor-grab active:cursor-grabbing transition-shadow hover:shadow-xl"
           style={{
             left: `calc(${position}% - ${thumbWidth / 2}px)`,
-            color: appColors.primary,
+            color: 'white',
+            background: appColors.primaryDark
           }}
         >
           {isLoading ? <Loader size={20} /> : <IconGripVertical size={20} stroke={1.5} />}
@@ -53,10 +54,10 @@ const CustomDateSlider: FC<CustomDateSliderProps> = ({
 
         {/* date label above thumb */}
         <div
-          className="absolute -top-8 -translate-x-1/2 text-sm font-medium whitespace-nowrap"
+          className="absolute -top-8 -translate-x-1/2 text-sm text-gray-200 bg-gray-800 rounded-md font-medium whitespace-nowrap"
           style={{
             left: `${position}%`,
-            color: appColors.primary,
+            // color: appColors.primary,
           }}
         >
           {formatSliderLabel(value)}
