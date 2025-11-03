@@ -1,0 +1,15 @@
+{
+  "batch_number": 35,
+  "location_range": {
+    "start": 17001,
+    "end": 17500
+  },
+  "total_records": 0,
+  "unique_cities": 0,
+  "unique_countries": 0,
+  "date_range": {
+    "min": NaN,
+    "max": NaN
+  },
+  "processing_timestamp": "2025-11-02T23:31:11.210755"
+}

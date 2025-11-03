@@ -1,11 +1,11 @@
 {
-  "completed": 38100,
+  "completed": 41351,
   "total": 41351,
-  "failed_count": 12671,
-  "worldcities_matched": 1596,
-  "nominatim_fallback": 14511,
-  "last_updated": "2025-11-02T22:14:17.948394",
-  "current_batch": 381,
+  "failed_count": 14824,
+  "worldcities_matched": 1648,
+  "nominatim_fallback": 15392,
+  "last_updated": "2025-11-02T23:30:22.900233",
+  "current_batch": 414,
   "matching_version": "v2_worldcities",
-  "estimated_time_remaining_minutes": 81.275
+  "estimated_time_remaining_minutes": 0
 }
