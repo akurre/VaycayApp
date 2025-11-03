@@ -19,7 +19,11 @@ Maintain high cohesion and easy discoverability by ensuring each top-level funct
 - Utility functions should live in the nearest relevant `utils/` folder.
   - Example: Map-specific utilities go in `client/src/components/Map/utils/`.
 - Do not define multiple exported functions in the same file.
-- Keep type-only declarations (interfaces, types) where they are idiomatically shared (e.g., `client/src/types/`, `server/src/types/`), not co-located unless function-specific.
+- **Type Declarations:**
+  - All type-only declarations (interfaces, types) must be placed in appropriate files within `client/src/types/` or `server/src/types/`.
+  - **Exception:** Component props interfaces should be defined in the same file as the component they belong to.
+  - Do NOT co-locate types with functions, hooks, or utilities - always extract them to the types directory.
+  - Group related types in the same file (e.g., all weather-related types in `cityWeatherDataType.ts`).
 - If a file contains a React component, do not add additional exported helpers; extract them to a separate file and import them.
 
 ## Exceptions
