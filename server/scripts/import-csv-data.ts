@@ -113,8 +113,8 @@ async function importCSVData(batchDir: string) {
     const batchDirs = readdirSync(batchDir)
       .filter((name) => name.startsWith('batch'))
       .sort((a, b) => {
-        const numA = Number.parseInt(a.replace('batch', ''));
-        const numB = Number.parseInt(b.replace('batch', ''));
+        const numA = Number.parseInt(a.replace('batch', ''), 10);
+        const numB = Number.parseInt(b.replace('batch', ''), 10);
         return numA - numB;
       });
 
@@ -289,7 +289,28 @@ async function importCSVData(batchDir: string) {
         const lines = content.split('\n');
         const headers = parseCSVLine(lines[0]);
 
-        const recordsToInsert: any[] = [];
+        const recordsToInsert: Array<{
+          cityId: number;
+          stationId: number;
+          date: string;
+          PRCP: number | null;
+          SNWD: number | null;
+          TAVG: number | null;
+          TMAX: number | null;
+          TMIN: number | null;
+          AWND: number | null;
+          DAPR: number | null;
+          DATN: number | null;
+          DATX: number | null;
+          DWPR: number | null;
+          MDPR: number | null;
+          MDTN: number | null;
+          MDTX: number | null;
+          WDF2: number | null;
+          WDF5: number | null;
+          WSF2: number | null;
+          WSF5: number | null;
+        }> = [];
 
         for (let i = 1; i < lines.length; i++) {
           const line = lines[i].trim();

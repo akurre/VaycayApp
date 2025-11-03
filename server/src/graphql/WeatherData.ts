@@ -1,7 +1,7 @@
 import { objectType, queryField, nonNull, stringArg, intArg, list } from 'nexus';
 import type { City, WeatherStation, WeatherRecord } from '@prisma/client';
 import { getCachedWeatherData } from '../utils/cache';
-import { queryCityIds } from '../utils/weatherQueries';
+import queryCityIds from '../utils/weatherQueries';
 
 type WeatherRecordWithRelations = WeatherRecord & {
   city: City;
@@ -107,7 +107,7 @@ export const weatherByDateQuery = queryField('weatherByDate', {
       // calculate distribution statistics for logging
       const countryDistribution = records.reduce(
         (acc: Record<string, number>, record: WeatherRecordWithRelations) => {
-          const country = record.city.country;
+          const { country } = record.city;
           acc[country] = (acc[country] || 0) + 1;
           return acc;
         },
@@ -202,7 +202,7 @@ export const weatherByDateAndBoundsQuery = queryField('weatherByDateAndBounds', 
       // calculate distribution statistics for logging
       const countryDistribution = records.reduce(
         (acc: Record<string, number>, record: WeatherRecordWithRelations) => {
-          const country = record.city.country;
+          const { country } = record.city;
           acc[country] = (acc[country] || 0) + 1;
           return acc;
         },

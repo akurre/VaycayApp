@@ -20,7 +20,7 @@ interface QueryCityIdsParams {
  * 3. apply adaptive quotas based on country count
  * 4. return balanced set of cities (population + temperature extremes)
  */
-export async function queryCityIds({
+async function queryCityIds({
   prisma,
   dateStr,
   bounds,
@@ -124,3 +124,5 @@ export async function queryCityIds({
 
   return cityIds.map((c) => c.id);
 }
+
+export default queryCityIds;
