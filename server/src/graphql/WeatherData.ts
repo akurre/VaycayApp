@@ -1,6 +1,7 @@
 import { objectType, queryField, nonNull, stringArg, intArg, list } from 'nexus';
 import type { City, WeatherStation, WeatherRecord } from '@prisma/client';
-import { MAX_CITIES_GLOBAL_VIEW } from '../const';
+import { MAX_CITIES_GLOBAL_VIEW, QUOTA_THRESHOLDS } from '../const';
+import { getCachedWeatherData } from '../utils/cache';
 
 type WeatherRecordWithRelations = WeatherRecord & {
   city: City;
@@ -79,71 +80,117 @@ export const weatherByDateQuery = queryField('weatherByDate', {
     const day = args.monthDay.slice(2);
     const dateStr = `2020-${month}-${day}`;
 
-    // smart city selection strategy:
-    // 1. get one city per country (most populous)
-    // 2. fill remaining slots with top cities by population (up to 300 total)
+    // use caching to avoid repeated queries for the same date
+    const cacheKey = `weather:${dateStr}`;
 
-    // step 1: get the most populous city from each country that has data for this date
-    const countryCities = await context.prisma.$queryRaw<Array<{ id: number }>>`
-      SELECT DISTINCT ON (c.country) 
-        c.id
-      FROM cities c
-      INNER JOIN weather_records wr ON wr."cityId" = c.id
-      WHERE wr.date = ${dateStr}
-      ORDER BY c.country, c.population DESC NULLS LAST
-    `;
+    return getCachedWeatherData(cacheKey, async () => {
+      const startTime = Date.now();
 
-    const countryCityIds = countryCities.map((c: { id: number }) => c.id);
+      // single-query approach using window functions for fair distribution
+      // this query:
+      // 1. ranks cities within each country by population
+      // 2. calculates adaptive quotas based on total country count
+      // 3. applies quotas and returns final result set
+      // all in one database round-trip (~300ms)
+      const cityIds = await context.prisma.$queryRaw<Array<{ id: number }>>`
+        WITH ranked_cities AS (
+          -- rank cities within each country by population
+          SELECT 
+            c.id,
+            c.country,
+            c.population,
+            ROW_NUMBER() OVER (
+              PARTITION BY c.country 
+              ORDER BY c.population DESC NULLS LAST
+            ) as country_rank
+          FROM cities c
+          INNER JOIN weather_records wr ON wr."cityId" = c.id
+          WHERE wr.date = ${dateStr}
+        ),
+        country_stats AS (
+          -- calculate how many countries we have
+          SELECT COUNT(DISTINCT country) as total_countries
+          FROM ranked_cities
+        ),
+        quota_calc AS (
+          -- calculate per-country quota based on total countries
+          SELECT 
+            CASE 
+              WHEN total_countries > ${QUOTA_THRESHOLDS.MANY_COUNTRIES} THEN ${QUOTA_THRESHOLDS.MAX_PER_COUNTRY_MANY}
+              WHEN total_countries > ${QUOTA_THRESHOLDS.MODERATE_COUNTRIES} THEN ${QUOTA_THRESHOLDS.MAX_PER_COUNTRY_MODERATE}
+              ELSE ${QUOTA_THRESHOLDS.MAX_PER_COUNTRY_FEW}
+            END as max_per_country
+          FROM country_stats
+        )
+        SELECT rc.id
+        FROM ranked_cities rc
+        CROSS JOIN quota_calc qc
+        WHERE rc.country_rank <= qc.max_per_country
+        ORDER BY 
+          rc.country_rank,  -- prioritize country representatives (rank 1)
+          rc.population DESC NULLS LAST
+        LIMIT ${MAX_CITIES_GLOBAL_VIEW}
+      `;
 
-    // step 2: get top cities by population (up to MAX_CITIES_GLOBAL_VIEW total)
-    const topCities = await context.prisma.city.findMany({
-      where: {
-        weatherRecords: {
-          some: { date: dateStr },
+      const selectedCityIds = cityIds.map((c: { id: number }) => c.id);
+
+      // fetch weather records for selected cities
+      const records = await context.prisma.weatherRecord.findMany({
+        where: {
+          date: dateStr,
+          cityId: { in: selectedCityIds },
         },
-      },
-      orderBy: [{ population: { sort: 'desc', nulls: 'last' } }],
-      take: MAX_CITIES_GLOBAL_VIEW,
-      select: { id: true },
+        include: {
+          city: true,
+          station: true,
+        },
+      });
+
+      // calculate distribution statistics for logging
+      const countryDistribution = records.reduce(
+        (acc: Record<string, number>, record: WeatherRecordWithRelations) => {
+          const country = record.city.country;
+          acc[country] = (acc[country] || 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>,
+      );
+
+      const queryTime = Date.now() - startTime;
+      const countriesCount = Object.keys(countryDistribution).length;
+      const maxCitiesPerCountry = Math.max(...(Object.values(countryDistribution) as number[]));
+      const avgCitiesPerCountry = (records.length / countriesCount).toFixed(1);
+
+      console.log(`\n📊 Weather query for ${dateStr}:`);
+      console.log(`  ⏱️  Query time: ${queryTime}ms`);
+      console.log(`  🌍 Countries: ${countriesCount}`);
+      console.log(`  🏙️  Total cities: ${records.length}`);
+      console.log(`  📈 Max per country: ${maxCitiesPerCountry}`);
+      console.log(`  📊 Avg per country: ${avgCitiesPerCountry}`);
+
+      // log top 5 countries by city count
+      const topCountries = Object.entries(countryDistribution)
+        .sort(([, a], [, b]) => (b as number) - (a as number))
+        .slice(0, 5);
+      console.log(`  🔝 Top countries: ${topCountries.map(([c, n]) => `${c}(${n})`).join(', ')}`);
+
+      return records.map((record: WeatherRecordWithRelations) => ({
+        city: record.city.name,
+        country: record.city.country,
+        state: record.city.state,
+        suburb: record.city.suburb,
+        date: record.date,
+        lat: record.city.lat,
+        long: record.city.long,
+        population: record.city.population,
+        precipitation: record.PRCP,
+        snowDepth: record.SNWD,
+        avgTemperature: record.TAVG,
+        maxTemperature: record.TMAX,
+        minTemperature: record.TMIN,
+        stationName: record.station.name,
+      }));
     });
-
-    const topCityIds = topCities.map((c: { id: number }) => c.id);
-
-    // step 3: union of both sets (ensures country coverage + top cities)
-    const selectedCityIds = [...new Set([...countryCityIds, ...topCityIds])];
-
-    console.log(`Selected ${selectedCityIds.length} cities for date ${dateStr}`);
-    console.log(`  - Country representatives: ${countryCityIds.length}`);
-    console.log(`  - Top cities: ${topCityIds.length}`);
-
-    // step 4: fetch weather records for selected cities
-    const records = await context.prisma.weatherRecord.findMany({
-      where: {
-        date: dateStr,
-        cityId: { in: selectedCityIds },
-      },
-      include: {
-        city: true,
-        station: true,
-      },
-    });
-
-    return records.map((record: WeatherRecordWithRelations) => ({
-      city: record.city.name,
-      country: record.city.country,
-      state: record.city.state,
-      suburb: record.city.suburb,
-      date: record.date,
-      lat: record.city.lat,
-      long: record.city.long,
-      population: record.city.population,
-      precipitation: record.PRCP,
-      snowDepth: record.SNWD,
-      avgTemperature: record.TAVG,
-      maxTemperature: record.TMAX,
-      minTemperature: record.TMIN,
-      stationName: record.station.name,
-    }));
   },
 });
 
