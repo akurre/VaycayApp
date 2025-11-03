@@ -4,12 +4,16 @@
     "start": 25501,
     "end": 26000
   },
-  "total_records": 0,
-  "unique_cities": 0,
-  "unique_countries": 0,
+  "total_records": 180147,
+  "unique_cities": 464,
+  "unique_countries": 1,
   "date_range": {
-    "min": NaN,
-    "max": NaN
+    "min": "2020-01-01",
+    "max": "2020-12-31"
   },
-  "processing_timestamp": "2025-11-02T23:31:27.877432"
+  "processing_timestamp": "2025-11-03T09:32:45.924377",
+  "temperature_range": {
+    "min": -35.78,
+    "max": 42.54
+  }
 }

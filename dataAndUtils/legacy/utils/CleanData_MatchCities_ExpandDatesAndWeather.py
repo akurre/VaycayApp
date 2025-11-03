@@ -1,5 +1,11 @@
 """
 Script to process weather station data and match it to nearest cities.
+Pickle file location: '/Users/ashlenlaurakurre/Library/Mobile Documents/com~apple~CloudDocs/Documents/AVERAGED_weather_station_data_ALL.pkl.zip'
+To run the script from the console:
+```
+cd ../legacy && source venv/bin/activate && python utils/CleanData_MatchCities_ExpandDatesAndWeather.py --input-pickle-zip '/Users/ashlenlaurakurre/Library/Mobile Documents/com~apple~CloudDocs/Documents/AVERAGED_weather_station_data_ALL.pkl.zip'
+```
+optional tags on the end: `--skip-geocoding --no-json`
 
 DATAFRAME STRUCTURES:
 
@@ -180,6 +186,10 @@ OUTPUT_DIR = PROJECT_ROOT / 'dataAndUtils' / 'vaycay' / 'weather_data'
 CITY_DATA_DIR = PROJECT_ROOT / 'dataAndUtils' / 'vaycay' / 'city_data'
 BATCH_OUTPUT_DIR = PROJECT_ROOT / 'dataAndUtils' / 'worldData'  # New batch output directory
 WORLDCITIES_PATH = PROJECT_ROOT / 'dataAndUtils' / 'worldcities.csv'
+
+# Debug: Log the actual paths being used
+import sys
+logger = logging.getLogger(__name__)
 
 # Default processing settings
 DEFAULT_BATCH_SIZE_LOCATIONS = 500  # Number of locations per output batch
@@ -628,8 +638,8 @@ def match_station_to_major_city(
 
 def load_geocoding_progress() -> Optional[pd.DataFrame]:
     """load previous geocoding progress if it exists."""
-    checkpoint_path = CITY_DATA_DIR / 'geocoding_checkpoint1.csv'
-    progress_path = CITY_DATA_DIR / 'geocoding_progress1.json'
+    checkpoint_path = CITY_DATA_DIR / 'geocoding_checkpoint.csv'
+    progress_path = CITY_DATA_DIR / 'geocoding_progress.json'
     
     if checkpoint_path.exists():
         logger.info(f"found existing geocoding checkpoint: {checkpoint_path}")
@@ -1065,20 +1075,70 @@ def pivot_and_clean_data(df: pd.DataFrame) -> pd.DataFrame:
     """Pivot data and clean weather values with validation."""
     logger.info("Pivoting data by location and date...")
     
+    # DEBUG: Log input data state
+    logger.info(f"DEBUG: Input dataframe shape: {df.shape}")
+    logger.info(f"DEBUG: Input columns: {list(df.columns)}")
+    logger.info(f"DEBUG: Data types:\n{df.dtypes}")
+    logger.info(f"DEBUG: Null counts:\n{df.isnull().sum()}")
+    logger.info(f"DEBUG: Unique data_types: {df['data_type'].unique() if 'data_type' in df.columns else 'N/A'}")
+    logger.info(f"DEBUG: Sample of first 3 rows:\n{df.head(3)}")
+    
+    # save population column separately to add back after pivot (to avoid overflow)
+    population_map = None
+    if 'population' in df.columns:
+        # create a mapping of (lat, long) -> population
+        population_map = df[['lat', 'long', 'population']].drop_duplicates().set_index(['lat', 'long'])['population']
+    
     # build index columns dynamically based on what's available
+    # exclude population from pivot to avoid overflow
     base_index = ['city', 'country', 'state', 'suburb', 'lat', 'long', 'date', 'name']
-    additional_index = ['city_ascii', 'iso2', 'iso3', 'capital', 'population', 
+    additional_index = ['city_ascii', 'iso2', 'iso3', 'capital', 
                        'worldcities_id', 'data_source']
     
     # only include columns that exist in the dataframe
     index_cols = [col for col in base_index + additional_index if col in df.columns]
     
+    # DEBUG: Check for NaN in index columns before pivot
+    logger.info(f"DEBUG: Index columns to use: {index_cols}")
+    for col in index_cols:
+        nan_count = df[col].isnull().sum()
+        if nan_count > 0:
+            logger.warning(f"DEBUG: Column '{col}' has {nan_count} NaN values ({100*nan_count/len(df):.1f}%)")
+            # Fill NaN with empty string to prevent pivot issues
+            logger.info(f"DEBUG: Filling NaN in '{col}' with empty string")
+            df[col] = df[col].fillna('')
+    
+    # DEBUG: Test pivot on small sample first
+    logger.info("DEBUG: Testing pivot on first 1000 rows...")
+    df_sample = df.head(1000).copy()
+    try:
+        df_pivot_sample = df_sample.pivot_table(
+            index=index_cols,
+            columns='data_type',
+            values='value',
+            aggfunc='first'
+        ).reset_index()
+        logger.info(f"DEBUG: Sample pivot successful! Produced {len(df_pivot_sample)} records from {len(df_sample)} input records")
+    except Exception as e:
+        logger.error(f"DEBUG: Sample pivot FAILED with error: {e}")
+        import traceback
+        traceback.print_exc()
+    
+    # Perform actual pivot
+    logger.info("DEBUG: Performing full pivot...")
     df_pivot = df.pivot_table(
         index=index_cols,
         columns='data_type',
         values='value',
         aggfunc='first'
     ).reset_index()
+    
+    logger.info(f"DEBUG: Pivot complete! Result shape: {df_pivot.shape}")
+    logger.info(f"DEBUG: Pivot result columns: {list(df_pivot.columns)}")
+    
+    # add population back after pivot
+    if population_map is not None:
+        df_pivot['population'] = df_pivot.set_index(['lat', 'long']).index.map(population_map).values
     
     logger.info("Processing weather values...")
     
@@ -1349,17 +1409,60 @@ def main():
             geocoded_data = load_geocoding_progress()
             if geocoded_data is None:
                 raise ValueError("No geocoding checkpoint found. Run without --skip-geocoding first.")
+            
+            # filter out failed geocodes
+            failed_count = (geocoded_data['data_source'] == 'failed').sum()
+            logger.info(f"found {failed_count} failed geocodes in checkpoint")
+            geocoded_data = geocoded_data[geocoded_data['data_source'] != 'failed'].reset_index(drop=True)
+            logger.info(f"after filtering: {len(geocoded_data)} valid locations remaining")
+            total_locations = len(geocoded_data)  # update total
         else:
-            geocoded_data = reverse_geocode_locations(
-                unique_locs,
-                geocoding_delay=args.geocoding_delay
-            )
+            # geocoding step - commented out to prevent accidental re-geocoding
+            # geocoded_data = reverse_geocode_locations(
+            #     unique_locs,
+            #     geocoding_delay=args.geocoding_delay
+            # )
+            
+            # force use of checkpoint instead
+            logger.info("geocoding disabled - loading from checkpoint instead...")
+            geocoded_data = load_geocoding_progress()
+            if geocoded_data is None:
+                raise ValueError("no geocoding checkpoint found. please use --skip-geocoding flag.")
+            
+            # filter out failed geocodes
+            failed_count = (geocoded_data['data_source'] == 'failed').sum()
+            logger.info(f"found {failed_count} failed geocodes in checkpoint")
+            geocoded_data = geocoded_data[geocoded_data['data_source'] != 'failed'].reset_index(drop=True)
+            logger.info(f"after filtering: {len(geocoded_data)} valid locations remaining")
+            total_locations = len(geocoded_data)  # update total
             
             if args.resume_only:
-                logger.info("Resume-only mode: Geocoding complete, exiting.")
+                logger.info("resume-only mode: geocoding complete, exiting.")
                 return
         
-        # step 4: process data in batches
+        # step 4: filter weather data to only include valid geocoded locations
+        logger.info("\nFiltering weather data to only include valid geocoded locations...")
+        original_weather_count = len(df_weather)
+        
+        # round coordinates in weather data to match geocoded data
+        df_weather['lat'] = df_weather['lat'].round(3)
+        df_weather['long'] = df_weather['long'].round(3)
+        
+        # create set of valid coordinates for fast lookup
+        valid_coords = set(zip(geocoded_data['lat'], geocoded_data['long']))
+        logger.info(f"Valid geocoded coordinates: {len(valid_coords):,}")
+        
+        # filter weather data
+        df_weather['coord_tuple'] = list(zip(df_weather['lat'], df_weather['long']))
+        df_weather = df_weather[df_weather['coord_tuple'].isin(valid_coords)].copy()
+        df_weather = df_weather.drop(columns=['coord_tuple'])
+        
+        filtered_weather_count = len(df_weather)
+        logger.info(f"Weather data before filtering: {original_weather_count:,} records")
+        logger.info(f"Weather data after filtering: {filtered_weather_count:,} records")
+        logger.info(f"Filtered out: {original_weather_count - filtered_weather_count:,} records ({100*(original_weather_count - filtered_weather_count)/original_weather_count:.1f}%)")
+        
+        # step 5: process data in batches
         logger.info("\n" + "=" * 80)
         logger.info("BATCH PROCESSING")
         logger.info("=" * 80)

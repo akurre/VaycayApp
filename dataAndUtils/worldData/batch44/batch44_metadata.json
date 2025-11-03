@@ -4,12 +4,12 @@
     "start": 21501,
     "end": 22000
   },
-  "total_records": 0,
-  "unique_cities": 0,
-  "unique_countries": 0,
+  "total_records": 170856,
+  "unique_cities": 474,
+  "unique_countries": 2,
   "date_range": {
-    "min": NaN,
-    "max": NaN
+    "min": "2020-01-01",
+    "max": "2020-12-31"
   },
-  "processing_timestamp": "2025-11-02T23:31:19.951551"
+  "processing_timestamp": "2025-11-03T09:32:07.238752"
 }

@@ -1,8 +1,8 @@
 {
-  "total_batches": 83,
-  "batches_processed": 80,
+  "total_batches": 54,
+  "batches_processed": 54,
   "batches_skipped": 0,
-  "total_records_processed": 474095,
+  "total_records_processed": 7569151,
   "batch_size_locations": 500,
-  "processing_timestamp": "2025-11-02T23:32:01.768108"
+  "processing_timestamp": "2025-11-03T09:32:53.145689"
 }
