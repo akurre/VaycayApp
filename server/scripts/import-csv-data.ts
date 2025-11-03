@@ -226,7 +226,9 @@ async function importCSVData(batchDir: string) {
         }
 
         const progress = ((i + batch.length) / cityEntries.length) * 100;
-        console.log(`  ✓ Inserted ${stats.citiesCreated.toLocaleString()} cities (${progress.toFixed(1)}%)`);
+        console.log(
+          `  ✓ Inserted ${stats.citiesCreated.toLocaleString()} cities (${progress.toFixed(1)}%)`
+        );
       } catch (error) {
         console.error(`  ✗ Error inserting city batch:`, error);
         stats.errors += batch.length;
@@ -266,7 +268,9 @@ async function importCSVData(batchDir: string) {
         }
 
         const progress = ((i + batch.length) / stationEntries.length) * 100;
-        console.log(`  ✓ Inserted ${stats.stationsCreated.toLocaleString()} stations (${progress.toFixed(1)}%)`);
+        console.log(
+          `  ✓ Inserted ${stats.stationsCreated.toLocaleString()} stations (${progress.toFixed(1)}%)`
+        );
       } catch (error) {
         console.error(`  ✗ Error inserting station batch:`, error);
         stats.errors += batch.length;
@@ -370,7 +374,9 @@ async function importCSVData(batchDir: string) {
 
             if (recordsProcessed % 100000 === 0) {
               const progress = (recordsProcessed / stats.totalRecords) * 100;
-              console.log(`  ✓ Inserted ${stats.weatherRecordsCreated.toLocaleString()} records (${progress.toFixed(1)}%)`);
+              console.log(
+                `  ✓ Inserted ${stats.weatherRecordsCreated.toLocaleString()} records (${progress.toFixed(1)}%)`
+              );
             }
           }
         }
