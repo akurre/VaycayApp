@@ -4,6 +4,11 @@ import { WeatherData } from '../types/cityWeatherDataType';
 import { getTooltipContent } from '../utils/map/getTooltipContent';
 import type { ViewMode } from '../components/Map/WorldMap';
 
+/**
+ * hook to manage map interactions including hover tooltips and city selection.
+ * handles both marker and heatmap view modes with appropriate interaction logic.
+ */
+
 interface HoverInfo {
   x: number;
   y: number;

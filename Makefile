@@ -66,8 +66,8 @@ db-setup: check-prereqs
 	cd server && npm run prisma:migrate
 	@echo "$(YELLOW)Generating Prisma client...$(NC)"
 	cd server && npm run prisma:generate
-	@echo "$(YELLOW)Importing weather data (this may take a few minutes)...$(NC)"
-	cd server && npm run import-data
+	@echo "$(YELLOW)Importing CSV weather data (this will take 30-60 minutes for 7.5M records)...$(NC)"
+	cd server && npm run import-csv-data
 	@echo "$(GREEN)✓ Database setup complete$(NC)"
 
 # Start all services for development
@@ -123,7 +123,7 @@ lint: check-prereqs
 	@echo "$(YELLOW)Auto-formatting code with Prettier...$(NC)"
 	@cd client && npx prettier --write "src/**/*.{ts,tsx,css}" || true
 	@echo ""
-	@cd server && npx prettier --write "src/**/*.{ts,tsx}" || true
+	@cd server && npx prettier --write "src/**/*.{ts,tsx}" "scripts/**/*.ts" || true
 	@echo "$(GREEN)✓ Lint check complete$(NC)"
 
 # Auto-fix lint errors in both client and server

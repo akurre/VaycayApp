@@ -1,5 +1,5 @@
 // Prisma schema for Vaycay weather data
-// This schema matches the existing PostgreSQL database structure
+// Normalized 3-table model optimized for read performance
 
 generator client {
   provider = "prisma-client-js"
@@ -10,37 +10,94 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model WeatherData {
-  // Composite primary key (city, date, name)
-  city   String
-  date   String
-  name   String  // Weather station name
+// Cities table - stores unique city information
+model City {
+  id             Int              @id @default(autoincrement())
+  name           String
+  country        String
+  state          String?
+  suburb         String?
+  lat            Float
+  long           Float
+  cityAscii      String?
+  iso2           String?
+  iso3           String?
+  capital        String?
+  worldcitiesId  Float?
+  population     Float?
+  dataSource     String?
   
-  // Location information
-  country    String?
-  state      String?
-  suburb     String?
-  lat        String?
-  long       String?
-  population Float?   // City population
+  // Relations
+  weatherStations WeatherStation[]
+  weatherRecords  WeatherRecord[]
   
-  // Weather metrics
-  PRCP    Float?  // Precipitation (mm)
-  SNWD    Float?  // Snow depth (mm)
-  TAVG    Float?  // Average temperature (°C)
-  TMAX    Float?  // Maximum temperature (°C)
-  TMIN    Float?  // Minimum temperature (°C)
+  // Ensure uniqueness based on name, country, and coordinates
+  @@unique([name, country, lat, long])
   
-  // Metadata
-  submitter_id String?
+  // Indexes for fast lookups
+  @@index([name])
+  @@index([country])
+  @@index([lat, long])
   
-  // Composite primary key definition
-  @@id([city, date, name])
+  @@map("cities")
+}
+
+// Weather stations table - links stations to cities
+model WeatherStation {
+  id       Int             @id @default(autoincrement())
+  name     String
+  cityId   Int
   
-  // Indexes for query performance
-  @@index([date])
-  @@index([city])
+  // Relations
+  city            City            @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  weatherRecords  WeatherRecord[]
   
-  // Map to existing table name
-  @@map("weather_data")
+  // Ensure unique station names per city
+  @@unique([name, cityId])
+  @@index([cityId])
+  
+  @@map("weather_stations")
+}
+
+// Weather records table - stores daily weather data
+model WeatherRecord {
+  id        Int      @id @default(autoincrement())
+  cityId    Int
+  stationId Int
+  date      String   // Format: YYYY-MM-DD
+  
+  // Core weather metrics (currently used in app)
+  PRCP      Float?   // Precipitation (mm)
+  SNWD      Float?   // Snow depth (mm)
+  TAVG      Float?   // Average temperature (°C)
+  TMAX      Float?   // Maximum temperature (°C)
+  TMIN      Float?   // Minimum temperature (°C)
+  
+  // Additional weather metrics (available but not yet displayed)
+  AWND      Float?   // Average wind speed
+  DAPR      Float?   // Number of days included in multiday precipitation
+  DATN      Float?   // Number of days included in multiday minimum temperature
+  DATX      Float?   // Number of days included in multiday maximum temperature
+  DWPR      Float?   // Number of days with non-zero precipitation
+  MDPR      Float?   // Multiday precipitation total
+  MDTN      Float?   // Multiday minimum temperature
+  MDTX      Float?   // Multiday maximum temperature
+  WDF2      Float?   // Direction of fastest 2-minute wind
+  WDF5      Float?   // Direction of fastest 5-second wind
+  WSF2      Float?   // Fastest 2-minute wind speed
+  WSF5      Float?   // Fastest 5-second wind speed
+  
+  // Relations
+  city    City           @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  station WeatherStation @relation(fields: [stationId], references: [id], onDelete: Cascade)
+  
+  // Ensure unique records per city, station, and date
+  @@unique([cityId, stationId, date])
+  
+  // Indexes optimized for read queries
+  @@index([date])                    // For "all cities on date X" queries
+  @@index([cityId, date])            // For "city Y on date X" queries
+  @@index([cityId])                  // For "all weather for city Y" queries
+  
+  @@map("weather_records")
 }

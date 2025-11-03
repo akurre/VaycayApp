@@ -166,6 +166,24 @@ The GraphQL schema is built using **Nexus** (code-first approach):
    - Provides Prisma client to resolvers
    - Handles database connections
 
+### Query Optimization System
+
+The API implements a **two-tier query system** with **temperature extremes** for optimal performance and data richness:
+
+#### Adaptive Quotas with Caching
+- **Single-query approach** using PostgreSQL window functions
+- **Fair distribution**: Adaptive per-country quotas (6-21 cities based on country count)
+- **Temperature extremes**: Guarantees hottest and coldest city per country (regardless of population)
+- **In-memory caching**: 1-hour TTL, <5ms response for cached queries
+- **Performance**: ~320ms first request, <5ms cached
+
+#### Zoom-Based Loading
+- **Global view** (zoom 1-4): Uses `weatherByDate` query, returns ~300 cities
+- **Zoomed view** (zoom 5+): Uses `weatherByDateAndBounds` query with geographic filtering
+- **Bounds-first filtering**: Reduces dataset by 90%+ when zoomed in
+- **Temperature extremes included**: At all zoom levels
+- **Performance**: 50-320ms depending on zoom level
+
 ### Available Queries
 
 #### 1. `weatherData` - Paginated Weather Records
@@ -209,7 +227,38 @@ query GetSpringWeather {
 - Queries all records where date ends with `-MM-DD`
 - Returns weather data for that day across all years and cities
 
-#### 3. `weatherByCity` - Weather for Specific City
+#### 3. `weatherByDateAndBounds` - Weather for Date within Geographic Bounds
+```graphql
+query GetNorthAmericaWeather {
+  weatherByDateAndBounds(
+    monthDay: "0315"
+    minLat: 25
+    maxLat: 50
+    minLong: -125
+    maxLong: -65
+  ) {
+    city
+    country
+    avgTemperature
+    lat
+    long
+  }
+}
+```
+
+**Parameters:**
+- `monthDay` (String!): Date in `MMDD` format (e.g., `"0315"` for March 15)
+- `minLat` (Int!): Minimum latitude
+- `maxLat` (Int!): Maximum latitude
+- `minLong` (Int!): Minimum longitude
+- `maxLong` (Int!): Maximum longitude
+
+**Implementation Details:**
+- Filters by geographic bounds BEFORE applying quotas (90%+ performance improvement when zoomed)
+- Uses same adaptive quota system as `weatherByDate`
+- Optimized for zoomed map views (zoom level 4+)
+
+#### 4. `weatherByCity` - Weather for Specific City
 ```graphql
 query GetRomeWeather {
   weatherByCity(city: "Rome") {

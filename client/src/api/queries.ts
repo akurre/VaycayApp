@@ -17,7 +17,39 @@ export const GET_WEATHER_BY_DATE = gql`
       maxTemperature
       minTemperature
       stationName
-      submitterId
+    }
+  }
+`;
+
+export const GET_WEATHER_BY_DATE_AND_BOUNDS = gql`
+  query GetWeatherByDateAndBounds(
+    $monthDay: String!
+    $minLat: Int!
+    $maxLat: Int!
+    $minLong: Int!
+    $maxLong: Int!
+  ) {
+    weatherByDateAndBounds(
+      monthDay: $monthDay
+      minLat: $minLat
+      maxLat: $maxLat
+      minLong: $minLong
+      maxLong: $maxLong
+    ) {
+      city
+      country
+      state
+      suburb
+      date
+      lat
+      long
+      population
+      precipitation
+      snowDepth
+      avgTemperature
+      maxTemperature
+      minTemperature
+      stationName
     }
   }
 `;

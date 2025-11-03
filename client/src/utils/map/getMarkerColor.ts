@@ -1,4 +1,4 @@
-import { TEMP_THRESHOLDS, COLOR_RANGE } from '@/constants/temperatureColors';
+import { TEMP_THRESHOLDS, COLOR_RANGE } from '@/constants';
 
 // interpolate between two colors
 function interpolateColor(

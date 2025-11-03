@@ -1,5 +1,12 @@
 import { objectType, queryField, nonNull, stringArg, intArg, list } from 'nexus';
-import { WeatherData as PrismaWeatherData } from '@prisma/client';
+import type { City, WeatherStation, WeatherRecord } from '@prisma/client';
+import { getCachedWeatherData } from '../utils/cache';
+import queryCityIds from '../utils/weatherQueries';
+
+type WeatherRecordWithRelations = WeatherRecord & {
+  city: City;
+  station: WeatherStation;
+};
 
 // GraphQL WeatherData type definition
 export const WeatherData = objectType({
@@ -20,30 +27,8 @@ export const WeatherData = objectType({
     t.float('maxTemperature', { description: 'Maximum temperature in °C' });
     t.float('minTemperature', { description: 'Minimum temperature in °C' });
     t.nonNull.string('stationName', { description: 'Weather station name' });
-    t.string('submitterId', { description: 'Data submitter ID' });
   },
 });
-
-// Helper function to transform Prisma data to GraphQL format
-function transformWeatherData(data: PrismaWeatherData) {
-  return {
-    city: data.city,
-    country: data.country,
-    state: data.state,
-    suburb: data.suburb,
-    date: data.date,
-    lat: data.lat ? parseFloat(data.lat) : null,
-    long: data.long ? parseFloat(data.long) : null,
-    population: data.population,
-    precipitation: data.PRCP,
-    snowDepth: data.SNWD,
-    avgTemperature: data.TAVG,
-    maxTemperature: data.TMAX,
-    minTemperature: data.TMIN,
-    stationName: data.name,
-    submitterId: data.submitter_id,
-  };
-}
 
 // Query: Get all weather data (paginated)
 export const weatherDataQuery = queryField('weatherData', {
@@ -54,12 +39,31 @@ export const weatherDataQuery = queryField('weatherData', {
     offset: intArg({ default: 0, description: 'Number of records to skip' }),
   },
   async resolve(_parent, args, context) {
-    const data = await context.prisma.weatherData.findMany({
+    const records = await context.prisma.weatherRecord.findMany({
       take: args.limit || 10,
       skip: args.offset || 0,
+      include: {
+        city: true,
+        station: true,
+      },
     });
 
-    return data.map(transformWeatherData);
+    return records.map((record: WeatherRecordWithRelations) => ({
+      city: record.city.name,
+      country: record.city.country,
+      state: record.city.state,
+      suburb: record.city.suburb,
+      date: record.date,
+      lat: record.city.lat,
+      long: record.city.long,
+      population: record.city.population,
+      precipitation: record.PRCP,
+      snowDepth: record.SNWD,
+      avgTemperature: record.TAVG,
+      maxTemperature: record.TMAX,
+      minTemperature: record.TMIN,
+      stationName: record.station.name,
+    }));
   },
 });
 
@@ -71,17 +75,178 @@ export const weatherByDateQuery = queryField('weatherByDate', {
     monthDay: nonNull(stringArg({ description: 'Date in MMDD format (e.g., "0315")' })),
   },
   async resolve(_parent, args, context) {
-    // Convert MMDD to 2020-MM-DD format (matching Python API logic)
+    // convert MMDD to 2020-MM-DD format (matching Python API logic)
     const month = args.monthDay.slice(0, 2);
     const day = args.monthDay.slice(2);
     const dateStr = `2020-${month}-${day}`;
 
-    const data = await context.prisma.weatherData.findMany({
-      where: { date: dateStr },
-      take: 100,
-    });
+    // use caching to avoid repeated queries for the same date
+    const cacheKey = `weather:${dateStr}`;
 
-    return data.map(transformWeatherData);
+    return getCachedWeatherData(cacheKey, async () => {
+      const startTime = Date.now();
+
+      // use shared query logic for smart city distribution
+      const selectedCityIds = await queryCityIds({
+        prisma: context.prisma,
+        dateStr,
+      });
+
+      // fetch weather records for selected cities
+      const records = await context.prisma.weatherRecord.findMany({
+        where: {
+          date: dateStr,
+          cityId: { in: selectedCityIds },
+        },
+        include: {
+          city: true,
+          station: true,
+        },
+      });
+
+      // calculate distribution statistics for logging
+      const countryDistribution = records.reduce(
+        (acc: Record<string, number>, record: WeatherRecordWithRelations) => {
+          const { country } = record.city;
+          acc[country] = (acc[country] || 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>
+      );
+
+      const queryTime = Date.now() - startTime;
+      const countriesCount = Object.keys(countryDistribution).length;
+      const maxCitiesPerCountry = Math.max(...(Object.values(countryDistribution) as number[]));
+      const avgCitiesPerCountry = (records.length / countriesCount).toFixed(1);
+
+      console.log(`\n📊 Weather query for ${dateStr}:`);
+      console.log(`  ⏱️  Query time: ${queryTime}ms`);
+      console.log(`  🌍 Countries: ${countriesCount}`);
+      console.log(`  🏙️  Total cities: ${records.length}`);
+      console.log(`  📈 Max per country: ${maxCitiesPerCountry}`);
+      console.log(`  📊 Avg per country: ${avgCitiesPerCountry}`);
+
+      // log top 5 countries by city count
+      const topCountries = Object.entries(countryDistribution)
+        .sort(([, a], [, b]) => (b as number) - (a as number))
+        .slice(0, 5);
+      console.log(`  🔝 Top countries: ${topCountries.map(([c, n]) => `${c}(${n})`).join(', ')}`);
+
+      return records.map((record: WeatherRecordWithRelations) => ({
+        city: record.city.name,
+        country: record.city.country,
+        state: record.city.state,
+        suburb: record.city.suburb,
+        date: record.date,
+        lat: record.city.lat,
+        long: record.city.long,
+        population: record.city.population,
+        precipitation: record.PRCP,
+        snowDepth: record.SNWD,
+        avgTemperature: record.TAVG,
+        maxTemperature: record.TMAX,
+        minTemperature: record.TMIN,
+        stationName: record.station.name,
+      }));
+    });
+  },
+});
+
+// Query: Get weather by date and geographic bounds
+export const weatherByDateAndBoundsQuery = queryField('weatherByDateAndBounds', {
+  type: list('WeatherData'),
+  description: 'Get weather data for a specific date within geographic bounds (for zoomed views)',
+  args: {
+    monthDay: nonNull(stringArg({ description: 'Date in MMDD format (e.g., "0315")' })),
+    minLat: nonNull(intArg({ description: 'Minimum latitude' })),
+    maxLat: nonNull(intArg({ description: 'Maximum latitude' })),
+    minLong: nonNull(intArg({ description: 'Minimum longitude' })),
+    maxLong: nonNull(intArg({ description: 'Maximum longitude' })),
+  },
+  async resolve(_parent, args, context) {
+    // convert MMDD to 2020-MM-DD format
+    const month = args.monthDay.slice(0, 2);
+    const day = args.monthDay.slice(2);
+    const dateStr = `2020-${month}-${day}`;
+
+    // create cache key including bounds
+    const cacheKey = `weather:${dateStr}:bounds:${args.minLat}-${args.maxLat}:${args.minLong}-${args.maxLong}`;
+
+    return getCachedWeatherData(cacheKey, async () => {
+      const startTime = Date.now();
+
+      // use shared query logic with bounds filtering
+      const selectedCityIds = await queryCityIds({
+        prisma: context.prisma,
+        dateStr,
+        bounds: {
+          minLat: args.minLat,
+          maxLat: args.maxLat,
+          minLong: args.minLong,
+          maxLong: args.maxLong,
+        },
+      });
+
+      // fetch weather records for selected cities
+      const records = await context.prisma.weatherRecord.findMany({
+        where: {
+          date: dateStr,
+          cityId: { in: selectedCityIds },
+        },
+        include: {
+          city: true,
+          station: true,
+        },
+      });
+
+      // calculate distribution statistics for logging
+      const countryDistribution = records.reduce(
+        (acc: Record<string, number>, record: WeatherRecordWithRelations) => {
+          const { country } = record.city;
+          acc[country] = (acc[country] || 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>
+      );
+
+      const queryTime = Date.now() - startTime;
+      const countriesCount = Object.keys(countryDistribution).length;
+      const maxCitiesPerCountry = Math.max(...(Object.values(countryDistribution) as number[]));
+      const avgCitiesPerCountry = (records.length / countriesCount).toFixed(1);
+
+      console.log(`\n📊 Weather query (BOUNDS) for ${dateStr}:`);
+      console.log(
+        `  📍 Bounds: lat[${args.minLat}, ${args.maxLat}], long[${args.minLong}, ${args.maxLong}]`
+      );
+      console.log(`  ⏱️  Query time: ${queryTime}ms`);
+      console.log(`  🌍 Countries: ${countriesCount}`);
+      console.log(`  🏙️  Total cities: ${records.length}`);
+      console.log(`  📈 Max per country: ${maxCitiesPerCountry}`);
+      console.log(`  📊 Avg per country: ${avgCitiesPerCountry}`);
+
+      // log top 5 countries by city count
+      const topCountries = Object.entries(countryDistribution)
+        .sort(([, a], [, b]) => (b as number) - (a as number))
+        .slice(0, 5);
+      console.log(`  🔝 Top countries: ${topCountries.map(([c, n]) => `${c}(${n})`).join(', ')}`);
+
+      return records.map((record: WeatherRecordWithRelations) => ({
+        city: record.city.name,
+        country: record.city.country,
+        state: record.city.state,
+        suburb: record.city.suburb,
+        date: record.date,
+        lat: record.city.lat,
+        long: record.city.long,
+        population: record.city.population,
+        precipitation: record.PRCP,
+        snowDepth: record.SNWD,
+        avgTemperature: record.TAVG,
+        maxTemperature: record.TMAX,
+        minTemperature: record.TMIN,
+        stationName: record.station.name,
+      }));
+    });
   },
 });
 
@@ -93,15 +258,47 @@ export const weatherByCityQuery = queryField('weatherByCity', {
     city: nonNull(stringArg({ description: 'City name (case-insensitive)' })),
   },
   async resolve(_parent, args, context) {
-    // Title case the city name (matching Python API logic)
+    // title case the city name (matching Python API logic)
     const cityName = args.city.charAt(0).toUpperCase() + args.city.slice(1).toLowerCase();
 
-    const data = await context.prisma.weatherData.findMany({
-      where: { city: cityName },
-      take: 100,
+    // find the city first
+    const cities = await context.prisma.city.findMany({
+      where: { name: cityName },
     });
 
-    return data.map(transformWeatherData);
+    if (cities.length === 0) {
+      return [];
+    }
+
+    // get weather records for all matching cities
+    const cityIds = cities.map((c: City) => c.id);
+    const records = await context.prisma.weatherRecord.findMany({
+      where: {
+        cityId: { in: cityIds },
+      },
+      take: 100,
+      include: {
+        city: true,
+        station: true,
+      },
+    });
+
+    return records.map((record: WeatherRecordWithRelations) => ({
+      city: record.city.name,
+      country: record.city.country,
+      state: record.city.state,
+      suburb: record.city.suburb,
+      date: record.date,
+      lat: record.city.lat,
+      long: record.city.long,
+      population: record.city.population,
+      precipitation: record.PRCP,
+      snowDepth: record.SNWD,
+      avgTemperature: record.TAVG,
+      maxTemperature: record.TMAX,
+      minTemperature: record.TMIN,
+      stationName: record.station.name,
+    }));
   },
 });
 
@@ -110,13 +307,12 @@ export const citiesQuery = queryField('cities', {
   type: list('String'),
   description: 'Get list of all unique cities in the database',
   async resolve(_parent, _args, context) {
-    const cities = await context.prisma.weatherData.findMany({
-      distinct: ['city'],
-      select: { city: true },
-      orderBy: { city: 'asc' },
+    const cities = await context.prisma.city.findMany({
+      select: { name: true },
+      orderBy: { name: 'asc' },
     });
 
-    return cities.map((c: { city: string }) => c.city);
+    return cities.map((c: { name: string }) => c.name);
   },
 });
 
@@ -125,13 +321,12 @@ export const countriesQuery = queryField('countries', {
   type: list('String'),
   description: 'Get list of all unique countries in the database',
   async resolve(_parent, _args, context) {
-    const countries = await context.prisma.weatherData.findMany({
+    const countries = await context.prisma.city.findMany({
       distinct: ['country'],
       select: { country: true },
-      where: { country: { not: null } },
       orderBy: { country: 'asc' },
     });
 
-    return countries.map((c: { country: string | null }) => c.country).filter(Boolean) as string[];
+    return countries.map((c: { country: string }) => c.country);
   },
 });

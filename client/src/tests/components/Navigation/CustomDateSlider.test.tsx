@@ -62,8 +62,8 @@ describe('CustomDateSlider', () => {
     const trackContainer = container.querySelector('.relative.h-2.cursor-pointer');
     expect(trackContainer).toBeInTheDocument();
 
-    // verify the thumb exists
-    const thumb = container.querySelector('.rounded-full.bg-white.shadow-lg');
+    // verify the thumb exists (it has rounded-full and shadow-lg classes)
+    const thumb = container.querySelector('.rounded-full.shadow-lg');
     expect(thumb).toBeInTheDocument();
   });
 });

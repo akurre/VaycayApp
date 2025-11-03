@@ -16,8 +16,17 @@ export interface WeatherData {
   submitterId: string | null;
 }
 
+// type for weather data with guaranteed non-null coordinates and temperature
+// used for map markers where these values are required
+export type ValidMarkerData = WeatherData & {
+  lat: number;
+  long: number;
+  avgTemperature: number;
+};
+
 export interface WeatherByDateResponse {
   weatherByDate: WeatherData[];
+  weatherByDateAndBounds?: WeatherData[];
 }
 
 export interface WeatherByDateVars {
