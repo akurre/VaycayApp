@@ -1396,86 +1396,8 @@ def main():
         if args.input_pickle_zip:
             logger.info(f"  Input pickle zip: {args.input_pickle_zip}")
             df_weather = read_from_pickle_zip(args.input_pickle_zip)
-        
-        # DEBUG: Check TAVG, TMAX, TMIN data for major cities in pickle
-        print("\n" + "=" * 80)
-        print("DEBUG: Checking TAVG/TMAX/TMIN data in pickle for major cities")
-        print("=" * 80)
-        
-        # Check for major US cities
-        us_cities = ['NEW YORK', 'LOS ANGELES', 'CHICAGO']
-        for city_name in us_cities:
-            city_data = df_weather[df_weather['name'].str.contains(city_name, case=False, na=False)]
-            if len(city_data) > 0:
-                print(f"\n{'='*60}")
-                print(f"✓ {city_name} found: {len(city_data)} total records")
-                print(f"{'='*60}")
-                
-                # check each data type
-                for data_type in ['TAVG', 'TMAX', 'TMIN']:
-                    type_data = city_data[city_data['data_type'] == data_type]
-                    print(f"\n  {data_type}:")
-                    print(f"    Records: {len(type_data)} ({100*len(type_data)/len(city_data):.1f}%)")
-                    
-                    if len(type_data) > 0:
-                        # check value column (renamed from AVG)
-                        value_not_null = type_data['value'].notna().sum()
-                        print(f"    value (AVG) column not null: {value_not_null} ({100*value_not_null/len(type_data):.1f}%)")
-                        
-                        # check individual year columns
-                        year_cols = ['value2016', 'value2017', 'value2018', 'value2019', 'value2020']
-                        for year_col in year_cols:
-                            if year_col in type_data.columns:
-                                year_not_null = type_data[year_col].notna().sum()
-                                print(f"    {year_col} not null: {year_not_null} ({100*year_not_null/len(type_data):.1f}%)")
-                        
-                        # show sample values
-                        if value_not_null > 0:
-                            print(f"    Sample value (AVG) values: {type_data[type_data['value'].notna()]['value'].head(3).tolist()}")
-                    else:
-                        print(f"    ❌ NO {data_type} DATA FOUND")
-            else:
-                print(f"❌ {city_name} not found in pickle")
-        
-        # Check for major Australian cities
-        aus_cities = ['SYDNEY', 'MELBOURNE']
-        for city_name in aus_cities:
-            city_data = df_weather[df_weather['name'].str.contains(city_name, case=False, na=False)]
-            if len(city_data) > 0:
-                print(f"\n{'='*60}")
-                print(f"✓ {city_name} found: {len(city_data)} total records")
-                print(f"{'='*60}")
-                
-                # check each data type
-                for data_type in ['TAVG', 'TMAX', 'TMIN']:
-                    type_data = city_data[city_data['data_type'] == data_type]
-                    print(f"\n  {data_type}:")
-                    print(f"    Records: {len(type_data)} ({100*len(type_data)/len(city_data):.1f}%)")
-                    
-                    if len(type_data) > 0:
-                        # check value column (renamed from AVG)
-                        value_not_null = type_data['value'].notna().sum()
-                        print(f"    value (AVG) column not null: {value_not_null} ({100*value_not_null/len(type_data):.1f}%)")
-                        
-                        # check individual year columns
-                        year_cols = ['value2016', 'value2017', 'value2018', 'value2019', 'value2020']
-                        for year_col in year_cols:
-                            if year_col in type_data.columns:
-                                year_not_null = type_data[year_col].notna().sum()
-                                print(f"    {year_col} not null: {year_not_null} ({100*year_not_null/len(type_data):.1f}%)")
-                        
-                        # show sample values
-                        if value_not_null > 0:
-                            print(f"    Sample value (AVG) values: {type_data[type_data['value'].notna()]['value'].head(3).tolist()}")
-                    else:
-                        print(f"    ❌ NO {data_type} DATA FOUND")
-            else:
-                print(f"❌ {city_name} not found in pickle")
-        
-        print("\n" + "=" * 80)
-        print("DEBUG: Exiting after pickle check")
-        print("=" * 80)
-        exit()
+        else:
+            df_weather = read_and_prepare_data(args.input_csv)
         
         # step 2: get unique locations
         unique_locs = get_unique_locations(df_weather)
