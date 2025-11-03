@@ -17,6 +17,9 @@ dist/
 build/
 *.log
 
+# test coverage
+coverage/
+
 # Server (TypeScript GraphQL API)
 server/node_modules/
 server/dist/
