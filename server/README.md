@@ -168,19 +168,21 @@ The GraphQL schema is built using **Nexus** (code-first approach):
 
 ### Query Optimization System
 
-The API implements a **two-tier query system** for optimal performance:
+The API implements a **two-tier query system** with **temperature extremes** for optimal performance and data richness:
 
 #### Adaptive Quotas with Caching
 - **Single-query approach** using PostgreSQL window functions
 - **Fair distribution**: Adaptive per-country quotas (6-21 cities based on country count)
+- **Temperature extremes**: Guarantees hottest and coldest city per country (regardless of population)
 - **In-memory caching**: 1-hour TTL, <5ms response for cached queries
-- **Performance**: ~300ms first request, <5ms cached
+- **Performance**: ~320ms first request, <5ms cached
 
 #### Zoom-Based Loading
-- **Global view** (zoom 1-3): Uses `weatherByDate` query, returns 300 cities
-- **Zoomed view** (zoom 4+): Uses `weatherByDateAndBounds` query with geographic filtering
+- **Global view** (zoom 1-4): Uses `weatherByDate` query, returns ~300 cities
+- **Zoomed view** (zoom 5+): Uses `weatherByDateAndBounds` query with geographic filtering
 - **Bounds-first filtering**: Reduces dataset by 90%+ when zoomed in
-- **Performance**: 50-300ms depending on zoom level
+- **Temperature extremes included**: At all zoom levels
+- **Performance**: 50-320ms depending on zoom level
 
 ### Available Queries
 

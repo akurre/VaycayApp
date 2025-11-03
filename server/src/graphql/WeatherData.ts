@@ -1,7 +1,7 @@
 import { objectType, queryField, nonNull, stringArg, intArg, list } from 'nexus';
 import type { City, WeatherStation, WeatherRecord } from '@prisma/client';
-import { MAX_CITIES_GLOBAL_VIEW, QUOTA_THRESHOLDS } from '../const';
 import { getCachedWeatherData } from '../utils/cache';
+import { queryCityIds } from '../utils/weatherQueries';
 
 type WeatherRecordWithRelations = WeatherRecord & {
   city: City;
@@ -86,53 +86,11 @@ export const weatherByDateQuery = queryField('weatherByDate', {
     return getCachedWeatherData(cacheKey, async () => {
       const startTime = Date.now();
 
-      // single-query approach using window functions for fair distribution
-      // this query:
-      // 1. ranks cities within each country by population
-      // 2. calculates adaptive quotas based on total country count
-      // 3. applies quotas and returns final result set
-      // all in one database round-trip (~300ms)
-      const cityIds = await context.prisma.$queryRaw<Array<{ id: number }>>`
-        WITH ranked_cities AS (
-          -- rank cities within each country by population
-          SELECT 
-            c.id,
-            c.country,
-            c.population,
-            ROW_NUMBER() OVER (
-              PARTITION BY c.country 
-              ORDER BY c.population DESC NULLS LAST
-            ) as country_rank
-          FROM cities c
-          INNER JOIN weather_records wr ON wr."cityId" = c.id
-          WHERE wr.date = ${dateStr}
-        ),
-        country_stats AS (
-          -- calculate how many countries we have
-          SELECT COUNT(DISTINCT country) as total_countries
-          FROM ranked_cities
-        ),
-        quota_calc AS (
-          -- calculate per-country quota based on total countries
-          SELECT 
-            CASE 
-              WHEN total_countries > ${QUOTA_THRESHOLDS.MANY_COUNTRIES} THEN ${QUOTA_THRESHOLDS.MAX_PER_COUNTRY_MANY}
-              WHEN total_countries > ${QUOTA_THRESHOLDS.MODERATE_COUNTRIES} THEN ${QUOTA_THRESHOLDS.MAX_PER_COUNTRY_MODERATE}
-              ELSE ${QUOTA_THRESHOLDS.MAX_PER_COUNTRY_FEW}
-            END as max_per_country
-          FROM country_stats
-        )
-        SELECT rc.id
-        FROM ranked_cities rc
-        CROSS JOIN quota_calc qc
-        WHERE rc.country_rank <= qc.max_per_country
-        ORDER BY 
-          rc.country_rank,  -- prioritize country representatives (rank 1)
-          rc.population DESC NULLS LAST
-        LIMIT ${MAX_CITIES_GLOBAL_VIEW}
-      `;
-
-      const selectedCityIds = cityIds.map((c: { id: number }) => c.id);
+      // use shared query logic for smart city distribution
+      const selectedCityIds = await queryCityIds({
+        prisma: context.prisma,
+        dateStr,
+      });
 
       // fetch weather records for selected cities
       const records = await context.prisma.weatherRecord.findMany({
@@ -217,58 +175,17 @@ export const weatherByDateAndBoundsQuery = queryField('weatherByDateAndBounds', 
     return getCachedWeatherData(cacheKey, async () => {
       const startTime = Date.now();
 
-      // bounds-first approach: filter by geographic bounds BEFORE applying quotas
-      // this reduces the dataset by 90%+ when zoomed in, making queries much faster
-      const cityIds = await context.prisma.$queryRaw<Array<{ id: number }>>`
-        WITH bounded_cities AS (
-          -- FIRST: filter by geographic bounds (reduces dataset dramatically)
-          SELECT 
-            c.id,
-            c.country,
-            c.population
-          FROM cities c
-          INNER JOIN weather_records wr ON wr."cityId" = c.id
-          WHERE 
-            wr.date = ${dateStr}
-            AND c.lat BETWEEN ${args.minLat} AND ${args.maxLat}
-            AND c.long BETWEEN ${args.minLong} AND ${args.maxLong}
-        ),
-        ranked_cities AS (
-          -- THEN: rank within each country
-          SELECT 
-            id,
-            country,
-            population,
-            ROW_NUMBER() OVER (
-              PARTITION BY country 
-              ORDER BY population DESC NULLS LAST
-            ) as country_rank
-          FROM bounded_cities
-        ),
-        country_stats AS (
-          -- calculate countries within bounds
-          SELECT COUNT(DISTINCT country) as total_countries
-          FROM bounded_cities
-        ),
-        quota_calc AS (
-          -- apply same adaptive quota logic
-          SELECT 
-            CASE 
-              WHEN total_countries > ${QUOTA_THRESHOLDS.MANY_COUNTRIES} THEN ${QUOTA_THRESHOLDS.MAX_PER_COUNTRY_MANY}
-              WHEN total_countries > ${QUOTA_THRESHOLDS.MODERATE_COUNTRIES} THEN ${QUOTA_THRESHOLDS.MAX_PER_COUNTRY_MODERATE}
-              ELSE ${QUOTA_THRESHOLDS.MAX_PER_COUNTRY_FEW}
-            END as max_per_country
-          FROM country_stats
-        )
-        SELECT rc.id
-        FROM ranked_cities rc
-        CROSS JOIN quota_calc qc
-        WHERE rc.country_rank <= qc.max_per_country
-        ORDER BY rc.country_rank, rc.population DESC NULLS LAST
-        LIMIT ${MAX_CITIES_GLOBAL_VIEW}
-      `;
-
-      const selectedCityIds = cityIds.map((c: { id: number }) => c.id);
+      // use shared query logic with bounds filtering
+      const selectedCityIds = await queryCityIds({
+        prisma: context.prisma,
+        dateStr,
+        bounds: {
+          minLat: args.minLat,
+          maxLat: args.maxLat,
+          minLong: args.minLong,
+          maxLong: args.maxLong,
+        },
+      });
 
       // fetch weather records for selected cities
       const records = await context.prisma.weatherRecord.findMany({
