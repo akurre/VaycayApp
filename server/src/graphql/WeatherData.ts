@@ -1,5 +1,6 @@
 import { objectType, queryField, nonNull, stringArg, intArg, list } from 'nexus';
 import type { City, WeatherStation, WeatherRecord } from '@prisma/client';
+import { MAX_CITIES_GLOBAL_VIEW } from '../const';
 
 type WeatherRecordWithRelations = WeatherRecord & {
   city: City;
@@ -78,9 +79,49 @@ export const weatherByDateQuery = queryField('weatherByDate', {
     const day = args.monthDay.slice(2);
     const dateStr = `2020-${month}-${day}`;
 
+    // smart city selection strategy:
+    // 1. get one city per country (most populous)
+    // 2. fill remaining slots with top cities by population (up to 300 total)
+
+    // step 1: get the most populous city from each country that has data for this date
+    const countryCities = await context.prisma.$queryRaw<Array<{ id: number }>>`
+      SELECT DISTINCT ON (c.country) 
+        c.id
+      FROM cities c
+      INNER JOIN weather_records wr ON wr."cityId" = c.id
+      WHERE wr.date = ${dateStr}
+      ORDER BY c.country, c.population DESC NULLS LAST
+    `;
+
+    const countryCityIds = countryCities.map((c: { id: number }) => c.id);
+
+    // step 2: get top cities by population (up to MAX_CITIES_GLOBAL_VIEW total)
+    const topCities = await context.prisma.city.findMany({
+      where: {
+        weatherRecords: {
+          some: { date: dateStr },
+        },
+      },
+      orderBy: [{ population: { sort: 'desc', nulls: 'last' } }],
+      take: MAX_CITIES_GLOBAL_VIEW,
+      select: { id: true },
+    });
+
+    const topCityIds = topCities.map((c: { id: number }) => c.id);
+
+    // step 3: union of both sets (ensures country coverage + top cities)
+    const selectedCityIds = [...new Set([...countryCityIds, ...topCityIds])];
+
+    console.log(`Selected ${selectedCityIds.length} cities for date ${dateStr}`);
+    console.log(`  - Country representatives: ${countryCityIds.length}`);
+    console.log(`  - Top cities: ${topCityIds.length}`);
+
+    // step 4: fetch weather records for selected cities
     const records = await context.prisma.weatherRecord.findMany({
-      where: { date: dateStr },
-      take: 100,
+      where: {
+        date: dateStr,
+        cityId: { in: selectedCityIds },
+      },
       include: {
         city: true,
         station: true,
