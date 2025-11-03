@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import type { MapViewState, ViewStateChangeParameters } from '@deck.gl/core';
-import { ZOOM_THRESHOLD, DEBOUNCE_DELAY } from '@/constants/mapConstants';
+import { ZOOM_THRESHOLD, DEBOUNCE_DELAY, BOUNDS_BUFFER_PERCENT } from '@/constants/mapConstants';
 
 /**
  * hook to track map viewport bounds and zoom level for intelligent query switching.
@@ -22,7 +22,7 @@ interface UseMapBoundsReturn {
   onViewStateChange: (params: ViewStateChangeParameters) => void;
 }
 
-// calculate geographic bounds from viewport
+// calculate geographic bounds from viewport with buffer
 function calculateBounds(viewState: MapViewState): MapBounds {
   const { latitude, longitude, zoom } = viewState;
 
@@ -31,11 +31,15 @@ function calculateBounds(viewState: MapViewState): MapBounds {
   const degreesLongitude = 360 / Math.pow(2, zoom);
   const degreesLatitude = 180 / Math.pow(2, zoom);
 
+  // add buffer to include nearby areas (helps show cities in adjacent countries)
+  const bufferLat = degreesLatitude * BOUNDS_BUFFER_PERCENT;
+  const bufferLong = degreesLongitude * BOUNDS_BUFFER_PERCENT;
+
   return {
-    minLat: Math.max(-90, Math.floor(latitude - degreesLatitude / 2)),
-    maxLat: Math.min(90, Math.ceil(latitude + degreesLatitude / 2)),
-    minLong: Math.max(-180, Math.floor(longitude - degreesLongitude / 2)),
-    maxLong: Math.min(180, Math.ceil(longitude + degreesLongitude / 2)),
+    minLat: Math.max(-90, Math.floor(latitude - degreesLatitude / 2 - bufferLat)),
+    maxLat: Math.min(90, Math.ceil(latitude + degreesLatitude / 2 + bufferLat)),
+    minLong: Math.max(-180, Math.floor(longitude - degreesLongitude / 2 - bufferLong)),
+    maxLong: Math.min(180, Math.ceil(longitude + degreesLongitude / 2 + bufferLong)),
   };
 }
 
