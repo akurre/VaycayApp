@@ -18,6 +18,7 @@ export interface WeatherData {
 
 export interface WeatherByDateResponse {
   weatherByDate: WeatherData[];
+  weatherByDateAndBounds?: WeatherData[];
 }
 
 export interface WeatherByDateVars {
