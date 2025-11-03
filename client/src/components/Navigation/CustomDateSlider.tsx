@@ -46,7 +46,7 @@ const CustomDateSlider: FC<CustomDateSliderProps> = ({
           style={{
             left: `calc(${position}% - ${thumbWidth / 2}px)`,
             color: 'white',
-            background: appColors.primaryDark
+            background: appColors.primaryDark,
           }}
         >
           {isLoading ? <Loader size={20} /> : <IconGripVertical size={20} stroke={1.5} />}

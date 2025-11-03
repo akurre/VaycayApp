@@ -30,7 +30,11 @@ const MapPage: FC = () => {
   const [debouncedDate] = useDebouncedValue(selectedDate, 300);
 
   // use bounds-aware query hook
-  const { dataReturned: weatherData, isError, isLoading } = useWeatherByDateAndBounds({
+  const {
+    dataReturned: weatherData,
+    isError,
+    isLoading,
+  } = useWeatherByDateAndBounds({
     date: debouncedDate,
     bounds,
     shouldUseBounds,
@@ -58,13 +62,10 @@ const MapPage: FC = () => {
   };
 
   // handle bounds changes from map zoom/pan
-  const handleBoundsChange = useCallback(
-    (newBounds: MapBounds | null, useBounds: boolean) => {
-      setBounds(newBounds);
-      setShouldUseBounds(useBounds);
-    },
-    []
-  );
+  const handleBoundsChange = useCallback((newBounds: MapBounds | null, useBounds: boolean) => {
+    setBounds(newBounds);
+    setShouldUseBounds(useBounds);
+  }, []);
 
   if (isError) {
     // todo handle errors better

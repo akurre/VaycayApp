@@ -111,7 +111,7 @@ export const weatherByDateQuery = queryField('weatherByDate', {
           acc[country] = (acc[country] || 0) + 1;
           return acc;
         },
-        {} as Record<string, number>,
+        {} as Record<string, number>
       );
 
       const queryTime = Date.now() - startTime;
@@ -206,7 +206,7 @@ export const weatherByDateAndBoundsQuery = queryField('weatherByDateAndBounds', 
           acc[country] = (acc[country] || 0) + 1;
           return acc;
         },
-        {} as Record<string, number>,
+        {} as Record<string, number>
       );
 
       const queryTime = Date.now() - startTime;
@@ -215,7 +215,9 @@ export const weatherByDateAndBoundsQuery = queryField('weatherByDateAndBounds', 
       const avgCitiesPerCountry = (records.length / countriesCount).toFixed(1);
 
       console.log(`\n📊 Weather query (BOUNDS) for ${dateStr}:`);
-      console.log(`  📍 Bounds: lat[${args.minLat}, ${args.maxLat}], long[${args.minLong}, ${args.maxLong}]`);
+      console.log(
+        `  📍 Bounds: lat[${args.minLat}, ${args.maxLat}], long[${args.minLong}, ${args.maxLong}]`
+      );
       console.log(`  ⏱️  Query time: ${queryTime}ms`);
       console.log(`  🌍 Countries: ${countriesCount}`);
       console.log(`  🏙️  Total cities: ${records.length}`);

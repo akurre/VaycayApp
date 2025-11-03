@@ -15,7 +15,7 @@ const weatherCache = new NodeCache({
  */
 export async function getCachedWeatherData<T>(
   cacheKey: string,
-  fetchFn: () => Promise<T>,
+  fetchFn: () => Promise<T>
 ): Promise<T> {
   const cached = weatherCache.get<T>(cacheKey);
   if (cached) {
