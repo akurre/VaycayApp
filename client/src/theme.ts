@@ -3,8 +3,8 @@ import { createTheme } from '@mantine/core';
 // Custom color palette for the application
 export const appColors = {
   primary: '#800040', // burgundy
-  primaryLight: '#', //
-  primaryDark: '#', //
+  primaryLight: '#', // todo fill in
+  primaryDark: '#', // todo fill in
 } as const;
 
 export const theme = createTheme({

@@ -1,21 +1,13 @@
 import DeckGL from '@deck.gl/react';
 import Map from 'react-map-gl/maplibre';
-import type { MapViewState } from '@deck.gl/core';
 import { WeatherData } from '../../types/cityWeatherDataType';
 import { useMapLayers } from '../../hooks/useMapLayers';
 import { useMapInteractions } from '../../hooks/useMapInteractions';
 import { useMapBounds } from '../../hooks/useMapBounds';
+import { INITIAL_VIEW_STATE } from '@/constants';
 import CityPopup from './CityPopup';
 import MapTooltip from './MapTooltip';
 import 'maplibre-gl/dist/maplibre-gl.css';
-
-const INITIAL_VIEW_STATE: MapViewState = {
-  longitude: 0,
-  latitude: 20,
-  zoom: 2,
-  pitch: 0,
-  bearing: 0,
-};
 
 export type ViewMode = 'heatmap' | 'markers';
 

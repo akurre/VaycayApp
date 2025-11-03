@@ -1,3 +1,25 @@
+// ============================================================================
+// MAP CONSTANTS
+// ============================================================================
+
+// zoom-based loading thresholds
+export const ZOOM_THRESHOLD = 2; // switch to bounds query at zoom level 2+ (continental view)
+export const DEBOUNCE_DELAY = 300; // ms - debounce delay for zoom/pan events
+export const BOUNDS_BUFFER_PERCENT = 0.8; // add 80% buffer to calculated bounds to include edge countries
+
+// initial map view state
+export const INITIAL_VIEW_STATE = {
+  longitude: 0,
+  latitude: 20,
+  zoom: 2,
+  pitch: 0,
+  bearing: 0,
+};
+
+// ============================================================================
+// TEMPERATURE & COLOR CONSTANTS
+// ============================================================================
+
 // fixed temperature thresholds (in celsius) and their corresponding colors
 // the interpolation function in getMarkerColor.ts creates smooth gradients between these points
 // so we only need key transition points, not every degree
@@ -16,3 +38,10 @@ export const TEMP_THRESHOLDS = [
 
 // color range for heatmap layer (extracted from thresholds)
 export const COLOR_RANGE: [number, number, number][] = TEMP_THRESHOLDS.map((t) => t.color);
+
+// ============================================================================
+// UI CONSTANTS
+// ============================================================================
+
+// custom date slider thumb dimensions for positioning calculations
+export const SLIDER_THUMB_WIDTH = 32; // 8 * 4 (w-8 in tailwind)
