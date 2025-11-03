@@ -17,7 +17,6 @@ export const GET_WEATHER_BY_DATE = gql`
       maxTemperature
       minTemperature
       stationName
-      submitterId
     }
   }
 `;

@@ -66,8 +66,8 @@ db-setup: check-prereqs
 	cd server && npm run prisma:migrate
 	@echo "$(YELLOW)Generating Prisma client...$(NC)"
 	cd server && npm run prisma:generate
-	@echo "$(YELLOW)Importing weather data (this may take a few minutes)...$(NC)"
-	cd server && npm run import-data
+	@echo "$(YELLOW)Importing CSV weather data (this will take 30-60 minutes for 7.5M records)...$(NC)"
+	cd server && npm run import-csv-data
 	@echo "$(GREEN)✓ Database setup complete$(NC)"
 
 # Start all services for development
