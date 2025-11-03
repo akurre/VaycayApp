@@ -20,11 +20,7 @@ interface QueryCityIdsParams {
  * 3. apply adaptive quotas based on country count
  * 4. return balanced set of cities (population + temperature extremes)
  */
-async function queryCityIds({
-  prisma,
-  dateStr,
-  bounds,
-}: QueryCityIdsParams): Promise<number[]> {
+async function queryCityIds({ prisma, dateStr, bounds }: QueryCityIdsParams): Promise<number[]> {
   // build WHERE clause based on whether bounds are provided
   const boundsCondition = bounds
     ? Prisma.sql`
