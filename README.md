@@ -1,5 +1,7 @@
 # Vaycay Weather App
 
+Hey, I'm Ashlen, welcome to my little side project (currently being developed).
+
 **Vaycay** is a weather data API platform providing historical average weather data for locations worldwide. The system uses a modern TypeScript GraphQL API with a React frontend, enabling users to query weather statistics for specific dates or cities to help with vacation planning based on historical weather patterns.
 
 **Important to note:** I built this originally with Python FastAPI in the very (very) start of my programming career, where I was moreso in the business of just playing with dataframes in pandas. I had not revisited it really until now (late Oct 2025), but I want to play with GraphQL / React in my own way. That being said, it's very primitive! Will be building it out as time goes on.
