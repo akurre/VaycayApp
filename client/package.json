@@ -28,7 +28,7 @@
     "@mantine/hooks": "^8.3.6",
     "@tabler/icons-react": "^3.35.0",
     "@types/react-map-gl": "^6.1.7",
-    "dayjs": "^1.11.18",
+    "dayjs": "^1.11.19",
     "deck.gl": "^9.2.2",
     "graphql": "^16.9.0",
     "maplibre-gl": "^5.10.0",
