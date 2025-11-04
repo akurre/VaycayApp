@@ -1,15 +1,15 @@
 /**
  * Merge Duplicate Cities - PRCP Data Consolidation (Efficient Approach)
- * 
+ *
  * This script consolidates precipitation (PRCP) data from duplicate city entries
  * into cities that have temperature data, then removes PRCP-only cities.
- * 
+ *
  * EFFICIENT APPROACH:
  * 1. Find cities with TEMP but no PRCP (these need PRCP data)
  * 2. For each TEMP-only city, find duplicate cities with PRCP data
  * 3. Transfer PRCP data by matching dates
  * 4. Delete ALL PRCP-only cities in one final sweep
- * 
+ *
  * WHY THIS IS BETTER:
  * - Most duplicate groups have cities with BOTH temp & PRCP (no action needed)
  * - Only a small subset have TEMP-only cities that need PRCP
@@ -174,8 +174,12 @@ async function mergeDuplicateCities() {
           }
 
           console.log(`    ✓ Updated ${recordsUpdated} weather records with PRCP data`);
-          if (stationsReassigned > 0) console.log(`    ✓ Reassigned ${stationsReassigned} stations`);
-          if (stationsDeleted > 0) console.log(`    ✓ Deleted ${stationsDeleted} duplicate stations`);
+          if (stationsReassigned > 0) {
+            console.log(`    ✓ Reassigned ${stationsReassigned} stations`);
+          }
+          if (stationsDeleted > 0) {
+            console.log(`    ✓ Deleted ${stationsDeleted} duplicate stations`);
+          }
 
           stats.tempOnlyCitiesUpdated++;
           stats.weatherRecordsUpdated += recordsUpdated;
@@ -187,7 +191,9 @@ async function mergeDuplicateCities() {
         if ((i + 1) % 50 === 0) {
           const percentage = (((i + 1) / tempOnlyCities.length) * 100).toFixed(1);
           console.log(`\n  📈 Progress: ${i + 1}/${tempOnlyCities.length} cities (${percentage}%)`);
-          console.log(`     Records updated so far: ${stats.weatherRecordsUpdated.toLocaleString()}\n`);
+          console.log(
+            `     Records updated so far: ${stats.weatherRecordsUpdated.toLocaleString()}\n`
+          );
         }
       }
     }
@@ -279,7 +285,9 @@ async function mergeDuplicateCities() {
       }
 
       console.log(`  ✓ Filled PRCP gaps for ${gapsFilled} cities`);
-      console.log(`  ✓ Updated ${stats.weatherRecordsUpdated.toLocaleString()} additional records\n`);
+      console.log(
+        `  ✓ Updated ${stats.weatherRecordsUpdated.toLocaleString()} additional records\n`
+      );
     }
 
     // step 4: delete ALL PRCP-only cities
@@ -330,7 +338,7 @@ async function mergeDuplicateCities() {
     }
 
     // final summary
-    console.log('\n' + '='.repeat(80));
+    console.log(`\n${'='.repeat(80)}`);
     console.log('📊 Merge Complete!');
     console.log('='.repeat(80));
     console.log(`\n✅ TEMP-only cities found:      ${stats.tempOnlyCitiesFound.toLocaleString()}`);
@@ -350,7 +358,7 @@ async function mergeDuplicateCities() {
     console.log(`  • Cities:           ${finalCityCount.toLocaleString()}`);
     console.log(`  • Weather records:  ${finalRecordCount.toLocaleString()}`);
     console.log(`  • Weather stations: ${finalStationCount.toLocaleString()}`);
-    console.log('\n' + '='.repeat(80));
+    console.log(`\n${'='.repeat(80)}`);
   } catch (error) {
     console.error('❌ Error during merge:', error);
     throw error;
