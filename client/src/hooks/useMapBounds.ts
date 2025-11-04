@@ -1,6 +1,11 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import type { MapViewState, ViewStateChangeParameters } from '@deck.gl/core';
-import { ZOOM_THRESHOLD, DEBOUNCE_DELAY, BOUNDS_BUFFER_PERCENT } from '@/constants';
+import {
+  ZOOM_THRESHOLD,
+  DEBOUNCE_DELAY,
+  BOUNDS_BUFFER_PERCENT,
+  ZOOM_AMPLIFICATION_FACTOR,
+} from '@/constants';
 
 /**
  * hook to track map viewport bounds and zoom level for intelligent query switching.
@@ -51,10 +56,21 @@ export const useMapBounds = (
   const [bounds, setBounds] = useState<MapBounds | null>(null);
   const [shouldUseBounds, setShouldUseBounds] = useState(false);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const previousZoomRef = useRef<number>(initialViewState.zoom);
 
   const onViewStateChange = useCallback(
     ({ viewState: newViewState }: { viewState: MapViewState }) => {
-      setViewState(newViewState);
+      // amplify zoom changes for more sensitive pinch/scroll zoom
+      const zoomDelta = newViewState.zoom - previousZoomRef.current;
+      const amplifiedZoom = previousZoomRef.current + zoomDelta * ZOOM_AMPLIFICATION_FACTOR;
+      
+      const amplifiedViewState = {
+        ...newViewState,
+        zoom: amplifiedZoom,
+      };
+      
+      previousZoomRef.current = amplifiedZoom;
+      setViewState(amplifiedViewState);
 
       // clear existing debounce timer
       if (debounceTimerRef.current) {

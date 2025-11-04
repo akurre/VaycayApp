@@ -30,5 +30,5 @@ export const ZOOM_THRESHOLDS = {
   MIN_BOUNDS_CHANGE: 5,
 
   // debounce delay for zoom/pan events (ms)
-  DEBOUNCE_DELAY: 200,
+  DEBOUNCE_DELAY: 150,
 };
