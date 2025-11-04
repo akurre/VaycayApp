@@ -8,9 +8,9 @@
  */
 
 import { PrismaClient } from '@prisma/client';
-import * as fs from 'fs';
 import * as path from 'path';
 import { parse } from 'csv-parse/sync';
+import { readFileSync } from 'fs';
 
 const prisma = new PrismaClient();
 
@@ -72,7 +72,7 @@ function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
 function loadWorldCities(): WorldCity[] {
   console.log(`loading worldcities.csv from: ${WORLDCITIES_PATH}`);
   
-  const fileContent = fs.readFileSync(WORLDCITIES_PATH, 'utf-8');
+  const fileContent = readFileSync(WORLDCITIES_PATH, 'utf-8');
   const records = parse(fileContent, {
     columns: true,
     skip_empty_lines: true,
@@ -194,16 +194,16 @@ async function main() {
 
   for (let i = 0; i < citiesWithoutPopulation.length; i++) {
     const city = citiesWithoutPopulation[i];
-    const progress = `[${i + 1}/${citiesWithoutPopulation.length}]`;
+
+    // show progress every 1000 cities
+    if ((i + 1) % 1000 === 0 || i === 0) {
+      console.log(`progress: ${i + 1}/${citiesWithoutPopulation.length} cities processed...`);
+    }
 
     const match = findMatch(city.name, city.country, city.lat, city.long, worldCities);
 
     if (match) {
       const distance = calculateDistance(city.lat, city.long, match.lat, match.lng);
-      
-      console.log(`${progress} ${city.name}, ${city.country}`);
-      console.log(`  ✓ matched: ${match.city} (${match.lat}, ${match.lng})`);
-      console.log(`    distance: ${distance.toFixed(3)}° - population: ${match.population.toLocaleString()}`);
 
       matches.push({
         cityId: city.id,
@@ -226,8 +226,6 @@ async function main() {
         });
       }
     } else {
-      console.log(`${progress} ${city.name}, ${city.country}`);
-      console.log(`  ✗ no match found`);
       noMatches.push(city);
     }
   }
@@ -250,16 +248,6 @@ async function main() {
     console.log(`  min: ${minDistance.toFixed(3)}°`);
     console.log(`  avg: ${avgDistance.toFixed(3)}°`);
     console.log(`  max: ${maxDistance.toFixed(3)}°`);
-  }
-
-  // save unmatched cities to csv
-  if (noMatches.length > 0) {
-    const unmatchedCsv = 'city,country,lat,long\n' +
-      noMatches.map((c) => `"${c.name}","${c.country}",${c.lat},${c.long}`).join('\n');
-    
-    const unmatchedPath = path.join(__dirname, 'unmatched-populations.csv');
-    fs.writeFileSync(unmatchedPath, unmatchedCsv);
-    console.log(`\nunmatched cities saved to: ${unmatchedPath}`);
   }
 
   if (DRY_RUN) {
