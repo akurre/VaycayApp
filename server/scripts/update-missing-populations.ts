@@ -63,7 +63,7 @@ function normalizeName(name: string): string {
 function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const dlat = Math.abs(lat1 - lat2);
   const dlon = Math.abs(lon1 - lon2);
-  return Math.sqrt((dlat * dlat) + (dlon * dlon));
+  return Math.sqrt(dlat * dlat + dlon * dlon);
 }
 
 /**
