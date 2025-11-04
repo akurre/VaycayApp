@@ -68,6 +68,8 @@ db-setup: check-prereqs
 	cd server && npm run prisma:generate
 	@echo "$(YELLOW)Importing CSV weather data (this will take 30-60 minutes for 7.5M records)...$(NC)"
 	cd server && npm run import-csv-data
+	@echo "$(YELLOW)Merging duplicate cities and consolidating PRCP data (this will take 5-10 minutes)...$(NC)"
+	cd server && npx tsx scripts/merge-duplicate-cities-optimized.ts
 	@echo "$(GREEN)✓ Database setup complete$(NC)"
 
 # Start all services for development
