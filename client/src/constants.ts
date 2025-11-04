@@ -6,6 +6,7 @@
 export const ZOOM_THRESHOLD = 2; // switch to bounds query at zoom level 2+ (continental view)
 export const DEBOUNCE_DELAY = 300; // ms - debounce delay for zoom/pan events
 export const BOUNDS_BUFFER_PERCENT = 0.8; // add 80% buffer to calculated bounds to include edge countries
+export const ZOOM_AMPLIFICATION_FACTOR = 3; // amplify zoom changes for more sensitive pinch/scroll zoom
 
 // initial map view state
 export const INITIAL_VIEW_STATE = {

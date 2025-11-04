@@ -38,6 +38,8 @@ model City {
   @@index([name])
   @@index([country])
   @@index([lat, long])
+  @@index([country, lat, long])  // For area calculations per country
+  @@index([country, population])  // For ranking cities by population per country
   
   @@map("cities")
 }
@@ -98,6 +100,7 @@ model WeatherRecord {
   @@index([date])                    // For "all cities on date X" queries
   @@index([cityId, date])            // For "city Y on date X" queries
   @@index([cityId])                  // For "all weather for city Y" queries
+  @@index([date, TAVG])              // For filtering by date with non-null temperature
   
   @@map("weather_records")
 }

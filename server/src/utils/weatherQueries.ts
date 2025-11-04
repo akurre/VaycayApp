@@ -1,5 +1,5 @@
 import { PrismaClient, Prisma } from '@prisma/client';
-import { MAX_CITIES_GLOBAL_VIEW, QUOTA_THRESHOLDS } from '../const';
+import { MAX_CITIES_GLOBAL_VIEW } from '../const';
 
 interface QueryCityIdsParams {
   prisma: PrismaClient;
@@ -13,12 +13,16 @@ interface QueryCityIdsParams {
 }
 
 /**
- * shared query logic for fetching city ids with smart distribution.
+ * shared query logic for fetching city ids with area-based distribution.
  * uses window functions to:
- * 1. rank cities by population per country
- * 2. identify temperature extremes (hottest/coldest) per country
- * 3. apply adaptive quotas based on country count
- * 4. return balanced set of cities (population + temperature extremes)
+ * 1. calculate approximate area for each country in visible region
+ * 2. distribute cities proportionally by area (large countries get more cities)
+ * 3. rank cities by population within each country
+ * 4. ensure every country gets at least 1 city (minimum representation)
+ *
+ * this algorithm works for both global and zoomed views:
+ * - global: area = country's total area → large countries get more cities
+ * - zoomed: area = country's visible area → adapts to visible region
  */
 async function queryCityIds({ prisma, dateStr, bounds }: QueryCityIdsParams): Promise<number[]> {
   // build WHERE clause based on whether bounds are provided
@@ -31,71 +35,69 @@ async function queryCityIds({ prisma, dateStr, bounds }: QueryCityIdsParams): Pr
 
   const cityIds = await prisma.$queryRaw<Array<{ id: number }>>`
     WITH city_weather AS (
-      -- get all cities with weather data and temperature rankings
+      -- get all cities with weather data in visible region
       SELECT 
         c.id,
         c.country,
-        c.population,
-        wr."TAVG" as avg_temp,
-        ROW_NUMBER() OVER (
-          PARTITION BY c.country 
-          ORDER BY c.population DESC NULLS LAST
-        ) as pop_rank,
-        ROW_NUMBER() OVER (
-          PARTITION BY c.country 
-          ORDER BY wr."TAVG" DESC NULLS LAST
-        ) as hot_rank,
-        ROW_NUMBER() OVER (
-          PARTITION BY c.country 
-          ORDER BY wr."TAVG" ASC NULLS LAST
-        ) as cold_rank
+        c.lat,
+        c.long,
+        c.population
       FROM cities c
       INNER JOIN weather_records wr ON wr."cityId" = c.id
       WHERE wr.date = ${dateStr} 
         AND wr."TAVG" IS NOT NULL
         ${boundsCondition}
     ),
-    ranked_cities AS (
-      -- keep all cities (no pre-filtering by population rank)
-      -- temperature extremes are marked for priority
+    country_areas AS (
+      -- calculate approximate area for each country in visible region
+      -- uses bounding box: (max_lat - min_lat) * (max_long - min_long)
       SELECT 
-        id,
         country,
-        population,
-        pop_rank,
-        CASE 
-          WHEN hot_rank = 1 THEN true
-          WHEN cold_rank = 1 THEN true
-          ELSE false
-        END as is_temp_extreme
+        (MAX(lat) - MIN(lat)) * (MAX(long) - MIN(long)) as area,
+        COUNT(*) as available_cities
       FROM city_weather
+      GROUP BY country
     ),
-    country_stats AS (
-      -- calculate how many countries we have
-      SELECT COUNT(DISTINCT country) as total_countries
-      FROM ranked_cities
+    total_visible_area AS (
+      -- sum of all country areas in visible region
+      SELECT SUM(area) as total FROM country_areas
     ),
-    quota_calc AS (
-      -- calculate per-country quota based on total countries
+    country_quotas AS (
+      -- distribute cities proportionally by area
+      -- every country gets at least 1 city (minimum representation)
       SELECT 
-        CASE 
-          WHEN total_countries > ${QUOTA_THRESHOLDS.MANY_COUNTRIES} THEN ${QUOTA_THRESHOLDS.MAX_PER_COUNTRY_MANY}
-          WHEN total_countries > ${QUOTA_THRESHOLDS.MODERATE_COUNTRIES} THEN ${QUOTA_THRESHOLDS.MAX_PER_COUNTRY_MODERATE}
-          ELSE ${QUOTA_THRESHOLDS.MAX_PER_COUNTRY_FEW}
-        END as max_per_country,
-        total_countries
-      FROM country_stats
+        ca.country,
+        ca.area,
+        ca.available_cities,
+        GREATEST(
+          1,  -- minimum 1 city per country
+          LEAST(
+            ca.available_cities,  -- can't exceed available cities
+            FLOOR((ca.area / NULLIF(tva.total, 0)) * ${MAX_CITIES_GLOBAL_VIEW})
+          )
+        ) as quota
+      FROM country_areas ca
+      CROSS JOIN total_visible_area tva
+    ),
+    ranked_cities AS (
+      -- rank cities by population within each country
+      SELECT 
+        cw.id,
+        cw.country,
+        cw.population,
+        ROW_NUMBER() OVER (
+          PARTITION BY cw.country 
+          ORDER BY cw.population DESC NULLS LAST
+        ) as rank
+      FROM city_weather cw
     ),
     selected_cities AS (
-      -- apply quotas and select cities
-      SELECT rc.id, rc.is_temp_extreme, rc.pop_rank, rc.population
+      -- select top N cities per country based on area-weighted quota
+      SELECT rc.id, rc.population
       FROM ranked_cities rc
-      CROSS JOIN quota_calc qc
-      WHERE rc.is_temp_extreme = true OR rc.pop_rank <= qc.max_per_country
-      ORDER BY 
-        rc.is_temp_extreme DESC,
-        rc.pop_rank,
-        rc.population DESC NULLS LAST
+      INNER JOIN country_quotas cq ON cq.country = rc.country
+      WHERE rc.rank <= cq.quota
+      ORDER BY rc.population DESC NULLS LAST
     ),
     city_count AS (
       -- count how many cities we have so far
@@ -103,6 +105,7 @@ async function queryCityIds({ prisma, dateStr, bounds }: QueryCityIdsParams): Pr
     ),
     additional_cities AS (
       -- if we have fewer than target, add more cities by population
+      -- this handles edge cases where area-based distribution doesn't fill quota
       SELECT rc.id
       FROM ranked_cities rc
       CROSS JOIN city_count cc
@@ -111,7 +114,7 @@ async function queryCityIds({ prisma, dateStr, bounds }: QueryCityIdsParams): Pr
       ORDER BY rc.population DESC NULLS LAST
       LIMIT ${MAX_CITIES_GLOBAL_VIEW} - (SELECT current_count FROM city_count)
     )
-    -- combine quota-based cities with additional cities to reach target
+    -- combine area-based cities with additional cities to reach target
     SELECT id FROM selected_cities
     UNION ALL
     SELECT id FROM additional_cities

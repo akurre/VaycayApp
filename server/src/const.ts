@@ -1,18 +1,12 @@
 // global map display configuration
 export const MAX_CITIES_GLOBAL_VIEW = 300;
 
-// adaptive quota thresholds for fair city distribution
-export const QUOTA_THRESHOLDS = {
-  // when countries > 30: strict limit (many countries visible)
-  MANY_COUNTRIES: 30,
-  MAX_PER_COUNTRY_MANY: 6, // 1 guaranteed + 5 additional
-
-  // when countries 15-30: moderate limit
-  MODERATE_COUNTRIES: 15,
-  MAX_PER_COUNTRY_MODERATE: 11, // 1 guaranteed + 10 additional
-
-  // when countries < 15: generous limit (few countries visible)
-  MAX_PER_COUNTRY_FEW: 21, // 1 guaranteed + 20 additional
+// area-based distribution configuration
+// cities are distributed proportionally by geographic area
+// large countries get more cities, small countries get minimum representation
+export const AREA_DISTRIBUTION = {
+  // minimum cities per country (ensures all countries are represented)
+  MIN_CITIES_PER_COUNTRY: 1,
 };
 
 // caching configuration
@@ -36,5 +30,5 @@ export const ZOOM_THRESHOLDS = {
   MIN_BOUNDS_CHANGE: 5,
 
   // debounce delay for zoom/pan events (ms)
-  DEBOUNCE_DELAY: 300,
+  DEBOUNCE_DELAY: 150,
 };
