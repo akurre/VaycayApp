@@ -65,8 +65,8 @@ Ensure all code changes consider performance implications, especially for databa
 ### Client-Side Performance
 
 1. **Debounce User Interactions**
-   - Map zoom/pan events: 300ms debounce (already implemented)
-   - Search inputs: 300-500ms debounce
+   - Map zoom/pan events: 200ms debounce (already implemented)
+   - Search inputs: 200-500ms debounce
    - Prevent excessive API calls
 
 2. **Optimize Rendering**

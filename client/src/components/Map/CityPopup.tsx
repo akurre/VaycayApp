@@ -37,7 +37,9 @@ function CityPopup({ city, onClose }: CityPopupProps) {
           minTemperature={city.minTemperature}
         />
 
-        <PrecipitationSection precipitation={city.precipitation} snowDepth={city.snowDepth} />
+        {city.precipitation && (
+          <PrecipitationSection precipitation={city.precipitation} snowDepth={city.snowDepth} />
+        )}
 
         {city.population && (
           <div className="border-t border-gray-200 pt-3">
