@@ -63,12 +63,12 @@ export const useMapBounds = (
       // amplify zoom changes for more sensitive pinch/scroll zoom
       const zoomDelta = newViewState.zoom - previousZoomRef.current;
       const amplifiedZoom = previousZoomRef.current + zoomDelta * ZOOM_AMPLIFICATION_FACTOR;
-      
+
       const amplifiedViewState = {
         ...newViewState,
         zoom: amplifiedZoom,
       };
-      
+
       previousZoomRef.current = amplifiedZoom;
       setViewState(amplifiedViewState);
 

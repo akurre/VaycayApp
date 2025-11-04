@@ -19,7 +19,7 @@ interface QueryCityIdsParams {
  * 2. distribute cities proportionally by area (large countries get more cities)
  * 3. rank cities by population within each country
  * 4. ensure every country gets at least 1 city (minimum representation)
- * 
+ *
  * this algorithm works for both global and zoomed views:
  * - global: area = country's total area → large countries get more cities
  * - zoomed: area = country's visible area → adapts to visible region
