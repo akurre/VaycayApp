@@ -63,7 +63,9 @@ function normalizeName(name: string): string {
 function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const dlat = Math.abs(lat1 - lat2);
   const dlon = Math.abs(lon1 - lon2);
-  return Math.sqrt((dlat * dlat) + (dlon * dlon));
+  // eslint and prettier keep fighting about which is better
+  // eslint-disable-next-line no-mixed-operators
+  return Math.sqrt(dlat * dlat + dlon * dlon);
 }
 
 /**
