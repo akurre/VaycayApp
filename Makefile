@@ -68,6 +68,8 @@ db-setup: check-prereqs
 	cd server && npm run prisma:generate
 	@echo "$(YELLOW)Importing CSV weather data (this will take 30-60 minutes for 7.5M records)...$(NC)"
 	cd server && npm run import-csv-data
+	@echo "$(YELLOW)Updating missing population data from worldcities.csv...$(NC)"
+	cd server && npx tsx scripts/update-missing-populations.ts
 	@echo "$(GREEN)✓ Database setup complete$(NC)"
 
 # Start all services for development
