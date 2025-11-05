@@ -28,7 +28,7 @@ const MapToggle = <T extends string>({
   return (
     <SegmentedControl
       value={value}
-      color={isLightMode ? appColors.primaryLight : appColors.primaryDark}
+      color={isLightMode ? appColors.tertiary : appColors.primaryDark}
       transitionDuration={300}
       onChange={(val) => onChange(val as T)}
       styles={{

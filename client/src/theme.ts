@@ -2,31 +2,31 @@ import { createTheme } from '@mantine/core';
 
 // custom color palette for the application
 export const appColors = {
-  // primary colors (burgundy)
-  primary: '#800040',
-  primaryLight: '#c497ac',
-  primaryDark: '#850042',
-  primaryHover: '#9d4571',
+  // primary colors (amaranth purple - deep burgundy-red)
+  primary: '#9F2042',
+  primaryLight: '#BB4A52',
+  primaryDark: '#7A1933',
+  primaryHover: '#B4365A',
   
-  // secondary colors (teal/blue-green)
-  secondary: '#008080',
-  secondaryLight: '#00a3a3',
-  secondaryDark: '#005959',
-  secondaryHover: '#006b6b',
+  // secondary colors (light sea green - teal)
+  secondary: '#20A39E',
+  secondaryLight: '#3DBDB8',
+  secondaryDark: '#187A76',
+  secondaryHover: '#2BB5B0',
   
-  // tertiary colors (warm orange)
-  tertiary: '#d97706',
-  tertiaryLight: '#f59e0b',
-  tertiaryDark: '#b45309',
-  tertiaryHover: '#c2660a',
+  // tertiary colors (wisteria - soft purple)
+  tertiary: '#B49FCC',
+  tertiaryLight: '#C9B8DC',
+  tertiaryDark: '#9580B3',
+  tertiaryHover: '#BFA9D4',
   
   // neutral colors for light mode
   light: {
     background: '#ffffff',
-    surface: '#f8f9fa',
-    border: '#dee2e6',
-    text: '#212529',
-    textSecondary: '#6c757d',
+    surface: '#DBF9F4',
+    border: '#C5E8E4',
+    text: '#2c2c2c',
+    textSecondary: '#6b6b6b',
     toggleBackground: '#f0f0f0',
     textShadow: '0 0 8px rgba(255, 255, 255, 0.8), 0 0 4px rgba(255, 255, 255, 0.6)',
   },
@@ -36,17 +36,17 @@ export const appColors = {
     background: '#1a1b1e',
     surface: '#25262b',
     border: '#373a40',
-    text: '#c1c2c5',
-    textSecondary: '#909296',
+    text: '#DBF9F4',
+    textSecondary: '#B49FCC',
     toggleBackground: '#424242',
     textShadow: '0 0 8px rgba(0, 0, 0, 0.8), 0 0 4px rgba(0, 0, 0, 0.6)',
   },
   
   // accent colors
-  success: '#51cf66',
+  success: '#20A39E',
   warning: '#ffd43b',
-  error: '#ff6b6b',
-  info: '#339af0',
+  error: '#BB4A52',
+  info: '#B49FCC',
 } as const;
 
 export const theme = createTheme({

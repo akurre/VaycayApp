@@ -5,7 +5,7 @@ import useMapLayers from '../../hooks/useMapLayers';
 import { useMapInteractions } from '../../hooks/useMapInteractions';
 import { useMapBounds } from '../../hooks/useMapBounds';
 import { INITIAL_VIEW_STATE, MAP_STYLES } from '@/constants';
-import CityPopup from './CityPopup';
+import CityPopup from '../CityPopup/CityPopup';
 import MapTooltip from './MapTooltip';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useWeatherStore } from '@/stores/useWeatherStore';

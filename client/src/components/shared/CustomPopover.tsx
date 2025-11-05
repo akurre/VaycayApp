@@ -1,6 +1,7 @@
 import { FC, ReactNode } from 'react';
-import { useMantineColorScheme } from '@mantine/core';
 import { appColors } from '@/theme';
+import { useAppStore } from '@/stores/useAppStore';
+import { MapTheme } from '@/types/mapTypes';
 
 interface CustomPopoverProps {
   children: ReactNode;
@@ -15,11 +16,12 @@ const CustomPopover: FC<CustomPopoverProps> = ({
   direction = 'down', 
   showBackground = true
 }) => {
-  const { colorScheme } = useMantineColorScheme();
-  const isDark = colorScheme === 'dark';
+  const theme = useAppStore((state) => state.theme);
+  const isLightMode = theme === MapTheme.Light;
   
-  const backgroundColor = isDark ? appColors.dark.surface : appColors.light.surface;
-  const borderColor = isDark ? appColors.dark.border : appColors.light.border;
+  const backgroundColor = isLightMode ? appColors.light.surface : appColors.dark.surface;
+  const borderColor = isLightMode ? appColors.tertiaryDark : appColors.tertiary;
+  const textColor = isLightMode ? appColors.light.text : appColors.dark.text;
   
   // size-based padding
   const paddingMap = {
@@ -87,7 +89,7 @@ const CustomPopover: FC<CustomPopoverProps> = ({
               borderLeftWidth: `${arrowSize.fill}px`,
               borderRightWidth: `${arrowSize.fill}px`,
               borderBottomWidth: `${arrowSize.fill}px`,
-              borderBottomColor: isDark ? appColors.light.text : appColors.dark.text,
+              borderBottomColor: isLightMode ? appColors.dark.text : appColors.light.text,
             }}
           />
         )
@@ -100,6 +102,7 @@ const CustomPopover: FC<CustomPopoverProps> = ({
           style={{
             backgroundColor,
             border: `1px solid ${borderColor}`,
+            color: textColor,
           }}
         >
           {children}
@@ -140,7 +143,7 @@ const CustomPopover: FC<CustomPopoverProps> = ({
               borderLeftWidth: `${arrowSize.fill}px`,
               borderRightWidth: `${arrowSize.fill}px`,
               borderTopWidth: `${arrowSize.fill}px`,
-              borderTopColor: isDark ? appColors.light.text : appColors.dark.text,
+              borderTopColor: isLightMode ? appColors.dark.text : appColors.light.text,
             }}
           />
         )

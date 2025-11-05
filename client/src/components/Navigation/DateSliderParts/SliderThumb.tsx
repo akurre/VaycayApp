@@ -21,7 +21,7 @@ const SliderThumb: FC<SliderThumbProps> = ({ position, isLoading }) => {
       style={{
         left: `calc(${position}% - ${SLIDER_THUMB_WIDTH / 2}px)`,
         color: 'white',
-        background: isLightMode ? appColors.primaryLight : appColors.primaryDark,
+        background: isLightMode ? appColors.primaryLight : appColors.primary,
       }}
     >
       {isLoading ? <CustomLoader /> : <IconGripVertical size={20} stroke={1.5} />}
