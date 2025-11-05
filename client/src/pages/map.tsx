@@ -80,16 +80,16 @@ const MapPage: FC = () => {
   return (
     <div className="relative w-full h-screen">
       {/* navigation panel */}
-      <div className="absolute top-8 left-4 z-20 flex gap-2">
-        <MapViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
+      <div className="absolute top-8 left-4 z-20">
         <HomeLocationSelector />
       </div>
-      <div className="absolute top-8 right-4 z-20">
+      <div className="absolute top-8 right-4 z-20 flex gap-2">
         <MapThemeToggle />
+        <MapViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
       </div>
       <div
         className="absolute top-12 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30"
-        style={{ width: 'calc(100% - 16rem)', maxWidth: '56rem' }}
+        style={{ width: 'calc(100% - 16rem)', maxWidth: '52rem' }}
       >
         <DateSliderWrapper currentDate={selectedDate} onDateChange={handleDateChange} />
       </div>
