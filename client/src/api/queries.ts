@@ -54,6 +54,35 @@ export const GET_WEATHER_BY_DATE_AND_BOUNDS = gql`
   }
 `;
 
+export const GET_NEAREST_CITY = gql`
+  query GetNearestCity($lat: Float!, $long: Float!) {
+    nearestCity(lat: $lat, long: $long) {
+      id
+      name
+      country
+      state
+      lat
+      long
+      population
+      distance
+    }
+  }
+`;
+
+export const SEARCH_CITIES = gql`
+  query SearchCities($searchTerm: String!, $limit: Int) {
+    searchCities(searchTerm: $searchTerm, limit: $limit) {
+      id
+      name
+      country
+      state
+      lat
+      long
+      population
+    }
+  }
+`;
+
 // // These are unused as of now
 // export const GET_WEATHER_BY_CITY = gql`
 //   query GetWeatherByCity($city: String!) {

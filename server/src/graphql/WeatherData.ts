@@ -1,7 +1,8 @@
-import { objectType, queryField, nonNull, stringArg, intArg, list } from 'nexus';
+import { objectType, queryField, nonNull, stringArg, intArg, floatArg, list } from 'nexus';
 import type { City, WeatherStation, WeatherRecord } from '@prisma/client';
 import { getCachedWeatherData } from '../utils/cache';
 import queryCityIds from '../utils/weatherQueries';
+import { calculateDistance } from '../utils/calculateDistance';
 
 type WeatherRecordWithRelations = WeatherRecord & {
   city: City;
@@ -328,5 +329,95 @@ export const countriesQuery = queryField('countries', {
     });
 
     return countries.map((c: { country: string }) => c.country);
+  },
+});
+
+// GraphQL CityResult type definition
+export const CityResult = objectType({
+  name: 'CityResult',
+  description: 'City information with optional distance',
+  definition(t) {
+    t.nonNull.int('id', { description: 'City ID' });
+    t.nonNull.string('name', { description: 'City name' });
+    t.nonNull.string('country', { description: 'Country name' });
+    t.string('state', { description: 'State or region' });
+    t.nonNull.float('lat', { description: 'Latitude coordinate' });
+    t.nonNull.float('long', { description: 'Longitude coordinate' });
+    t.float('population', { description: 'City population' });
+    t.float('distance', { description: 'Distance in kilometers (for nearest city queries)' });
+  },
+});
+
+// Query: Find nearest city to given coordinates
+export const nearestCityQuery = queryField('nearestCity', {
+  type: 'CityResult',
+  description: 'Find the nearest city to given coordinates',
+  args: {
+    lat: nonNull(floatArg({ description: 'Latitude' })),
+    long: nonNull(floatArg({ description: 'Longitude' })),
+  },
+  async resolve(_parent, args, context) {
+    // get all cities
+    const cities = await context.prisma.city.findMany();
+
+    // calculate distances and find nearest
+    let nearestCity: City | null = null;
+    let minDistance = Infinity;
+
+    for (const city of cities) {
+      const distance = calculateDistance(args.lat, args.long, city.lat, city.long);
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearestCity = city;
+      }
+    }
+
+    if (!nearestCity) {
+      return null;
+    }
+
+    return {
+      id: nearestCity.id,
+      name: nearestCity.name,
+      country: nearestCity.country,
+      state: nearestCity.state,
+      lat: nearestCity.lat,
+      long: nearestCity.long,
+      population: nearestCity.population,
+      distance: minDistance,
+    };
+  },
+});
+
+// Query: Search cities by name
+export const searchCitiesQuery = queryField('searchCities', {
+  type: list('CityResult'),
+  description: 'Search cities by name (case-insensitive, partial match)',
+  args: {
+    searchTerm: nonNull(stringArg({ description: 'Search term' })),
+    limit: intArg({ default: 10, description: 'Maximum number of results' }),
+  },
+  async resolve(_parent, args, context) {
+    const cities = await context.prisma.city.findMany({
+      where: {
+        name: {
+          contains: args.searchTerm,
+          mode: 'insensitive',
+        },
+      },
+      orderBy: [{ population: 'desc' }, { name: 'asc' }],
+      take: args.limit || 10,
+    });
+
+    return cities.map((city: City) => ({
+      id: city.id,
+      name: city.name,
+      country: city.country,
+      state: city.state,
+      lat: city.lat,
+      long: city.long,
+      population: city.population,
+      distance: null,
+    }));
   },
 });

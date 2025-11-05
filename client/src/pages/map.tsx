@@ -6,6 +6,7 @@ import useWeatherByDateAndBounds from '../api/dates/useWeatherByDateAndBounds';
 import WorldMap from '../components/Map/WorldMap';
 import MapViewToggle from '../components/Map/MapViewToggle';
 import MapThemeToggle from '../components/Map/MapThemeToggle';
+import HomeLocationSelector from '../components/Navigation/HomeLocationSelector';
 import { getTodayAsMMDD } from '@/utils/dateFormatting/getTodayAsMMDD';
 import { useWeatherStore } from '../stores/useWeatherStore';
 import { useAppStore } from '../stores/useAppStore';
@@ -101,6 +102,9 @@ const MapPage: FC = () => {
       </div>
       <div className="absolute top-8 right-4 z-20">
         <MapThemeToggle />
+      </div>
+      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-30">
+        <HomeLocationSelector />
       </div>
       <div
         className="absolute top-12 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30"
