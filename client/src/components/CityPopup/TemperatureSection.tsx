@@ -17,14 +17,10 @@ const TemperatureSection = ({
   maxTemperature,
   minTemperature,
 }: TemperatureSectionProps) => {
-  const theme = useAppStore((state) => state.theme);
-  const isLightMode = theme === MapTheme.Light;
-  const textColor = isLightMode ? appColors.light.text : appColors.dark.text;
-
   return (
     <div className="mt-2">
       <Divider />
-      <Text size="sm" fw={600} mb="xs" style={{ color: textColor }}>
+      <Text size="sm" fw={600} mb="xs">
         Temperature
       </Text>
       <div className="grid grid-cols-3 gap-2">

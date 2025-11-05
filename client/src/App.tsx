@@ -8,7 +8,7 @@ import MapPage from './pages/map';
 
 function App() {
   return (
-    <MantineProvider theme={theme}>
+    <MantineProvider theme={theme} defaultColorScheme="dark">
       <Notifications position="top-right" zIndex={1000} />
       <BrowserRouter>
         <Routes>

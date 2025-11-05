@@ -1,9 +1,6 @@
 import { FC } from 'react';
 import { IconGripVertical } from '@tabler/icons-react';
-import { appColors } from '@/theme';
 import { SLIDER_THUMB_WIDTH } from '@/constants';
-import { useAppStore } from '@/stores/useAppStore';
-import { MapTheme } from '@/types/mapTypes';
 import CustomLoader from '@/components/Shared/CustomLoader';
 
 interface SliderThumbProps {
@@ -12,8 +9,6 @@ interface SliderThumbProps {
 }
 
 const SliderThumb: FC<SliderThumbProps> = ({ position, isLoading }) => {
-  const theme = useAppStore((state) => state.theme);
-  const isLightMode = theme === MapTheme.Light;
 
   return (
     <div
@@ -21,7 +16,6 @@ const SliderThumb: FC<SliderThumbProps> = ({ position, isLoading }) => {
       style={{
         left: `calc(${position}% - ${SLIDER_THUMB_WIDTH / 2}px)`,
         color: 'white',
-        background: isLightMode ? appColors.primaryLight : appColors.primary,
       }}
     >
       {isLoading ? <CustomLoader /> : <IconGripVertical size={20} stroke={1.5} />}

@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Button, TextInput, Popover, Loader } from '@mantine/core';
+import { Button, TextInput, Popover, Loader, Text } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { IconHome, IconMapPin, IconSearch } from '@tabler/icons-react';
 import { useAppStore } from '@/stores/useAppStore';
 import { useUserLocation } from '@/hooks/useUserLocation';
 import useCitySearch from '@/hooks/useCitySearch';
 import { SearchCitiesResult } from '@/types/userLocationType';
+import { TOGGLE_ICON_SIZE } from '@/constants';
 
 function HomeLocationSelector() {
   const [opened, setOpened] = useState(false);
@@ -39,13 +40,18 @@ function HomeLocationSelector() {
   };
 
   return (
-    <Popover opened={opened} onChange={setOpened} position="bottom" withArrow shadow="md">
+    <Popover 
+      opened={opened} 
+      onChange={setOpened} 
+      position="bottom" 
+      withArrow 
+      shadow="md"
+    >
       <Popover.Target>
         <Button
           onClick={() => setOpened((o) => !o)}
-          leftSection={<IconHome size={16} />}
-          variant="filled"
-          size="sm"
+          leftSection={<IconHome size={TOGGLE_ICON_SIZE} />}
+          size="xs"
         >
           {homeLocation ? `${homeLocation.cityName}, ${homeLocation.country}` : 'Set Home Location'}
         </Button>
@@ -53,7 +59,11 @@ function HomeLocationSelector() {
 
       <Popover.Dropdown>
         <div className="w-80 p-2">
-          <div className="text-sm font-semibold mb-3">Set Your Home Location</div>
+          <div className="text-sm mb-3">
+            <Text>
+              Set Your Home Location
+            </Text>
+          </div>
 
           {/* use my location button */}
           <Button
@@ -61,6 +71,7 @@ function HomeLocationSelector() {
             leftSection={<IconMapPin size={16} />}
             variant="light"
             fullWidth
+            size="xs"
             loading={isGeoLoading}
             className="mb-3"
           >

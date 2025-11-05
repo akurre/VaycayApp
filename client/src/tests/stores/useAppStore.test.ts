@@ -1,29 +1,14 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useAppStore } from '@/stores/useAppStore';
-import { MapTheme } from '@/types/mapTypes';
 import { LocationSource } from '@/types/userLocationType';
 
 describe('useAppStore', () => {
   beforeEach(() => {
     // reset store state before each test
     useAppStore.setState({
-      theme: MapTheme.Dark,
       homeLocation: null,
       isLocationLoading: false,
       locationError: null,
-    });
-  });
-
-  describe('theme', () => {
-    it('initializes with dark theme', () => {
-      const { theme } = useAppStore.getState();
-      expect(theme).toBe(MapTheme.Dark);
-    });
-
-    it('updates theme', () => {
-      const { setTheme } = useAppStore.getState();
-      setTheme(MapTheme.Light);
-      expect(useAppStore.getState().theme).toBe(MapTheme.Light);
     });
   });
 
