@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatSliderLabel } from '@/utils/dateFormatting/formatSliderLabel';
+import formatSliderLabel from '@/utils/dateFormatting/formatSliderLabel';
 
 describe('formatSliderLabel', () => {
   it('formats January dates correctly', () => {
