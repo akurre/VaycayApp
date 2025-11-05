@@ -4,7 +4,7 @@
 
 // zoom-based loading thresholds
 export const ZOOM_THRESHOLD = 2; // switch to bounds query at zoom level 2+ (continental view)
-export const DEBOUNCE_DELAY = 300; // ms - debounce delay for zoom/pan events
+export const DEBOUNCE_DELAY = 200; // ms - debounce delay for zoom/pan events (reduced for more responsive feel)
 export const BOUNDS_BUFFER_PERCENT = 0.8; // add 80% buffer to calculated bounds to include edge countries
 export const ZOOM_AMPLIFICATION_FACTOR = 3; // amplify zoom changes for more sensitive pinch/scroll zoom
 
@@ -16,6 +16,14 @@ export const INITIAL_VIEW_STATE = {
   pitch: 0,
   bearing: 0,
 };
+
+export const TOGGLE_ICON_SIZE = 16;
+
+// map style urls for light and dark themes
+export const MAP_STYLES = {
+  light: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+  dark: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+} as const;
 
 // ============================================================================
 // TEMPERATURE & COLOR CONSTANTS
@@ -46,3 +54,19 @@ export const COLOR_RANGE: [number, number, number][] = TEMP_THRESHOLDS.map((t) =
 
 // custom date slider thumb dimensions for positioning calculations
 export const SLIDER_THUMB_WIDTH = 32; // 8 * 4 (w-8 in tailwind)
+
+// month boundaries for labels
+export const monthMarks = [
+  { value: 1, label: 'Jan' },
+  { value: 32, label: 'Feb' },
+  { value: 60, label: 'Mar' },
+  { value: 91, label: 'Apr' },
+  { value: 121, label: 'May' },
+  { value: 152, label: 'Jun' },
+  { value: 182, label: 'Jul' },
+  { value: 213, label: 'Aug' },
+  { value: 244, label: 'Sep' },
+  { value: 274, label: 'Oct' },
+  { value: 305, label: 'Nov' },
+  { value: 335, label: 'Dec' },
+];

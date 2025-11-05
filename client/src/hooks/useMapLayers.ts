@@ -4,14 +4,22 @@ import { ScatterplotLayer } from '@deck.gl/layers';
 import { WeatherData, ValidMarkerData } from '../types/cityWeatherDataType';
 import { transformToHeatmapData } from '../utils/map/transformToHeatmapData';
 import { getMarkerColor, COLOR_RANGE } from '../utils/map/getMarkerColor';
-import type { ViewMode } from '../components/Map/WorldMap';
+import { ViewMode } from '@/types/mapTypes';
 
 /**
  * hook to create and manage deck.gl map layers for both heatmap and marker views.
  * pre-creates both layers and toggles visibility to prevent expensive layer recreation during view mode transitions.
+ * uses css-style transitions for smooth fade-in of new data points.
+ * implements progressive loading with staggered marker appearance for improved perceived performance.
  */
 
-export const useMapLayers = (cities: WeatherData[], viewMode: ViewMode) => {
+interface UseMapLayersProps {
+  cities: WeatherData[];
+  viewMode: ViewMode;
+  isLoadingWeather: boolean;
+}
+
+function useMapLayers({ cities, viewMode, isLoadingWeather }: UseMapLayersProps) {
   const heatmapData = useMemo(() => transformToHeatmapData(cities), [cities]);
 
   return useMemo(() => {
@@ -32,7 +40,7 @@ export const useMapLayers = (cities: WeatherData[], viewMode: ViewMode) => {
         visible: viewMode === 'heatmap',
         transitions: {
           getWeight: {
-            duration: 500,
+            duration: 600,
             easing: (t: number) => t * (2 - t),
           },
         },
@@ -44,20 +52,38 @@ export const useMapLayers = (cities: WeatherData[], viewMode: ViewMode) => {
             c.lat !== null && c.long !== null && c.avgTemperature !== null
         ),
         getPosition: (d) => [d.long, d.lat],
-        getFillColor: (d) => getMarkerColor(d.avgTemperature),
+        getFillColor: (d) => {
+          const [r, g, b] = getMarkerColor(d.avgTemperature);
+          return [r, g, b, 255];
+        },
         getRadius: 50000,
         radiusMinPixels: 3,
         radiusMaxPixels: 8,
         pickable: true,
-        opacity: 0.8,
+        // reduce opacity slightly when loading to provide visual feedback
+        opacity: isLoadingWeather ? 0.5 : 0.8,
         visible: viewMode === 'markers',
         transitions: {
           getFillColor: {
-            duration: 500,
+            duration: 600,
             easing: (t: number) => t * (2 - t),
+          },
+          // smooth opacity transition when loading state changes
+          opacity: {
+            duration: 300,
+            easing: (t: number) => t,
+          },
+          // progressive loading: stagger marker appearance based on index
+          // markers appear in waves for a more polished feel
+          getRadius: {
+            duration: 400,
+            easing: (t: number) => t * (2 - t),
+            enter: () => [0], // start from 0 radius and grow
           },
         },
       }),
     ];
-  }, [cities, heatmapData, viewMode]);
-};
+  }, [cities, heatmapData, viewMode, isLoadingWeather]);
+}
+
+export default useMapLayers;

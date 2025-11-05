@@ -105,7 +105,7 @@ Use `renderHook` from `@testing-library/react`:
 ```typescript
 import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { useMapLayers } from '@/hooks/useMapLayers';
+import useMapLayers from '@/hooks/useMapLayers';
 
 describe('useMapLayers', () => {
   it('returns an array of layers', () => {

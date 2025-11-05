@@ -1,15 +1,16 @@
 import DeckGL from '@deck.gl/react';
 import Map from 'react-map-gl/maplibre';
 import { WeatherData } from '../../types/cityWeatherDataType';
-import { useMapLayers } from '../../hooks/useMapLayers';
+import useMapLayers from '../../hooks/useMapLayers';
 import { useMapInteractions } from '../../hooks/useMapInteractions';
 import { useMapBounds } from '../../hooks/useMapBounds';
-import { INITIAL_VIEW_STATE } from '@/constants';
-import CityPopup from './CityPopup';
+import { INITIAL_VIEW_STATE, MAP_STYLES } from '@/constants';
+import CityPopup from '../CityPopup/CityPopup';
 import MapTooltip from './MapTooltip';
 import 'maplibre-gl/dist/maplibre-gl.css';
-
-export type ViewMode = 'heatmap' | 'markers';
+import { useWeatherStore } from '@/stores/useWeatherStore';
+import { useAppStore } from '@/stores/useAppStore';
+import { ViewMode } from '@/types/mapTypes';
 
 interface WorldMapProps {
   cities: WeatherData[];
@@ -21,8 +22,10 @@ interface WorldMapProps {
 }
 
 function WorldMap({ cities, viewMode, onBoundsChange }: WorldMapProps) {
+  const theme = useAppStore((state) => state.theme);
+  const isLoadingWeather = useWeatherStore((state) => state.isLoadingWeather);
   const { viewState, onViewStateChange } = useMapBounds(INITIAL_VIEW_STATE, onBoundsChange);
-  const layers = useMapLayers(cities, viewMode);
+  const layers = useMapLayers({ cities, viewMode, isLoadingWeather });
   const { selectedCity, hoverInfo, handleHover, handleClick, handleClosePopup } =
     useMapInteractions(cities, viewMode);
 
@@ -45,10 +48,7 @@ function WorldMap({ cities, viewMode, onBoundsChange }: WorldMapProps) {
         onClick={handleClick}
         getTooltip={() => null}
       >
-        <Map
-          mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
-          attributionControl={false}
-        />
+        <Map mapStyle={MAP_STYLES[theme]} attributionControl={false} />
       </DeckGL>
 
       {hoverInfo && <MapTooltip x={hoverInfo.x} y={hoverInfo.y} content={hoverInfo.content} />}

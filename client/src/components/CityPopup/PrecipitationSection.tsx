@@ -1,6 +1,10 @@
 import { Text } from '@mantine/core';
 import Field from './Field';
+import Divider from './Divider';
 import { formatValue } from '@/utils/dataFormatting/formatValue';
+import { appColors } from '@/theme';
+import { useAppStore } from '@/stores/useAppStore';
+import { MapTheme } from '@/types/mapTypes';
 
 interface PrecipitationSectionProps {
   precipitation: number | null;
@@ -8,9 +12,14 @@ interface PrecipitationSectionProps {
 }
 
 const PrecipitationSection = ({ precipitation, snowDepth }: PrecipitationSectionProps) => {
+  const theme = useAppStore((state) => state.theme);
+  const isLightMode = theme === MapTheme.Light;
+  const textColor = isLightMode ? appColors.light.text : appColors.dark.text;
+
   return (
-    <div className="border-t border-gray-200 pt-3">
-      <Text size="sm" fw={600} mb="xs">
+    <div>
+      <Divider />
+      <Text size="sm" fw={600} mb="xs" style={{ color: textColor }}>
         Precipitation
       </Text>
       <div className="grid grid-cols-2 gap-2">

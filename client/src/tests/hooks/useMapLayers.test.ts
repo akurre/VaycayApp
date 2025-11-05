@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { renderHook } from '@testing-library/react';
-import { useMapLayers } from '@/hooks/useMapLayers';
+import useMapLayers from '@/hooks/useMapLayers';
 import type { WeatherData } from '@/types/cityWeatherDataType';
+import { ViewMode } from '@/types/mapTypes';
 
 describe('useMapLayers', () => {
   const mockCities: WeatherData[] = [
@@ -42,14 +43,18 @@ describe('useMapLayers', () => {
   ];
 
   it('returns an array of layers', () => {
-    const { result } = renderHook(() => useMapLayers(mockCities, 'markers'));
+    const { result } = renderHook(() =>
+      useMapLayers({ cities: mockCities, viewMode: ViewMode.Markers, isLoadingWeather: false })
+    );
 
     expect(Array.isArray(result.current)).toBe(true);
     expect(result.current).toHaveLength(2);
   });
 
   it('returns both layers with heatmap visible when viewMode is heatmap', () => {
-    const { result } = renderHook(() => useMapLayers(mockCities, 'heatmap'));
+    const { result } = renderHook(() =>
+      useMapLayers({ cities: mockCities, viewMode: ViewMode.Heatmap, isLoadingWeather: false })
+    );
 
     expect(result.current).toHaveLength(2);
     expect(result.current[0].id).toBe('temperature-heatmap');
@@ -59,7 +64,9 @@ describe('useMapLayers', () => {
   });
 
   it('returns both layers with markers visible when viewMode is markers', () => {
-    const { result } = renderHook(() => useMapLayers(mockCities, 'markers'));
+    const { result } = renderHook(() =>
+      useMapLayers({ cities: mockCities, viewMode: ViewMode.Markers, isLoadingWeather: false })
+    );
 
     expect(result.current).toHaveLength(2);
     expect(result.current[0].id).toBe('temperature-heatmap');
@@ -69,7 +76,9 @@ describe('useMapLayers', () => {
   });
 
   it('handles empty cities array', () => {
-    const { result } = renderHook(() => useMapLayers([], 'markers'));
+    const { result } = renderHook(() =>
+      useMapLayers({ cities: [], viewMode: ViewMode.Markers, isLoadingWeather: false })
+    );
 
     expect(result.current).toHaveLength(2);
     expect(result.current[0].id).toBe('temperature-heatmap');
@@ -98,7 +107,9 @@ describe('useMapLayers', () => {
       },
     ];
 
-    const { result } = renderHook(() => useMapLayers(citiesWithNulls, 'markers'));
+    const { result } = renderHook(() =>
+      useMapLayers({ cities: citiesWithNulls, viewMode: ViewMode.Markers, isLoadingWeather: false })
+    );
 
     expect(result.current).toHaveLength(2);
     // the scatterplot layer should only include cities with valid coordinates
@@ -106,14 +117,19 @@ describe('useMapLayers', () => {
 
   it('memoizes layers when inputs do not change', () => {
     const { result, rerender } = renderHook(
-      ({ cities, viewMode }) => useMapLayers(cities, viewMode),
+      ({ cities, viewMode, isLoadingWeather }) =>
+        useMapLayers({ cities, viewMode, isLoadingWeather }),
       {
-        initialProps: { cities: mockCities, viewMode: 'markers' as const },
+        initialProps: {
+          cities: mockCities,
+          viewMode: ViewMode.Markers as const,
+          isLoadingWeather: false,
+        },
       }
     );
 
     const firstResult = result.current;
-    rerender({ cities: mockCities, viewMode: 'markers' as const });
+    rerender({ cities: mockCities, viewMode: ViewMode.Markers as const, isLoadingWeather: false });
     const secondResult = result.current;
 
     // should return the same reference due to memoization
@@ -122,9 +138,14 @@ describe('useMapLayers', () => {
 
   it('updates layers when viewMode changes', () => {
     const { result, rerender } = renderHook(
-      ({ cities, viewMode }) => useMapLayers(cities, viewMode),
+      ({ cities, viewMode, isLoadingWeather }) =>
+        useMapLayers({ cities, viewMode, isLoadingWeather }),
       {
-        initialProps: { cities: mockCities, viewMode: 'markers' as 'markers' | 'heatmap' },
+        initialProps: {
+          cities: mockCities,
+          viewMode: ViewMode.Markers as ViewMode.Markers | ViewMode.Heatmap,
+          isLoadingWeather: false,
+        },
       }
     );
 
@@ -135,7 +156,11 @@ describe('useMapLayers', () => {
     expect(initialLayers[1].id).toBe('city-markers');
     expect(initialLayers[1].props.visible).toBe(true);
 
-    rerender({ cities: mockCities, viewMode: 'heatmap' as 'markers' | 'heatmap' });
+    rerender({
+      cities: mockCities,
+      viewMode: ViewMode.Heatmap as ViewMode.Markers | ViewMode.Heatmap,
+      isLoadingWeather: false,
+    });
 
     const updatedLayers = result.current;
     // both layers still exist, but heatmap should now be visible
@@ -147,9 +172,14 @@ describe('useMapLayers', () => {
 
   it('updates layers when cities data changes', () => {
     const { result, rerender } = renderHook(
-      ({ cities, viewMode }) => useMapLayers(cities, viewMode),
+      ({ cities, viewMode, isLoadingWeather }) =>
+        useMapLayers({ cities, viewMode, isLoadingWeather }),
       {
-        initialProps: { cities: mockCities, viewMode: 'markers' as const },
+        initialProps: {
+          cities: mockCities,
+          viewMode: ViewMode.Markers as const,
+          isLoadingWeather: false,
+        },
       }
     );
 
@@ -175,10 +205,24 @@ describe('useMapLayers', () => {
       },
     ];
 
-    rerender({ cities: newCities, viewMode: 'markers' as const });
+    rerender({ cities: newCities, viewMode: ViewMode.Markers as const, isLoadingWeather: false });
 
     const secondResult = result.current;
     // should be a different reference since cities changed
     expect(firstResult).not.toBe(secondResult);
+  });
+
+  it('adjusts marker opacity when loading', () => {
+    const { result: loadingResult } = renderHook(() =>
+      useMapLayers({ cities: mockCities, viewMode: ViewMode.Markers, isLoadingWeather: true })
+    );
+
+    const { result: notLoadingResult } = renderHook(() =>
+      useMapLayers({ cities: mockCities, viewMode: ViewMode.Markers, isLoadingWeather: false })
+    );
+
+    // marker layer is at index 1
+    expect(loadingResult.current[1].props.opacity).toBe(0.5);
+    expect(notLoadingResult.current[1].props.opacity).toBe(0.8);
   });
 });

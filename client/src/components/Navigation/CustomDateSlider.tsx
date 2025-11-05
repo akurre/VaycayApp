@@ -1,10 +1,9 @@
 import { FC } from 'react';
-import { IconGripVertical } from '@tabler/icons-react';
 import { clamp, useMove } from '@mantine/hooks';
-import { appColors } from '@/theme';
-import { Loader } from '@mantine/core';
-import { formatSliderLabel } from '@/utils/dateFormatting/formatSliderLabel';
-import { SLIDER_THUMB_WIDTH } from '@/constants';
+import SliderTrack from './DateSliderParts/SliderTrack';
+import SliderThumb from './DateSliderParts/SliderThumb';
+import SliderLabel from './DateSliderParts/SliderLabel';
+import SliderMarks from './DateSliderParts/SliderMarks';
 
 interface CustomDateSliderProps {
   value: number;
@@ -30,53 +29,14 @@ const CustomDateSlider: FC<CustomDateSliderProps> = ({
 
   return (
     <div className="w-full">
-      {/* track container */}
-      <div className="relative h-2 cursor-pointer" ref={ref}>
-        {/* semi-transparent track background */}
-        <div
-          className="absolute inset-0 rounded-full"
-          style={{ backgroundColor: `${appColors.primary}33` }}
-        />
-
-        {/* draggable thumb */}
-        <div
-          className="absolute top-1/2 -translate-y-1/2 w-8 h-8 rounded-full shadow-lg flex items-center justify-center cursor-grab active:cursor-grabbing transition-shadow hover:shadow-xl"
-          style={{
-            left: `calc(${position}% - ${SLIDER_THUMB_WIDTH / 2}px)`,
-            color: 'white',
-            background: appColors.primaryDark,
-          }}
-        >
-          {isLoading ? <Loader size={20} /> : <IconGripVertical size={20} stroke={1.5} />}
-        </div>
-
-        {/* date label above thumb */}
-        <div
-          className="absolute -top-8 -translate-x-1/2 text-sm text-gray-200 bg-gray-800 rounded-md font-medium whitespace-nowrap"
-          style={{
-            left: `${position}%`,
-            // color: appColors.primary,
-          }}
-        >
-          {formatSliderLabel(value)}
-        </div>
-      </div>
+      {/* track container with draggable elements */}
+      <SliderTrack trackRef={ref}>
+        <SliderThumb position={position} isLoading={isLoading} />
+        <SliderLabel value={value} position={position} />
+      </SliderTrack>
 
       {/* month marks below track */}
-      <div className="relative mt-2">
-        {marks.map((mark) => {
-          const markPosition = ((mark.value - min) / (max - min)) * 100;
-          return (
-            <div
-              key={mark.value}
-              className="absolute bg-gray-800 rounded-md -translate-x-1/2 text-xs text-gray-200 font-medium"
-              style={{ left: `${markPosition}%` }}
-            >
-              {mark.label}
-            </div>
-          );
-        })}
-      </div>
+      <SliderMarks marks={marks} min={min} max={max} />
     </div>
   );
 };

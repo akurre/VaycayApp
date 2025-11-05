@@ -1,4 +1,5 @@
 import Field from './Field';
+import Divider from './Divider';
 
 interface LocationSectionProps {
   lat: number | null;
@@ -9,7 +10,8 @@ const LocationSection = ({ lat, long }: LocationSectionProps) => {
   if (lat === null || long === null) return null;
 
   return (
-    <div className="border-t border-gray-200 pt-3">
+    <div>
+      <Divider />
       <Field label="Coordinates" value={`${lat.toFixed(4)}°, ${long.toFixed(4)}°`} monospace />
     </div>
   );

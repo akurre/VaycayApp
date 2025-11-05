@@ -1,17 +1,26 @@
-import { Modal, Title } from '@mantine/core';
-import { WeatherData } from '../../types/cityWeatherDataType';
-import { toTitleCase } from '../../utils/dataFormatting/toTitleCase';
-import Field from '../CityPopup/Field';
-import LocationSection from '../CityPopup/LocationSection';
-import PrecipitationSection from '../CityPopup/PrecipitationSection';
-import TemperatureSection from '../CityPopup/TemperatureSection';
+import { Modal } from '@mantine/core';
+import { WeatherData } from '@/types/cityWeatherDataType';
+import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
+import { appColors } from '@/theme';
+import { useAppStore } from '@/stores/useAppStore';
+import { MapTheme } from '@/types/mapTypes';
+import Field from './Field';
+import LocationSection from './LocationSection';
+import PrecipitationSection from './PrecipitationSection';
+import TemperatureSection from './TemperatureSection';
+import Divider from './Divider';
 
 interface CityPopupProps {
   city: WeatherData | null;
   onClose: () => void;
 }
 
-function CityPopup({ city, onClose }: CityPopupProps) {
+const CityPopup = ({ city, onClose }: CityPopupProps) => {
+  const theme = useAppStore((state) => state.theme);
+  const isLightMode = theme === MapTheme.Light;
+  const backgroundColor = isLightMode ? appColors.light.background : appColors.dark.background;
+  const textColor = isLightMode ? appColors.light.text : appColors.dark.text;
+
   if (!city) return null;
 
   return (
@@ -19,12 +28,23 @@ function CityPopup({ city, onClose }: CityPopupProps) {
       opened={!!city}
       onClose={onClose}
       title={
-        <Title order={3}>
+        <span style={{ color: textColor }}>
           {toTitleCase(city.city)}
           {city.country && `, ${city.country}`}
-        </Title>
+        </span>
       }
       size="md"
+      styles={{
+        content: {
+          backgroundColor,
+        },
+        header: {
+          backgroundColor,
+        },
+        body: {
+          backgroundColor,
+        },
+      }}
     >
       <div className="flex flex-col gap-3">
         {city.state && <Field label="State/Region" value={toTitleCase(city.state)} />}
@@ -42,12 +62,14 @@ function CityPopup({ city, onClose }: CityPopupProps) {
         )}
 
         {city.population && (
-          <div className="border-t border-gray-200 pt-3">
+          <div>
+            <Divider />
             <Field label="Population" value={city.population.toLocaleString()} />
           </div>
         )}
 
-        <div className="border-t border-gray-200 pt-3">
+        <div>
+          <Divider />
           <Field label="Weather Station" value={city.stationName} />
         </div>
 
@@ -55,6 +77,6 @@ function CityPopup({ city, onClose }: CityPopupProps) {
       </div>
     </Modal>
   );
-}
+};
 
 export default CityPopup;
