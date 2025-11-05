@@ -12,7 +12,9 @@ interface FieldProps {
 const Field = ({ label, value, monospace }: FieldProps) => {
   const theme = useAppStore((state) => state.theme);
   const isLightMode = theme === MapTheme.Light;
-  const textSecondaryColor = isLightMode ? appColors.light.textSecondary : appColors.dark.textSecondary;
+  const textSecondaryColor = isLightMode
+    ? appColors.light.textSecondary
+    : appColors.dark.textSecondary;
   const textColor = isLightMode ? appColors.light.text : appColors.dark.text;
 
   return (

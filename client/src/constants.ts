@@ -65,16 +65,16 @@ export const SLIDER_THUMB_WIDTH = 32; // 8 * 4 (w-8 in tailwind)
 
 // month boundaries for labels
 export const monthMarks = [
-    { value: 1, label: 'Jan' },
-    { value: 32, label: 'Feb' },
-    { value: 60, label: 'Mar' },
-    { value: 91, label: 'Apr' },
-    { value: 121, label: 'May' },
-    { value: 152, label: 'Jun' },
-    { value: 182, label: 'Jul' },
-    { value: 213, label: 'Aug' },
-    { value: 244, label: 'Sep' },
-    { value: 274, label: 'Oct' },
-    { value: 305, label: 'Nov' },
-    { value: 335, label: 'Dec' },
-  ];
+  { value: 1, label: 'Jan' },
+  { value: 32, label: 'Feb' },
+  { value: 60, label: 'Mar' },
+  { value: 91, label: 'Apr' },
+  { value: 121, label: 'May' },
+  { value: 152, label: 'Jun' },
+  { value: 182, label: 'Jul' },
+  { value: 213, label: 'Aug' },
+  { value: 244, label: 'Sep' },
+  { value: 274, label: 'Oct' },
+  { value: 305, label: 'Nov' },
+  { value: 335, label: 'Dec' },
+];

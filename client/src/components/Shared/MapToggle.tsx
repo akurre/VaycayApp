@@ -16,14 +16,12 @@ interface MapToggleProps<T extends string> {
   options: MapToggleOption<T>[];
 }
 
-const MapToggle = <T extends string>({
-  value,
-  onChange,
-  options,
-}: MapToggleProps<T>) => {
+const MapToggle = <T extends string>({ value, onChange, options }: MapToggleProps<T>) => {
   const theme = useAppStore((state) => state.theme);
   const isLightMode = theme === MapTheme.Light;
-  const iconColorUnselected = isLightMode ? appColors.light.textSecondary : appColors.dark.textSecondary
+  const iconColorUnselected = isLightMode
+    ? appColors.light.textSecondary
+    : appColors.dark.textSecondary;
 
   return (
     <SegmentedControl

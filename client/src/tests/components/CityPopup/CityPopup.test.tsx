@@ -118,7 +118,7 @@ describe('CityPopup', () => {
     // verify modal is rendered with role
     const modal = screen.getByRole('dialog');
     expect(modal).toBeInTheDocument();
-    
+
     // verify background color is applied
     expect(modal).toHaveStyle({ backgroundColor: expect.any(String) });
   });

@@ -11,7 +11,7 @@ interface MapTooltipProps {
 const MapTooltip = ({ x, y, content }: MapTooltipProps) => {
   const theme = useAppStore((state) => state.theme);
   const isLightMode = theme === MapTheme.Light;
-  
+
   const backgroundColor = isLightMode ? appColors.light.surface : appColors.dark.surface;
   const borderColor = isLightMode ? appColors.light.border : appColors.dark.border;
   const textColor = isLightMode ? appColors.light.text : appColors.dark.text;
