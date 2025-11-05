@@ -26,6 +26,7 @@
     "@mantine/core": "^8.3.6",
     "@mantine/dates": "^8.3.6",
     "@mantine/hooks": "^8.3.6",
+    "@mantine/notifications": "^8.3.6",
     "@tabler/icons-react": "^3.35.0",
     "@types/react-map-gl": "^6.1.7",
     "dayjs": "^1.11.19",

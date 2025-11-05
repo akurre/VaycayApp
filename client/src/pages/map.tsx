@@ -1,7 +1,6 @@
 import { FC, useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useDebouncedValue } from '@mantine/hooks';
-import { Alert } from '@mantine/core';
 import useWeatherByDateAndBounds from '../api/dates/useWeatherByDateAndBounds';
 import WorldMap from '../components/Map/WorldMap';
 import MapViewToggle from '../components/Map/MapViewToggle';
@@ -12,6 +11,7 @@ import { useWeatherStore } from '../stores/useWeatherStore';
 import { useAppStore } from '../stores/useAppStore';
 import DateSliderWrapper from '@/components/Navigation/DateSliderWrapper';
 import { ViewMode, MapTheme } from '@/types/mapTypes';
+import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
 
 interface MapBounds {
   minLat: number;
@@ -73,6 +73,13 @@ const MapPage: FC = () => {
     }
   }, [weatherData, isLoading, setDisplayedWeatherData, setIsLoadingWeather]);
 
+  // handle errors with toast notifications
+  useEffect(() => {
+    if (isError) {
+      parseErrorAndNotify(isError, 'failed to load weather data');
+    }
+  }, [isError]);
+
   const handleDateChange = (newDate: string) => {
     setSelectedDate(newDate);
   };
@@ -82,17 +89,6 @@ const MapPage: FC = () => {
     setBounds(newBounds);
     setShouldUseBounds(useBounds);
   }, []);
-
-  if (isError) {
-    // todo handle errors better
-    return (
-      <div className="w-full h-screen flex justify-center items-center">
-        <Alert color="red" title="Error">
-          Failed to load weather data.
-        </Alert>
-      </div>
-    );
-  }
 
   return (
     <div className="relative w-full h-screen">

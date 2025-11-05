@@ -2,6 +2,7 @@ import { useLazyQuery } from '@apollo/client/react';
 import { SEARCH_CITIES } from '@/api/queries';
 import { SearchCitiesResult, HomeLocation, LocationSource } from '@/types/userLocationType';
 import { useAppStore } from '@/stores/useAppStore';
+import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
 
 interface UseCitySearchReturn {
   searchCities: (searchTerm: string) => Promise<SearchCitiesResult[]>;
@@ -32,7 +33,7 @@ function useCitySearch(): UseCitySearchReturn {
 
       return data?.searchCities || [];
     } catch (err) {
-      console.error('city search error:', err);
+      parseErrorAndNotify(err, 'failed to search cities');
       return [];
     }
   };

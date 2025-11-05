@@ -3,26 +3,27 @@ import { useLazyQuery } from '@apollo/client/react';
 import { GET_NEAREST_CITY } from '@/api/queries';
 import { HomeLocation, NearestCityResult, LocationSource } from '@/types/userLocationType';
 import { useAppStore } from '@/stores/useAppStore';
+import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
 
 interface UseUserLocationReturn {
   requestLocation: () => Promise<void>;
   isLoading: boolean;
-  error: string | null;
 }
 
 export function useUserLocation(): UseUserLocationReturn {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const setHomeLocation = useAppStore((state) => state.setHomeLocation);
 
   const [getNearestCity] = useLazyQuery<{ nearestCity: NearestCityResult }>(GET_NEAREST_CITY);
 
   const requestLocation = useCallback(async () => {
     setIsLoading(true);
-    setError(null);
 
     if (!navigator.geolocation) {
-      setError('geolocation is not supported by your browser');
+      parseErrorAndNotify(
+        new Error('geolocation is not supported by your browser'),
+        'geolocation unavailable'
+      );
       setIsLoading(false);
       return;
     }
@@ -47,7 +48,7 @@ export function useUserLocation(): UseUserLocationReturn {
       });
 
       if (queryError) {
-        throw new Error(`failed to find nearest city: ${queryError.message}`);
+        throw queryError;
       }
 
       if (!data?.nearestCity) {
@@ -72,14 +73,7 @@ export function useUserLocation(): UseUserLocationReturn {
       setHomeLocation(homeLocation);
       setIsLoading(false);
     } catch (err) {
-      const errorMessage =
-        err instanceof GeolocationPositionError
-          ? getGeolocationErrorMessage(err)
-          : err instanceof Error
-            ? err.message
-            : 'failed to get location';
-
-      setError(errorMessage);
+      parseErrorAndNotify(err);
       setIsLoading(false);
     }
   }, [getNearestCity, setHomeLocation]);
@@ -87,19 +81,5 @@ export function useUserLocation(): UseUserLocationReturn {
   return {
     requestLocation,
     isLoading,
-    error,
   };
-}
-
-function getGeolocationErrorMessage(error: GeolocationPositionError): string {
-  switch (error.code) {
-    case error.PERMISSION_DENIED:
-      return 'location permission denied';
-    case error.POSITION_UNAVAILABLE:
-      return 'location information unavailable';
-    case error.TIMEOUT:
-      return 'location request timed out';
-    default:
-      return 'failed to get location';
-  }
 }

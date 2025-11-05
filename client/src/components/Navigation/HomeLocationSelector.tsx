@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, TextInput, Popover, Loader, Alert } from '@mantine/core';
+import { Button, TextInput, Popover, Loader } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { IconHome, IconMapPin, IconSearch } from '@tabler/icons-react';
 import { useAppStore } from '@/stores/useAppStore';
@@ -14,7 +14,7 @@ function HomeLocationSelector() {
   const [debouncedSearchTerm] = useDebouncedValue(searchTerm, 300);
 
   const homeLocation = useAppStore((state) => state.homeLocation);
-  const { requestLocation, isLoading: isGeoLoading, error: geoError } = useUserLocation();
+  const { requestLocation, isLoading: isGeoLoading } = useUserLocation();
   const { searchCities, selectCity, isLoading: isSearchLoading } = useCitySearch();
 
   // perform search when debounced term changes
@@ -68,12 +68,6 @@ function HomeLocationSelector() {
           >
             Use My Current Location
           </Button>
-
-          {geoError && (
-            <Alert color="red" className="mb-3 text-xs">
-              {geoError}
-            </Alert>
-          )}
 
           {/* divider */}
           <div className="flex items-center gap-2 mb-3">

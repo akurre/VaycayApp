@@ -49,6 +49,14 @@ export const TEMP_THRESHOLDS = [
 export const COLOR_RANGE: [number, number, number][] = TEMP_THRESHOLDS.map((t) => t.color);
 
 // ============================================================================
+// ERROR NOTIFICATION CONSTANTS
+// ============================================================================
+
+// notification auto-close durations (in milliseconds)
+export const ERROR_NOTIFICATION_DURATION = 5000;
+export const WARNING_NOTIFICATION_DURATION = 3000;
+
+// ============================================================================
 // UI CONSTANTS
 // ============================================================================
 
