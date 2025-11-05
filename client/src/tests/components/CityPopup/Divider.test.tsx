@@ -14,7 +14,7 @@ describe('Divider', () => {
     const { container } = render(<Divider />);
 
     const divider = container.querySelector('.pt-3') as HTMLElement;
-    
+
     // verify border is applied with inline style
     expect(divider.style.borderTop).toBeTruthy();
     expect(divider.style.borderTop).toContain('1px');

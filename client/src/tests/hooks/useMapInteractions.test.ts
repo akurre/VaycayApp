@@ -285,7 +285,10 @@ describe('useMapInteractions', () => {
         ({ cities, mode }: { cities: WeatherData[]; mode: ViewMode.Markers | ViewMode.Heatmap }) =>
           useMapInteractions(cities, mode),
         {
-          initialProps: { cities: [city], mode: ViewMode.Markers as ViewMode.Markers | ViewMode.Heatmap },
+          initialProps: {
+            cities: [city],
+            mode: ViewMode.Markers as ViewMode.Markers | ViewMode.Heatmap,
+          },
         }
       );
 

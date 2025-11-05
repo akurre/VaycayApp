@@ -9,9 +9,9 @@ interface SliderTrackProps {
 }
 
 const SliderTrack: FC<SliderTrackProps> = ({ trackRef, children }) => {
-  const theme = useAppStore(state => state.theme)
+  const theme = useAppStore((state) => state.theme);
   const isLightMode = theme === MapTheme.Light;
-  const trackColor = isLightMode ? appColors.tertiaryLight : appColors.tertiaryDark
+  const trackColor = isLightMode ? appColors.tertiaryLight : appColors.tertiaryDark;
   return (
     <div className="relative h-2 cursor-pointer" ref={trackRef}>
       {/* slider track background with 80% opacity */}

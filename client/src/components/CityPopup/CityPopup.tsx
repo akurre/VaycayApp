@@ -1,4 +1,4 @@
-import { Modal, Title } from '@mantine/core';
+import { Modal } from '@mantine/core';
 import { WeatherData } from '@/types/cityWeatherDataType';
 import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
 import { appColors } from '@/theme';

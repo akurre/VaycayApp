@@ -83,7 +83,7 @@ function useMapLayers({ cities, viewMode, isLoadingWeather }: UseMapLayersProps)
         },
       }),
     ];
-  }, [cities, heatmapData, viewMode]);
-};
+  }, [cities, heatmapData, viewMode, isLoadingWeather]);
+}
 
 export default useMapLayers;
