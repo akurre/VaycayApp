@@ -47,9 +47,7 @@ function HomeLocationSelector() {
           variant="filled"
           size="sm"
         >
-          {homeLocation
-            ? `${homeLocation.cityName}, ${homeLocation.country}`
-            : 'Set Home Location'}
+          {homeLocation ? `${homeLocation.cityName}, ${homeLocation.country}` : 'Set Home Location'}
         </Button>
       </Popover.Target>
 
@@ -111,11 +109,9 @@ function HomeLocationSelector() {
             </div>
           )}
 
-          {!isSearchLoading &&
-            searchTerm.trim().length >= 2 &&
-            searchResults.length === 0 && (
-              <div className="text-center py-4 text-sm text-gray-500">No cities found</div>
-            )}
+          {!isSearchLoading && searchTerm.trim().length >= 2 && searchResults.length === 0 && (
+            <div className="text-center py-4 text-sm text-gray-500">No cities found</div>
+          )}
         </div>
       </Popover.Dropdown>
     </Popover>

@@ -28,7 +28,7 @@ export interface NearestCityResult extends CityInfo {
   distance: number;
 }
 
-export interface SearchCitiesResult extends CityInfo {}
+export type SearchCitiesResult = CityInfo;
 
 export enum LocationSource {
   Geolocation = 'geolocation',

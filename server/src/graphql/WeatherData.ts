@@ -2,7 +2,7 @@ import { objectType, queryField, nonNull, stringArg, intArg, floatArg, list } fr
 import type { City, WeatherStation, WeatherRecord } from '@prisma/client';
 import { getCachedWeatherData } from '../utils/cache';
 import queryCityIds from '../utils/weatherQueries';
-import { calculateDistance } from '../utils/calculateDistance';
+import calculateDistance from '../utils/calculateDistance';
 
 type WeatherRecordWithRelations = WeatherRecord & {
   city: City;

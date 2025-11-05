@@ -23,7 +23,10 @@ export function parseErrorAndNotify(
     title: getErrorTitle(parsed.category),
     message: parsed.message,
     color: getSeverityColor(finalSeverity),
-    autoClose: finalSeverity === ErrorSeverity.Error ? ERROR_NOTIFICATION_DURATION : WARNING_NOTIFICATION_DURATION,
+    autoClose:
+      finalSeverity === ErrorSeverity.Error
+        ? ERROR_NOTIFICATION_DURATION
+        : WARNING_NOTIFICATION_DURATION,
   });
 
   return { ...parsed, severity: finalSeverity };

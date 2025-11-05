@@ -1,4 +1,9 @@
-import { GeolocationErrorLike, ErrorCategory, ErrorSeverity, ParsedError } from '@/types/errorTypes';
+import {
+  GeolocationErrorLike,
+  ErrorCategory,
+  ErrorSeverity,
+  ParsedError,
+} from '@/types/errorTypes';
 
 /**
  * parses geolocation errors into a standardized format
