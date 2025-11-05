@@ -4,9 +4,9 @@ import { createTheme } from '@mantine/core';
 export const appColors = {
   // primary colors (burgundy)
   primary: '#800040',
-  primaryLight: '#a6004d',
-  primaryDark: '#5a002d',
-  primaryHover: '#6b0036',
+  primaryLight: '#c497ac',
+  primaryDark: '#850042',
+  primaryHover: '#9d4571',
   
   // secondary colors (teal/blue-green)
   secondary: '#008080',
@@ -27,6 +27,8 @@ export const appColors = {
     border: '#dee2e6',
     text: '#212529',
     textSecondary: '#6c757d',
+    toggleBackground: '#f0f0f0',
+    textShadow: '0 0 8px rgba(255, 255, 255, 0.8), 0 0 4px rgba(255, 255, 255, 0.6)',
   },
   
   // neutral colors for dark mode
@@ -36,6 +38,8 @@ export const appColors = {
     border: '#373a40',
     text: '#c1c2c5',
     textSecondary: '#909296',
+    toggleBackground: '#424242',
+    textShadow: '0 0 8px rgba(0, 0, 0, 0.8), 0 0 4px rgba(0, 0, 0, 0.6)',
   },
   
   // accent colors

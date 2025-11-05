@@ -4,7 +4,7 @@ import { ScatterplotLayer } from '@deck.gl/layers';
 import { WeatherData, ValidMarkerData } from '../types/cityWeatherDataType';
 import { transformToHeatmapData } from '../utils/map/transformToHeatmapData';
 import { getMarkerColor, COLOR_RANGE } from '../utils/map/getMarkerColor';
-import type { ViewMode } from '../components/Map/WorldMap';
+import { ViewMode } from '@/types/mapTypes';
 
 /**
  * hook to create and manage deck.gl map layers for both heatmap and marker views.

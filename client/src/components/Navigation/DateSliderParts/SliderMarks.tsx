@@ -1,7 +1,9 @@
 import { FC } from 'react';
-import { Text, useMantineColorScheme } from '@mantine/core';
-import CustomPopover from '@/components/shared/CustomPopover';
+import { Text } from '@mantine/core';
+import CustomPopover from '@/components/Shared/CustomPopover';
 import { appColors } from '@/theme';
+import { useAppStore } from '@/stores/useAppStore';
+import { MapTheme } from '@/types/mapTypes';
 
 interface SliderMarksProps {
   marks: Array<{ value: number; label: string }>;
@@ -10,11 +12,11 @@ interface SliderMarksProps {
 }
 
 const SliderMarks: FC<SliderMarksProps> = ({ marks, min, max }) => {
-  const { colorScheme } = useMantineColorScheme();
-  const isDark = colorScheme === 'dark';
+  const theme = useAppStore((state) => state.theme);
+  const isLightMode = theme === MapTheme.Light;
   
-  // use light text on dark map background for contrast
-  const textColor = isDark ? appColors.light.text : appColors.dark.text;
+  const textColor = isLightMode ? appColors.light.text : appColors.dark.text;
+  const textShadow = isLightMode ? appColors.light.textShadow : appColors.dark.textShadow;
   
   return (
     <div className="relative mt-1">
@@ -32,7 +34,7 @@ const SliderMarks: FC<SliderMarksProps> = ({ marks, min, max }) => {
                 fw={500}
                 style={{
                   color: textColor,
-                  textShadow: '0 0 8px rgba(0, 0, 0, 0.8), 0 0 4px rgba(0, 0, 0, 0.6)'
+                  textShadow
                 }}
               >
                 {mark.label}

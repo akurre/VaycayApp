@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import formatSliderLabel from '@/utils/dateFormatting/formatSliderLabel';
 import { Text } from '@mantine/core';
-import CustomPopover from '@/components/shared/CustomPopover';
+import CustomPopover from '@/components/Shared/CustomPopover';
 
 interface SliderLabelProps {
   value: number;

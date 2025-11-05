@@ -17,6 +17,14 @@ export const INITIAL_VIEW_STATE = {
   bearing: 0,
 };
 
+export const TOGGLE_ICON_SIZE = 16;
+
+// map style urls for light and dark themes
+export const MAP_STYLES = {
+  light: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+  dark: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+} as const;
+
 // ============================================================================
 // TEMPERATURE & COLOR CONSTANTS
 // ============================================================================

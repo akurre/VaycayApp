@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import useMapLayers from '@/hooks/useMapLayers';
 import type { WeatherData } from '@/types/cityWeatherDataType';
+import { ViewMode } from '@/types/mapTypes';
 
 describe('useMapLayers', () => {
   const mockCities: WeatherData[] = [
@@ -43,7 +44,7 @@ describe('useMapLayers', () => {
 
   it('returns an array of layers', () => {
     const { result } = renderHook(() =>
-      useMapLayers({ cities: mockCities, viewMode: 'markers', isLoadingWeather: false })
+      useMapLayers({ cities: mockCities, viewMode: ViewMode.Markers, isLoadingWeather: false })
     );
 
     expect(Array.isArray(result.current)).toBe(true);
@@ -52,7 +53,7 @@ describe('useMapLayers', () => {
 
   it('returns both layers with heatmap visible when viewMode is heatmap', () => {
     const { result } = renderHook(() =>
-      useMapLayers({ cities: mockCities, viewMode: 'heatmap', isLoadingWeather: false })
+      useMapLayers({ cities: mockCities, viewMode: ViewMode.Heatmap, isLoadingWeather: false })
     );
 
     expect(result.current).toHaveLength(2);
@@ -64,7 +65,7 @@ describe('useMapLayers', () => {
 
   it('returns both layers with markers visible when viewMode is markers', () => {
     const { result } = renderHook(() =>
-      useMapLayers({ cities: mockCities, viewMode: 'markers', isLoadingWeather: false })
+      useMapLayers({ cities: mockCities, viewMode: ViewMode.Markers, isLoadingWeather: false })
     );
 
     expect(result.current).toHaveLength(2);
@@ -76,7 +77,7 @@ describe('useMapLayers', () => {
 
   it('handles empty cities array', () => {
     const { result } = renderHook(() =>
-      useMapLayers({ cities: [], viewMode: 'markers', isLoadingWeather: false })
+      useMapLayers({ cities: [], viewMode: ViewMode.Markers, isLoadingWeather: false })
     );
 
     expect(result.current).toHaveLength(2);
@@ -107,7 +108,7 @@ describe('useMapLayers', () => {
     ];
 
     const { result } = renderHook(() =>
-      useMapLayers({ cities: citiesWithNulls, viewMode: 'markers', isLoadingWeather: false })
+      useMapLayers({ cities: citiesWithNulls, viewMode: ViewMode.Markers, isLoadingWeather: false })
     );
 
     expect(result.current).toHaveLength(2);
@@ -121,14 +122,14 @@ describe('useMapLayers', () => {
       {
         initialProps: {
           cities: mockCities,
-          viewMode: 'markers' as const,
+          viewMode: ViewMode.Markers as const,
           isLoadingWeather: false,
         },
       }
     );
 
     const firstResult = result.current;
-    rerender({ cities: mockCities, viewMode: 'markers' as const, isLoadingWeather: false });
+    rerender({ cities: mockCities, viewMode: ViewMode.Markers as const, isLoadingWeather: false });
     const secondResult = result.current;
 
     // should return the same reference due to memoization
@@ -142,7 +143,7 @@ describe('useMapLayers', () => {
       {
         initialProps: {
           cities: mockCities,
-          viewMode: 'markers' as 'markers' | 'heatmap',
+          viewMode: ViewMode.Markers as ViewMode.Markers | ViewMode.Heatmap,
           isLoadingWeather: false,
         },
       }
@@ -157,7 +158,7 @@ describe('useMapLayers', () => {
 
     rerender({
       cities: mockCities,
-      viewMode: 'heatmap' as 'markers' | 'heatmap',
+      viewMode: ViewMode.Heatmap as ViewMode.Markers | ViewMode.Heatmap,
       isLoadingWeather: false,
     });
 
@@ -176,7 +177,7 @@ describe('useMapLayers', () => {
       {
         initialProps: {
           cities: mockCities,
-          viewMode: 'markers' as const,
+          viewMode: ViewMode.Markers as const,
           isLoadingWeather: false,
         },
       }
@@ -204,7 +205,7 @@ describe('useMapLayers', () => {
       },
     ];
 
-    rerender({ cities: newCities, viewMode: 'markers' as const, isLoadingWeather: false });
+    rerender({ cities: newCities, viewMode: ViewMode.Markers as const, isLoadingWeather: false });
 
     const secondResult = result.current;
     // should be a different reference since cities changed
@@ -213,11 +214,11 @@ describe('useMapLayers', () => {
 
   it('adjusts marker opacity when loading', () => {
     const { result: loadingResult } = renderHook(() =>
-      useMapLayers({ cities: mockCities, viewMode: 'markers', isLoadingWeather: true })
+      useMapLayers({ cities: mockCities, viewMode: ViewMode.Markers, isLoadingWeather: true })
     );
 
     const { result: notLoadingResult } = renderHook(() =>
-      useMapLayers({ cities: mockCities, viewMode: 'markers', isLoadingWeather: false })
+      useMapLayers({ cities: mockCities, viewMode: ViewMode.Markers, isLoadingWeather: false })
     );
 
     // marker layer is at index 1

@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import type { PickingInfo } from '@deck.gl/core';
 import { WeatherData } from '../types/cityWeatherDataType';
 import { getTooltipContent } from '../utils/map/getTooltipContent';
-import type { ViewMode } from '../components/Map/WorldMap';
+import { ViewMode } from '@/types/mapTypes';
 
 /**
  * hook to manage map interactions including hover tooltips and city selection.

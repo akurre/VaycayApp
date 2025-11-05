@@ -1,8 +1,10 @@
 import { FC } from 'react';
 import { IconGripVertical } from '@tabler/icons-react';
-import { Loader } from '@mantine/core';
 import { appColors } from '@/theme';
 import { SLIDER_THUMB_WIDTH } from '@/constants';
+import { useAppStore } from '@/stores/useAppStore';
+import { MapTheme } from '@/types/mapTypes';
+import CustomLoader from '@/components/Shared/CustomLoader';
 
 interface SliderThumbProps {
   position: number;
@@ -10,16 +12,19 @@ interface SliderThumbProps {
 }
 
 const SliderThumb: FC<SliderThumbProps> = ({ position, isLoading }) => {
+  const theme = useAppStore((state) => state.theme);
+  const isLightMode = theme === MapTheme.Light;
+
   return (
     <div
       className="absolute z-20 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full shadow-lg flex items-center justify-center cursor-grab active:cursor-grabbing transition-shadow hover:shadow-xl"
       style={{
         left: `calc(${position}% - ${SLIDER_THUMB_WIDTH / 2}px)`,
         color: 'white',
-        background: appColors.primaryDark,
+        background: isLightMode ? appColors.primaryLight : appColors.primaryDark,
       }}
     >
-      {isLoading ? <Loader size={20} /> : <IconGripVertical size={20} stroke={1.5} />}
+      {isLoading ? <CustomLoader /> : <IconGripVertical size={20} stroke={1.5} />}
     </div>
   );
 };

@@ -1,8 +1,6 @@
-import { SegmentedControl, Tooltip } from '@mantine/core';
 import { IconChartBubble, IconMapPin } from '@tabler/icons-react';
-import { appColors } from '@/theme';
-
-type ViewMode = 'heatmap' | 'markers';
+import MapToggle from '@/components/Shared/MapToggle';
+import { ViewMode } from '@/types/mapTypes';
 
 interface MapViewToggleProps {
   viewMode: ViewMode;
@@ -11,41 +9,19 @@ interface MapViewToggleProps {
 
 const MapViewToggle = ({ viewMode, onViewModeChange }: MapViewToggleProps) => {
   return (
-    <SegmentedControl
+    <MapToggle
       value={viewMode}
-      color={appColors.primary}
-      transitionDuration={300}
-      onChange={(value) => onViewModeChange(value as ViewMode)}
-      styles={{
-        root: {
-          backgroundColor: 'rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(8px)',
-        },
-        label: {
-          color: 'inherit',
-          opacity: 1,
-        },
-      }}
-      data={[
+      onChange={onViewModeChange}
+      options={[
         {
-          value: 'markers',
-          label: (
-            <Tooltip label="Marker View" withArrow>
-              <div className="flex items-center justify-center">
-                <IconMapPin size={16} color={viewMode === 'heatmap' ? 'gray' : undefined} />
-              </div>
-            </Tooltip>
-          ),
+          value: ViewMode.Markers,
+          label: 'Marker View',
+          icon: IconMapPin,
         },
         {
-          value: 'heatmap',
-          label: (
-            <Tooltip label="Heatmap View" withArrow>
-              <div className="flex items-center justify-center">
-                <IconChartBubble size={16} color={viewMode === 'markers' ? 'gray' : undefined} />
-              </div>
-            </Tooltip>
-          ),
+          value: ViewMode.Heatmap,
+          label: 'Heatmap View',
+          icon: IconChartBubble,
         },
       ]}
     />
