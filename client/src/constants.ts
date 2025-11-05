@@ -25,6 +25,22 @@ export const MAP_STYLES = {
   dark: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
 } as const;
 
+// home icon marker constants
+export const HOME_ICON_SIZE = 32;
+export const HOME_ICON_SVG = `
+  <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(24, 24)">
+      <!-- house shape -->
+      <path d="M-12,-8 L0,-16 L12,-8 L12,12 L-12,12 Z" fill="#FFD700" stroke="#000" stroke-width="1.5"/>
+      <!-- door -->
+      <rect x="-4" y="4" width="8" height="8" fill="#8B4513" stroke="#000" stroke-width="1"/>
+      <!-- roof detail -->
+      <path d="M-12,-8 L0,-16 L12,-8" fill="none" stroke="#000" stroke-width="1.5"/>
+    </g>
+  </svg>
+`;
+export const HOME_ICON_DATA_URL = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(HOME_ICON_SVG)}`;
+
 // ============================================================================
 // TEMPERATURE & COLOR CONSTANTS
 // ============================================================================

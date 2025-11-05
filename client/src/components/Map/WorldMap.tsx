@@ -10,6 +10,7 @@ import CityPopup from '../CityPopup/CityPopup';
 import MapTooltip from './MapTooltip';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useWeatherStore } from '@/stores/useWeatherStore';
+import { useAppStore } from '@/stores/useAppStore';
 import { ViewMode } from '@/types/mapTypes';
 
 interface WorldMapProps {
@@ -24,10 +25,11 @@ interface WorldMapProps {
 function WorldMap({ cities, viewMode, onBoundsChange }: WorldMapProps) {
   const colorScheme = useComputedColorScheme('dark');
   const isLoadingWeather = useWeatherStore((state) => state.isLoadingWeather);
+  const homeLocation = useAppStore((state) => state.homeLocation);
   const { viewState, onViewStateChange } = useMapBounds(INITIAL_VIEW_STATE, onBoundsChange);
-  const layers = useMapLayers({ cities, viewMode, isLoadingWeather });
+  const layers = useMapLayers({ cities, viewMode, isLoadingWeather, homeLocation });
   const { selectedCity, hoverInfo, handleHover, handleClick, handleClosePopup } =
-    useMapInteractions(cities, viewMode);
+    useMapInteractions(cities, viewMode, homeLocation);
 
   return (
     <div className="relative h-full w-full">
