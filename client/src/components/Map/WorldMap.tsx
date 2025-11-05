@@ -1,13 +1,14 @@
 import DeckGL from '@deck.gl/react';
 import Map from 'react-map-gl/maplibre';
 import { WeatherData } from '../../types/cityWeatherDataType';
-import { useMapLayers } from '../../hooks/useMapLayers';
+import useMapLayers from '../../hooks/useMapLayers';
 import { useMapInteractions } from '../../hooks/useMapInteractions';
 import { useMapBounds } from '../../hooks/useMapBounds';
 import { INITIAL_VIEW_STATE } from '@/constants';
 import CityPopup from './CityPopup';
 import MapTooltip from './MapTooltip';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { useWeatherStore } from '@/stores/useWeatherStore';
 
 export type ViewMode = 'heatmap' | 'markers';
 
@@ -21,8 +22,9 @@ interface WorldMapProps {
 }
 
 function WorldMap({ cities, viewMode, onBoundsChange }: WorldMapProps) {
+  const isLoadingWeather = useWeatherStore((state) => state.isLoadingWeather);
   const { viewState, onViewStateChange } = useMapBounds(INITIAL_VIEW_STATE, onBoundsChange);
-  const layers = useMapLayers(cities, viewMode);
+  const layers = useMapLayers({ cities, viewMode, isLoadingWeather });
   const { selectedCity, hoverInfo, handleHover, handleClick, handleClosePopup } =
     useMapInteractions(cities, viewMode);
 
