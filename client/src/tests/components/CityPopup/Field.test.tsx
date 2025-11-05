@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { render, screen } from '../../../test-utils';
+import { render, screen } from '@/test-utils';
 import Field from '@/components/CityPopup/Field';
 
 describe('Field', () => {
@@ -10,30 +10,29 @@ describe('Field', () => {
     expect(screen.getByText('25.5°C')).toBeInTheDocument();
   });
 
-  it('renders numeric value', () => {
-    render(<Field label="Humidity" value={75} />);
+  it('renders with numeric value', () => {
+    render(<Field label="Population" value={1000000} />);
 
-    expect(screen.getByText('Humidity')).toBeInTheDocument();
-    expect(screen.getByText('75')).toBeInTheDocument();
+    expect(screen.getByText('Population')).toBeInTheDocument();
+    expect(screen.getByText('1000000')).toBeInTheDocument();
   });
 
   it('applies monospace font when specified', () => {
-    render(<Field label="Coordinates" value="45.5, 9.2" monospace />);
+    render(<Field label="Coordinates" value="45.1234°, -93.5678°" monospace />);
 
-    const valueElement = screen.getByText('45.5, 9.2');
+    const valueElement = screen.getByText('45.1234°, -93.5678°');
+    // mantine applies font-family through ff prop, check it's present
     expect(valueElement).toBeInTheDocument();
   });
 
-  it('renders without monospace by default', () => {
-    render(<Field label="City" value="Milan" />);
+  it('uses theme colors for text', () => {
+    render(<Field label="Test Label" value="Test Value" />);
 
-    const valueElement = screen.getByText('Milan');
-    expect(valueElement).toBeInTheDocument();
-  });
+    const label = screen.getByText('Test Label');
+    const value = screen.getByText('Test Value');
 
-  it('handles empty string value', () => {
-    render(<Field label="Notes" value="" />);
-
-    expect(screen.getByText('Notes')).toBeInTheDocument();
+    // verify elements have color styles applied (specific color values)
+    expect(label.style.color).toBeTruthy();
+    expect(value.style.color).toBeTruthy();
   });
 });

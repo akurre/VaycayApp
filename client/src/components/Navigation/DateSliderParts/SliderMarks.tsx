@@ -15,8 +15,9 @@ const SliderMarks: FC<SliderMarksProps> = ({ marks, min, max }) => {
   const theme = useAppStore((state) => state.theme);
   const isLightMode = theme === MapTheme.Light;
   
-  // use appropriate text color based on theme
+  // use appropriate text color and shadow based on theme
   const textColor = isLightMode ? appColors.light.text : appColors.dark.text;
+  const textShadow = isLightMode ? appColors.light.textShadow : appColors.dark.textShadow;
   
   return (
     <div className="relative mt-1">
@@ -34,7 +35,7 @@ const SliderMarks: FC<SliderMarksProps> = ({ marks, min, max }) => {
                 fw={500}
                 style={{
                   color: textColor,
-                  textShadow: '0 0 8px rgba(0, 0, 0, 0.8), 0 0 4px rgba(0, 0, 0, 0.6)'
+                  textShadow
                 }}
               >
                 {mark.label}

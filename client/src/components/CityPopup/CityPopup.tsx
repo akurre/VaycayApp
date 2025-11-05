@@ -28,10 +28,10 @@ const CityPopup = ({ city, onClose }: CityPopupProps) => {
       opened={!!city}
       onClose={onClose}
       title={
-        <Title order={3} style={{ color: textColor }}>
+        <span style={{ color: textColor }}>
           {toTitleCase(city.city)}
           {city.country && `, ${city.country}`}
-        </Title>
+        </span>
       }
       size="md"
       styles={{

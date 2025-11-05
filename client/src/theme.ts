@@ -51,6 +51,8 @@ export const appColors = {
 
 export const theme = createTheme({
   primaryColor: 'blue',
-  fontFamily: 'Arial, sans-serif',
   defaultRadius: 'md',
+  fontFamily: 'Verdana, sans-serif',
+  fontFamilyMonospace: 'Monaco, Courier, monospace',
+  headings: { fontFamily: 'Outfit, sans-serif' },
 });
