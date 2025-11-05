@@ -25,6 +25,27 @@ interface UseMapLayersProps {
 function useMapLayers({ cities, viewMode, isLoadingWeather, homeLocation }: UseMapLayersProps) {
   const heatmapData = useMemo(() => transformToHeatmapData(cities), [cities]);
 
+  // memoize home icon layer separately to avoid recreating city layers when home location changes
+  const homeIconLayer = useMemo(() => {
+    if (!homeLocation) return null;
+
+    return new IconLayer({
+      id: 'home-icon',
+      data: [homeLocation],
+      getPosition: (d) => [d.coordinates.long, d.coordinates.lat],
+      getIcon: () => ({
+        url: HOME_ICON_DATA_URL,
+        width: 48,
+        height: 48,
+        anchorY: 48,
+      }),
+      getSize: HOME_ICON_SIZE,
+      pickable: true,
+      // always visible regardless of view mode
+      visible: true,
+    });
+  }, [homeLocation]);
+
   return useMemo(() => {
     // pre-create all layers and toggle visibility instead of creating/destroying
     // this prevents expensive layer creation from blocking the segmentedcontrol transition
@@ -87,29 +108,13 @@ function useMapLayers({ cities, viewMode, isLoadingWeather, homeLocation }: UseM
       }),
     ];
 
-    // add home icon layer if home location is set
-    if (homeLocation) {
-      layers.push(
-        new IconLayer({
-          id: 'home-icon',
-          data: [homeLocation],
-          getPosition: (d) => [d.coordinates.long, d.coordinates.lat],
-          getIcon: () => ({
-            url: HOME_ICON_DATA_URL,
-            width: 48,
-            height: 48,
-            anchorY: 48,
-          }),
-          getSize: HOME_ICON_SIZE,
-          pickable: true,
-          // always visible regardless of view mode
-          visible: true,
-        })
-      );
+    // add home icon layer if it exists
+    if (homeIconLayer) {
+      layers.push(homeIconLayer);
     }
 
     return layers;
-  }, [cities, heatmapData, viewMode, isLoadingWeather, homeLocation]);
+  }, [cities, heatmapData, viewMode, isLoadingWeather, homeIconLayer]);
 }
 
 export default useMapLayers;
