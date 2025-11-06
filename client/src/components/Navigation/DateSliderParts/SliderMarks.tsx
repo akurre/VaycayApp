@@ -1,8 +1,5 @@
 import { FC } from 'react';
 import { Text } from '@mantine/core';
-import { appColors } from '@/theme';
-import { useAppStore } from '@/stores/useAppStore';
-import { MapTheme } from '@/types/mapTypes';
 import CustomPopover from '@/components/Shared/CustomPopover';
 
 interface SliderMarksProps {
@@ -12,13 +9,6 @@ interface SliderMarksProps {
 }
 
 const SliderMarks: FC<SliderMarksProps> = ({ marks, min, max }) => {
-  const theme = useAppStore((state) => state.theme);
-  const isLightMode = theme === MapTheme.Light;
-
-  // use appropriate text color and shadow based on theme
-  const textColor = isLightMode ? appColors.light.text : appColors.dark.text;
-  const textShadow = isLightMode ? appColors.light.textShadow : appColors.dark.textShadow;
-
   return (
     <div className="relative mt-1">
       {marks.map((mark) => {
@@ -30,14 +20,7 @@ const SliderMarks: FC<SliderMarksProps> = ({ marks, min, max }) => {
             style={{ left: `${markPosition}%` }}
           >
             <CustomPopover showBackground={false} size="xxs" direction="up">
-              <Text
-                size="xs"
-                fw={500}
-                style={{
-                  color: textColor,
-                  textShadow,
-                }}
-              >
+              <Text size="xs" fw={500}>
                 {mark.label}
               </Text>
             </CustomPopover>

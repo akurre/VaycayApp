@@ -55,4 +55,46 @@ export const theme = createTheme({
   fontFamily: 'Verdana, sans-serif',
   fontFamilyMonospace: 'Monaco, Courier, monospace',
   headings: { fontFamily: 'Outfit, sans-serif' },
+
+  components: {
+    Button: {
+      defaultProps: {
+        variant: 'filled',
+      },
+      styles: () => ({
+        root: {
+          // automatically use correct colors based on color scheme
+          color: `light-dark(${appColors.light.text}, ${appColors.dark.text})`,
+          backgroundColor: `light-dark(${appColors.tertiary}, ${appColors.primaryDark})`,
+          '&:hover': {
+            backgroundColor: `light-dark(${appColors.tertiaryHover}, ${appColors.primaryHover})`,
+          },
+        },
+      }),
+    },
+    Text: {
+      styles: () => ({
+        root: {
+          // automatically use correct text color based on color scheme
+          color: `light-dark(${appColors.light.text}, ${appColors.dark.text})`,
+        },
+      }),
+    },
+    Popover: {
+      styles: () => ({
+        dropdown: {
+          // automatically use correct background and border based on color scheme
+          backgroundColor: `light-dark(${appColors.light.background}, ${appColors.dark.background})`,
+          border: `1px solid light-dark(${appColors.light.border}, ${appColors.dark.border})`,
+        },
+      }),
+    },
+    Divider: {
+      styles: () => ({
+        root: {
+          borderTopColor: `light-dark(${appColors.primaryLight}, ${appColors.primaryDark})`,
+        },
+      }),
+    },
+  },
 });

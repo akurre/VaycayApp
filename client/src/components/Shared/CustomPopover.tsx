@@ -1,7 +1,4 @@
 import { FC, ReactNode } from 'react';
-import { appColors } from '@/theme';
-import { useAppStore } from '@/stores/useAppStore';
-import { MapTheme } from '@/types/mapTypes';
 
 interface CustomPopoverProps {
   children: ReactNode;
@@ -16,13 +13,6 @@ const CustomPopover: FC<CustomPopoverProps> = ({
   direction = 'down',
   showBackground = true,
 }) => {
-  const theme = useAppStore((state) => state.theme);
-  const isLightMode = theme === MapTheme.Light;
-
-  const backgroundColor = isLightMode ? appColors.light.surface : appColors.dark.surface;
-  const borderColor = isLightMode ? appColors.tertiaryDark : appColors.tertiary;
-  const textColor = isLightMode ? appColors.light.text : appColors.dark.text;
-
   // size-based padding
   const paddingMap = {
     xxs: 'px-1 py-0',
@@ -68,7 +58,6 @@ const CustomPopover: FC<CustomPopoverProps> = ({
               style={{
                 ...arrowBorderStyle,
                 borderBottomWidth: `${arrowSize.border}px`,
-                borderBottomColor: borderColor,
                 marginBottom: `-1px`,
               }}
             />
@@ -77,7 +66,6 @@ const CustomPopover: FC<CustomPopoverProps> = ({
               style={{
                 ...arrowFillStyle,
                 borderBottomWidth: `${arrowSize.fill}px`,
-                borderBottomColor: backgroundColor,
                 marginBottom: `-${arrowSize.border - 1}px`,
               }}
             />
@@ -89,7 +77,6 @@ const CustomPopover: FC<CustomPopoverProps> = ({
               borderLeftWidth: `${arrowSize.fill}px`,
               borderRightWidth: `${arrowSize.fill}px`,
               borderBottomWidth: `${arrowSize.fill}px`,
-              borderBottomColor: isLightMode ? appColors.dark.text : appColors.light.text,
             }}
           />
         ))}
@@ -99,9 +86,7 @@ const CustomPopover: FC<CustomPopoverProps> = ({
         <div
           className={`rounded-md shadow-md ${padding}`}
           style={{
-            backgroundColor,
-            border: `1px solid ${borderColor}`,
-            color: textColor,
+            border: `1px solid `,
           }}
         >
           {children}
@@ -119,7 +104,6 @@ const CustomPopover: FC<CustomPopoverProps> = ({
               style={{
                 ...arrowBorderStyle,
                 borderTopWidth: `${arrowSize.border}px`,
-                borderTopColor: borderColor,
                 marginTop: `-1px`,
               }}
             />
@@ -128,7 +112,6 @@ const CustomPopover: FC<CustomPopoverProps> = ({
               style={{
                 ...arrowFillStyle,
                 borderTopWidth: `${arrowSize.fill}px`,
-                borderTopColor: backgroundColor,
                 marginTop: `-${arrowSize.border - 1}px`,
               }}
             />
@@ -140,7 +123,6 @@ const CustomPopover: FC<CustomPopoverProps> = ({
               borderLeftWidth: `${arrowSize.fill}px`,
               borderRightWidth: `${arrowSize.fill}px`,
               borderTopWidth: `${arrowSize.fill}px`,
-              borderTopColor: isLightMode ? appColors.dark.text : appColors.light.text,
             }}
           />
         ))}

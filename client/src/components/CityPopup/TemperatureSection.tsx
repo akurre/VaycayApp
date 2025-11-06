@@ -1,10 +1,6 @@
-import { Text } from '@mantine/core';
+import { Divider, Text } from '@mantine/core';
 import Field from './Field';
-import Divider from './Divider';
 import { formatTemperature } from '@/utils/tempFormatting/formatTemperature';
-import { appColors } from '@/theme';
-import { useAppStore } from '@/stores/useAppStore';
-import { MapTheme } from '@/types/mapTypes';
 
 interface TemperatureSectionProps {
   avgTemperature: number | null;
@@ -17,14 +13,10 @@ const TemperatureSection = ({
   maxTemperature,
   minTemperature,
 }: TemperatureSectionProps) => {
-  const theme = useAppStore((state) => state.theme);
-  const isLightMode = theme === MapTheme.Light;
-  const textColor = isLightMode ? appColors.light.text : appColors.dark.text;
-
   return (
     <div className="mt-2">
       <Divider />
-      <Text size="sm" fw={600} mb="xs" style={{ color: textColor }}>
+      <Text size="sm" fw={600} mb="xs">
         Temperature
       </Text>
       <div className="grid grid-cols-3 gap-2">

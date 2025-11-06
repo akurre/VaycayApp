@@ -3,6 +3,7 @@ import type { PickingInfo } from '@deck.gl/core';
 import { WeatherData } from '../types/cityWeatherDataType';
 import { getTooltipContent } from '../utils/map/getTooltipContent';
 import { ViewMode } from '@/types/mapTypes';
+import { HomeLocation } from '@/types/userLocationType';
 
 /**
  * hook to manage map interactions including hover tooltips and city selection.
@@ -15,7 +16,11 @@ interface HoverInfo {
   content: string;
 }
 
-export const useMapInteractions = (cities: WeatherData[], viewMode: ViewMode) => {
+export const useMapInteractions = (
+  cities: WeatherData[],
+  viewMode: ViewMode,
+  homeLocation: HomeLocation | null
+) => {
   const [selectedCity, setSelectedCity] = useState<WeatherData | null>(null);
   const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null);
 
@@ -49,6 +54,24 @@ export const useMapInteractions = (cities: WeatherData[], viewMode: ViewMode) =>
 
   const handleClick = useCallback(
     (info: PickingInfo) => {
+      // check if home icon was clicked
+      if (info.layer?.id === 'home-icon' && homeLocation) {
+        // find the city that matches the home location by coordinates and name
+        const homeCity = cities.find(
+          (c) =>
+            c.city === homeLocation.cityName &&
+            c.country === homeLocation.country &&
+            c.lat !== null &&
+            c.long !== null &&
+            Math.abs(c.lat - homeLocation.coordinates.lat) < 0.01 &&
+            Math.abs(c.long - homeLocation.coordinates.long) < 0.01
+        );
+        if (homeCity) {
+          setSelectedCity(homeCity);
+        }
+        return;
+      }
+
       if (viewMode === 'markers' && info.object) {
         setSelectedCity(info.object as WeatherData);
       } else if (viewMode === 'heatmap' && info.coordinate) {
@@ -65,7 +88,7 @@ export const useMapInteractions = (cities: WeatherData[], viewMode: ViewMode) =>
         }
       }
     },
-    [cities, viewMode]
+    [cities, viewMode, homeLocation]
   );
 
   const handleClosePopup = useCallback(() => {

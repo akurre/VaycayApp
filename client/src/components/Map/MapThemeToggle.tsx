@@ -1,24 +1,23 @@
 import { IconMoon, IconSun } from '@tabler/icons-react';
+import { useComputedColorScheme, useMantineColorScheme } from '@mantine/core';
 import MapToggle from '@/components/Shared/MapToggle';
-import { MapTheme } from '@/types/mapTypes';
-import { useAppStore } from '@/stores/useAppStore';
 
 const MapThemeToggle = () => {
-  const theme = useAppStore((state) => state.theme);
-  const setTheme = useAppStore((state) => state.setTheme);
+  const { setColorScheme } = useMantineColorScheme();
+  const computedColorScheme = useComputedColorScheme('dark');
 
   return (
     <MapToggle
-      value={theme}
-      onChange={setTheme}
+      value={computedColorScheme}
+      onChange={(value) => setColorScheme(value as 'light' | 'dark')}
       options={[
         {
-          value: MapTheme.Light,
+          value: 'light',
           label: 'Light Mode',
           icon: IconSun,
         },
         {
-          value: MapTheme.Dark,
+          value: 'dark',
           label: 'Dark Mode',
           icon: IconMoon,
         },

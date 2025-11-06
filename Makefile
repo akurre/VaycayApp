@@ -115,17 +115,24 @@ client-dev: check-prereqs
 
 # Lint both client and server
 lint: check-prereqs
-	@echo "$(GREEN)Running ESLint checks...$(NC)"
-	@echo "$(YELLOW)Checking client...$(NC)"
+	@echo "$(GREEN)Running code quality checks...$(NC)"
+	@echo ""
+	@echo "$(YELLOW)Checking code formatting with Prettier...$(NC)"
+	@FAILED=0; \
+	cd client && npm run format:check || FAILED=1; \
+	echo ""; \
+	cd ../server && npm run format:check || FAILED=1; \
+	if [ $$FAILED -eq 1 ]; then \
+		echo ""; \
+		echo "$(RED)✗ Formatting issues found. Run 'make format' to fix them.$(NC)"; \
+		exit 1; \
+	fi
+	@echo ""
+	@echo "$(YELLOW)Running ESLint checks...$(NC)"
 	@cd client && npm run lint || true
 	@echo ""
-	@echo "$(YELLOW)Checking server...$(NC)"
 	@cd server && npm run lint || true
 	@echo ""
-	@echo "$(YELLOW)Auto-formatting code with Prettier...$(NC)"
-	@cd client && npx prettier --write "src/**/*.{ts,tsx,css}" || true
-	@echo ""
-	@cd server && npx prettier --write "src/**/*.{ts,tsx}" "scripts/**/*.ts" || true
 	@echo "$(GREEN)✓ Lint check complete$(NC)"
 
 # Auto-fix lint errors in both client and server

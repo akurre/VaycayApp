@@ -1,5 +1,5 @@
+import { Divider } from '@mantine/core';
 import Field from './Field';
-import Divider from './Divider';
 
 interface LocationSectionProps {
   lat: number | null;

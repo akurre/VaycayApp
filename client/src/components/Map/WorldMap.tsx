@@ -1,5 +1,6 @@
 import DeckGL from '@deck.gl/react';
 import Map from 'react-map-gl/maplibre';
+import { useComputedColorScheme } from '@mantine/core';
 import { WeatherData } from '../../types/cityWeatherDataType';
 import useMapLayers from '../../hooks/useMapLayers';
 import { useMapInteractions } from '../../hooks/useMapInteractions';
@@ -22,12 +23,13 @@ interface WorldMapProps {
 }
 
 function WorldMap({ cities, viewMode, onBoundsChange }: WorldMapProps) {
-  const theme = useAppStore((state) => state.theme);
+  const colorScheme = useComputedColorScheme('dark');
   const isLoadingWeather = useWeatherStore((state) => state.isLoadingWeather);
+  const homeLocation = useAppStore((state) => state.homeLocation);
   const { viewState, onViewStateChange } = useMapBounds(INITIAL_VIEW_STATE, onBoundsChange);
-  const layers = useMapLayers({ cities, viewMode, isLoadingWeather });
+  const layers = useMapLayers({ cities, viewMode, isLoadingWeather, homeLocation });
   const { selectedCity, hoverInfo, handleHover, handleClick, handleClosePopup } =
-    useMapInteractions(cities, viewMode);
+    useMapInteractions(cities, viewMode, homeLocation);
 
   return (
     <div className="relative h-full w-full">
@@ -48,7 +50,7 @@ function WorldMap({ cities, viewMode, onBoundsChange }: WorldMapProps) {
         onClick={handleClick}
         getTooltip={() => null}
       >
-        <Map mapStyle={MAP_STYLES[theme]} attributionControl={false} />
+        <Map mapStyle={MAP_STYLES[colorScheme]} attributionControl={false} />
       </DeckGL>
 
       {hoverInfo && <MapTooltip x={hoverInfo.x} y={hoverInfo.y} content={hoverInfo.content} />}

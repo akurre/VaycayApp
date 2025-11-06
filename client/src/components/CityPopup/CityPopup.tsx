@@ -1,14 +1,11 @@
-import { Modal } from '@mantine/core';
+import { Divider, Modal } from '@mantine/core';
 import { WeatherData } from '@/types/cityWeatherDataType';
 import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
-import { appColors } from '@/theme';
-import { useAppStore } from '@/stores/useAppStore';
-import { MapTheme } from '@/types/mapTypes';
 import Field from './Field';
 import LocationSection from './LocationSection';
 import PrecipitationSection from './PrecipitationSection';
 import TemperatureSection from './TemperatureSection';
-import Divider from './Divider';
+import DistanceSection from './DistanceSection';
 
 interface CityPopupProps {
   city: WeatherData | null;
@@ -16,35 +13,14 @@ interface CityPopupProps {
 }
 
 const CityPopup = ({ city, onClose }: CityPopupProps) => {
-  const theme = useAppStore((state) => state.theme);
-  const isLightMode = theme === MapTheme.Light;
-  const backgroundColor = isLightMode ? appColors.light.background : appColors.dark.background;
-  const textColor = isLightMode ? appColors.light.text : appColors.dark.text;
-
   if (!city) return null;
 
   return (
     <Modal
       opened={!!city}
       onClose={onClose}
-      title={
-        <span style={{ color: textColor }}>
-          {toTitleCase(city.city)}
-          {city.country && `, ${city.country}`}
-        </span>
-      }
+      title={`${toTitleCase(city.city)}${city.country ? `, ${city.country}` : ''}`}
       size="md"
-      styles={{
-        content: {
-          backgroundColor,
-        },
-        header: {
-          backgroundColor,
-        },
-        body: {
-          backgroundColor,
-        },
-      }}
     >
       <div className="flex flex-col gap-3">
         {city.state && <Field label="State/Region" value={toTitleCase(city.state)} />}
@@ -74,6 +50,8 @@ const CityPopup = ({ city, onClose }: CityPopupProps) => {
         </div>
 
         <LocationSection lat={city.lat} long={city.long} />
+
+        <DistanceSection lat={city.lat} long={city.long} />
       </div>
     </Modal>
   );

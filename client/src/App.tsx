@@ -1,13 +1,21 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { MantineProvider } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
 import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
 import { theme } from './theme';
 import MapPage from './pages/map';
 
 function App() {
   return (
-    <MantineProvider theme={theme}>
-      <BrowserRouter>
+    <MantineProvider theme={theme} defaultColorScheme="dark">
+      <Notifications position="top-right" zIndex={1000} />
+      <BrowserRouter
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
         <Routes>
           <Route path="/" element={<MapPage />} />
         </Routes>

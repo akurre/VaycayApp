@@ -2,6 +2,11 @@
 // MAP CONSTANTS
 // ============================================================================
 
+export const KM_TO_MILES = 0.621371;
+
+// locales that use miles instead of kilometers
+export const MILES_LOCALES = ['en-US', 'en-GB', 'en-LR', 'en-MM'];
+
 // zoom-based loading thresholds
 export const ZOOM_THRESHOLD = 2; // switch to bounds query at zoom level 2+ (continental view)
 export const DEBOUNCE_DELAY = 200; // ms - debounce delay for zoom/pan events (reduced for more responsive feel)
@@ -20,9 +25,28 @@ export const INITIAL_VIEW_STATE = {
 export const TOGGLE_ICON_SIZE = 16;
 
 // map style urls for light and dark themes
+// using carto basemaps via vite proxy to bypass cors restrictions
 export const MAP_STYLES = {
-  light: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-  dark: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+  light: '/basemaps/gl/positron-gl-style/style.json',
+  dark: '/basemaps/gl/dark-matter-gl-style/style.json',
+} as const;
+
+// home icon marker constants
+export const HOME_ICON_SIZE = 32;
+
+// pre-computed svg data url to avoid runtime encoding overhead
+// minified svg for better performance
+const HOME_ICON_SVG =
+  '<svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><g transform="translate(24,24)"><path d="M-12,-8 L0,-16 L12,-8 L12,12 L-12,12 Z" fill="#FFD700" stroke="#000" stroke-width="1.5"/><rect x="-4" y="4" width="8" height="8" fill="#8B4513" stroke="#000" stroke-width="1"/><path d="M-12,-8 L0,-16 L12,-8" fill="none" stroke="#000" stroke-width="1.5"/></g></svg>';
+
+export const HOME_ICON_DATA_URL = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(HOME_ICON_SVG)}`;
+
+// cached icon object to avoid recreating on every layer render
+export const HOME_ICON_OBJECT = {
+  url: HOME_ICON_DATA_URL,
+  width: 48,
+  height: 48,
+  anchorY: 48,
 } as const;
 
 // ============================================================================
@@ -47,6 +71,14 @@ export const TEMP_THRESHOLDS = [
 
 // color range for heatmap layer (extracted from thresholds)
 export const COLOR_RANGE: [number, number, number][] = TEMP_THRESHOLDS.map((t) => t.color);
+
+// ============================================================================
+// ERROR NOTIFICATION CONSTANTS
+// ============================================================================
+
+// notification auto-close durations (in milliseconds)
+export const ERROR_NOTIFICATION_DURATION = 5000;
+export const WARNING_NOTIFICATION_DURATION = 3000;
 
 // ============================================================================
 // UI CONSTANTS

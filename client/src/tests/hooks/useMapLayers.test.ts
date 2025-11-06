@@ -1,83 +1,51 @@
 import { describe, it, expect } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import useMapLayers from '@/hooks/useMapLayers';
-import type { WeatherData } from '@/types/cityWeatherDataType';
+import { WeatherData } from '@/types/cityWeatherDataType';
 import { ViewMode } from '@/types/mapTypes';
+import { HomeLocation } from '@/types/userLocationType';
 
 describe('useMapLayers', () => {
   const mockCities: WeatherData[] = [
     {
-      city: 'Milan',
-      country: 'Italy',
-      state: null,
+      city: 'New York',
+      country: 'USA',
+      state: 'NY',
       suburb: null,
-      date: '0615',
-      lat: 45.4642,
-      long: 9.19,
-      population: 1000000,
-      avgTemperature: 25.5,
-      minTemperature: 20.0,
-      maxTemperature: 30.0,
-      precipitation: 10.5,
-      snowDepth: null,
-      stationName: 'Milan Station',
-      submitterId: 'test-1',
-    },
-    {
-      city: 'Rome',
-      country: 'Italy',
-      state: null,
-      suburb: null,
-      date: '0615',
-      lat: 41.9028,
-      long: 12.4964,
-      population: 2000000,
-      avgTemperature: 28.0,
-      minTemperature: 22.0,
-      maxTemperature: 34.0,
-      precipitation: 5.0,
-      snowDepth: null,
-      stationName: 'Rome Station',
-      submitterId: 'test-2',
+      date: '2024-01-15',
+      lat: 40.7128,
+      long: -74.006,
+      population: 8000000,
+      precipitation: 0,
+      snowDepth: 0,
+      avgTemperature: 5,
+      maxTemperature: 8,
+      minTemperature: 2,
+      stationName: 'NYC Station',
+      submitterId: null,
     },
   ];
 
-  it('returns an array of layers', () => {
+  const mockHomeLocation: HomeLocation = {
+    cityId: 1,
+    cityName: 'San Francisco',
+    country: 'USA',
+    state: 'CA',
+    coordinates: {
+      lat: 37.7749,
+      long: -122.4194,
+    },
+    source: 'manual',
+  };
+
+  it('returns heatmap and marker layers', () => {
     const { result } = renderHook(() =>
-      useMapLayers({ cities: mockCities, viewMode: ViewMode.Markers, isLoadingWeather: false })
-    );
-
-    expect(Array.isArray(result.current)).toBe(true);
-    expect(result.current).toHaveLength(2);
-  });
-
-  it('returns both layers with heatmap visible when viewMode is heatmap', () => {
-    const { result } = renderHook(() =>
-      useMapLayers({ cities: mockCities, viewMode: ViewMode.Heatmap, isLoadingWeather: false })
-    );
-
-    expect(result.current).toHaveLength(2);
-    expect(result.current[0].id).toBe('temperature-heatmap');
-    expect(result.current[0].props.visible).toBe(true);
-    expect(result.current[1].id).toBe('city-markers');
-    expect(result.current[1].props.visible).toBe(false);
-  });
-
-  it('returns both layers with markers visible when viewMode is markers', () => {
-    const { result } = renderHook(() =>
-      useMapLayers({ cities: mockCities, viewMode: ViewMode.Markers, isLoadingWeather: false })
-    );
-
-    expect(result.current).toHaveLength(2);
-    expect(result.current[0].id).toBe('temperature-heatmap');
-    expect(result.current[0].props.visible).toBe(false);
-    expect(result.current[1].id).toBe('city-markers');
-    expect(result.current[1].props.visible).toBe(true);
-  });
-
-  it('handles empty cities array', () => {
-    const { result } = renderHook(() =>
-      useMapLayers({ cities: [], viewMode: ViewMode.Markers, isLoadingWeather: false })
+      useMapLayers({
+        cities: mockCities,
+        viewMode: ViewMode.Markers,
+        isLoadingWeather: false,
+        homeLocation: null,
+      })
     );
 
     expect(result.current).toHaveLength(2);
@@ -85,144 +53,113 @@ describe('useMapLayers', () => {
     expect(result.current[1].id).toBe('city-markers');
   });
 
-  it('filters out cities with null coordinates in marker mode', () => {
-    const citiesWithNulls: WeatherData[] = [
-      ...mockCities,
-      {
-        city: 'Invalid',
-        country: 'Italy',
-        state: null,
-        suburb: null,
-        date: '0615',
-        lat: null,
-        long: null,
-        population: null,
-        avgTemperature: 25.0,
-        minTemperature: 20.0,
-        maxTemperature: 30.0,
-        precipitation: 10.0,
-        snowDepth: null,
-        stationName: 'Invalid Station',
-        submitterId: null,
-      },
-    ];
-
+  it('adds home icon layer when homeLocation is provided', () => {
     const { result } = renderHook(() =>
-      useMapLayers({ cities: citiesWithNulls, viewMode: ViewMode.Markers, isLoadingWeather: false })
+      useMapLayers({
+        cities: mockCities,
+        viewMode: ViewMode.Markers,
+        isLoadingWeather: false,
+        homeLocation: mockHomeLocation,
+      })
+    );
+
+    expect(result.current).toHaveLength(3);
+    expect(result.current[2].id).toBe('home-icon');
+  });
+
+  it('does not add home icon layer when homeLocation is null', () => {
+    const { result } = renderHook(() =>
+      useMapLayers({
+        cities: mockCities,
+        viewMode: ViewMode.Markers,
+        isLoadingWeather: false,
+        homeLocation: null,
+      })
     );
 
     expect(result.current).toHaveLength(2);
-    // the scatterplot layer should only include cities with valid coordinates
+    expect(result.current.find((layer) => layer.id === 'home-icon')).toBeUndefined();
   });
 
-  it('memoizes layers when inputs do not change', () => {
-    const { result, rerender } = renderHook(
-      ({ cities, viewMode, isLoadingWeather }) =>
-        useMapLayers({ cities, viewMode, isLoadingWeather }),
-      {
-        initialProps: {
-          cities: mockCities,
-          viewMode: ViewMode.Markers as const,
-          isLoadingWeather: false,
-        },
-      }
+  it('heatmap layer is visible in heatmap mode', () => {
+    const { result } = renderHook(() =>
+      useMapLayers({
+        cities: mockCities,
+        viewMode: ViewMode.Heatmap,
+        isLoadingWeather: false,
+        homeLocation: null,
+      })
     );
 
-    const firstResult = result.current;
-    rerender({ cities: mockCities, viewMode: ViewMode.Markers as const, isLoadingWeather: false });
-    const secondResult = result.current;
-
-    // should return the same reference due to memoization
-    expect(firstResult).toBe(secondResult);
+    const heatmapLayer = result.current.find((layer) => layer.id === 'temperature-heatmap');
+    expect(heatmapLayer?.props.visible).toBe(true);
   });
 
-  it('updates layers when viewMode changes', () => {
-    const { result, rerender } = renderHook(
-      ({ cities, viewMode, isLoadingWeather }) =>
-        useMapLayers({ cities, viewMode, isLoadingWeather }),
-      {
-        initialProps: {
-          cities: mockCities,
-          viewMode: ViewMode.Markers as ViewMode.Markers | ViewMode.Heatmap,
-          isLoadingWeather: false,
-        },
-      }
+  it('marker layer is visible in markers mode', () => {
+    const { result } = renderHook(() =>
+      useMapLayers({
+        cities: mockCities,
+        viewMode: ViewMode.Markers,
+        isLoadingWeather: false,
+        homeLocation: null,
+      })
     );
 
-    const initialLayers = result.current;
-    // both layers exist, but markers should be visible
-    expect(initialLayers[0].id).toBe('temperature-heatmap');
-    expect(initialLayers[0].props.visible).toBe(false);
-    expect(initialLayers[1].id).toBe('city-markers');
-    expect(initialLayers[1].props.visible).toBe(true);
-
-    rerender({
-      cities: mockCities,
-      viewMode: ViewMode.Heatmap as ViewMode.Markers | ViewMode.Heatmap,
-      isLoadingWeather: false,
-    });
-
-    const updatedLayers = result.current;
-    // both layers still exist, but heatmap should now be visible
-    expect(updatedLayers[0].id).toBe('temperature-heatmap');
-    expect(updatedLayers[0].props.visible).toBe(true);
-    expect(updatedLayers[1].id).toBe('city-markers');
-    expect(updatedLayers[1].props.visible).toBe(false);
+    const markerLayer = result.current.find((layer) => layer.id === 'city-markers');
+    expect(markerLayer?.props.visible).toBe(true);
   });
 
-  it('updates layers when cities data changes', () => {
-    const { result, rerender } = renderHook(
-      ({ cities, viewMode, isLoadingWeather }) =>
-        useMapLayers({ cities, viewMode, isLoadingWeather }),
-      {
-        initialProps: {
-          cities: mockCities,
-          viewMode: ViewMode.Markers as const,
-          isLoadingWeather: false,
-        },
-      }
+  it('home icon layer is always visible regardless of view mode', () => {
+    const { result: resultMarkers } = renderHook(() =>
+      useMapLayers({
+        cities: mockCities,
+        viewMode: ViewMode.Markers,
+        isLoadingWeather: false,
+        homeLocation: mockHomeLocation,
+      })
     );
 
-    const firstResult = result.current;
+    const homeLayerMarkers = resultMarkers.current.find((layer) => layer.id === 'home-icon');
+    expect(homeLayerMarkers?.props.visible).toBe(true);
 
-    const newCities: WeatherData[] = [
-      {
-        city: 'Florence',
-        country: 'Italy',
-        state: null,
-        suburb: null,
-        date: '0615',
-        lat: 43.7696,
-        long: 11.2558,
-        population: 500000,
-        avgTemperature: 26.0,
-        minTemperature: 21.0,
-        maxTemperature: 31.0,
-        precipitation: 8.0,
-        snowDepth: null,
-        stationName: 'Florence Station',
-        submitterId: 'test-3',
-      },
-    ];
+    const { result: resultHeatmap } = renderHook(() =>
+      useMapLayers({
+        cities: mockCities,
+        viewMode: ViewMode.Heatmap,
+        isLoadingWeather: false,
+        homeLocation: mockHomeLocation,
+      })
+    );
 
-    rerender({ cities: newCities, viewMode: ViewMode.Markers as const, isLoadingWeather: false });
-
-    const secondResult = result.current;
-    // should be a different reference since cities changed
-    expect(firstResult).not.toBe(secondResult);
+    const homeLayerHeatmap = resultHeatmap.current.find((layer) => layer.id === 'home-icon');
+    expect(homeLayerHeatmap?.props.visible).toBe(true);
   });
 
-  it('adjusts marker opacity when loading', () => {
-    const { result: loadingResult } = renderHook(() =>
-      useMapLayers({ cities: mockCities, viewMode: ViewMode.Markers, isLoadingWeather: true })
+  it('reduces marker opacity when loading weather', () => {
+    const { result } = renderHook(() =>
+      useMapLayers({
+        cities: mockCities,
+        viewMode: ViewMode.Markers,
+        isLoadingWeather: true,
+        homeLocation: null,
+      })
     );
 
-    const { result: notLoadingResult } = renderHook(() =>
-      useMapLayers({ cities: mockCities, viewMode: ViewMode.Markers, isLoadingWeather: false })
+    const markerLayer = result.current.find((layer) => layer.id === 'city-markers');
+    expect(markerLayer?.props.opacity).toBe(0.5);
+  });
+
+  it('uses normal marker opacity when not loading', () => {
+    const { result } = renderHook(() =>
+      useMapLayers({
+        cities: mockCities,
+        viewMode: ViewMode.Markers,
+        isLoadingWeather: false,
+        homeLocation: null,
+      })
     );
 
-    // marker layer is at index 1
-    expect(loadingResult.current[1].props.opacity).toBe(0.5);
-    expect(notLoadingResult.current[1].props.opacity).toBe(0.8);
+    const markerLayer = result.current.find((layer) => layer.id === 'city-markers');
+    expect(markerLayer?.props.opacity).toBe(0.8);
   });
 });

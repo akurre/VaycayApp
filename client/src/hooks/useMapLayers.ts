@@ -1,10 +1,13 @@
 import { useMemo } from 'react';
 import { HeatmapLayer } from '@deck.gl/aggregation-layers';
-import { ScatterplotLayer } from '@deck.gl/layers';
+import { ScatterplotLayer, IconLayer } from '@deck.gl/layers';
+import { Layer } from '@deck.gl/core';
 import { WeatherData, ValidMarkerData } from '../types/cityWeatherDataType';
 import { transformToHeatmapData } from '../utils/map/transformToHeatmapData';
 import { getMarkerColor, COLOR_RANGE } from '../utils/map/getMarkerColor';
 import { ViewMode } from '@/types/mapTypes';
+import { HomeLocation } from '@/types/userLocationType';
+import { HOME_ICON_SIZE, HOME_ICON_OBJECT } from '@/constants';
 
 /**
  * hook to create and manage deck.gl map layers for both heatmap and marker views.
@@ -17,15 +20,32 @@ interface UseMapLayersProps {
   cities: WeatherData[];
   viewMode: ViewMode;
   isLoadingWeather: boolean;
+  homeLocation: HomeLocation | null;
 }
 
-function useMapLayers({ cities, viewMode, isLoadingWeather }: UseMapLayersProps) {
+function useMapLayers({ cities, viewMode, isLoadingWeather, homeLocation }: UseMapLayersProps) {
   const heatmapData = useMemo(() => transformToHeatmapData(cities), [cities]);
 
+  // memoize home icon layer separately to avoid recreating city layers when home location changes
+  const homeIconLayer = useMemo(() => {
+    if (!homeLocation) return null;
+
+    return new IconLayer({
+      id: 'home-icon',
+      data: [homeLocation],
+      getPosition: (d) => [d.coordinates.long, d.coordinates.lat],
+      getIcon: () => HOME_ICON_OBJECT, // use cached icon object
+      getSize: HOME_ICON_SIZE,
+      pickable: true,
+      // always visible regardless of view mode
+      visible: true,
+    });
+  }, [homeLocation]);
+
   return useMemo(() => {
-    // pre-create both layers and toggle visibility instead of creating/destroying
+    // pre-create all layers and toggle visibility instead of creating/destroying
     // this prevents expensive layer creation from blocking the segmentedcontrol transition
-    return [
+    const layers: Layer[] = [
       new HeatmapLayer({
         id: 'temperature-heatmap',
         data: heatmapData,
@@ -83,7 +103,14 @@ function useMapLayers({ cities, viewMode, isLoadingWeather }: UseMapLayersProps)
         },
       }),
     ];
-  }, [cities, heatmapData, viewMode, isLoadingWeather]);
+
+    // add home icon layer if it exists
+    if (homeIconLayer) {
+      layers.push(homeIconLayer);
+    }
+
+    return layers;
+  }, [cities, heatmapData, viewMode, isLoadingWeather, homeIconLayer]);
 }
 
 export default useMapLayers;
