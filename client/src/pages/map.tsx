@@ -49,7 +49,7 @@ const MapPage: FC = () => {
   // update url when date or theme changes (for bookmarking/sharing)
   useEffect(() => {
     setSearchParams({ date: selectedDate }, { replace: true });
-  }, [selectedDate,, setSearchParams]);
+  }, [selectedDate, setSearchParams]);
 
   // update store when weather data changes
   useEffect(() => {

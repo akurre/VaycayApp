@@ -6,7 +6,7 @@ import { transformToHeatmapData } from '../utils/map/transformToHeatmapData';
 import { getMarkerColor, COLOR_RANGE } from '../utils/map/getMarkerColor';
 import { ViewMode } from '@/types/mapTypes';
 import { HomeLocation } from '@/types/userLocationType';
-import { HOME_ICON_SIZE, HOME_ICON_DATA_URL } from '@/constants';
+import { HOME_ICON_SIZE, HOME_ICON_OBJECT } from '@/constants';
 
 /**
  * hook to create and manage deck.gl map layers for both heatmap and marker views.
@@ -33,12 +33,7 @@ function useMapLayers({ cities, viewMode, isLoadingWeather, homeLocation }: UseM
       id: 'home-icon',
       data: [homeLocation],
       getPosition: (d) => [d.coordinates.long, d.coordinates.lat],
-      getIcon: () => ({
-        url: HOME_ICON_DATA_URL,
-        width: 48,
-        height: 48,
-        anchorY: 48,
-      }),
+      getIcon: () => HOME_ICON_OBJECT, // use cached icon object
       getSize: HOME_ICON_SIZE,
       pickable: true,
       // always visible regardless of view mode
