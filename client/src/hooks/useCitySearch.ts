@@ -44,21 +44,24 @@ function useCitySearch(): UseCitySearchReturn {
   );
 
   // wrap in usecallback to maintain stable function reference across renders
-  const selectCity = useCallback((city: SearchCitiesResult) => {
-    const homeLocation: HomeLocation = {
-      cityId: city.id,
-      cityName: city.name,
-      country: city.country,
-      state: city.state,
-      coordinates: {
-        lat: city.lat,
-        long: city.long,
-      },
-      source: LocationSource.Manual,
-    };
+  const selectCity = useCallback(
+    (city: SearchCitiesResult) => {
+      const homeLocation: HomeLocation = {
+        cityId: city.id,
+        cityName: city.name,
+        country: city.country,
+        state: city.state,
+        coordinates: {
+          lat: city.lat,
+          long: city.long,
+        },
+        source: LocationSource.Manual,
+      };
 
-    setHomeLocation(homeLocation);
-  }, [setHomeLocation]);
+      setHomeLocation(homeLocation);
+    },
+    [setHomeLocation]
+  );
 
   return {
     searchCities,

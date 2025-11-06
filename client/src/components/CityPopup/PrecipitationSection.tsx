@@ -1,6 +1,5 @@
-import { Text } from '@mantine/core';
+import { Divider, Text } from '@mantine/core';
 import Field from './Field';
-import Divider from './Divider';
 import { formatValue } from '@/utils/dataFormatting/formatValue';
 
 interface PrecipitationSectionProps {

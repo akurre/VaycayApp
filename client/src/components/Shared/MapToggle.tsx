@@ -1,7 +1,4 @@
 import { SegmentedControl, Tooltip } from '@mantine/core';
-import { appColors } from '@/theme';
-import { MapTheme } from '@/types/mapTypes';
-import { useAppStore } from '@/stores/useAppStore';
 import { TOGGLE_ICON_SIZE } from '@/constants';
 
 interface MapToggleOption<T extends string> {

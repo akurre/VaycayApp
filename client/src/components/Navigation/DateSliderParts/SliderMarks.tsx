@@ -1,8 +1,5 @@
 import { FC } from 'react';
 import { Text } from '@mantine/core';
-import { appColors } from '@/theme';
-import { useAppStore } from '@/stores/useAppStore';
-import { MapTheme } from '@/types/mapTypes';
 import CustomPopover from '@/components/Shared/CustomPopover';
 
 interface SliderMarksProps {

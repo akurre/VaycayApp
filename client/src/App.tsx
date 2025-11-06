@@ -10,7 +10,12 @@ function App() {
   return (
     <MantineProvider theme={theme} defaultColorScheme="dark">
       <Notifications position="top-right" zIndex={1000} />
-      <BrowserRouter>
+      <BrowserRouter
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
         <Routes>
           <Route path="/" element={<MapPage />} />
         </Routes>

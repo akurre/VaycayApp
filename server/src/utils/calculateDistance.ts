@@ -16,6 +16,7 @@ export default function calculateDistance(
   const dLon = toRadians(lon2 - lon1);
 
   const a =
+    // eslint-disable-next-line no-mixed-operators
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(toRadians(lat1)) *
       Math.cos(toRadians(lat2)) *

@@ -1,7 +1,4 @@
 import { FC, ReactNode } from 'react';
-import { appColors } from '@/theme';
-import { useAppStore } from '@/stores/useAppStore';
-import { MapTheme } from '@/types/mapTypes';
 
 interface CustomPopoverProps {
   children: ReactNode;

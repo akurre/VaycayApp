@@ -1,9 +1,8 @@
-import { Text } from '@mantine/core';
+import { Divider, Text } from '@mantine/core';
 import { useAppStore } from '@/stores/useAppStore';
 import { calculateDistanceFromHome } from '@/utils/location/calculateDistanceFromHome';
 import { formatDistance } from '@/utils/location/formatDistance';
 import Field from './Field';
-import Divider from './Divider';
 
 interface DistanceSectionProps {
   lat: number | null;

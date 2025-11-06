@@ -25,9 +25,10 @@ export const INITIAL_VIEW_STATE = {
 export const TOGGLE_ICON_SIZE = 16;
 
 // map style urls for light and dark themes
+// using carto basemaps via vite proxy to bypass cors restrictions
 export const MAP_STYLES = {
-  light: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-  dark: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+  light: '/basemaps/gl/positron-gl-style/style.json',
+  dark: '/basemaps/gl/dark-matter-gl-style/style.json',
 } as const;
 
 // home icon marker constants
