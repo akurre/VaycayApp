@@ -1,4 +1,4 @@
-import { Modal } from '@mantine/core';
+import { Divider, Modal } from '@mantine/core';
 import { WeatherData } from '@/types/cityWeatherDataType';
 import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
 import Field from './Field';
@@ -6,7 +6,6 @@ import LocationSection from './LocationSection';
 import PrecipitationSection from './PrecipitationSection';
 import TemperatureSection from './TemperatureSection';
 import DistanceSection from './DistanceSection';
-import Divider from './Divider';
 
 interface CityPopupProps {
   city: WeatherData | null;

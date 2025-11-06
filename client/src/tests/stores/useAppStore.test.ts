@@ -6,7 +6,7 @@ describe('useAppStore', () => {
   beforeEach(() => {
     // clear localStorage to reset persisted state
     localStorage.clear();
-    
+
     // reset store state before each test
     useAppStore.setState({
       homeLocation: null,

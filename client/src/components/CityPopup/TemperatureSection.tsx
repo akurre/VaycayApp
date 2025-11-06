@@ -2,9 +2,6 @@ import { Text } from '@mantine/core';
 import Field from './Field';
 import Divider from './Divider';
 import { formatTemperature } from '@/utils/tempFormatting/formatTemperature';
-import { appColors } from '@/theme';
-import { useAppStore } from '@/stores/useAppStore';
-import { MapTheme } from '@/types/mapTypes';
 
 interface TemperatureSectionProps {
   avgTemperature: number | null;

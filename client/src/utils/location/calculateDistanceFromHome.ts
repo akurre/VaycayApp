@@ -9,12 +9,7 @@ export function calculateDistanceFromHome(lat: number, long: number): number | n
     return null;
   }
 
-  return calculateDistance(
-    homeLocation.coordinates.lat,
-    homeLocation.coordinates.long,
-    lat,
-    long
-  );
+  return calculateDistance(homeLocation.coordinates.lat, homeLocation.coordinates.long, lat, long);
 }
 
 export default calculateDistanceFromHome;

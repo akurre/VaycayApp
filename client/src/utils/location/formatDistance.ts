@@ -1,6 +1,6 @@
 // formats distance for display, using miles for US/UK locales and km for others
 
-import { KM_TO_MILES, MILES_LOCALES } from "@/constants";
+import { KM_TO_MILES, MILES_LOCALES } from '@/constants';
 
 function shouldUseMiles(): boolean {
   const locale = navigator.language;

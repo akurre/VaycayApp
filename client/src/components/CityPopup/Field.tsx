@@ -9,10 +9,8 @@ interface FieldProps {
 const Field = ({ label, value, monospace }: FieldProps) => {
   return (
     <div>
-      <Text size="sm">
-        {label}
-      </Text>
-      <Text size="md" ff={monospace ? 'monospace' : undefined} >
+      <Text size="sm">{label}</Text>
+      <Text size="md" ff={monospace ? 'monospace' : undefined}>
         {value}
       </Text>
     </div>

@@ -40,13 +40,7 @@ function HomeLocationSelector() {
   };
 
   return (
-    <Popover 
-      opened={opened} 
-      onChange={setOpened} 
-      position="bottom" 
-      withArrow 
-      shadow="md"
-    >
+    <Popover opened={opened} onChange={setOpened} position="bottom" withArrow shadow="md">
       <Popover.Target>
         <Button
           onClick={() => setOpened((o) => !o)}
@@ -60,9 +54,7 @@ function HomeLocationSelector() {
       <Popover.Dropdown>
         <div className="w-80 p-2">
           <div className="text-sm mb-3">
-            <Text>
-              Set Your Home Location
-            </Text>
+            <Text>Set Your Home Location</Text>
           </div>
 
           {/* use my location button */}

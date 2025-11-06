@@ -55,7 +55,7 @@ export const theme = createTheme({
   fontFamily: 'Verdana, sans-serif',
   fontFamilyMonospace: 'Monaco, Courier, monospace',
   headings: { fontFamily: 'Outfit, sans-serif' },
-  
+
   components: {
     Button: {
       defaultProps: {
@@ -86,6 +86,13 @@ export const theme = createTheme({
           // automatically use correct background and border based on color scheme
           backgroundColor: `light-dark(${appColors.light.background}, ${appColors.dark.background})`,
           border: `1px solid light-dark(${appColors.light.border}, ${appColors.dark.border})`,
+        },
+      }),
+    },
+    Divider: {
+      styles: () => ({
+        root: {
+          borderTopColor: `light-dark(${appColors.primaryLight}, ${appColors.primaryDark})`,
         },
       }),
     },

@@ -23,10 +23,7 @@ const SliderMarks: FC<SliderMarksProps> = ({ marks, min, max }) => {
             style={{ left: `${markPosition}%` }}
           >
             <CustomPopover showBackground={false} size="xxs" direction="up">
-              <Text
-                size="xs"
-                fw={500}
-              >
+              <Text size="xs" fw={500}>
                 {mark.label}
               </Text>
             </CustomPopover>

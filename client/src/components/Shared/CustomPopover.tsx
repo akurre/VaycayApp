@@ -16,7 +16,6 @@ const CustomPopover: FC<CustomPopoverProps> = ({
   direction = 'down',
   showBackground = true,
 }) => {
-
   // size-based padding
   const paddingMap = {
     xxs: 'px-1 py-0',
