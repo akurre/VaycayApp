@@ -31,8 +31,8 @@ describe('Field', () => {
     const label = screen.getByText('Test Label');
     const value = screen.getByText('Test Value');
 
-    // verify elements have color styles applied (specific color values)
-    expect(label.style.color).toBeTruthy();
-    expect(value.style.color).toBeTruthy();
+    // verify mantine text components are rendered (they handle theming via css classes)
+    expect(label).toBeInTheDocument();
+    expect(value).toBeInTheDocument();
   });
 });
