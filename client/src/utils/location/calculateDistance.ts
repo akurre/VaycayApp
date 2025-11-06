@@ -1,4 +1,3 @@
-/* eslint-disable no-mixed-operators */
 // haversine formula to calculate distance between two coordinates in kilometers
 
 export function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
