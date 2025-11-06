@@ -5,6 +5,7 @@ import Field from './Field';
 import LocationSection from './LocationSection';
 import PrecipitationSection from './PrecipitationSection';
 import TemperatureSection from './TemperatureSection';
+import DistanceSection from './DistanceSection';
 import Divider from './Divider';
 
 interface CityPopupProps {
@@ -50,6 +51,8 @@ const CityPopup = ({ city, onClose }: CityPopupProps) => {
         </div>
 
         <LocationSection lat={city.lat} long={city.long} />
+
+        <DistanceSection lat={city.lat} long={city.long} />
       </div>
     </Modal>
   );

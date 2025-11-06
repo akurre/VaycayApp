@@ -2,6 +2,11 @@
 // MAP CONSTANTS
 // ============================================================================
 
+export const KM_TO_MILES = 0.621371;
+
+// locales that use miles instead of kilometers
+export const MILES_LOCALES = ['en-US', 'en-GB', 'en-LR', 'en-MM'];
+
 // zoom-based loading thresholds
 export const ZOOM_THRESHOLD = 2; // switch to bounds query at zoom level 2+ (continental view)
 export const DEBOUNCE_DELAY = 200; // ms - debounce delay for zoom/pan events (reduced for more responsive feel)
@@ -95,3 +100,6 @@ export const monthMarks = [
   { value: 305, label: 'Nov' },
   { value: 335, label: 'Dec' },
 ];
+
+
+
