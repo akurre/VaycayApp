@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { HeatmapLayer } from '@deck.gl/aggregation-layers';
 import { ScatterplotLayer, IconLayer } from '@deck.gl/layers';
+import { Layer } from '@deck.gl/core';
 import { WeatherData, ValidMarkerData } from '../types/cityWeatherDataType';
 import { transformToHeatmapData } from '../utils/map/transformToHeatmapData';
 import { getMarkerColor, COLOR_RANGE } from '../utils/map/getMarkerColor';
@@ -44,7 +45,7 @@ function useMapLayers({ cities, viewMode, isLoadingWeather, homeLocation }: UseM
   return useMemo(() => {
     // pre-create all layers and toggle visibility instead of creating/destroying
     // this prevents expensive layer creation from blocking the segmentedcontrol transition
-    const layers: any[] = [
+    const layers: Layer[] = [
       new HeatmapLayer({
         id: 'temperature-heatmap',
         data: heatmapData,

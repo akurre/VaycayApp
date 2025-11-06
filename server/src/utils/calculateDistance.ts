@@ -1,3 +1,4 @@
+/* eslint-disable no-mixed-operators */
 // haversine formula to calculate distance between two coordinates in kilometers
 
 function toRadians(degrees: number): number {
@@ -16,11 +17,10 @@ export default function calculateDistance(
   const dLon = toRadians(lon2 - lon1);
 
   const a =
-    // eslint-disable-next-line no-mixed-operators
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(toRadians(lat1)) *
       Math.cos(toRadians(lat2)) *
-      (Math.sin(dLon / 2) * Math.sin(dLon / 2));
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
 
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
