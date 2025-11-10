@@ -24,7 +24,7 @@
     "@deck.gl/core": "^9.2.2",
     "@deck.gl/layers": "^9.2.2",
     "@deck.gl/react": "^9.2.2",
-    "@mantine/core": "^8.3.6",
+    "@mantine/core": "^8.3.7",
     "@mantine/dates": "^8.3.6",
     "@mantine/hooks": "^8.3.6",
     "@mantine/notifications": "^8.3.6",
