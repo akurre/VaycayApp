@@ -72,6 +72,21 @@ export const TEMP_THRESHOLDS = [
 // color range for heatmap layer (extracted from thresholds)
 export const COLOR_RANGE: [number, number, number][] = TEMP_THRESHOLDS.map((t) => t.color);
 
+// sunshine hours color thresholds for heatmap visualization
+// ranges from low sunshine (dark/cool colors) to high sunshine (bright/warm colors)
+export const SUNSHINE_THRESHOLDS = [
+  { hours: 0, color: [50, 50, 100] as const }, // dark blue (very low sunshine)
+  { hours: 500, color: [100, 150, 200] as const }, // light blue (low sunshine)
+  { hours: 1000, color: [150, 200, 100] as const }, // light green (moderate sunshine)
+  { hours: 1500, color: [200, 220, 100] as const }, // yellow-green (good sunshine)
+  { hours: 2000, color: [255, 220, 100] as const }, // light yellow (high sunshine)
+  { hours: 2500, color: [255, 180, 50] as const }, // orange (very high sunshine)
+  { hours: 3000, color: [255, 100, 0] as const }, // bright orange (extreme sunshine)
+];
+
+// extract color range from sunshine thresholds for heatmap layer
+export const SUNSHINE_COLOR_RANGE = SUNSHINE_THRESHOLDS.map((t) => t.color);
+
 // ============================================================================
 // ERROR NOTIFICATION CONSTANTS
 // ============================================================================
@@ -87,7 +102,7 @@ export const WARNING_NOTIFICATION_DURATION = 3000;
 // custom date slider thumb dimensions for positioning calculations
 export const SLIDER_THUMB_WIDTH = 32; // 8 * 4 (w-8 in tailwind)
 
-// month boundaries for labels
+// month boundaries for labels (day-of-year format)
 export const monthMarks = [
   { value: 1, label: 'Jan' },
   { value: 32, label: 'Feb' },
@@ -102,3 +117,19 @@ export const monthMarks = [
   { value: 305, label: 'Nov' },
   { value: 335, label: 'Dec' },
 ];
+
+// monthly marks for date slider when in monthly mode (sunshine data)
+export const monthlyMarks = [
+  { value: 1, label: 'Jan' },
+  { value: 2, label: 'Feb' },
+  { value: 3, label: 'Mar' },
+  { value: 4, label: 'Apr' },
+  { value: 5, label: 'May' },
+  { value: 6, label: 'Jun' },
+  { value: 7, label: 'Jul' },
+  { value: 8, label: 'Aug' },
+  { value: 9, label: 'Sep' },
+  { value: 10, label: 'Oct' },
+  { value: 11, label: 'Nov' },
+  { value: 12, label: 'Dec' },
+] as const;
