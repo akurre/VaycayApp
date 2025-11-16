@@ -54,6 +54,72 @@ export const GET_WEATHER_BY_DATE_AND_BOUNDS = gql`
   }
 `;
 
+export const GET_SUNSHINE_BY_MONTH = gql`
+  query GetSunshineByMonth($month: Int!) {
+    sunshineByMonth(month: $month) {
+      city
+      country
+      state
+      suburb
+      lat
+      long
+      population
+      jan
+      feb
+      mar
+      apr
+      may
+      jun
+      jul
+      aug
+      sep
+      oct
+      nov
+      dec
+      stationName
+    }
+  }
+`;
+
+export const GET_SUNSHINE_BY_MONTH_AND_BOUNDS = gql`
+  query GetSunshineByMonthAndBounds(
+    $month: Int!
+    $minLat: Int!
+    $maxLat: Int!
+    $minLong: Int!
+    $maxLong: Int!
+  ) {
+    sunshineByMonthAndBounds(
+      month: $month
+      minLat: $minLat
+      maxLat: $maxLat
+      minLong: $minLong
+      maxLong: $maxLong
+    ) {
+      city
+      country
+      state
+      suburb
+      lat
+      long
+      population
+      jan
+      feb
+      mar
+      apr
+      may
+      jun
+      jul
+      aug
+      sep
+      oct
+      nov
+      dec
+      stationName
+    }
+  }
+`;
+
 export const GET_NEAREST_CITY = gql`
   query GetNearestCity($lat: Float!, $long: Float!) {
     nearestCity(lat: $lat, long: $long) {

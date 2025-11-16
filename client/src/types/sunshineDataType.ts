@@ -1,3 +1,5 @@
+import { WeatherData } from './cityWeatherDataType';
+
 // sunshine data type definitions for monthly sunshine hours visualization
 
 export interface SunshineData {
@@ -29,5 +31,21 @@ export interface ValidSunshineMarkerData extends SunshineData {
   long: number;
 }
 
+export interface SunshineByMonthResponse {
+  sunshineByMonth: SunshineData[];
+  sunshineByMonthAndBounds?: SunshineData[];
+}
+
+export interface SunshineByMonthVars {
+  month: number;
+}
+
+export interface SunshineByMonthAndBoundsVars extends SunshineByMonthVars {
+  minLat: number;
+  maxLat: number;
+  minLong: number;
+  maxLong: number;
+}
+
 // union type for flexibility when handling both weather and sunshine data
-export type WeatherDataUnion = any; // will be updated when WeatherData type is available
+export type WeatherDataUnion = WeatherData | SunshineData;
