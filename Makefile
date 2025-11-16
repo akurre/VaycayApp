@@ -70,6 +70,8 @@ db-setup: check-prereqs
 	cd server && npm run import-csv-data
 	@echo "$(YELLOW)Merging duplicate cities and consolidating PRCP data (this will take 5-10 minutes)...$(NC)"
 	cd server && npx tsx scripts/merge-duplicate-cities-optimized.ts
+	@echo "$(YELLOW)Importing monthly sunshine hours data...$(NC)"
+	cd server && npx tsx scripts/import-sunshine-hours.ts
 	@echo "$(GREEN)✓ Database setup complete$(NC)"
 
 # Start all services for development
