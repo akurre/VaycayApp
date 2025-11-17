@@ -9,7 +9,7 @@ interface PrecipitationSectionProps {
 }
 
 const PrecipitationSection = ({ precipitation, snowDepth }: PrecipitationSectionProps) => {
-  const precipitationIcon = getPrecipitationIcon(precipitation)
+  const precipitationIcon = getPrecipitationIcon(precipitation);
   return (
     <GreaterSection title="Precipitation" icon={precipitationIcon}>
       <div className="grid grid-cols-2 gap-2">

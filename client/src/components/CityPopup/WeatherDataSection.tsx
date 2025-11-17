@@ -1,7 +1,6 @@
 import { Alert, Loader } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
 import { WeatherData } from '@/types/cityWeatherDataType';
-import Field from './Field';
 import TemperatureSection from './TemperatureSection';
 import PrecipitationSection from './PrecipitationSection';
 

@@ -53,18 +53,18 @@ export const appColors = {
 export const theme: MantineThemeOverride = createTheme({
   // Set primary color to your actual primary color
   primaryColor: 'primary-red',
-  
+
   // Configure primary shade for light and dark modes
   primaryShade: { light: 6, dark: 8 },
-  
+
   // Default radius for components
   defaultRadius: 'md',
-  
+
   // Font configurations
   fontFamily: 'Verdana, sans-serif',
   fontFamilyMonospace: 'Monaco, Courier, monospace',
   headings: { fontFamily: 'Outfit, sans-serif' },
-  
+
   // Define custom colors as proper Mantine color arrays
   colors: {
     // Primary color (burgundy-red)
@@ -78,9 +78,9 @@ export const theme: MantineThemeOverride = createTheme({
       '#9F2042', // 6 - our primary color
       '#7A1933', // 7 - our primaryDark
       '#5A0F24',
-      '#3B0615'  // 9 - darkest
+      '#3B0615', // 9 - darkest
     ],
-    
+
     // Secondary color (teal)
     'secondary-teal': [
       '#E6FFFD', // 0 - lightest
@@ -92,9 +92,9 @@ export const theme: MantineThemeOverride = createTheme({
       '#187A76', // 6 - our secondaryDark
       '#115C59',
       '#0A3E3C',
-      '#05201F'  // 9 - darkest
+      '#05201F', // 9 - darkest
     ],
-    
+
     // Tertiary color (purple)
     'tertiary-purple': [
       '#F5F0FA', // 0 - lightest
@@ -106,10 +106,10 @@ export const theme: MantineThemeOverride = createTheme({
       '#9580B3', // 6 - our tertiaryDark
       '#7A6A96',
       '#5F5275',
-      '#453B54'  // 9 - darkest
+      '#453B54', // 9 - darkest
     ],
-    
-    'success': [
+
+    success: [
       '#E6FFFD', // 0 - lightest
       '#C5F7F4',
       '#94EBE7',
@@ -119,10 +119,10 @@ export const theme: MantineThemeOverride = createTheme({
       '#187A76',
       '#115C59',
       '#0A3E3C',
-      '#05201F'  // 9 - darkest
+      '#05201F', // 9 - darkest
     ],
-    
-    'warning': [
+
+    warning: [
       '#FFFAEB',
       '#FFF3D0',
       '#FFEDB8',
@@ -132,10 +132,10 @@ export const theme: MantineThemeOverride = createTheme({
       '#FFD43B', // 6 - our warning color
       '#E6BC30',
       '#CCA426',
-      '#B38C1D'  // 9 - darkest
+      '#B38C1D', // 9 - darkest
     ],
-    
-    'error': [
+
+    error: [
       '#FFF0F3',
       '#FFD6DE',
       '#FFADB9',
@@ -145,10 +145,10 @@ export const theme: MantineThemeOverride = createTheme({
       '#BB4A52', // 6 - our error color
       '#9F3A42',
       '#832A32',
-      '#671A22'  // 9 - darkest
+      '#671A22', // 9 - darkest
     ],
-    
-    'info': [
+
+    info: [
       '#F5F0FA',
       '#E9E0F5',
       '#D4C4E9',
@@ -158,10 +158,10 @@ export const theme: MantineThemeOverride = createTheme({
       '#9580B3',
       '#7A6A96',
       '#5F5275',
-      '#453B54'  // 9 - darkest
-    ]
+      '#453B54', // 9 - darkest
+    ],
   },
-  
+
   // Component-specific styles using the extend pattern
   components: {
     Button: Button.extend({
@@ -179,7 +179,7 @@ export const theme: MantineThemeOverride = createTheme({
       //   }
       // }
     }),
-    
+
     Text: Text.extend({
       defaultProps: {
         // Default props for Text component
@@ -191,7 +191,7 @@ export const theme: MantineThemeOverride = createTheme({
         },
       },
     }),
-    
+
     Popover: Popover.extend({
       styles: {
         dropdown: {
@@ -201,7 +201,7 @@ export const theme: MantineThemeOverride = createTheme({
         },
       },
     }),
-    
+
     Divider: Divider.extend({
       styles: {
         root: {
@@ -211,7 +211,7 @@ export const theme: MantineThemeOverride = createTheme({
       },
     }),
   },
-  
+
   // Other theme properties
   other: {
     // Custom properties that can be accessed via theme.other

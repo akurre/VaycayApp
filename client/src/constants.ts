@@ -3,12 +3,12 @@
 // ============================================================================
 
 import { SunshineData } from './types/sunshineDataType';
-import { 
-  IconCloudStorm, 
-  IconCloudFilled, 
-  IconCloudFog, 
-  IconSunElectricity, 
-  IconSunFilled, 
+import {
+  IconCloudStorm,
+  IconCloudFilled,
+  IconCloudFog,
+  IconSunElectricity,
+  IconSunFilled,
   IconSunglasses,
   IconSnowman,
   IconSnowflake,
@@ -21,7 +21,7 @@ import {
   IconDropletOff,
   IconDroplet,
   IconDropletHalf2Filled,
-  IconDropletFilled
+  IconDropletFilled,
 } from '@tabler/icons-react';
 
 export const KM_TO_MILES = 0.621371;

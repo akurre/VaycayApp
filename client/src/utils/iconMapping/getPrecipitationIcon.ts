@@ -6,7 +6,7 @@ import { ComponentType } from 'react';
  * returns the appropriate icon component based on precipitation amount
  * uses the PRECIPITATION_ICON_THRESHOLDS to determine which icon to display
  */
-export const getPrecipitationIcon = (precip: number | null): ComponentType<any> => {
+export const getPrecipitationIcon = (precip: number | null): ComponentType<{ size?: number; color?: string; stroke?: number }> => {
   // if no data, return default icon
   if (precip === null) {
     return IconDroplet;

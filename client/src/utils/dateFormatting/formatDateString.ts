@@ -1,4 +1,4 @@
-import { MONTH_NAMES } from "@/constants";
+import { MONTH_NAMES } from '@/constants';
 
 /**
  * formats a date string in format "YYYY-MM-DD" to a readable format like "January 1st"
@@ -18,10 +18,14 @@ export function formatDateString(dateString: string | null | undefined): string 
   const getOrdinalSuffix = (day: number): string => {
     if (day > 3 && day < 21) return 'th';
     switch (day % 10) {
-      case 1: return 'st';
-      case 2: return 'nd';
-      case 3: return 'rd';
-      default: return 'th';
+      case 1:
+        return 'st';
+      case 2:
+        return 'nd';
+      case 3:
+        return 'rd';
+      default:
+        return 'th';
     }
   };
 

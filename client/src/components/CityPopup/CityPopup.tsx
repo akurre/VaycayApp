@@ -47,12 +47,12 @@ const CityPopup = ({ city, onClose, selectedMonth }: CityPopupProps) => {
   return (
     <Modal opened={!!city} onClose={onClose} title={modalTitle} size="md">
       <div className="flex flex-col gap-3">
-        <div className='flex justify-between items-center'>
+        <div className="flex justify-between items-center">
           <Field label="Date" value={formattedDate} />
           <Popover position="bottom" withArrow shadow="md">
             <Popover.Target>
               {/* varient below doesnt change anything */}
-              <Button variant="subtle" size="compact-xs"> 
+              <Button variant="subtle" size="compact-xs">
                 More Info
               </Button>
             </Popover.Target>
@@ -63,7 +63,11 @@ const CityPopup = ({ city, onClose, selectedMonth }: CityPopupProps) => {
                 </div>
               )}
               {city.lat && city.long && (
-                <Field label="Coordinates" value={`${city.lat.toFixed(4)}°, ${city.long.toFixed(4)}°`} monospace />
+                <Field
+                  label="Coordinates"
+                  value={`${city.lat.toFixed(4)}°, ${city.long.toFixed(4)}°`}
+                  monospace
+                />
               )}
             </Popover.Dropdown>
           </Popover>
