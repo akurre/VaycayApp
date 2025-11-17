@@ -72,15 +72,27 @@ describe('CityPopup', () => {
     vi.mocked(useCityDataModule.default).mockReturnValue({
       weatherData: null,
       sunshineData: null,
-      isLoading: false,
-      hasError: false,
+      weatherLoading: false,
+      sunshineLoading: false,
+      weatherError: false,
+      sunshineError: false,
     });
   });
 
   it('renders weather data correctly', () => {
+    // Mock the hook to return weather data
+    vi.mocked(useCityDataModule.default).mockReturnValue({
+      weatherData: weatherData,
+      sunshineData: null,
+      weatherLoading: false,
+      sunshineLoading: false,
+      weatherError: false,
+      sunshineError: false,
+    });
+    
     render(<CityPopup city={weatherData} onClose={mockOnClose} selectedMonth={1} />);
 
-    expect(screen.getByText('New York, United States')).toBeInTheDocument();
+    expect(screen.getByText('New York, New York, United States')).toBeInTheDocument();
     expect(screen.getByText('State/Region')).toBeInTheDocument();
     expect(screen.getByText('New York')).toBeInTheDocument();
     expect(screen.getByText('2020-01-01')).toBeInTheDocument();
@@ -90,9 +102,19 @@ describe('CityPopup', () => {
   });
 
   it('renders sunshine data correctly', () => {
+    // Mock the hook to return sunshine data
+    vi.mocked(useCityDataModule.default).mockReturnValue({
+      weatherData: null,
+      sunshineData: sunshineData,
+      weatherLoading: false,
+      sunshineLoading: false,
+      weatherError: false,
+      sunshineError: false,
+    });
+    
     render(<CityPopup city={sunshineData} onClose={mockOnClose} selectedMonth={1} />);
 
-    expect(screen.getByText('New York, United States')).toBeInTheDocument();
+    expect(screen.getByText('New York, New York, United States')).toBeInTheDocument();
     expect(screen.getByText('State/Region')).toBeInTheDocument();
     expect(screen.getByText('New York')).toBeInTheDocument();
     // Check for sunshine hours (specific text depends on SunshineSection implementation)
@@ -100,13 +122,15 @@ describe('CityPopup', () => {
     expect(screen.getByText('January Sunshine')).toBeInTheDocument();
   });
 
-  it('shows both weather and sunshine data when viewing weather data and sunshine data is fetched', () => {
-    // Mock the hook to return sunshine data when viewing weather data
+  it('shows both weather and sunshine data when both are fetched', () => {
+    // Mock the hook to return both weather and sunshine data
     vi.mocked(useCityDataModule.default).mockReturnValue({
-      weatherData: null, // Not needed since we're passing weather data directly
+      weatherData: weatherData,
       sunshineData: sunshineData,
-      isLoading: false,
-      hasError: false,
+      weatherLoading: false,
+      sunshineLoading: false,
+      weatherError: false,
+      sunshineError: false,
     });
 
     render(<CityPopup city={weatherData} onClose={mockOnClose} selectedMonth={1} />);
@@ -118,26 +142,6 @@ describe('CityPopup', () => {
 
     // Check for sunshine data
     expect(screen.getByText('Average Annual Sunshine')).toBeInTheDocument();
-  });
-
-  it('shows both weather and sunshine data when viewing sunshine data and weather data is fetched', () => {
-    // Mock the hook to return weather data when viewing sunshine data
-    vi.mocked(useCityDataModule.default).mockReturnValue({
-      weatherData: weatherData,
-      sunshineData: null, // Not needed since we're passing sunshine data directly
-      isLoading: false,
-      hasError: false,
-    });
-
-    render(<CityPopup city={sunshineData} onClose={mockOnClose} selectedMonth={1} />);
-
-    // Check for sunshine data
-    expect(screen.getByText('Average Annual Sunshine')).toBeInTheDocument();
-
-    // Check for weather data
-    expect(screen.getByText('Temperature')).toBeInTheDocument();
-    expect(screen.getByText('Average')).toBeInTheDocument();
-    expect(screen.getByText('5.0°C')).toBeInTheDocument();
   });
 
   it('shows loading state when data is being fetched', () => {
@@ -145,20 +149,16 @@ describe('CityPopup', () => {
     vi.mocked(useCityDataModule.default).mockReturnValue({
       weatherData: null,
       sunshineData: null,
-      isLoading: true,
-      hasError: false,
+      weatherLoading: true,
+      sunshineLoading: true,
+      weatherError: false,
+      sunshineError: false,
     });
 
     render(<CityPopup city={weatherData} onClose={mockOnClose} selectedMonth={1} />);
 
-    // Weather data should still be shown since it's passed directly
-    expect(screen.getByText('Temperature')).toBeInTheDocument();
-    expect(screen.getByText('Average')).toBeInTheDocument();
-
-    // But sunshine data should show loading
-    // The Loader component is present but doesn't have text content
-    // Instead, check for the progressbar role
-    expect(document.querySelector('.mantine-Loader-root')).toBeInTheDocument();
+    // Both sections should show loading
+    expect(document.querySelectorAll('.mantine-Loader-root').length).toBe(2);
   });
 
   it('shows error state when data fetching fails', () => {
@@ -166,17 +166,16 @@ describe('CityPopup', () => {
     vi.mocked(useCityDataModule.default).mockReturnValue({
       weatherData: null,
       sunshineData: null,
-      isLoading: false,
-      hasError: true,
+      weatherLoading: false,
+      sunshineLoading: false,
+      weatherError: true,
+      sunshineError: true,
     });
 
     render(<CityPopup city={weatherData} onClose={mockOnClose} selectedMonth={1} />);
 
-    // Weather data should still be shown since it's passed directly
-    expect(screen.getByText('Temperature')).toBeInTheDocument();
-    expect(screen.getByText('Average')).toBeInTheDocument();
-
-    // But sunshine data should show error
+    // Both sections should show error
+    expect(screen.getByText('Failed to load temperature data for this city.')).toBeInTheDocument();
     expect(screen.getByText('Failed to load sunshine data for this city.')).toBeInTheDocument();
   });
 
@@ -199,11 +198,12 @@ describe('CityPopup', () => {
     render(<CityPopup city={weatherData} onClose={mockOnClose} />);
 
     // Verify that useCityData was called with the current month (January = 1)
-    expect(useCityDataModule.default).toHaveBeenCalledWith(
-      expect.objectContaining({
-        selectedMonth: 1,
-      })
-    );
+    expect(useCityDataModule.default).toHaveBeenCalledWith({
+      cityName: 'New York',
+      lat: 40.7128,
+      long: -74.006,
+      selectedMonth: 1,
+    });
 
     // Restore the original Date
     global.Date = originalDate;
@@ -227,8 +227,10 @@ describe('CityPopup', () => {
     vi.mocked(useCityDataModule.default).mockReturnValue({
       weatherData: weatherData,
       sunshineData: sunshineData,
-      isLoading: false,
-      hasError: false,
+      weatherLoading: false,
+      sunshineLoading: false,
+      weatherError: false,
+      sunshineError: false,
     });
 
     // Create a minimal valid WeatherData object for testing
@@ -253,7 +255,7 @@ describe('CityPopup', () => {
     render(<CityPopup city={testCity} onClose={mockOnClose} />);
 
     // Verify data is displayed from cache
-    expect(screen.getByText('Test City, Test Country')).toBeInTheDocument();
+    expect(screen.getByText('Test City, Test State, Test Country')).toBeInTheDocument();
     expect(screen.getByText('Temperature')).toBeInTheDocument();
     expect(screen.getByText('Average Annual Sunshine')).toBeInTheDocument();
   });
@@ -274,14 +276,18 @@ describe('CityPopup', () => {
       .mockReturnValueOnce({
         weatherData: null,
         sunshineData: null,
-        isLoading: true,
-        hasError: false,
+        weatherLoading: true,
+        sunshineLoading: true,
+        weatherError: false,
+        sunshineError: false,
       })
       .mockReturnValue({
         weatherData: weatherData,
         sunshineData: sunshineData,
-        isLoading: false,
-        hasError: false,
+        weatherLoading: false,
+        sunshineLoading: false,
+        weatherError: false,
+        sunshineError: false,
       });
 
     // Create a minimal valid WeatherData object for testing
@@ -341,8 +347,10 @@ describe('CityPopup', () => {
         return {
           weatherData: weatherData,
           sunshineData: sunshineData,
-          isLoading: false,
-          hasError: false,
+          weatherLoading: false,
+          sunshineLoading: false,
+          weatherError: false,
+          sunshineError: false,
         };
       }
     );

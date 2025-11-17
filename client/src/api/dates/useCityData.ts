@@ -35,7 +35,7 @@ function useCityData({ cityName, lat, long, selectedMonth }: UseCityDataParams) 
   const { getFromCache, addToCache } = useCityDataCacheStore();
 
   // Default to current month if not provided
-  const month = selectedMonth || parseInt(getTodayAsMMDD().substring(0, 2), 10);
+  const month = selectedMonth || Number.parseInt(getTodayAsMMDD().substring(0, 2), 10);
 
   // Generate a unique cache key for this city
   // Include coordinates for more precise matching if available
@@ -141,10 +141,15 @@ function useCityData({ cityName, lat, long, selectedMonth }: UseCityDataParams) 
   }, [sunshineError]);
 
   return {
+    // data
     weatherData,
     sunshineData,
-    isLoading: weatherLoading || sunshineLoading, // todo decouple loading states
-    hasError: !!weatherError || !!sunshineError, // todo decouple error states
+    // loading states
+    weatherLoading,
+    sunshineLoading,
+    // error states
+    weatherError: !!weatherError,
+    sunshineError: !!sunshineError,
   };
 }
 

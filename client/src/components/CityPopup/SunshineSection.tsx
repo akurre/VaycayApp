@@ -1,4 +1,4 @@
-import { Divider } from '@mantine/core';
+import { Divider, Text } from '@mantine/core';
 import { SunshineData } from '@/types/sunshineDataType';
 import Field from './Field';
 import { MONTH_FIELDS, MONTH_NAMES } from '@/constants';
@@ -37,7 +37,10 @@ const SunshineSection = ({ sunshineData, selectedMonth }: SunshineSectionProps) 
   return (
     <div>
       <Divider />
-      <div className="py-2">
+      <Text size="sm" fw={600} mb="xs">
+        Sunshine
+      </Text>
+      <div>
         {selectedMonth && (
           <Field
             label={`${MONTH_NAMES[selectedMonth - 1]} Sunshine`}
