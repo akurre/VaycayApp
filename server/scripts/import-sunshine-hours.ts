@@ -2,11 +2,73 @@ import { PrismaClient } from '@prisma/client';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
+// Define a type for city where clauses
+interface CityWhereClause {
+  name: string;
+  country: string;
+  state?: string;
+}
+
 const prisma = new PrismaClient();
+
+// Country name mapping to handle variations
+const countryMapping: Record<string, string> = {
+  'South Korea': 'Korea, South',
+  Taiwan: 'Taiwan',
+  'United States': 'United States',
+  'United Kingdom': 'United Kingdom',
+  'Czech Republic': 'Czechia',
+  Russia: 'Russian Federation',
+  "Côte d'Ivoire": 'Ivory Coast',
+  'Democratic Republic of the Congo': 'Congo, Democratic Republic of the',
+  Congo: 'Congo, Republic of the',
+  'Bosnia and Herzegovina': 'Bosnia & Herzegovina',
+  'North Macedonia': 'Macedonia',
+  'Saint Pierre and Miquelon': 'Saint Pierre & Miquelon',
+  'Falkland Islands': 'Falkland Islands (Islas Malvinas)',
+  // Add more mappings as needed
+};
+
+// City name normalization function
+function normalizeCity(city: string): string {
+  // Replace accented characters
+  const normalized = city
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    // Handle common variations
+    .replace(/ü/g, 'u')
+    .replace(/ö/g, 'o')
+    .replace(/ä/g, 'a')
+    .replace(/é/g, 'e')
+    .replace(/è/g, 'e')
+    .replace(/ñ/g, 'n');
+
+  // Handle specific city name variations
+  const cityMapping: Record<string, string> = {
+    Zurich: 'Zürich',
+    Seville: 'Sevilla',
+    'Washington D.C.': 'Washington',
+    Taipei: 'Taipei City',
+    Kaohsiung: 'Kaohsiung City',
+    Taichung: 'Taichung City',
+    Brasília: 'Brasilia',
+    Yaoundé: 'Yaounde',
+    "N'Djamena": 'Ndjamena',
+    Reykjavik: 'Reykjavík',
+    'Tel Aviv': 'Tel Aviv-Yafo',
+    'Luxembourg City': 'Luxembourg',
+    Valletta: 'Valletta',
+    'Dar-es-Salaam': 'Dar es Salaam',
+    // Add more mappings as needed
+  };
+
+  return cityMapping[city] || normalized;
+}
 
 interface SunshineRow {
   Country: string;
   City: string;
+  State: string;
   Jan: string;
   Feb: string;
   Mar: string;
@@ -27,6 +89,12 @@ interface ImportStats {
   successfulImports: number;
   citiesNotFound: number;
   errors: number;
+  matchingApproaches: {
+    exactMatch: number;
+    countryNormalized: number;
+    cityNormalized: number;
+    bothNormalized: number;
+  };
 }
 
 // helper to parse float or return null
@@ -70,6 +138,12 @@ async function importSunshineHours(csvPath: string) {
     successfulImports: 0,
     citiesNotFound: 0,
     errors: 0,
+    matchingApproaches: {
+      exactMatch: 0,
+      countryNormalized: 0,
+      cityNormalized: 0,
+      bothNormalized: 0,
+    },
   };
 
   try {
@@ -110,17 +184,93 @@ async function importSunshineHours(csvPath: string) {
       stats.totalRecords++;
 
       try {
-        // find city by name and country
-        const city = await prisma.city.findFirst({
-          where: {
-            name: row.City,
-            country: row.Country,
-          },
+        // Try multiple approaches to find the city
+        let city = null;
+
+        // Approach 1: Exact match (original approach)
+        const whereClauseExact: CityWhereClause = {
+          name: row.City,
+          country: row.Country,
+        };
+
+        // Add state to the query if it exists
+        if (row.State && row.State.trim() !== '') {
+          whereClauseExact.state = row.State;
+        }
+
+        city = await prisma.city.findFirst({
+          where: whereClauseExact,
         });
+
+        if (city) {
+          stats.matchingApproaches.exactMatch++;
+        } else {
+          // Approach 2: Try with normalized country name
+          const normalizedCountry = countryMapping[row.Country] || row.Country;
+          if (normalizedCountry !== row.Country) {
+            const whereClauseNormalizedCountry: CityWhereClause = {
+              name: row.City,
+              country: normalizedCountry,
+            };
+
+            if (row.State && row.State.trim() !== '') {
+              whereClauseNormalizedCountry.state = row.State;
+            }
+
+            city = await prisma.city.findFirst({
+              where: whereClauseNormalizedCountry,
+            });
+
+            if (city) {
+              stats.matchingApproaches.countryNormalized++;
+            }
+          }
+
+          // Approach 3: Try with normalized city name
+          if (!city) {
+            const normalizedCity = normalizeCity(row.City);
+            if (normalizedCity !== row.City) {
+              const whereClauseNormalizedCity: CityWhereClause = {
+                name: normalizedCity,
+                country: row.Country,
+              };
+
+              if (row.State && row.State.trim() !== '') {
+                whereClauseNormalizedCity.state = row.State;
+              }
+
+              city = await prisma.city.findFirst({
+                where: whereClauseNormalizedCity,
+              });
+
+              if (city) {
+                stats.matchingApproaches.cityNormalized++;
+              } else if (normalizedCountry !== row.Country) {
+                // Approach 4: Try with both normalized country and city
+                const whereClauseBothNormalized: CityWhereClause = {
+                  name: normalizedCity,
+                  country: normalizedCountry,
+                };
+
+                if (row.State && row.State.trim() !== '') {
+                  whereClauseBothNormalized.state = row.State;
+                }
+
+                city = await prisma.city.findFirst({
+                  where: whereClauseBothNormalized,
+                });
+
+                if (city) {
+                  stats.matchingApproaches.bothNormalized++;
+                }
+              }
+            }
+          }
+        }
 
         if (!city) {
           console.warn(
-            `  ⚠ City not found: ${row.City}, ${row.Country}`
+            `  ⚠ City not found: ${row.City}, ${row.Country}${row.State ? `, ${row.State}` : ''}`
           );
           stats.citiesNotFound++;
           continue;
@@ -153,9 +303,7 @@ async function importSunshineHours(csvPath: string) {
           recordsToInsert.length = 0;
 
           const progress = (i / (lines.length - 1)) * 100;
-          console.log(
-            `  ✓ Imported ${stats.successfulImports} records (${progress.toFixed(1)}%)`
-          );
+          console.log(`  ✓ Imported ${stats.successfulImports} records (${progress.toFixed(1)}%)`);
         }
       } catch (error) {
         console.error(`  ✗ Error processing row ${i}:`, error);
@@ -181,6 +329,19 @@ async function importSunshineHours(csvPath: string) {
     console.log(`✅ Successful imports:    ${stats.successfulImports.toLocaleString()}`);
     console.log(`⚠️  Cities not found:      ${stats.citiesNotFound.toLocaleString()}`);
     console.log(`❌ Errors:                ${stats.errors.toLocaleString()}`);
+    console.log(`\n📊 Matching approaches used:`);
+    console.log(
+      `  • Exact match:           ${stats.matchingApproaches.exactMatch.toLocaleString()}`
+    );
+    console.log(
+      `  • Country normalized:    ${stats.matchingApproaches.countryNormalized.toLocaleString()}`
+    );
+    console.log(
+      `  • City normalized:       ${stats.matchingApproaches.cityNormalized.toLocaleString()}`
+    );
+    console.log(
+      `  • Both normalized:       ${stats.matchingApproaches.bothNormalized.toLocaleString()}`
+    );
     console.log('='.repeat(80));
 
     // verify import
@@ -204,7 +365,7 @@ async function main() {
     'dataAndUtils',
     'legacy',
     'weather_data',
-    'Sunshine hours for cities in the world.csv'
+    'Sunshine_hours_world_cities.csv'
   );
 
   console.log(`📍 CSV file path: ${csvPath}\n`);

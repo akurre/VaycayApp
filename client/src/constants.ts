@@ -2,7 +2,11 @@
 // MAP CONSTANTS
 // ============================================================================
 
+import { SunshineData } from './types/sunshineDataType';
+
 export const KM_TO_MILES = 0.621371;
+
+export const MAX_CITIES_SHOWN = 300;
 
 // locales that use miles instead of kilometers
 export const MILES_LOCALES = ['en-US', 'en-GB', 'en-LR', 'en-MM'];
@@ -75,17 +79,29 @@ export const COLOR_RANGE: [number, number, number][] = TEMP_THRESHOLDS.map((t) =
 // sunshine hours color thresholds for heatmap visualization
 // ranges from low sunshine (dark/cool colors) to high sunshine (bright/warm colors)
 export const SUNSHINE_THRESHOLDS = [
-  { hours: 0, color: [50, 50, 100] as const }, // dark blue (very low sunshine)
-  { hours: 500, color: [100, 150, 200] as const }, // light blue (low sunshine)
-  { hours: 1000, color: [150, 200, 100] as const }, // light green (moderate sunshine)
-  { hours: 1500, color: [200, 220, 100] as const }, // yellow-green (good sunshine)
-  { hours: 2000, color: [255, 220, 100] as const }, // light yellow (high sunshine)
-  { hours: 2500, color: [255, 180, 50] as const }, // orange (very high sunshine)
-  { hours: 3000, color: [255, 100, 0] as const }, // bright orange (extreme sunshine)
+  { hours: 0, color: [100, 20, 150] as const }, // brighter purple (very low sunshine)
+  { hours: 25, color: [70, 40, 190] as const }, // lighter purple-blue (very low sunshine)
+  { hours: 50, color: [0, 120, 200] as const }, // bright blue (low sunshine)
+  { hours: 80, color: [0, 180, 180] as const }, // cyan/turquoise (below average sunshine)
+  { hours: 110, color: [60, 140, 40] as const }, // olive green (transitional sunshine)
+  { hours: 140, color: [100, 200, 0] as const }, // lime green (average sunshine)
+  { hours: 180, color: [173, 255, 47] as const }, // green-yellow (good sunshine)
+  { hours: 220, color: [255, 255, 0] as const }, // yellow (very good sunshine)
+  { hours: 260, color: [255, 165, 0] as const }, // orange (excellent sunshine)
+  { hours: 300, color: [255, 69, 0] as const }, // orange-red (extreme sunshine)
+  { hours: 340, color: [255, 20, 0] as const }, // bright red (near maximum sunshine)
+  { hours: 380, color: [220, 0, 0] as const }, // deep red (maximum sunshine)
 ];
 
 // extract color range from sunshine thresholds for heatmap layer
 export const SUNSHINE_COLOR_RANGE = SUNSHINE_THRESHOLDS.map((t) => t.color);
+
+// Default loading state colors
+export const TEMPERATURE_LOADING_COLOR: [number, number, number, number] = [150, 150, 200, 255]; // Blue-gray
+export const SUNSHINE_LOADING_COLOR: [number, number, number, number] = [150, 150, 150, 255]; // Gray
+
+// Type for color cache entries
+export type ColorCacheEntry = [number, number, number, number]; // r, g, b, a
 
 // ============================================================================
 // ERROR NOTIFICATION CONSTANTS
@@ -98,6 +114,36 @@ export const WARNING_NOTIFICATION_DURATION = 3000;
 // ============================================================================
 // UI CONSTANTS
 // ============================================================================
+
+export const MONTH_NAMES = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
+export const MONTH_FIELDS: Record<number, keyof SunshineData> = {
+  1: 'jan',
+  2: 'feb',
+  3: 'mar',
+  4: 'apr',
+  5: 'may',
+  6: 'jun',
+  7: 'jul',
+  8: 'aug',
+  9: 'sep',
+  10: 'oct',
+  11: 'nov',
+  12: 'dec',
+};
 
 // custom date slider thumb dimensions for positioning calculations
 export const SLIDER_THUMB_WIDTH = 32; // 8 * 4 (w-8 in tailwind)

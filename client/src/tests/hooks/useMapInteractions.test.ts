@@ -3,7 +3,7 @@ import { renderHook, act } from '@testing-library/react';
 import { useMapInteractions } from '@/hooks/useMapInteractions';
 import { WeatherData } from '@/types/cityWeatherDataType';
 import type { PickingInfo } from '@deck.gl/core';
-import { ViewMode } from '@/types/mapTypes';
+import { ViewMode, DataType } from '@/types/mapTypes';
 
 describe('useMapInteractions', () => {
   const createMockCity = (overrides?: Partial<WeatherData>): WeatherData => ({
@@ -40,19 +40,25 @@ describe('useMapInteractions', () => {
 
   describe('initial state', () => {
     it('initializes with null selectedCity', () => {
-      const { result } = renderHook(() => useMapInteractions([], ViewMode.Markers, null));
+      const { result } = renderHook(() =>
+        useMapInteractions([], ViewMode.Markers, DataType.Temperature)
+      );
 
       expect(result.current.selectedCity).toBeNull();
     });
 
     it('initializes with null hoverInfo', () => {
-      const { result } = renderHook(() => useMapInteractions([], ViewMode.Markers, null));
+      const { result } = renderHook(() =>
+        useMapInteractions([], ViewMode.Markers, DataType.Temperature)
+      );
 
       expect(result.current.hoverInfo).toBeNull();
     });
 
     it('provides handler functions', () => {
-      const { result } = renderHook(() => useMapInteractions([], ViewMode.Markers, null));
+      const { result } = renderHook(() =>
+        useMapInteractions([], ViewMode.Markers, DataType.Temperature)
+      );
 
       expect(typeof result.current.handleHover).toBe('function');
       expect(typeof result.current.handleClick).toBe('function');
@@ -63,7 +69,9 @@ describe('useMapInteractions', () => {
   describe('handleHover - markers mode', () => {
     it('sets hover info when hovering over marker', () => {
       const city = createMockCity();
-      const { result } = renderHook(() => useMapInteractions([city], ViewMode.Markers, null));
+      const { result } = renderHook(() =>
+        useMapInteractions([city], ViewMode.Markers, DataType.Temperature)
+      );
 
       const pickingInfo = createMockPickingInfo({ object: city });
 
@@ -80,7 +88,9 @@ describe('useMapInteractions', () => {
 
     it('clears hover info when not hovering over marker', () => {
       const city = createMockCity();
-      const { result } = renderHook(() => useMapInteractions([city], ViewMode.Markers, null));
+      const { result } = renderHook(() =>
+        useMapInteractions([city], ViewMode.Markers, DataType.Temperature)
+      );
 
       // first set hover info
       act(() => {
@@ -99,7 +109,9 @@ describe('useMapInteractions', () => {
   describe('handleHover - heatmap mode', () => {
     it('sets hover info when hovering over city location', () => {
       const city = createMockCity();
-      const { result } = renderHook(() => useMapInteractions([city], ViewMode.Heatmap, null));
+      const { result } = renderHook(() =>
+        useMapInteractions([city], ViewMode.Heatmap, DataType.Temperature)
+      );
 
       const pickingInfo = createMockPickingInfo({
         coordinate: [9.19, 45.4642],
@@ -118,7 +130,9 @@ describe('useMapInteractions', () => {
 
     it('clears hover info when hovering over empty area', () => {
       const city = createMockCity();
-      const { result } = renderHook(() => useMapInteractions([city], ViewMode.Heatmap, null));
+      const { result } = renderHook(() =>
+        useMapInteractions([city], ViewMode.Heatmap, DataType.Temperature)
+      );
 
       const pickingInfo = createMockPickingInfo({
         coordinate: [0, 0], // far from any city
@@ -133,7 +147,9 @@ describe('useMapInteractions', () => {
 
     it('clears hover info when coordinate is undefined', () => {
       const city = createMockCity();
-      const { result } = renderHook(() => useMapInteractions([city], ViewMode.Heatmap, null));
+      const { result } = renderHook(() =>
+        useMapInteractions([city], ViewMode.Heatmap, DataType.Temperature)
+      );
 
       const pickingInfo = createMockPickingInfo({
         coordinate: undefined,
@@ -150,7 +166,9 @@ describe('useMapInteractions', () => {
   describe('handleClick - markers mode', () => {
     it('sets selected city when clicking marker', () => {
       const city = createMockCity();
-      const { result } = renderHook(() => useMapInteractions([city], ViewMode.Markers, null));
+      const { result } = renderHook(() =>
+        useMapInteractions([city], ViewMode.Markers, DataType.Temperature)
+      );
 
       const pickingInfo = createMockPickingInfo({ object: city });
 
@@ -163,7 +181,9 @@ describe('useMapInteractions', () => {
 
     it('does not set selected city when clicking empty area', () => {
       const city = createMockCity();
-      const { result } = renderHook(() => useMapInteractions([city], ViewMode.Markers, null));
+      const { result } = renderHook(() =>
+        useMapInteractions([city], ViewMode.Markers, DataType.Temperature)
+      );
 
       const pickingInfo = createMockPickingInfo({ object: null });
 
@@ -178,7 +198,9 @@ describe('useMapInteractions', () => {
   describe('handleClick - heatmap mode', () => {
     it('sets selected city when clicking near city location', () => {
       const city = createMockCity();
-      const { result } = renderHook(() => useMapInteractions([city], ViewMode.Heatmap, null));
+      const { result } = renderHook(() =>
+        useMapInteractions([city], ViewMode.Heatmap, DataType.Temperature)
+      );
 
       const pickingInfo = createMockPickingInfo({
         coordinate: [9.19, 45.4642],
@@ -193,7 +215,9 @@ describe('useMapInteractions', () => {
 
     it('does not set selected city when clicking far from any city', () => {
       const city = createMockCity();
-      const { result } = renderHook(() => useMapInteractions([city], ViewMode.Heatmap, null));
+      const { result } = renderHook(() =>
+        useMapInteractions([city], ViewMode.Heatmap, DataType.Temperature)
+      );
 
       const pickingInfo = createMockPickingInfo({
         coordinate: [0, 0],
@@ -208,7 +232,9 @@ describe('useMapInteractions', () => {
 
     it('finds city within tolerance range', () => {
       const city = createMockCity({ lat: 45.4642, long: 9.19 });
-      const { result } = renderHook(() => useMapInteractions([city], ViewMode.Heatmap, null));
+      const { result } = renderHook(() =>
+        useMapInteractions([city], ViewMode.Heatmap, DataType.Temperature)
+      );
 
       // click within 0.5 degree tolerance
       const pickingInfo = createMockPickingInfo({
@@ -224,7 +250,9 @@ describe('useMapInteractions', () => {
 
     it('does not find city outside tolerance range', () => {
       const city = createMockCity({ lat: 45.4642, long: 9.19 });
-      const { result } = renderHook(() => useMapInteractions([city], ViewMode.Heatmap, null));
+      const { result } = renderHook(() =>
+        useMapInteractions([city], ViewMode.Heatmap, DataType.Temperature)
+      );
 
       // click outside 0.5 degree tolerance
       const pickingInfo = createMockPickingInfo({
@@ -243,7 +271,9 @@ describe('useMapInteractions', () => {
         createMockCity({ city: 'Invalid', lat: null, long: null }),
         createMockCity({ city: 'Milan', lat: 45.4642, long: 9.19 }),
       ];
-      const { result } = renderHook(() => useMapInteractions(cities, ViewMode.Heatmap, null));
+      const { result } = renderHook(() =>
+        useMapInteractions(cities, ViewMode.Heatmap, DataType.Temperature)
+      );
 
       const pickingInfo = createMockPickingInfo({
         coordinate: [9.19, 45.4642],
@@ -260,7 +290,9 @@ describe('useMapInteractions', () => {
   describe('handleClosePopup', () => {
     it('clears selected city', () => {
       const city = createMockCity();
-      const { result } = renderHook(() => useMapInteractions([city], ViewMode.Markers, null));
+      const { result } = renderHook(() =>
+        useMapInteractions([city], ViewMode.Markers, DataType.Temperature)
+      );
 
       // first select a city
       act(() => {
@@ -282,12 +314,20 @@ describe('useMapInteractions', () => {
     it('handles switching from markers to heatmap mode', () => {
       const city = createMockCity();
       const { result, rerender } = renderHook(
-        ({ cities, mode }: { cities: WeatherData[]; mode: ViewMode.Markers | ViewMode.Heatmap }) =>
-          useMapInteractions(cities, mode, null),
+        ({
+          cities,
+          mode,
+          dataType,
+        }: {
+          cities: WeatherData[];
+          mode: ViewMode.Markers | ViewMode.Heatmap;
+          dataType: DataType;
+        }) => useMapInteractions(cities, mode, dataType),
         {
           initialProps: {
             cities: [city],
             mode: ViewMode.Markers as ViewMode.Markers | ViewMode.Heatmap,
+            dataType: DataType.Temperature,
           },
         }
       );
@@ -300,7 +340,11 @@ describe('useMapInteractions', () => {
       expect(result.current.hoverInfo).not.toBeNull();
 
       // switch to heatmap mode
-      rerender({ cities: [city], mode: ViewMode.Heatmap as ViewMode.Markers | ViewMode.Heatmap });
+      rerender({
+        cities: [city],
+        mode: ViewMode.Heatmap as ViewMode.Markers | ViewMode.Heatmap,
+        dataType: DataType.Temperature,
+      });
 
       // hover should still work in heatmap mode
       act(() => {
@@ -320,7 +364,9 @@ describe('useMapInteractions', () => {
         createMockCity({ city: 'Rome', lat: 41.9028, long: 12.4964 }),
         createMockCity({ city: 'Venice', lat: 45.4408, long: 12.3155 }),
       ];
-      const { result } = renderHook(() => useMapInteractions(cities, ViewMode.Heatmap, null));
+      const { result } = renderHook(() =>
+        useMapInteractions(cities, ViewMode.Heatmap, DataType.Temperature)
+      );
 
       // click near Rome
       const pickingInfo = createMockPickingInfo({

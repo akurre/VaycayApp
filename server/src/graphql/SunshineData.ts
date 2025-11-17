@@ -1,28 +1,12 @@
 import { objectType, queryField, nonNull, intArg, list } from 'nexus';
 import type { City, MonthlySunshine } from '@prisma/client';
-import { MAX_CITIES_GLOBAL_VIEW } from '../const';
+import { MAX_CITIES_GLOBAL_VIEW, MONTH_FIELDS } from '../const';
 import { getCachedWeatherData } from '../utils/cache';
 
 // helper type combining monthly sunshine with related city data
 type MonthlySunshineWithRelations = MonthlySunshine & {
   city: City;
 };
-
-// ordered list of monthly field names used for dynamic column selection
-const MONTH_FIELDS: Array<keyof MonthlySunshine> = [ // todo put in const
-  'jan',
-  'feb',
-  'mar',
-  'apr',
-  'may',
-  'jun',
-  'jul',
-  'aug',
-  'sep',
-  'oct',
-  'nov',
-  'dec',
-];
 
 // graphql type for monthly sunshine data
 export const SunshineData = objectType({

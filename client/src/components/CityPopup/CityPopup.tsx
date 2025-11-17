@@ -1,18 +1,31 @@
 import { Divider, Modal } from '@mantine/core';
 import { WeatherData } from '@/types/cityWeatherDataType';
+import { SunshineData } from '@/types/sunshineDataType';
 import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
+import { WeatherDataUnion } from '@/types/mapTypes';
 import Field from './Field';
 import LocationSection from './LocationSection';
 import PrecipitationSection from './PrecipitationSection';
 import TemperatureSection from './TemperatureSection';
+import SunshineSection from './SunshineSection';
 import DistanceSection from './DistanceSection';
 
 interface CityPopupProps {
-  city: WeatherData | null;
+  city: WeatherDataUnion | null;
   onClose: () => void;
+  selectedMonth?: number;
 }
 
-const CityPopup = ({ city, onClose }: CityPopupProps) => {
+// Type guards
+const isWeatherData = (data: WeatherDataUnion | null): data is WeatherData => {
+  return data !== null && 'avgTemperature' in data;
+};
+
+const isSunshineData = (data: WeatherDataUnion | null): data is SunshineData => {
+  return data !== null && 'jan' in data;
+};
+
+const CityPopup = ({ city, onClose, selectedMonth }: CityPopupProps) => {
   if (!city) return null;
 
   return (
@@ -25,16 +38,27 @@ const CityPopup = ({ city, onClose }: CityPopupProps) => {
       <div className="flex flex-col gap-3">
         {city.state && <Field label="State/Region" value={toTitleCase(city.state)} />}
         {city.suburb && <Field label="Suburb" value={toTitleCase(city.suburb)} />}
-        <Field label="Date" value={city.date} />
 
-        <TemperatureSection
-          avgTemperature={city.avgTemperature}
-          maxTemperature={city.maxTemperature}
-          minTemperature={city.minTemperature}
-        />
+        {/* Weather data specific sections */}
+        {isWeatherData(city) && (
+          <>
+            <Field label="Date" value={city.date} />
 
-        {city.precipitation && (
-          <PrecipitationSection precipitation={city.precipitation} snowDepth={city.snowDepth} />
+            <TemperatureSection
+              avgTemperature={city.avgTemperature}
+              maxTemperature={city.maxTemperature}
+              minTemperature={city.minTemperature}
+            />
+
+            {city.precipitation && (
+              <PrecipitationSection precipitation={city.precipitation} snowDepth={city.snowDepth} />
+            )}
+          </>
+        )}
+
+        {/* Sunshine data specific section */}
+        {isSunshineData(city) && selectedMonth && (
+          <SunshineSection sunshineData={city} selectedMonth={selectedMonth} />
         )}
 
         {city.population && (
@@ -44,10 +68,12 @@ const CityPopup = ({ city, onClose }: CityPopupProps) => {
           </div>
         )}
 
-        <div>
-          <Divider />
-          <Field label="Weather Station" value={city.stationName} />
-        </div>
+        {city.stationName && (
+          <div>
+            <Divider />
+            <Field label="Weather Station" value={city.stationName} />
+          </div>
+        )}
 
         <LocationSection lat={city.lat} long={city.long} />
 

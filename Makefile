@@ -72,6 +72,8 @@ db-setup: check-prereqs
 	cd server && npx tsx scripts/merge-duplicate-cities-optimized.ts
 	@echo "$(YELLOW)Importing monthly sunshine hours data...$(NC)"
 	cd server && npx tsx scripts/import-sunshine-hours.ts
+	@echo "$(YELLOW)Reassigning small cities to major cities...$(NC)"
+	cd server && npx tsx scripts/reassign-cities-to-major-cities.ts
 	@echo "$(GREEN)✓ Database setup complete$(NC)"
 
 # Start all services for development

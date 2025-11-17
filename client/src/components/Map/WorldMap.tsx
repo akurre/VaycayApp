@@ -1,7 +1,6 @@
 import DeckGL from '@deck.gl/react';
 import Map from 'react-map-gl/maplibre';
 import { useComputedColorScheme } from '@mantine/core';
-import { WeatherData } from '../../types/cityWeatherDataType';
 import useMapLayers from '../../hooks/useMapLayers';
 import { useMapInteractions } from '../../hooks/useMapInteractions';
 import { useMapBounds } from '../../hooks/useMapBounds';
@@ -10,26 +9,42 @@ import CityPopup from '../CityPopup/CityPopup';
 import MapTooltip from './MapTooltip';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useWeatherStore } from '@/stores/useWeatherStore';
+import { useSunshineStore } from '@/stores/useSunshineStore';
 import { useAppStore } from '@/stores/useAppStore';
-import { ViewMode } from '@/types/mapTypes';
+import { DataType, ViewMode, WeatherDataUnion } from '@/types/mapTypes';
 
 interface WorldMapProps {
-  cities: WeatherData[];
+  cities: WeatherDataUnion[];
   viewMode: ViewMode;
+  dataType: DataType;
+  selectedMonth?: number;
   onBoundsChange?: (
     bounds: { minLat: number; maxLat: number; minLong: number; maxLong: number } | null,
     shouldUseBounds: boolean
   ) => void;
 }
 
-function WorldMap({ cities, viewMode, onBoundsChange }: WorldMapProps) {
+const WorldMap = ({ cities, viewMode, dataType, selectedMonth, onBoundsChange }: WorldMapProps) => {
   const colorScheme = useComputedColorScheme('dark');
   const isLoadingWeather = useWeatherStore((state) => state.isLoadingWeather);
+  const isLoadingSunshine = useSunshineStore((state) => state.isLoadingSunshine);
   const homeLocation = useAppStore((state) => state.homeLocation);
   const { viewState, onViewStateChange } = useMapBounds(INITIAL_VIEW_STATE, onBoundsChange);
-  const layers = useMapLayers({ cities, viewMode, isLoadingWeather, homeLocation });
+
+  // Use the appropriate loading state based on data type
+  const isLoading = dataType === DataType.Temperature ? isLoadingWeather : isLoadingSunshine;
+
+  const layers = useMapLayers({
+    cities,
+    viewMode,
+    dataType,
+    selectedMonth,
+    isLoadingWeather: isLoading,
+    homeLocation,
+  });
+
   const { selectedCity, hoverInfo, handleHover, handleClick, handleClosePopup } =
-    useMapInteractions(cities, viewMode, homeLocation);
+    useMapInteractions(cities, viewMode, dataType, selectedMonth, homeLocation);
 
   return (
     <div className="relative h-full w-full">
@@ -55,9 +70,9 @@ function WorldMap({ cities, viewMode, onBoundsChange }: WorldMapProps) {
 
       {hoverInfo && <MapTooltip x={hoverInfo.x} y={hoverInfo.y} content={hoverInfo.content} />}
 
-      <CityPopup city={selectedCity} onClose={handleClosePopup} />
+      <CityPopup city={selectedCity} onClose={handleClosePopup} selectedMonth={selectedMonth} />
     </div>
   );
-}
+};
 
 export default WorldMap;

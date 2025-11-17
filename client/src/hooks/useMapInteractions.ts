@@ -1,8 +1,7 @@
 import { useState, useCallback } from 'react';
 import type { PickingInfo } from '@deck.gl/core';
-import { WeatherData } from '../types/cityWeatherDataType';
 import { getTooltipContent } from '../utils/map/getTooltipContent';
-import { ViewMode } from '@/types/mapTypes';
+import { DataType, ViewMode, WeatherDataUnion } from '@/types/mapTypes';
 import { HomeLocation } from '@/types/userLocationType';
 
 /**
@@ -17,25 +16,27 @@ interface HoverInfo {
 }
 
 export const useMapInteractions = (
-  cities: WeatherData[],
+  cities: WeatherDataUnion[],
   viewMode: ViewMode,
-  homeLocation: HomeLocation | null
+  dataType: DataType,
+  selectedMonth?: number,
+  homeLocation: HomeLocation | null = null
 ) => {
-  const [selectedCity, setSelectedCity] = useState<WeatherData | null>(null);
+  const [selectedCity, setSelectedCity] = useState<WeatherDataUnion | null>(null);
   const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null);
 
   const handleHover = useCallback(
     (info: PickingInfo) => {
       if (viewMode === 'markers' && info.object) {
-        const city = info.object as WeatherData;
+        const city = info.object as WeatherDataUnion;
         setHoverInfo({
           x: info.x,
           y: info.y,
-          content: getTooltipContent([city], city.long!, city.lat!)!,
+          content: getTooltipContent([city], city.long!, city.lat!, dataType, selectedMonth)!,
         });
       } else if (viewMode === 'heatmap' && info.coordinate) {
         const [longitude, latitude] = info.coordinate;
-        const content = getTooltipContent(cities, longitude, latitude);
+        const content = getTooltipContent(cities, longitude, latitude, dataType, selectedMonth);
         if (content) {
           setHoverInfo({
             x: info.x,
@@ -49,7 +50,7 @@ export const useMapInteractions = (
         setHoverInfo(null);
       }
     },
-    [cities, viewMode]
+    [cities, viewMode, dataType, selectedMonth]
   );
 
   const handleClick = useCallback(
@@ -73,7 +74,7 @@ export const useMapInteractions = (
       }
 
       if (viewMode === 'markers' && info.object) {
-        setSelectedCity(info.object as WeatherData);
+        setSelectedCity(info.object as WeatherDataUnion);
       } else if (viewMode === 'heatmap' && info.coordinate) {
         const [longitude, latitude] = info.coordinate;
         const city = cities.find(
