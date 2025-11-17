@@ -6,7 +6,9 @@ import { ComponentType } from 'react';
  * returns the appropriate icon component based on sunshine hours
  * uses the SUNSHINE_ICON_THRESHOLDS to determine which icon to display
  */
-export const getSunshineHoursIcon = (hours: number | null): ComponentType<{ size?: number; color?: string; stroke?: number }> => {
+export const getSunshineHoursIcon = (
+  hours: number | null
+): ComponentType<{ size?: number; color?: string; stroke?: number }> => {
   // if no data, return default icon
   if (hours === null) {
     return IconSunFilled;

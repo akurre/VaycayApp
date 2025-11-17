@@ -6,7 +6,9 @@ import { ComponentType } from 'react';
  * returns the appropriate icon component based on temperature
  * uses the TEMPERATURE_ICON_THRESHOLDS to determine which icon to display
  */
-export const getTemperatureIcon = (temp: number | null): ComponentType<{ size?: number; color?: string; stroke?: number }> => {
+export const getTemperatureIcon = (
+  temp: number | null
+): ComponentType<{ size?: number; color?: string; stroke?: number }> => {
   // if no data, return default icon
   if (temp === null) {
     return IconTemperatureSun;
