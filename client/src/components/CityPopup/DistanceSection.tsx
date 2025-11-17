@@ -17,7 +17,6 @@ const DistanceSection = ({ lat, long }: DistanceSectionProps) => {
 
   return (
     <div>
-      <Divider />
       {homeLocation ? (
         distance !== null ? (
           <Field label="Distance from home" value={formatDistance(distance)} />

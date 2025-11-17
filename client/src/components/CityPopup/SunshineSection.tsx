@@ -1,7 +1,7 @@
-import { Divider, Text } from '@mantine/core';
 import { SunshineData } from '@/types/sunshineDataType';
 import Field from './Field';
 import { MONTH_FIELDS, MONTH_NAMES } from '@/constants';
+import GreaterSection from './GreaterSection';
 
 interface SunshineSectionProps {
   sunshineData: SunshineData;
@@ -35,21 +35,15 @@ const SunshineSection = ({ sunshineData, selectedMonth }: SunshineSectionProps) 
   const averageSunshine = calculateAverageSunshine();
 
   return (
-    <div>
-      <Divider />
-      <Text size="sm" fw={600} mb="xs">
-        Sunshine
-      </Text>
-      <div>
-        {selectedMonth && (
-          <Field
-            label={`${MONTH_NAMES[selectedMonth - 1]} Sunshine`}
-            value={formatSunshineHours(getMonthValue(selectedMonth))}
-          />
-        )}
-        <Field label="Average Annual Sunshine" value={formatSunshineHours(averageSunshine)} />
-      </div>
-    </div>
+    <GreaterSection title="Sunshine">
+      {selectedMonth && (
+        <Field
+          label={`${MONTH_NAMES[selectedMonth - 1]} Sunshine`}
+          value={formatSunshineHours(getMonthValue(selectedMonth))}
+        />
+      )}
+      <Field label="Average Annual Sunshine" value={formatSunshineHours(averageSunshine)} />
+    </GreaterSection>
   );
 };
 

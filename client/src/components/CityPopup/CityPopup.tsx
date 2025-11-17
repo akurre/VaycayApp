@@ -2,7 +2,6 @@ import { Modal } from '@mantine/core';
 import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
 import { WeatherDataUnion } from '@/types/mapTypes';
 import useCityData from '@/api/dates/useCityData';
-import BasicInfo from './BasicInfo';
 import WeatherDataSection from './WeatherDataSection';
 import SunshineDataSection from './SunshineDataSection';
 import AdditionalInfo from './AdditionalInfo';
@@ -44,7 +43,7 @@ const CityPopup = ({ city, onClose, selectedMonth }: CityPopupProps) => {
   return (
     <Modal opened={!!city} onClose={onClose} title={modalTitle} size="md">
       <div className="flex flex-col gap-3">
-        <BasicInfo city={city} />
+        <AdditionalInfo city={city} />
         <WeatherDataSection
           displayWeatherData={weatherData}
           isLoading={weatherLoading}
@@ -56,7 +55,6 @@ const CityPopup = ({ city, onClose, selectedMonth }: CityPopupProps) => {
           hasError={sunshineError}
           selectedMonth={currentMonth}
         />
-        <AdditionalInfo city={city} />
       </div>
     </Modal>
   );
