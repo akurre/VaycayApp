@@ -89,7 +89,7 @@ describe('CityPopup', () => {
       weatherError: false,
       sunshineError: false,
     });
-    
+
     render(<CityPopup city={weatherData} onClose={mockOnClose} selectedMonth={1} />);
 
     expect(screen.getByText('New York, New York, United States')).toBeInTheDocument();
@@ -111,7 +111,7 @@ describe('CityPopup', () => {
       weatherError: false,
       sunshineError: false,
     });
-    
+
     render(<CityPopup city={sunshineData} onClose={mockOnClose} selectedMonth={1} />);
 
     expect(screen.getByText('New York, New York, United States')).toBeInTheDocument();

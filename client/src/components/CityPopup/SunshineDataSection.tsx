@@ -10,11 +10,11 @@ interface SunshineDataSectionProps {
   selectedMonth: number;
 }
 
-const SunshineDataSection = ({ 
-  displaySunshineData, 
-  isLoading, 
-  hasError, 
-  selectedMonth 
+const SunshineDataSection = ({
+  displaySunshineData,
+  isLoading,
+  hasError,
+  selectedMonth,
 }: SunshineDataSectionProps) => {
   return (
     <>
@@ -23,13 +23,13 @@ const SunshineDataSection = ({
           <Loader size="sm" />
         </div>
       )}
-      
+
       {hasError && !displaySunshineData && (
         <Alert icon={<IconAlertCircle size="1rem" />} color="red" title="Error">
           Failed to load sunshine data for this city.
         </Alert>
       )}
-      
+
       {displaySunshineData && (
         <SunshineSection sunshineData={displaySunshineData} selectedMonth={selectedMonth} />
       )}

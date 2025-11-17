@@ -11,10 +11,10 @@ interface WeatherDataSectionProps {
   hasError: boolean;
 }
 
-const WeatherDataSection = ({ 
-  displayWeatherData, 
-  isLoading, 
-  hasError 
+const WeatherDataSection = ({
+  displayWeatherData,
+  isLoading,
+  hasError,
 }: WeatherDataSectionProps) => {
   return (
     <>
@@ -23,13 +23,13 @@ const WeatherDataSection = ({
           <Loader size="sm" />
         </div>
       )}
-      
+
       {hasError && !displayWeatherData && (
         <Alert icon={<IconAlertCircle size="1rem" />} color="red" title="Error">
           Failed to load temperature data for this city.
         </Alert>
       )}
-      
+
       {displayWeatherData && (
         <>
           <Field label="Date" value={displayWeatherData.date} />

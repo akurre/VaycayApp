@@ -18,20 +18,20 @@ const CityPopup = ({ city, onClose, selectedMonth }: CityPopupProps) => {
   const currentMonth = selectedMonth || new Date().getMonth() + 1; // JavaScript months are 0-indexed
 
   // Fetch both weather and sunshine data for this city
-  const { 
-    weatherData, 
-    sunshineData, 
-    weatherLoading, 
-    sunshineLoading, 
-    weatherError, 
-    sunshineError 
+  const {
+    weatherData,
+    sunshineData,
+    weatherLoading,
+    sunshineLoading,
+    weatherError,
+    sunshineError,
   } = useCityData({
     cityName: city?.city || null,
     lat: city?.lat || null,
     long: city?.long || null,
     selectedMonth: currentMonth,
   });
-  
+
   if (!city) return null;
 
   // Create the modal title
@@ -42,24 +42,19 @@ const CityPopup = ({ city, onClose, selectedMonth }: CityPopupProps) => {
   modalTitle += `, ${city.country}`;
 
   return (
-    <Modal
-      opened={!!city}
-      onClose={onClose}
-      title={modalTitle}
-      size="md"
-    >
+    <Modal opened={!!city} onClose={onClose} title={modalTitle} size="md">
       <div className="flex flex-col gap-3">
         <BasicInfo city={city} />
-        <WeatherDataSection 
-          displayWeatherData={weatherData} 
-          isLoading={weatherLoading} 
-          hasError={weatherError} 
+        <WeatherDataSection
+          displayWeatherData={weatherData}
+          isLoading={weatherLoading}
+          hasError={weatherError}
         />
-        <SunshineDataSection 
-          displaySunshineData={sunshineData} 
-          isLoading={sunshineLoading} 
-          hasError={sunshineError} 
-          selectedMonth={currentMonth} 
+        <SunshineDataSection
+          displaySunshineData={sunshineData}
+          isLoading={sunshineLoading}
+          hasError={sunshineError}
+          selectedMonth={currentMonth}
         />
         <AdditionalInfo city={city} />
       </div>
