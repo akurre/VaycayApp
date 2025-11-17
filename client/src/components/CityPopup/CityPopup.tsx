@@ -1,7 +1,8 @@
 import { Button, Modal, Popover } from '@mantine/core';
 import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
 import { WeatherDataUnion } from '@/types/mapTypes';
-import useCityData from '@/api/dates/useCityData';
+import useWeatherDataForCity from '@/api/dates/useWeatherDataForCity';
+import useSunshineDataForCity from '@/api/dates/useSunshineDataForCity';
 import WeatherDataSection from './WeatherDataSection';
 import SunshineDataSection from './SunshineDataSection';
 import AdditionalInfo from './AdditionalInfo';
@@ -12,21 +13,34 @@ interface CityPopupProps {
   city: WeatherDataUnion | null;
   onClose: () => void;
   selectedMonth?: number;
+  selectedDate?: string;
 }
 
-const CityPopup = ({ city, onClose, selectedMonth }: CityPopupProps) => {
+const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProps) => {
   // Default to current month if not provided (for sunshine data)
   const currentMonth = selectedMonth || new Date().getMonth() + 1; // JavaScript months are 0-indexed
+  
+  // Default to today's date if not provided (for weather data)
+  const currentDate = selectedDate || `${String(new Date().getMonth() + 1).padStart(2, '0')}${String(new Date().getDate()).padStart(2, '0')}`;
 
-  // Fetch both weather and sunshine data for this city
+  // Fetch weather data for this city on the selected date
   const {
     weatherData,
-    sunshineData,
     weatherLoading,
-    sunshineLoading,
     weatherError,
+  } = useWeatherDataForCity({
+    cityName: city?.city || null,
+    lat: city?.lat || null,
+    long: city?.long || null,
+    selectedDate: currentDate,
+  });
+
+  // Fetch sunshine data for this city in the selected month
+  const {
+    sunshineData,
+    sunshineLoading,
     sunshineError,
-  } = useCityData({
+  } = useSunshineDataForCity({
     cityName: city?.city || null,
     lat: city?.lat || null,
     long: city?.long || null,

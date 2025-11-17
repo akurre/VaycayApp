@@ -18,13 +18,14 @@ interface WorldMapProps {
   viewMode: ViewMode;
   dataType: DataType;
   selectedMonth?: number;
+  selectedDate?: string;
   onBoundsChange?: (
     bounds: { minLat: number; maxLat: number; minLong: number; maxLong: number } | null,
     shouldUseBounds: boolean
   ) => void;
 }
 
-const WorldMap = ({ cities, viewMode, dataType, selectedMonth, onBoundsChange }: WorldMapProps) => {
+const WorldMap = ({ cities, viewMode, dataType, selectedMonth, selectedDate, onBoundsChange }: WorldMapProps) => {
   const colorScheme = useComputedColorScheme('dark');
   const isLoadingWeather = useWeatherStore((state) => state.isLoadingWeather);
   const isLoadingSunshine = useSunshineStore((state) => state.isLoadingSunshine);
@@ -70,7 +71,12 @@ const WorldMap = ({ cities, viewMode, dataType, selectedMonth, onBoundsChange }:
 
       {hoverInfo && <MapTooltip x={hoverInfo.x} y={hoverInfo.y} content={hoverInfo.content} />}
 
-      <CityPopup city={selectedCity} onClose={handleClosePopup} selectedMonth={selectedMonth} />
+      <CityPopup 
+        city={selectedCity} 
+        onClose={handleClosePopup} 
+        selectedMonth={selectedMonth}
+        selectedDate={selectedDate} 
+      />
     </div>
   );
 };

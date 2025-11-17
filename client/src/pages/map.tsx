@@ -154,6 +154,7 @@ const MapPage: FC = () => {
             dataType={dataType}
             onBoundsChange={handleBoundsChange}
             selectedMonth={isSunshineSelected ? monthFromDate : undefined}
+            selectedDate={selectedDate}
           />
         )}
       </div>
