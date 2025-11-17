@@ -39,7 +39,7 @@ const DRY_RUN = dryRunArg;
 
 // Configuration
 const MIN_MAJOR_CITY_POPULATION = 1500000; // 1.5 million
-const SEARCH_RADIUS_KM = 15; // 15km radius
+const SEARCH_RADIUS_KM = 35; // 35km radius
 const WORLDCITIES_PATH = resolve(process.cwd(), '..', 'dataAndUtils', 'worldcities.csv');
 
 interface WorldCity {
