@@ -1,8 +1,10 @@
-import { Divider, Modal } from '@mantine/core';
+import { Divider, Modal, Loader, Alert } from '@mantine/core';
+import { IconAlertCircle } from '@tabler/icons-react';
 import { WeatherData } from '@/types/cityWeatherDataType';
 import { SunshineData } from '@/types/sunshineDataType';
 import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
 import { WeatherDataUnion } from '@/types/mapTypes';
+import useCityData from '@/api/dates/useCityData';
 import Field from './Field';
 import LocationSection from './LocationSection';
 import PrecipitationSection from './PrecipitationSection';
@@ -27,6 +29,24 @@ const isSunshineData = (data: WeatherDataUnion | null): data is SunshineData => 
 
 const CityPopup = ({ city, onClose, selectedMonth }: CityPopupProps) => {
   if (!city) return null;
+  
+  // Default to current month if not provided (for sunshine data)
+  const currentMonth = selectedMonth || new Date().getMonth() + 1; // JavaScript months are 0-indexed
+  
+  // Fetch both weather and sunshine data for this city
+  const { weatherData, sunshineData, isLoading, hasError } = useCityData({
+    cityName: city.city,
+    lat: city.lat,
+    long: city.long,
+    selectedMonth: currentMonth
+  });
+  
+  // Determine which data to use for display
+  // If we're viewing a weather city, use that data directly, otherwise use fetched data
+  const displayWeatherData = isWeatherData(city) ? city : weatherData;
+  
+  // If we're viewing a sunshine city, use that data directly, otherwise use fetched data
+  const displaySunshineData = isSunshineData(city) ? city : sunshineData;
 
   return (
     <Modal
@@ -39,27 +59,46 @@ const CityPopup = ({ city, onClose, selectedMonth }: CityPopupProps) => {
         {city.state && <Field label="State/Region" value={toTitleCase(city.state)} />}
         {city.suburb && <Field label="Suburb" value={toTitleCase(city.suburb)} />}
 
-        {/* Weather data specific sections */}
-        {isWeatherData(city) && (
+        {/* Weather data section */}
+        {isLoading && !displayWeatherData ? (
+          <div className="flex justify-center py-4">
+            <Loader size="sm" />
+          </div>
+        ) : hasError && !displayWeatherData ? (
+          <Alert icon={<IconAlertCircle size="1rem" />} color="red" title="Error">
+            Failed to load temperature data for this city.
+          </Alert>
+        ) : displayWeatherData ? (
           <>
-            <Field label="Date" value={city.date} />
+            <Field label="Date" value={displayWeatherData.date} />
 
             <TemperatureSection
-              avgTemperature={city.avgTemperature}
-              maxTemperature={city.maxTemperature}
-              minTemperature={city.minTemperature}
+              avgTemperature={displayWeatherData.avgTemperature}
+              maxTemperature={displayWeatherData.maxTemperature}
+              minTemperature={displayWeatherData.minTemperature}
             />
 
-            {city.precipitation && (
-              <PrecipitationSection precipitation={city.precipitation} snowDepth={city.snowDepth} />
+            {displayWeatherData.precipitation && (
+              <PrecipitationSection 
+                precipitation={displayWeatherData.precipitation} 
+                snowDepth={displayWeatherData.snowDepth} 
+              />
             )}
           </>
-        )}
+        ) : null}
 
-        {/* Sunshine data specific section */}
-        {isSunshineData(city) && selectedMonth && (
-          <SunshineSection sunshineData={city} selectedMonth={selectedMonth} />
-        )}
+        {/* Sunshine data section */}
+        {isLoading && !displaySunshineData ? (
+          <div className="flex justify-center py-4">
+            <Loader size="sm" />
+          </div>
+        ) : hasError && !displaySunshineData ? (
+          <Alert icon={<IconAlertCircle size="1rem" />} color="red" title="Error">
+            Failed to load sunshine data for this city.
+          </Alert>
+        ) : displaySunshineData ? (
+          <SunshineSection sunshineData={displaySunshineData} selectedMonth={currentMonth} />
+        ) : null}
 
         {city.population && (
           <div>

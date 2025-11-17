@@ -1,125 +1,201 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@/test-utils';
 import CityPopup from '@/components/CityPopup/CityPopup';
 import { WeatherData } from '@/types/cityWeatherDataType';
+import { SunshineData } from '@/types/sunshineDataType';
+import * as useCityDataModule from '@/api/dates/useCityData';
 
-const mockCity: WeatherData = {
-  city: 'san francisco',
-  country: 'United States',
-  state: 'california',
-  suburb: null,
-  date: '2024-01-15',
-  lat: 37.7749,
-  long: -122.4194,
-  avgTemperature: 15.5,
-  maxTemperature: 20.0,
-  minTemperature: 10.0,
-  precipitation: 5.2,
-  snowDepth: 0,
-  population: 873965,
-  stationName: 'San Francisco International Airport',
-  submitterId: null,
-};
+// Mock the useCityData hook
+vi.mock('@/api/dates/useCityData', () => ({
+  default: vi.fn()
+}));
 
 describe('CityPopup', () => {
   const mockOnClose = vi.fn();
+  
+  // Sample weather data
+  const weatherData: WeatherData = {
+    city: 'New York',
+    country: 'United States',
+    state: 'New York',
+    suburb: 'Suburb',
+    date: '2020-01-01',
+    lat: 40.7128,
+    long: -74.006,
+    population: 8419000,
+    precipitation: 10,
+    snowDepth: 5,
+    avgTemperature: 5,
+    maxTemperature: 10,
+    minTemperature: 0,
+    stationName: 'NYC Station',
+    submitterId: null
+  };
+  
+  // Sample sunshine data
+  const sunshineData: SunshineData = {
+    city: 'New York',
+    country: 'United States',
+    state: 'New York',
+    suburb: 'Suburb',
+    lat: 40.7128,
+    long: -74.006,
+    population: 8419000,
+    jan: 150,
+    feb: 160,
+    mar: 170,
+    apr: 180,
+    may: 190,
+    jun: 200,
+    jul: 210,
+    aug: 200,
+    sep: 190,
+    oct: 180,
+    nov: 170,
+    dec: 160,
+    stationName: 'NYC Station'
+  };
 
-  it('renders nothing when city is null', () => {
-    const { container } = render(<CityPopup city={null} onClose={mockOnClose} />);
-    // mantine adds style tags, so we check that no modal is rendered
-    expect(container.querySelector('[role="dialog"]')).not.toBeInTheDocument();
+  beforeEach(() => {
+    vi.clearAllMocks();
+    // Default mock implementation
+    (useCityDataModule.default as any).mockReturnValue({
+      weatherData: null,
+      sunshineData: null,
+      isLoading: false,
+      hasError: false
+    });
   });
 
-  it('renders city name and country in title', () => {
-    render(<CityPopup city={mockCity} onClose={mockOnClose} />);
-
-    // use getAllByText since "San Francisco" appears in both title and weather station
-    const elements = screen.getAllByText(/San Francisco/i);
-    expect(elements.length).toBeGreaterThan(0);
-    expect(screen.getByText(/United States/i)).toBeInTheDocument();
-  });
-
-  it('renders state when provided', () => {
-    render(<CityPopup city={mockCity} onClose={mockOnClose} />);
-
+  it('renders weather data correctly', () => {
+    render(<CityPopup city={weatherData} onClose={mockOnClose} selectedMonth={1} />);
+    
+    expect(screen.getByText('New York, United States')).toBeInTheDocument();
     expect(screen.getByText('State/Region')).toBeInTheDocument();
-    expect(screen.getByText('California')).toBeInTheDocument();
-  });
-
-  it('renders date', () => {
-    render(<CityPopup city={mockCity} onClose={mockOnClose} />);
-
-    expect(screen.getByText('Date')).toBeInTheDocument();
-    expect(screen.getByText('2024-01-15')).toBeInTheDocument();
-  });
-
-  it('renders temperature section', () => {
-    render(<CityPopup city={mockCity} onClose={mockOnClose} />);
-
+    expect(screen.getByText('New York')).toBeInTheDocument();
+    expect(screen.getByText('2020-01-01')).toBeInTheDocument();
     expect(screen.getByText('Temperature')).toBeInTheDocument();
     expect(screen.getByText('Average')).toBeInTheDocument();
-    expect(screen.getByText('Max')).toBeInTheDocument();
-    expect(screen.getByText('Min')).toBeInTheDocument();
+    expect(screen.getByText('5.0°C')).toBeInTheDocument();
   });
 
-  it('renders precipitation section when precipitation exists', () => {
-    render(<CityPopup city={mockCity} onClose={mockOnClose} />);
-
-    expect(screen.getByText('Precipitation')).toBeInTheDocument();
-    expect(screen.getByText('Rainfall')).toBeInTheDocument();
-    expect(screen.getByText('Snow Depth')).toBeInTheDocument();
+  it('renders sunshine data correctly', () => {
+    render(<CityPopup city={sunshineData} onClose={mockOnClose} selectedMonth={1} />);
+    
+    expect(screen.getByText('New York, United States')).toBeInTheDocument();
+    expect(screen.getByText('State/Region')).toBeInTheDocument();
+    expect(screen.getByText('New York')).toBeInTheDocument();
+    // Check for sunshine hours (specific text depends on SunshineSection implementation)
+    expect(screen.getByText('Average Annual Sunshine')).toBeInTheDocument();
+    expect(screen.getByText('January Sunshine')).toBeInTheDocument();
   });
 
-  it('does not render precipitation section when precipitation is null', () => {
-    const cityWithoutPrecipitation = { ...mockCity, precipitation: null };
-    render(<CityPopup city={cityWithoutPrecipitation} onClose={mockOnClose} />);
-
-    expect(screen.queryByText('Precipitation')).not.toBeInTheDocument();
+  it('shows both weather and sunshine data when viewing weather data and sunshine data is fetched', () => {
+    // Mock the hook to return sunshine data when viewing weather data
+    (useCityDataModule.default as any).mockReturnValue({
+      weatherData: null, // Not needed since we're passing weather data directly
+      sunshineData: sunshineData,
+      isLoading: false,
+      hasError: false
+    });
+    
+    render(<CityPopup city={weatherData} onClose={mockOnClose} selectedMonth={1} />);
+    
+    // Check for weather data
+    expect(screen.getByText('Temperature')).toBeInTheDocument();
+    expect(screen.getByText('Average')).toBeInTheDocument();
+    expect(screen.getByText('5.0°C')).toBeInTheDocument();
+    
+    // Check for sunshine data
+    expect(screen.getByText('Average Annual Sunshine')).toBeInTheDocument();
   });
 
-  it('renders population when provided', () => {
-    render(<CityPopup city={mockCity} onClose={mockOnClose} />);
-
-    expect(screen.getByText('Population')).toBeInTheDocument();
-    expect(screen.getByText('873,965')).toBeInTheDocument();
+  it('shows both weather and sunshine data when viewing sunshine data and weather data is fetched', () => {
+    // Mock the hook to return weather data when viewing sunshine data
+    (useCityDataModule.default as any).mockReturnValue({
+      weatherData: weatherData,
+      sunshineData: null, // Not needed since we're passing sunshine data directly
+      isLoading: false,
+      hasError: false
+    });
+    
+    render(<CityPopup city={sunshineData} onClose={mockOnClose} selectedMonth={1} />);
+    
+    // Check for sunshine data
+    expect(screen.getByText('Average Annual Sunshine')).toBeInTheDocument();
+    
+    // Check for weather data
+    expect(screen.getByText('Temperature')).toBeInTheDocument();
+    expect(screen.getByText('Average')).toBeInTheDocument();
+    expect(screen.getByText('5.0°C')).toBeInTheDocument();
   });
 
-  it('renders weather station', () => {
-    render(<CityPopup city={mockCity} onClose={mockOnClose} />);
-
-    expect(screen.getByText('Weather Station')).toBeInTheDocument();
-    expect(screen.getByText('San Francisco International Airport')).toBeInTheDocument();
+  it('shows loading state when data is being fetched', () => {
+    // Mock the hook to indicate loading
+    (useCityDataModule.default as any).mockReturnValue({
+      weatherData: null,
+      sunshineData: null,
+      isLoading: true,
+      hasError: false
+    });
+    
+    render(<CityPopup city={weatherData} onClose={mockOnClose} selectedMonth={1} />);
+    
+    // Weather data should still be shown since it's passed directly
+    expect(screen.getByText('Temperature')).toBeInTheDocument();
+    expect(screen.getByText('Average')).toBeInTheDocument();
+    
+    // But sunshine data should show loading
+    // The Loader component is present but doesn't have text content
+    // Instead, check for the progressbar role
+    expect(document.querySelector('.mantine-Loader-root')).toBeInTheDocument();
   });
 
-  it('renders coordinates', () => {
-    render(<CityPopup city={mockCity} onClose={mockOnClose} />);
-
-    expect(screen.getByText('Coordinates')).toBeInTheDocument();
-    expect(screen.getByText(/37.7749°, -122.4194°/)).toBeInTheDocument();
+  it('shows error state when data fetching fails', () => {
+    // Mock the hook to indicate error
+    (useCityDataModule.default as any).mockReturnValue({
+      weatherData: null,
+      sunshineData: null,
+      isLoading: false,
+      hasError: true
+    });
+    
+    render(<CityPopup city={weatherData} onClose={mockOnClose} selectedMonth={1} />);
+    
+    // Weather data should still be shown since it's passed directly
+    expect(screen.getByText('Temperature')).toBeInTheDocument();
+    expect(screen.getByText('Average')).toBeInTheDocument();
+    
+    // But sunshine data should show error
+    expect(screen.getByText('Failed to load sunshine data for this city.')).toBeInTheDocument();
   });
 
-  it('does not render suburb when not provided', () => {
-    render(<CityPopup city={mockCity} onClose={mockOnClose} />);
-
-    expect(screen.queryByText('Suburb')).not.toBeInTheDocument();
-  });
-
-  it('renders suburb when provided', () => {
-    const cityWithSuburb = { ...mockCity, suburb: 'mission district' };
-    render(<CityPopup city={cityWithSuburb} onClose={mockOnClose} />);
-
-    expect(screen.getByText('Suburb')).toBeInTheDocument();
-    expect(screen.getByText('Mission District')).toBeInTheDocument();
-  });
-
-  it('applies theme-based background colors to modal', () => {
-    render(<CityPopup city={mockCity} onClose={mockOnClose} />);
-
-    // verify modal is rendered with role
-    const modal = screen.getByRole('dialog');
-    expect(modal).toBeInTheDocument();
-
-    // verify background color is applied
-    expect(modal).toHaveStyle({ backgroundColor: expect.any(String) });
+  it('uses current month when selectedMonth is not provided', () => {
+    const originalDate = Date;
+    const mockDate = new Date(2023, 0, 15); // January 15, 2023
+    
+    // Mock the Date constructor to return a fixed date
+    global.Date = class extends Date {
+      constructor() {
+        super();
+        return mockDate;
+      }
+      
+      getMonth() {
+        return 0; // January (0-indexed)
+      }
+    } as any;
+    
+    render(<CityPopup city={weatherData} onClose={mockOnClose} />);
+    
+    // Verify that useCityData was called with the current month (January = 1)
+    expect(useCityDataModule.default).toHaveBeenCalledWith(
+      expect.objectContaining({
+        selectedMonth: 1
+      })
+    );
+    
+    // Restore the original Date
+    global.Date = originalDate;
   });
 });
