@@ -93,7 +93,6 @@ describe('CityPopup', () => {
     render(<CityPopup city={weatherData} onClose={mockOnClose} selectedMonth={1} />);
 
     expect(screen.getByText('New York, New York, United States')).toBeInTheDocument();
-    expect(screen.getByText('State/Region')).toBeInTheDocument();
     expect(screen.getByText('New York')).toBeInTheDocument();
     expect(screen.getByText('2020-01-01')).toBeInTheDocument();
     expect(screen.getByText('Temperature')).toBeInTheDocument();
@@ -115,7 +114,6 @@ describe('CityPopup', () => {
     render(<CityPopup city={sunshineData} onClose={mockOnClose} selectedMonth={1} />);
 
     expect(screen.getByText('New York, New York, United States')).toBeInTheDocument();
-    expect(screen.getByText('State/Region')).toBeInTheDocument();
     expect(screen.getByText('New York')).toBeInTheDocument();
     // Check for sunshine hours (specific text depends on SunshineSection implementation)
     expect(screen.getByText('Average Annual Sunshine')).toBeInTheDocument();

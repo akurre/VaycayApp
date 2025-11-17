@@ -1,14 +1,14 @@
+import { appColors } from '@/theme';
 import { Divider, Text } from '@mantine/core';
-import { Icon123 } from '@tabler/icons-react';
-import { ReactNode } from 'react';
+import { ComponentType, ReactNode } from 'react';
 
 interface GreaterSectionProps {
   children: ReactNode;
   title: string;
-  icon?: React.ComponentType<any>;
+  icon?: ComponentType<any>;
 }
 
-const GreaterSection = ({ children, title, icon: IconComponent = Icon123 }: GreaterSectionProps) => {
+const GreaterSection = ({ children, title, icon: IconComponent }: GreaterSectionProps) => {
   return (
     <div>
       <Divider />
@@ -21,7 +21,9 @@ const GreaterSection = ({ children, title, icon: IconComponent = Icon123 }: Grea
             {children}
           </div>
         </div>
-        <IconComponent size={32} />
+        {IconComponent && (
+          <IconComponent size={32} color={appColors.primary} />
+        )}
       </div>
     </div>
   );

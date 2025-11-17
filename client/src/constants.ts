@@ -3,6 +3,26 @@
 // ============================================================================
 
 import { SunshineData } from './types/sunshineDataType';
+import { 
+  IconCloudStorm, 
+  IconCloudFilled, 
+  IconCloudFog, 
+  IconSunElectricity, 
+  IconSunFilled, 
+  IconSunglasses,
+  IconSnowman,
+  IconSnowflake,
+  IconTemperatureMinus,
+  IconJacket,
+  IconWind,
+  IconMoodSmile,
+  IconTemperatureSun,
+  IconFlame,
+  IconDropletOff,
+  IconDroplet,
+  IconDropletHalf2Filled,
+  IconDropletFilled
+} from '@tabler/icons-react';
 
 export const KM_TO_MILES = 0.621371;
 
@@ -102,6 +122,40 @@ export const SUNSHINE_LOADING_COLOR: [number, number, number, number] = [150, 15
 
 // Type for color cache entries
 export type ColorCacheEntry = [number, number, number, number]; // r, g, b, a
+
+// ============================================================================
+// WEATHER ICON THRESHOLDS
+// ============================================================================
+
+// sunshine hours thresholds for icon selection
+export const SUNSHINE_ICON_THRESHOLDS = [
+  { hours: 0, icon: IconCloudStorm }, // very cloudy (0-45 hours)
+  { hours: 45, icon: IconCloudFilled }, // pretty cloudy (45-70 hours)
+  { hours: 70, icon: IconCloudFog }, // moderately cloudy (70-110 hours)
+  { hours: 110, icon: IconSunElectricity }, // partly cloudy (110-180 hours)
+  { hours: 180, icon: IconSunFilled }, // mostly sunny (180-260 hours)
+  { hours: 240, icon: IconSunglasses }, // very sunny (240+ hours)
+];
+
+// temperature thresholds for icon selection
+export const TEMPERATURE_ICON_THRESHOLDS = [
+  { temp: -15, icon: IconSnowman }, // very cold (-15°C or below)
+  { temp: -7, icon: IconSnowflake }, // a little below 0 (-7°C to 0°C)
+  { temp: 0, icon: IconTemperatureMinus }, // cold above 0 (0°C to 8°C)
+  { temp: 8, icon: IconJacket }, // chilly (8°C to 13°C)
+  { temp: 13, icon: IconWind }, // in between (13°C to 20°C)
+  { temp: 20, icon: IconMoodSmile }, // comfortably warm (20°C to 26°C)
+  { temp: 26, icon: IconTemperatureSun }, // hot (26°C to 33°C)
+  { temp: 33, icon: IconFlame }, // very hot (33°C+)
+];
+
+// precipitation thresholds for icon selection (in mm)
+export const PRECIPITATION_ICON_THRESHOLDS = [
+  { precip: 0, icon: IconDropletOff }, // no rain (0-20mm)
+  { precip: 7, icon: IconDroplet }, // little rain (20-60mm)
+  { precip: 15, icon: IconDropletHalf2Filled }, // moderate rain (60-120mm)
+  { precip: 30, icon: IconDropletFilled }, // lots of rain (120mm+)
+];
 
 // ============================================================================
 // ERROR NOTIFICATION CONSTANTS
