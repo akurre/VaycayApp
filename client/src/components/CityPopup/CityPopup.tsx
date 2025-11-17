@@ -28,23 +28,23 @@ const isSunshineData = (data: WeatherDataUnion | null): data is SunshineData => 
 };
 
 const CityPopup = ({ city, onClose, selectedMonth }: CityPopupProps) => {
-  if (!city) return null;
-  
   // Default to current month if not provided (for sunshine data)
   const currentMonth = selectedMonth || new Date().getMonth() + 1; // JavaScript months are 0-indexed
-  
+
   // Fetch both weather and sunshine data for this city
   const { weatherData, sunshineData, isLoading, hasError } = useCityData({
-    cityName: city.city,
-    lat: city.lat,
-    long: city.long,
-    selectedMonth: currentMonth
+    cityName: city?.city || null,
+    lat: city?.lat || null,
+    long: city?.long || null,
+    selectedMonth: currentMonth,
   });
-  
+
+  if (!city) return null;
+
   // Determine which data to use for display
   // If we're viewing a weather city, use that data directly, otherwise use fetched data
   const displayWeatherData = isWeatherData(city) ? city : weatherData;
-  
+
   // If we're viewing a sunshine city, use that data directly, otherwise use fetched data
   const displaySunshineData = isSunshineData(city) ? city : sunshineData;
 
@@ -79,9 +79,9 @@ const CityPopup = ({ city, onClose, selectedMonth }: CityPopupProps) => {
             />
 
             {displayWeatherData.precipitation && (
-              <PrecipitationSection 
-                precipitation={displayWeatherData.precipitation} 
-                snowDepth={displayWeatherData.snowDepth} 
+              <PrecipitationSection
+                precipitation={displayWeatherData.precipitation}
+                snowDepth={displayWeatherData.snowDepth}
               />
             )}
           </>
