@@ -1,10 +1,12 @@
-import { Modal } from '@mantine/core';
+import { Button, Modal, Popover } from '@mantine/core';
 import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
 import { WeatherDataUnion } from '@/types/mapTypes';
 import useCityData from '@/api/dates/useCityData';
 import WeatherDataSection from './WeatherDataSection';
 import SunshineDataSection from './SunshineDataSection';
 import AdditionalInfo from './AdditionalInfo';
+import Field from './Field';
+import formatDateString from '@/utils/dateFormatting/formatDateString';
 
 interface CityPopupProps {
   city: WeatherDataUnion | null;
@@ -40,9 +42,32 @@ const CityPopup = ({ city, onClose, selectedMonth }: CityPopupProps) => {
   }
   modalTitle += `, ${city.country}`;
 
+  const formattedDate = formatDateString(weatherData?.date);
+
   return (
     <Modal opened={!!city} onClose={onClose} title={modalTitle} size="md">
       <div className="flex flex-col gap-3">
+        <div className='flex justify-between items-center'>
+          <Field label="Date" value={formattedDate} />
+          <Popover position="bottom" withArrow shadow="md">
+            <Popover.Target>
+              {/* varient below doesnt change anything */}
+              <Button variant="subtle" size="compact-xs"> 
+                More Info
+              </Button>
+            </Popover.Target>
+            <Popover.Dropdown>
+              {city.stationName && (
+                <div>
+                  <Field label="Weather Station" value={city.stationName} />
+                </div>
+              )}
+              {city.lat && city.long && (
+                <Field label="Coordinates" value={`${city.lat.toFixed(4)}°, ${city.long.toFixed(4)}°`} monospace />
+              )}
+            </Popover.Dropdown>
+          </Popover>
+        </div>
         <AdditionalInfo city={city} />
         <WeatherDataSection
           displayWeatherData={weatherData}

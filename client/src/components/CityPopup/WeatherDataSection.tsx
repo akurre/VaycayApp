@@ -32,7 +32,6 @@ const WeatherDataSection = ({
 
       {displayWeatherData && (
         <>
-          <Field label="Date" value={displayWeatherData.date} />
           <TemperatureSection
             avgTemperature={displayWeatherData.avgTemperature}
             maxTemperature={displayWeatherData.maxTemperature}

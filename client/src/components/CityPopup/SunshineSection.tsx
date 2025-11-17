@@ -42,7 +42,9 @@ const SunshineSection = ({ sunshineData, selectedMonth }: SunshineSectionProps) 
           value={formatSunshineHours(getMonthValue(selectedMonth))}
         />
       )}
-      <Field label="Average Annual Sunshine" value={formatSunshineHours(averageSunshine)} />
+      <div className='mt-3'>
+        <Field label="Average Annual Sunshine" value={formatSunshineHours(averageSunshine)} />
+      </div>
     </GreaterSection>
   );
 };
