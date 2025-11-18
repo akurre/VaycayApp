@@ -2,6 +2,7 @@ import { SunshineData } from '@/types/sunshineDataType';
 import Field from './Field';
 import { MONTH_FIELDS, MONTH_NAMES } from '@/constants';
 import GreaterSection from './GreaterSection';
+import getSunshineHoursIcon from '@/utils/iconMapping/getSunshineIcon';
 
 interface SunshineSectionProps {
   sunshineData: SunshineData;
@@ -14,11 +15,15 @@ const formatSunshineHours = (hours: number | null): string => {
 };
 
 const SunshineSection = ({ sunshineData, selectedMonth }: SunshineSectionProps) => {
-  // Get the sunshine hours for the selected month
+  // get the sunshine hours for the selected month
   const getMonthValue = (month: number): number | null => {
     const field = MONTH_FIELDS[month];
     return sunshineData[field] as number | null;
   };
+
+  // get the icon based on the selected month's sunshine hours
+  const monthValue = selectedMonth ? getMonthValue(selectedMonth) : null;
+  const sunshineIcon = getSunshineHoursIcon(monthValue);
 
   // Calculate average sunshine hours across all available months
   const calculateAverageSunshine = (): number | null => {
@@ -35,7 +40,7 @@ const SunshineSection = ({ sunshineData, selectedMonth }: SunshineSectionProps) 
   const averageSunshine = calculateAverageSunshine();
 
   return (
-    <GreaterSection title="Sunshine">
+    <GreaterSection title="Sunshine" icon={sunshineIcon}>
       {selectedMonth && (
         <Field
           label={`${MONTH_NAMES[selectedMonth - 1]} Sunshine`}
