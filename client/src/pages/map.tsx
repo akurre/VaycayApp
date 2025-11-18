@@ -153,7 +153,7 @@ const MapPage: FC = () => {
             viewMode={viewMode}
             dataType={dataType}
             onBoundsChange={handleBoundsChange}
-            selectedMonth={isSunshineSelected ? monthFromDate : undefined}
+            selectedMonth={monthFromDate}
             selectedDate={selectedDate}
           />
         )}

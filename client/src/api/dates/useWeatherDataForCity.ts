@@ -10,6 +10,7 @@ interface UseWeatherDataForCityParams {
   lat?: number | null;
   long?: number | null;
   selectedDate: string;
+  skipFetch?: boolean;
 }
 
 interface WeatherByDateResponse {
@@ -24,14 +25,15 @@ interface WeatherByDateVars {
  * Hook to fetch weather data for a specific city on a specific date
  * Uses the weatherByDate query and filters for the specific city on the client side
  */
-function useWeatherDataForCity({ 
-  cityName, 
-  lat, 
-  long, 
-  selectedDate 
+function useWeatherDataForCity({
+  cityName,
+  lat,
+  long,
+  selectedDate,
+  skipFetch = false,
 }: UseWeatherDataForCityParams) {
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
-  
+
   // Get cache functions from the store
   const { getFromCache, addToCache } = useCityDataCacheStore();
 
@@ -39,9 +41,10 @@ function useWeatherDataForCity({
   const formattedDate = selectedDate ? selectedDate.replaceAll('-', '') : '';
 
   // Generate a unique cache key for this city and date
-  const cacheKey = cityName && formattedDate 
-    ? `weather-${cityName.toLowerCase()}-${lat || 0}-${long || 0}-${formattedDate}` 
-    : '';
+  const cacheKey =
+    cityName && formattedDate
+      ? `weather-${cityName.toLowerCase()}-${lat || 0}-${long || 0}-${formattedDate}`
+      : '';
 
   // Check cache first
   useEffect(() => {
@@ -60,7 +63,7 @@ function useWeatherDataForCity({
     error: weatherError,
   } = useQuery<WeatherByDateResponse, WeatherByDateVars>(GET_WEATHER_BY_DATE, {
     variables: { monthDay: formattedDate },
-    skip: !formattedDate || formattedDate.length !== 4 || !cityName || !!weatherData,
+    skip: skipFetch || !formattedDate || formattedDate.length !== 4 || !cityName || !!weatherData,
     fetchPolicy: 'network-only', // Always fetch fresh data when needed
   });
 

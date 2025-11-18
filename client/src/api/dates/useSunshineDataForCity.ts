@@ -10,6 +10,7 @@ interface UseSunshineDataForCityParams {
   lat?: number | null;
   long?: number | null;
   selectedMonth: number;
+  skipFetch?: boolean;
 }
 
 interface SunshineByMonthResponse {
@@ -19,20 +20,21 @@ interface SunshineByMonthResponse {
 /**
  * Hook to fetch sunshine data for a specific city in a specific month
  */
-function useSunshineDataForCity({ 
-  cityName, 
-  lat, 
-  long, 
-  selectedMonth 
+function useSunshineDataForCity({
+  cityName,
+  lat,
+  long,
+  selectedMonth,
+  skipFetch = false,
 }: UseSunshineDataForCityParams) {
   const [sunshineData, setSunshineData] = useState<SunshineData | null>(null);
-  
+
   // Get cache functions from the store
   const { getFromCache, addToCache } = useCityDataCacheStore();
 
   // Generate a unique cache key for this city and month
-  const cacheKey = cityName 
-    ? `sunshine-${cityName.toLowerCase()}-${lat || 0}-${long || 0}-${selectedMonth}` 
+  const cacheKey = cityName
+    ? `sunshine-${cityName.toLowerCase()}-${lat || 0}-${long || 0}-${selectedMonth}`
     : '';
 
   // Check cache first
@@ -52,13 +54,17 @@ function useSunshineDataForCity({
     error: sunshineError,
   } = useQuery<SunshineByMonthResponse>(GET_SUNSHINE_FOR_POPUP, {
     variables: { month: selectedMonth },
-    skip: !selectedMonth || !cityName || !!sunshineData, // Skip if we have cached data
+    skip: skipFetch || !selectedMonth || !cityName || !!sunshineData, // Skip if we have cached data
     fetchPolicy: 'network-only', // Always fetch fresh data when needed
   });
 
   // Process sunshine data when it's loaded
   useEffect(() => {
-    if (sunshineResponse?.sunshineByMonth && sunshineResponse.sunshineByMonth.length > 0 && cityName) {
+    if (
+      sunshineResponse?.sunshineByMonth &&
+      sunshineResponse.sunshineByMonth.length > 0 &&
+      cityName
+    ) {
       // Find the sunshine data for the exact city
       // We need to match by both name and coordinates since there might be multiple cities with the same name
       const citySunshine = sunshineResponse.sunshineByMonth.find((s) => {
