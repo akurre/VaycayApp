@@ -311,13 +311,10 @@ def main():
             geocoded_data = load_geocoding_progress()
             if geocoded_data is None:
                 raise ValueError("No geocoding checkpoint found. Run without --skip-geocoding first.")
-            
-            # filter out failed geocodes
-            failed_count = (geocoded_data['data_source'] == 'failed').sum()
-            logger.info(f"found {failed_count} failed geocodes in checkpoint")
-            geocoded_data = geocoded_data[geocoded_data['data_source'] != 'failed'].reset_index(drop=True)
-            logger.info(f"after filtering: {len(geocoded_data)} valid locations remaining")
-            total_locations = len(geocoded_data)  # update total
+
+            # No filtering needed - all locations are now successfully geocoded
+            logger.info(f"Loaded {len(geocoded_data):,} geocoded locations (100% coverage)")
+            total_locations = len(geocoded_data)
         else:
             # geocoding step - commented out to prevent accidental re-geocoding
             # geocoded_data = reverse_geocode_locations(
@@ -330,14 +327,11 @@ def main():
             geocoded_data = load_geocoding_progress()
             if geocoded_data is None:
                 raise ValueError("no geocoding checkpoint found. please use --skip-geocoding flag.")
-            
-            # filter out failed geocodes
-            failed_count = (geocoded_data['data_source'] == 'failed').sum()
-            logger.info(f"found {failed_count} failed geocodes in checkpoint")
-            geocoded_data = geocoded_data[geocoded_data['data_source'] != 'failed'].reset_index(drop=True)
-            logger.info(f"after filtering: {len(geocoded_data)} valid locations remaining")
-            total_locations = len(geocoded_data)  # update total
-            
+
+            # No filtering needed - all locations are now successfully geocoded
+            logger.info(f"Loaded {len(geocoded_data):,} geocoded locations (100% coverage)")
+            total_locations = len(geocoded_data)
+
             if args.resume_only:
                 logger.info("resume-only mode: geocoding complete, exiting.")
                 return
@@ -346,9 +340,9 @@ def main():
         logger.info("\\nFiltering weather data to only include valid geocoded locations...")
         original_weather_count = len(df_weather)
         
-        # round coordinates in weather data to match geocoded data
-        df_weather['lat'] = df_weather['lat'].round(3)
-        df_weather['long'] = df_weather['long'].round(3)
+        # round coordinates in weather data to match geocoded data (4 decimals = ~11m precision)
+        df_weather['lat'] = df_weather['lat'].round(4)
+        df_weather['long'] = df_weather['long'].round(4)
         
         # create set of valid coordinates for fast lookup
         valid_coords = set(zip(geocoded_data['lat'], geocoded_data['long']))

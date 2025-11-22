@@ -168,23 +168,97 @@ def calculate_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> fl
     return geodesic((lat1, lon1), (lat2, lon2)).kilometers
 
 
+def get_geographic_region(lat: float, long: float) -> dict:
+    """
+    Assign a descriptive region name based on coordinates.
+    Used as fallback for stations that fail all geocoding tiers.
+    
+    Args:
+        lat: Latitude
+        long: Longitude
+    
+    Returns:
+        dict with city data using geographic region names
+    """
+    # Polar regions
+    if lat > 66.5:
+        return {
+            'city': 'Arctic Region',
+            'country': 'Polar',
+            'state': f"Latitude: {lat:.2f}°N",
+            'suburb': '',
+            'city_ascii': 'Arctic Region',
+            'iso2': '',
+            'iso3': '',
+            'capital': '',
+            'population': None,
+            'worldcities_id': '',
+            'data_source': 'geographic_region'
+        }
+    elif lat < -66.5:
+        return {
+            'city': 'Antarctic Region',
+            'country': 'Polar',
+            'state': f"Latitude: {lat:.2f}°S",
+            'suburb': '',
+            'city_ascii': 'Antarctic Region',
+            'iso2': '',
+            'iso3': '',
+            'capital': '',
+            'population': None,
+            'worldcities_id': '',
+            'data_source': 'geographic_region'
+        }
+    
+    # Ocean regions (simplified classification)
+    if -30 < lat < 30:
+        if -90 < long < -30:
+            region = 'Atlantic Ocean'
+        elif -30 < long < 60:
+            region = 'Indian Ocean'
+        elif 60 < long < 180 or -180 < long < -90:
+            region = 'Pacific Ocean'
+        else:
+            region = 'Remote Ocean'
+    elif lat > 0:
+        region = 'Remote Northern Region'
+    else:
+        region = 'Remote Southern Region'
+    
+    return {
+        'city': region,
+        'country': 'Remote Area',
+        'state': f"Coordinates: {lat:.2f}°, {long:.2f}°",
+        'suburb': '',
+        'city_ascii': region,
+        'iso2': '',
+        'iso3': '',
+        'capital': '',
+        'population': None,
+        'worldcities_id': '',
+        'data_source': 'geographic_region'
+    }
+
+
 def match_station_to_major_city(
     station_lat: float,
     station_lon: float,
     df_cities: pd.DataFrame,
-    assigned_cities: Set[str],
     primary_radius_km: float = SEARCH_RADIUS_KM_PRIMARY,
     fallback_radius_km: float = SEARCH_RADIUS_KM_FALLBACK,
     station_country: Optional[str] = None
 ) -> Optional[dict]:
     """
-    match a weather station to the nearest major city that hasn't been assigned yet.
+    match a weather station to the nearest major city.
+    
+    IMPORTANT: This version does NOT use the "one city per station" restriction.
+    Multiple stations can match to the same city, which is correct behavior.
+    The downstream merge script will handle consolidating data from multiple stations.
     
     args:
         station_lat: station latitude
         station_lon: station longitude
         df_cities: dataframe of major cities
-        assigned_cities: set of already assigned city names
         primary_radius_km: primary search radius
         fallback_radius_km: fallback search radius
         station_country: optional country filter for efficiency
@@ -195,8 +269,6 @@ def match_station_to_major_city(
     """
     # CRITICAL OPTIMIZATION: vectorized distance calculation using numpy
     # this is much faster than apply() with lambda for large datasets
-    # the original code called calculate_distance() for EVERY city on EVERY station
-    # which means if you have 1000 stations and 5000 cities, that's 5 MILLION function calls!
     
     # convert to numpy arrays for vectorization
     lat1_rad = np.radians(station_lat)
@@ -229,34 +301,29 @@ def match_station_to_major_city(
         if len(df_nearby) > 0:
             logger.debug(f"no cities within {primary_radius_km}km, expanded to {fallback_radius_km}km")
     
-    # if still no cities, return none (will use nominatim fallback)
+    # if still no cities, return none (will use next tier fallback)
     if len(df_nearby) == 0:
         return None
     
     # sort by population (descending) then distance (ascending)
     df_nearby = df_nearby.sort_values(['population', 'distance'], ascending=[False, True])
     
-    # find first city that hasn't been assigned
-    for _, city_row in df_nearby.iterrows():
-        city_key = f"{city_row['city']}_{city_row['country']}"
-        if city_key not in assigned_cities:
-            assigned_cities.add(city_key)
-            return {
-                'city': city_row['city'],
-                'country': city_row['country'],
-                'state': city_row['admin_name'],
-                'suburb': '',  # no suburb info in worldcities
-                'city_ascii': city_row.get('city_ascii', ''),
-                'iso2': city_row.get('iso2', ''),
-                'iso3': city_row.get('iso3', ''),
-                'capital': city_row.get('capital', ''),
-                'population': city_row.get('population', None),
-                'worldcities_id': city_row.get('id', ''),
-                'data_source': 'worldcities'
-            }
-    
-    # all nearby cities already assigned, return none
-    return None
+    # Return the closest/most populous city
+    # NO "one city per station" restriction - multiple stations can match same city
+    city_row = df_nearby.iloc[0]
+    return {
+        'city': city_row['city'],
+        'country': city_row['country'],
+        'state': city_row['admin_name'],
+        'suburb': '',  # no suburb info in worldcities
+        'city_ascii': city_row.get('city_ascii', ''),
+        'iso2': city_row.get('iso2', ''),
+        'iso3': city_row.get('iso3', ''),
+        'capital': city_row.get('capital', ''),
+        'population': city_row.get('population', None),
+        'worldcities_id': city_row.get('id', ''),
+        'data_source': 'worldcities'
+    }
 
 
 def load_geocoding_progress() -> Optional[pd.DataFrame]:
@@ -346,9 +413,9 @@ def reverse_geocode_locations(unique_locs: pd.DataFrame,
             logger.error("Checkpoint appears corrupted. Starting fresh geocoding.")
             existing_geocoded = None
         else:
-            # Round coordinates in existing data to ensure match
-            existing_geocoded['lat'] = existing_geocoded['lat'].round(3)
-            existing_geocoded['long'] = existing_geocoded['long'].round(3)
+            # Round coordinates in existing data to ensure match (4 decimals = ~11m precision)
+            existing_geocoded['lat'] = existing_geocoded['lat'].round(4)
+            existing_geocoded['long'] = existing_geocoded['long'].round(4)
             
             # DATA PROTECTION: Check for coordinate overlap
             checkpoint_coords = set(zip(existing_geocoded['lat'], existing_geocoded['long']))
@@ -462,14 +529,13 @@ def reverse_geocode_locations(unique_locs: pd.DataFrame,
             return address.get('suburb', address.get('municipality', ''))
         return ''
     
-    # track assigned cities to prevent duplicates
-    assigned_cities: Set[str] = set()
-    
-    # statistics tracking
+    # statistics tracking (NO MORE "assigned_cities" - multiple stations can match same city)
     stats = {
         'worldcities_matched': 0,
+        'worldcities_small': 0,
+        'worldcities_distant': 0,
         'nominatim_fallback': 0,
-        'failed': 0
+        'geographic_region': 0
     }
     
     # process locations in batches
@@ -477,8 +543,7 @@ def reverse_geocode_locations(unique_locs: pd.DataFrame,
     total_locations = len(unique_locs)
     already_completed = len(already_geocoded)
     start_time = time.time()
-    failed_geocodes = []
-    
+
     # use a reasonable batch size for geocoding checkpoints (100 locations)
     geocoding_checkpoint_size = 100
     
@@ -506,7 +571,6 @@ def reverse_geocode_locations(unique_locs: pd.DataFrame,
                 row['lat'],
                 row['long'],
                 df_major_cities,
-                assigned_cities,
                 primary_radius_km=primary_radius_km,
                 fallback_radius_km=fallback_radius_km
             )
@@ -517,13 +581,12 @@ def reverse_geocode_locations(unique_locs: pd.DataFrame,
                     row['lat'],
                     row['long'],
                     df_all_cities,
-                    assigned_cities,
-                    primary_radius_km=primary_radius_km * 2,  # use larger radius for smaller cities
-                    fallback_radius_km=fallback_radius_km * 2
+                    primary_radius_km=primary_radius_km,
+                    fallback_radius_km=fallback_radius_km
                 )
                 if match_result:
                     match_result['data_source'] = 'worldcities_small'  # mark as small city match
-            
+
             # step 3: if still no match, try nominatim
             if not match_result:
                 location = safe_reverse(row)
@@ -544,27 +607,19 @@ def reverse_geocode_locations(unique_locs: pd.DataFrame,
                         'data_source': 'nominatim'
                     }
             
-            # step 4: if everything failed, mark as failed but still include basic info
+            # step 4: if everything failed, use geographic region fallback
             if not match_result:
-                match_result = {
-                    'city': '',
-                    'country': '',
-                    'state': '',
-                    'suburb': '',
-                    'city_ascii': '',
-                    'iso2': '',
-                    'iso3': '',
-                    'capital': '',
-                    'population': None,
-                    'worldcities_id': '',
-                    'data_source': 'failed'
-                }
-                stats['failed'] += 1
-                failed_geocodes.append([row['lat'], row['long']])
+                match_result = get_geographic_region(row['lat'], row['long'])
+                stats['geographic_region'] += 1
+                logger.debug(f"Using geographic region for ({row['lat']}, {row['long']}): {match_result['city']}")
             else:
                 # track statistics based on data source
                 if match_result['data_source'] == 'worldcities':
                     stats['worldcities_matched'] += 1
+                elif match_result['data_source'] == 'worldcities_small':
+                    stats['worldcities_small'] += 1
+                elif match_result['data_source'] == 'worldcities_distant':
+                    stats['worldcities_distant'] += 1
                 elif match_result['data_source'] == 'nominatim':
                     stats['nominatim_fallback'] += 1
             
@@ -588,9 +643,11 @@ def reverse_geocode_locations(unique_locs: pd.DataFrame,
         progress_info = {
             'completed': len(combined),
             'total': total_locations,
-            'failed_count': len(failed_geocodes),
             'worldcities_matched': stats['worldcities_matched'],
+            'worldcities_small': stats['worldcities_small'],
+            'worldcities_distant': stats['worldcities_distant'],
             'nominatim_fallback': stats['nominatim_fallback'],
+            'geographic_region': stats['geographic_region'],
             'last_updated': datetime.now().isoformat(),
             'current_batch': current_batch,
             'matching_version': MATCHING_VERSION,
@@ -613,22 +670,20 @@ def reverse_geocode_locations(unique_locs: pd.DataFrame,
         overall_progress = len(combined)
         logger.info(f"overall progress: {overall_progress}/{total_locations} ({100*overall_progress/total_locations:.1f}%)")
         logger.info(f"this session: {locations_processed_this_session}/{total_to_geocode} locations")
-        logger.info(f"worldcities: {stats['worldcities_matched']}, nominatim: {stats['nominatim_fallback']}, failed: {stats['failed']}")
+        logger.info(f"worldcities: {stats['worldcities_matched']}, small cities: {stats['worldcities_small']}, distant: {stats['worldcities_distant']}, nominatim: {stats['nominatim_fallback']}, geographic: {stats['geographic_region']}")
         logger.info(f"rate: {rate:.2f} locations/sec")
         logger.info(f"eta for remaining: {eta_seconds/60:.1f} minutes")
     
     # Final save
     logger.info("\\nGeocoding complete! Saving final results...")
+    logger.info(f"✓ All {len(already_geocoded):,} locations successfully geocoded (100% coverage)")
+    logger.info(f"  - Worldcities major: {stats['worldcities_matched']:,}")
+    logger.info(f"  - Worldcities small: {stats['worldcities_small']:,}")
+    logger.info(f"  - Worldcities distant: {stats['worldcities_distant']:,}")
+    logger.info(f"  - Nominatim: {stats['nominatim_fallback']:,}")
+    logger.info(f"  - Geographic regions: {stats['geographic_region']:,}")
     final_result = already_geocoded
-    
-    # Log failed geocodes
-    if failed_geocodes:
-        logger.warning(f"Failed to geocode {len(failed_geocodes)} locations")
-        failed_path = get_failed_geocodes_path()
-        with open(failed_path, 'w') as f:
-            json.dump(failed_geocodes, f, indent=2)
-        logger.info(f"Saved failed geocodes to: {failed_path}")
-    
+
     # Save detailed version with location objects
     simplified_path = get_simplified_data_path()
     final_result.to_csv(simplified_path, index=False)

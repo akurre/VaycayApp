@@ -176,14 +176,23 @@ def pivot_and_clean_data(df: pd.DataFrame) -> pd.DataFrame:
     
     logger.info("Processing weather values...")
     
-    # Fill missing TAVG with average of TMAX and TMIN
+    # Fill missing TAVG with improved formula
+    # Research shows TAVG ≈ TMIN + 0.44 * (TMAX - TMIN) is more accurate than simple average
     if 'TAVG' in df_pivot.columns:
         if 'TMAX' in df_pivot.columns and 'TMIN' in df_pivot.columns:
-            filled_count = df_pivot['TAVG'].isnull().sum()
-            df_pivot['TAVG'] = df_pivot['TAVG'].fillna(
-                df_pivot[['TMAX', 'TMIN']].mean(axis=1)
+            # Create mask for imputed values
+            imputed_mask = df_pivot['TAVG'].isnull()
+            filled_count = imputed_mask.sum()
+
+            # Use improved formula: TAVG = TMIN + 0.44 * (TMAX - TMIN)
+            # This accounts for the fact that daily temperature doesn't peak exactly at midday
+            df_pivot.loc[imputed_mask, 'TAVG'] = (
+                df_pivot.loc[imputed_mask, 'TMIN'] +
+                0.44 * (df_pivot.loc[imputed_mask, 'TMAX'] - df_pivot.loc[imputed_mask, 'TMIN'])
             )
-            logger.info(f"Filled {filled_count:,} missing TAVG values using TMAX/TMIN average")
+
+            logger.info(f"Imputed {filled_count:,} missing TAVG values using improved formula")
+            logger.info("  Formula: TAVG = TMIN + 0.44 * (TMAX - TMIN)")
     
     # Convert temperatures from tenths of degrees to degrees
     for col in ['TMAX', 'TMIN', 'TAVG']:

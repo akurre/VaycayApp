@@ -526,9 +526,10 @@ def get_unique_locations(df_weather: pd.DataFrame) -> pd.DataFrame:
     logger.info(f"Found {len(unique_locs):,} unique weather station locations")
     
     # Round coordinates to reduce near-duplicate locations
-    unique_locs['lat'] = unique_locs['lat'].round(3)
-    unique_locs['long'] = unique_locs['long'].round(3)
+    # Using 4 decimals (~11m precision) instead of 3 (~111m) to avoid merging nearby stations
+    unique_locs['lat'] = unique_locs['lat'].round(4)
+    unique_locs['long'] = unique_locs['long'].round(4)
     unique_locs = unique_locs.drop_duplicates().reset_index(drop=True)
-    logger.info(f"After rounding to 3 decimals: {len(unique_locs):,} unique locations")
+    logger.info(f"After rounding to 4 decimals: {len(unique_locs):,} unique locations")
     
     return unique_locs

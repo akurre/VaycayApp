@@ -28,7 +28,7 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent.parent  # Go up to repo root
 UNCLEANED_DATA_DIR = PROJECT_ROOT / 'uncleaned_data'
 OUTPUT_DIR = PROJECT_ROOT / 'dataAndUtils' / 'vaycay' / 'weather_data'
 CITY_DATA_DIR = PROJECT_ROOT / 'dataAndUtils' / 'vaycay' / 'city_data'
-BATCH_OUTPUT_DIR = PROJECT_ROOT / 'dataAndUtils' / 'worldData'  # New batch output directory
+BATCH_OUTPUT_DIR = PROJECT_ROOT / 'dataAndUtils' / 'worldData_v2'  # New batch output directory (v2: improved geocoding)
 WORLDCITIES_PATH = PROJECT_ROOT / 'dataAndUtils' / 'worldcities.csv'
 
 # ============================================================================
@@ -43,7 +43,8 @@ DEFAULT_GEOCODING_DELAY = 1.5  # Seconds between geocoding requests (Nominatim l
 MIN_POPULATION = 100000  # Minimum population for major cities
 SEARCH_RADIUS_KM_PRIMARY = 20.0  # Primary search radius in kilometers
 SEARCH_RADIUS_KM_FALLBACK = 30.0  # Fallback search radius in kilometers
-MATCHING_VERSION = "v2_worldcities"  # Version marker for checkpoint compatibility
+# Note: No tertiary radius - stations beyond 30km will use Nominatim or geographic regions
+MATCHING_VERSION = "v3_no_restriction"  # Version marker for checkpoint compatibility
 
 # ============================================================================
 # CHECKPOINT FILE PATHS
