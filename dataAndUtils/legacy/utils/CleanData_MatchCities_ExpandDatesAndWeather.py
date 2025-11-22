@@ -324,17 +324,11 @@ def main():
 
             total_locations = len(geocoded_data)
         else:
-            # geocoding step - commented out to prevent accidental re-geocoding
-            # geocoded_data = reverse_geocode_locations(
-            #     unique_locs,
-            #     geocoding_delay=args.geocoding_delay
-            # )
-            
-            # force use of checkpoint instead
-            logger.info("geocoding disabled - loading from checkpoint instead...")
-            geocoded_data = load_geocoding_progress()
-            if geocoded_data is None:
-                raise ValueError("no geocoding checkpoint found. please use --skip-geocoding flag.")
+            # geocoding step - runs worldcities matching + nominatim fallback
+            geocoded_data = reverse_geocode_locations(
+                unique_locs,
+                geocoding_delay=args.geocoding_delay
+            )
 
             # No filtering needed - all locations are now successfully geocoded
             logger.info(f"Loaded {len(geocoded_data):,} geocoded locations (100% coverage)")
