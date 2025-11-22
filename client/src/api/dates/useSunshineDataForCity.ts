@@ -33,7 +33,7 @@ function useSunshineDataForCity({
   skipFetch = false,
 }: UseSunshineDataForCityParams) {
   // Get cache functions from the store
-  const { getFromCache, addToCache } = useCityDataCacheStore();
+  const { getFromCache, addToCache, markAsRecentlyUsed } = useCityDataCacheStore();
 
   // Generate a unique cache key for this city (sunshine data includes all months)
   // Only create key if we have valid coordinates to avoid collisions
@@ -68,6 +68,13 @@ function useSunshineDataForCity({
       addToCache(cacheKey, null, sunshineResponse.sunshineByCity);
     }
   }, [sunshineResponse, cacheKey, addToCache]);
+
+  // Mark cache as recently used when accessed
+  useEffect(() => {
+    if (cacheKey && cachedData) {
+      markAsRecentlyUsed(cacheKey);
+    }
+  }, [cacheKey, cachedData, markAsRecentlyUsed]);
 
   // Handle errors with context
   useEffect(() => {

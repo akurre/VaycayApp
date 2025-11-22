@@ -220,6 +220,16 @@ export const MONTH_FIELDS: Record<number, keyof SunshineData> = {
 // custom date slider thumb dimensions for positioning calculations
 export const SLIDER_THUMB_WIDTH = 32; // 8 * 4 (w-8 in tailwind)
 
+// sunshine graph chart colors
+export const SUNSHINE_CHART_LINE_COLOR = '#f59e0b'; // orange/amber
+export const SUNSHINE_CHART_GRID_COLOR = '#e5e7eb'; // light gray
+export const SUNSHINE_CHART_AXIS_COLOR = '#9ca3af'; // medium gray
+export const SUNSHINE_CHART_MAX_LINE_COLOR = '#3b82f6'; // blue for theoretical max
+export const SUNSHINE_CHART_MIN_LINE_COLOR = '#6b7280'; // gray for baseline
+
+// days in each month (using 28.25 for February to account for leap years)
+export const DAYS_IN_MONTH = [31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
 // month boundaries for labels (day-of-year format)
 export const monthMarks = [
   { value: 1, label: 'Jan' },

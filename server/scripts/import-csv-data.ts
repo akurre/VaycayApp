@@ -1,3 +1,50 @@
+/**
+ * csv data import script for vaycay weather database
+ *
+ * this script imports historical weather data from batch csv files into the postgres database.
+ * it processes data from multiple batch directories (batch1, batch2, etc.) located in
+ * dataAndUtils/worldData/, where each batch contains a csv file with weather records.
+ *
+ * the import process runs in 4 phases:
+ *
+ * 1. collection phase: scans all batch csv files to identify unique cities and weather stations
+ *    - deduplicates cities based on name, country, and coordinates
+ *    - tracks unique weather stations per city
+ *
+ * 2. city insertion: creates city records in the database
+ *    - includes geographic data (lat/long), population, and metadata
+ *    - processes in batches of 1000 for efficiency
+ *    - maintains a map of city keys to database ids for later phases
+ *
+ * 3. station insertion: creates weather station records linked to cities
+ *    - each station is associated with a specific city
+ *    - processes in batches of 1000
+ *    - maintains a map of station keys to database ids
+ *
+ * 4. weather record insertion: imports all weather measurements
+ *    - includes temperature (tavg, tmax, tmin), precipitation (prcp), snow depth (snwd),
+ *      wind data (awnd, wdf2, wdf5, wsf2, wsf5), and other metrics
+ *    - processes in batches of 5000 for optimal performance
+ *    - uses skipDuplicates to handle any duplicate records
+ *
+ * csv format:
+ * each csv file contains columns for city metadata (name, country, state, lat, long),
+ * weather station info (name), date, and various weather metrics (temperature, precipitation,
+ * wind, etc.). the script handles quoted fields and empty values appropriately.
+ *
+ * performance considerations:
+ * - uses batch inserts to minimize database round-trips
+ * - deduplicates data in memory before insertion to avoid constraint violations
+ * - provides progress updates during long-running operations
+ * - verifies final counts against database after import
+ *
+ * usage:
+ * npm run import-csv-data
+ *
+ * the script expects batch directories to be located at:
+ * ../dataAndUtils/worldData/batch1/, batch2/, etc.
+ */
+
 import { PrismaClient } from '@prisma/client';
 import { readFileSync, readdirSync } from 'node:fs';
 import { resolve, join } from 'node:path';
