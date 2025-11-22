@@ -249,73 +249,97 @@ def match_station_to_major_city(
     station_country: Optional[str] = None
 ) -> Optional[dict]:
     """
-    match a weather station to the nearest major city.
+    Match a weather station to the nearest major city using population-based city radius expansion.
+    
+    ALGORITHM CHANGE (v4_population_radius):
+    Instead of fixed search radii for all cities, each city gets an "effective radius" based on population.
+    This models the geographic reality that large cities span wider areas.
+    
+    Formula: effective_radius = base_radius + sqrt(population_millions) * 3
+    - London (10.9M): 20 + sqrt(10.9) * 3 = ~30km effective radius
+    - Birmingham (2.9M): 20 + sqrt(2.9) * 3 = ~25km effective radius  
+    - Reading (318k): 20 + sqrt(0.318) * 3 = ~22km effective radius
+    
+    This allows mega-cities to "reach out" to peripheral stations while keeping
+    smaller cities tightly constrained, preventing cross-border issues.
     
     IMPORTANT: This version does NOT use the "one city per station" restriction.
     Multiple stations can match to the same city, which is correct behavior.
     The downstream merge script will handle consolidating data from multiple stations.
     
-    args:
-        station_lat: station latitude
-        station_lon: station longitude
-        df_cities: dataframe of major cities
-        primary_radius_km: primary search radius
-        fallback_radius_km: fallback search radius
-        station_country: optional country filter for efficiency
+    Args:
+        station_lat: Station latitude
+        station_lon: Station longitude
+        df_cities: DataFrame of major cities
+        primary_radius_km: Base radius for primary search (default 20km)
+        fallback_radius_km: Base radius for fallback search (default 30km) - ONLY used if primary fails
+        station_country: Optional country filter for efficiency
     
-    returns:
-        dict with city data (city, country, state, suburb, city_ascii, iso2, iso3, 
-        capital, population, worldcities_id, data_source) or none if no match
+    Returns:
+        Dict with city data (city, country, state, suburb, city_ascii, iso2, iso3, 
+        capital, population, worldcities_id, data_source) or None if no match
     """
     # CRITICAL OPTIMIZATION: vectorized distance calculation using numpy
-    # this is much faster than apply() with lambda for large datasets
+    # This is much faster than apply() with lambda for large datasets
     
-    # convert to numpy arrays for vectorization
+    # Convert to numpy arrays for vectorization
     lat1_rad = np.radians(station_lat)
     lon1_rad = np.radians(station_lon)
     lat2_rad = np.radians(df_cities['lat'].values)
     lon2_rad = np.radians(df_cities['long'].values)
     
-    # haversine formula - fully vectorized with numpy
+    # Haversine formula - fully vectorized with numpy
     dlon = lon2_rad - lon1_rad
     dlat = lat2_rad - lat1_rad
     a = np.sin(dlat/2)**2 + np.cos(lat1_rad) * np.cos(lat2_rad) * np.sin(dlon/2)**2
     c = 2 * np.arcsin(np.sqrt(a))
-    df_cities['distance'] = 6371 * c  # radius of earth in km
+    df_cities = df_cities.copy()
+    df_cities['distance'] = 6371 * c  # Radius of earth in km
     
-    # filter by country if provided (for efficiency)
+    # Calculate population-based effective radius for each city
+    # Formula: base_radius + sqrt(population_millions) * 3
+    # This gives larger cities more "reach" to peripheral stations
+    population_millions = df_cities['population'] / 1_000_000
+    df_cities['effective_radius'] = primary_radius_km + (np.sqrt(population_millions) * 3)
+    
+    # Filter by country if provided (for efficiency)
     if station_country:
         df_candidates = df_cities[df_cities['country'] == station_country].copy()
         if len(df_candidates) == 0:
-            # if no cities in same country, use all cities
+            # If no cities in same country, use all cities
             df_candidates = df_cities.copy()
     else:
         df_candidates = df_cities.copy()
     
-    # try primary radius first
-    df_nearby = df_candidates[df_candidates['distance'] <= primary_radius_km].copy()
+    # PRIMARY SEARCH: Find cities where station is within their effective radius
+    df_nearby = df_candidates[df_candidates['distance'] <= df_candidates['effective_radius']].copy()
     
-    # if no cities found, try fallback radius
+    # FALLBACK SEARCH: Only if primary search finds nothing, try expanded radius
+    # This is much stricter than before - we only fall back if NO cities are found
     if len(df_nearby) == 0:
-        df_nearby = df_candidates[df_candidates['distance'] <= fallback_radius_km].copy()
+        # Calculate fallback effective radius (using fallback_radius_km as base)
+        df_candidates['fallback_effective_radius'] = fallback_radius_km + (np.sqrt(population_millions) * 3)
+        df_nearby = df_candidates[df_candidates['distance'] <= df_candidates['fallback_effective_radius']].copy()
+        
         if len(df_nearby) > 0:
-            logger.debug(f"no cities within {primary_radius_km}km, expanded to {fallback_radius_km}km")
+            logger.debug(f"No cities within population-adjusted primary radius, using fallback")
     
-    # if still no cities, return none (will use next tier fallback)
+    # If still no cities, return None (will use next tier fallback: Tier 2/3/4)
     if len(df_nearby) == 0:
         return None
     
-    # sort by population (descending) then distance (ascending)
+    # Sort by population (descending) then distance (ascending)
+    # This ensures mega-cities win over their boroughs when both are in range
     df_nearby = df_nearby.sort_values(['population', 'distance'], ascending=[False, True])
     
-    # Return the closest/most populous city
+    # Return the most populous city (with distance as tiebreaker)
     # NO "one city per station" restriction - multiple stations can match same city
     city_row = df_nearby.iloc[0]
     return {
         'city': city_row['city'],
         'country': city_row['country'],
         'state': city_row['admin_name'],
-        'suburb': '',  # no suburb info in worldcities
+        'suburb': '',  # No suburb info in worldcities
         'city_ascii': city_row.get('city_ascii', ''),
         'iso2': city_row.get('iso2', ''),
         'iso3': city_row.get('iso3', ''),

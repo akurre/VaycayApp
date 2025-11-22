@@ -41,10 +41,12 @@ DEFAULT_GEOCODING_DELAY = 1.5  # Seconds between geocoding requests (Nominatim l
 
 # Worldcities matching settings
 MIN_POPULATION = 100000  # Minimum population for major cities
-SEARCH_RADIUS_KM_PRIMARY = 20.0  # Primary search radius in kilometers
-SEARCH_RADIUS_KM_FALLBACK = 30.0  # Fallback search radius in kilometers
-# Note: No tertiary radius - stations beyond 30km will use Nominatim or geographic regions
-MATCHING_VERSION = "v3_no_restriction"  # Version marker for checkpoint compatibility
+SEARCH_RADIUS_KM_PRIMARY = 20.0  # Base radius for primary search (expanded per city by population)
+SEARCH_RADIUS_KM_FALLBACK = 30.0  # Base radius for fallback search (only if primary finds nothing)
+# Note: Cities get effective_radius = base + sqrt(population_millions) * 3
+#       London (10.9M): 20 + sqrt(10.9)*3 = ~30km effective reach
+#       Smaller cities stay close to base radius
+MATCHING_VERSION = "v4_population_radius"  # Version marker for checkpoint compatibility
 
 # ============================================================================
 # CHECKPOINT FILE PATHS
