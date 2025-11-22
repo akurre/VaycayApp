@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client/react';
-import { useState, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { WeatherData } from '@/types/cityWeatherDataType';
 import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
 import { GET_WEATHER_BY_CITY_AND_DATE } from '../queries';
@@ -52,18 +52,8 @@ function useWeatherDataForCity({
     return null;
   }, [cityName, lat, long, formattedDate]);
 
-  // Check cache synchronously before query initialization
-  const cachedData = useMemo(() => {
-    if (cacheKey) {
-      return getFromCache(cacheKey);
-    }
-    return null;
-  }, [cacheKey, getFromCache]);
-
-  // Initialize state with cached data if available
-  const [weatherData, setWeatherData] = useState<WeatherData | null>(
-    cachedData?.weatherData || null
-  );
+  // Check cache directly - getFromCache is already memoized by zustand
+  const cachedData = cacheKey ? getFromCache(cacheKey) : null;
 
   // Fetch weather data for the specific city and date only if not in cache
   const {
@@ -90,25 +80,23 @@ function useWeatherDataForCity({
     }
   );
 
-  // Process weather data when it's loaded
+  // Update cache when new data is fetched
   useEffect(() => {
-    if (weatherResponse?.weatherByCityAndDate) {
-      const cityWeather = weatherResponse.weatherByCityAndDate;
-      setWeatherData(cityWeather);
-
-      // Update cache
-      if (cacheKey) {
-        addToCache(cacheKey, cityWeather, null);
-      }
+    if (weatherResponse?.weatherByCityAndDate && cacheKey) {
+      addToCache(cacheKey, weatherResponse.weatherByCityAndDate, null);
     }
   }, [weatherResponse, cacheKey, addToCache]);
 
-  // Handle errors
+  // Handle errors with context
   useEffect(() => {
     if (weatherError) {
-      parseErrorAndNotify(weatherError, 'failed to load weather data for city');
+      const context = cityName ? ` for ${cityName}` : '';
+      parseErrorAndNotify(weatherError, `failed to load weather data${context}`);
     }
-  }, [weatherError]);
+  }, [weatherError, cityName]);
+
+  // Derive data from cache or query response
+  const weatherData = cachedData?.weatherData || weatherResponse?.weatherByCityAndDate || null;
 
   return {
     weatherData,

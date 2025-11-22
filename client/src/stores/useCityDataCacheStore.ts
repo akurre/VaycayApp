@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { WeatherData } from '@/types/cityWeatherDataType';
 import { SunshineData } from '@/types/sunshineDataType';
+import { CITY_CACHE_MAX_SIZE } from '@/constants';
 
 interface CachedCityData {
   weatherData: WeatherData | null;
@@ -37,7 +38,7 @@ export const useCityDataCacheStore = create<CityDataCacheStore>()(
   persist(
     (set, get) => ({
       cache: {},
-      maxCacheSize: 30, // Store up to 30 cities
+      maxCacheSize: CITY_CACHE_MAX_SIZE,
       recentlyUsed: [],
 
       addToCache: (key, weatherData, sunshineData) =>

@@ -39,13 +39,21 @@ function useSunshineByMonthAndBounds({
   const boundsQuery = useQuery<SunshineByMonthResponse, SunshineByMonthAndBoundsVars>(
     GET_SUNSHINE_BY_MONTH_AND_BOUNDS,
     {
-      variables: {
-        month,
-        minLat: bounds?.minLat ?? 0,
-        maxLat: bounds?.maxLat ?? 0,
-        minLong: bounds?.minLong ?? 0,
-        maxLong: bounds?.maxLong ?? 0,
-      },
+      variables: bounds
+        ? {
+            month,
+            minLat: bounds.minLat,
+            maxLat: bounds.maxLat,
+            minLong: bounds.minLong,
+            maxLong: bounds.maxLong,
+          }
+        : {
+            month,
+            minLat: 0,
+            maxLat: 0,
+            minLong: 0,
+            maxLong: 0,
+          },
       skip: !isValidMonth || !shouldUseBounds || !bounds,
     }
   );

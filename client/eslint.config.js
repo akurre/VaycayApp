@@ -38,6 +38,27 @@ export default tseslint.config(
         'warn',
         { argsIgnorePattern: '^_' },
       ],
+      'no-magic-numbers': [
+        'warn',
+        {
+          ignore: [0, 1, -1, 2], // Allow common numbers
+          ignoreArrayIndexes: true,
+          ignoreDefaultValues: true,
+          enforceConst: true,
+        },
+      ],
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          prefer: 'type-imports',
+          fixStyle: 'separate-type-imports',
+        },
+      ],
+      'react/jsx-no-useless-fragment': ['error', { allowExpressions: true }],
+      'react-hooks/exhaustive-deps': 'warn',
+      '@typescript-eslint/no-unused-expressions': 'warn',
+      '@typescript-eslint/prefer-optional-chain': 'warn',
+      '@typescript-eslint/prefer-nullish-coalescing': 'warn',
     },
     settings: {
       react: {

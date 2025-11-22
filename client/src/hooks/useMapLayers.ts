@@ -16,10 +16,12 @@ import {
   ColorCacheEntry,
   SUNSHINE_LOADING_COLOR,
   TEMPERATURE_LOADING_COLOR,
+  MONTH_FIELDS,
 } from '@/constants';
 import getSunshineMarkerColor from '@/utils/map/getSunshineMarkerColor';
 import { useWeatherStore } from '@/stores/useWeatherStore';
 import { useSunshineStore } from '@/stores/useSunshineStore';
+import { isWeatherData, isSunshineData, ValidSunshineMarkerData } from '@/utils/typeGuards';
 
 /**
  * hook to create and manage deck.gl map layers for both heatmap and marker views.
@@ -28,22 +30,6 @@ import { useSunshineStore } from '@/stores/useSunshineStore';
  * implements progressive loading with staggered marker appearance for improved perceived performance.
  * supports both temperature and sunshine data visualization.
  */
-
-// Type guard to check if a city is a WeatherData object
-const isWeatherData = (city: WeatherDataUnion): city is WeatherData => {
-  return 'avgTemperature' in city;
-};
-
-// Type guard to check if a city is a SunshineData object
-const isSunshineData = (city: WeatherDataUnion): city is SunshineData => {
-  return 'jan' in city;
-};
-
-// Type guard for valid marker data with sunshine
-interface ValidSunshineMarkerData extends SunshineData {
-  lat: number;
-  long: number;
-}
 
 interface UseMapLayersProps {
   cities: WeatherDataUnion[];
@@ -112,21 +98,7 @@ function useMapLayers({
     if (dataType !== DataType.Sunshine) return null;
 
     const cache = new Map<string, ColorCacheEntry>();
-    const monthFields: Record<number, keyof SunshineData> = {
-      1: 'jan',
-      2: 'feb',
-      3: 'mar',
-      4: 'apr',
-      5: 'may',
-      6: 'jun',
-      7: 'jul',
-      8: 'aug',
-      9: 'sep',
-      10: 'oct',
-      11: 'nov',
-      12: 'dec',
-    };
-    const monthField = monthFields[selectedMonth];
+    const monthField = MONTH_FIELDS[selectedMonth];
 
     // Only process the first maxCitiesToShow cities that have valid data
     const validCities = cities
@@ -241,20 +213,7 @@ function useMapLayers({
       );
     } else {
       // Sunshine markers with color caching
-      const monthFields: Record<number, keyof SunshineData> = {
-        1: 'jan',
-        2: 'feb',
-        3: 'mar',
-        4: 'apr',
-        5: 'may',
-        6: 'jun',
-        7: 'jul',
-        8: 'aug',
-        9: 'sep',
-        10: 'oct',
-        11: 'nov',
-        12: 'dec',
-      };
+      const monthField = MONTH_FIELDS[selectedMonth];
 
       layers.push(
         new ScatterplotLayer<ValidSunshineMarkerData>({
@@ -264,7 +223,6 @@ function useMapLayers({
               if (!isSunshineData(c) || c.lat === null || c.long === null) return false;
 
               // Check if the selected month has data
-              const monthField = monthFields[selectedMonth];
               return c[monthField] !== null;
             })
             .slice(0, maxCitiesToShow),

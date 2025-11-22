@@ -28,6 +28,9 @@ export const KM_TO_MILES = 0.621371;
 
 export const MAX_CITIES_SHOWN = 300;
 
+// LRU cache size for city-specific data
+export const CITY_CACHE_MAX_SIZE = 30;
+
 // locales that use miles instead of kilometers
 export const MILES_LOCALES = ['en-US', 'en-GB', 'en-LR', 'en-MM'];
 
