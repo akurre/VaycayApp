@@ -29,7 +29,7 @@ const WeatherDataSection = ({
         </Alert>
       )}
 
-      {displayWeatherData && (
+      {displayWeatherData ? (
         <>
           <TemperatureSection
             avgTemperature={displayWeatherData.avgTemperature}
@@ -42,6 +42,10 @@ const WeatherDataSection = ({
               snowDepth={displayWeatherData.snowDepth}
             />
           )}
+        </>
+      ) : (
+        <>
+          No weather data to show.
         </>
       )}
     </>

@@ -144,10 +144,10 @@ export const GET_WEATHER_BY_CITY_NAME = gql`
   }
 `;
 
-// Optimized query for CityPopup weather data
-export const GET_WEATHER_FOR_POPUP = gql`
-  query GetWeatherForPopup($city: String!) {
-    weatherByCity(city: $city) {
+// Query to get weather data for a specific city on a specific date
+export const GET_WEATHER_BY_CITY_AND_DATE = gql`
+  query GetWeatherByCityAndDate($city: String!, $lat: Float, $long: Float, $monthDay: String!) {
+    weatherByCityAndDate(city: $city, lat: $lat, long: $long, monthDay: $monthDay) {
       city
       country
       state
@@ -167,7 +167,34 @@ export const GET_WEATHER_FOR_POPUP = gql`
 `;
 
 // Query to get sunshine data for a specific city
-// We'll use the sunshineByMonth query and filter by city name on the client side
+export const GET_SUNSHINE_BY_CITY = gql`
+  query GetSunshineByCity($city: String!, $lat: Float, $long: Float) {
+    sunshineByCity(city: $city, lat: $lat, long: $long) {
+      city
+      country
+      state
+      suburb
+      lat
+      long
+      population
+      jan
+      feb
+      mar
+      apr
+      may
+      jun
+      jul
+      aug
+      sep
+      oct
+      nov
+      dec
+      stationName
+    }
+  }
+`;
+
+// Query to get sunshine data for all cities in a specific month (for map view)
 export const GET_SUNSHINE_BY_MONTH = gql`
   query GetSunshineByMonth($month: Int!) {
     sunshineByMonth(month: $month) {
@@ -195,30 +222,4 @@ export const GET_SUNSHINE_BY_MONTH = gql`
   }
 `;
 
-// Optimized query for CityPopup sunshine data
-export const GET_SUNSHINE_FOR_POPUP = gql`
-  query GetSunshineForPopup($month: Int!) {
-    sunshineByMonth(month: $month) {
-      city
-      country
-      state
-      suburb
-      lat
-      long
-      population
-      jan
-      feb
-      mar
-      apr
-      may
-      jun
-      jul
-      aug
-      sep
-      oct
-      nov
-      dec
-      stationName
-    }
-  }
-`;
+

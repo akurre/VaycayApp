@@ -1,4 +1,4 @@
-import { objectType, queryField, nonNull, intArg, list } from 'nexus';
+import { objectType, queryField, nonNull, intArg, list, stringArg, floatArg } from 'nexus';
 import type { City, MonthlySunshine } from '@prisma/client';
 import { MAX_CITIES_GLOBAL_VIEW, MONTH_FIELDS } from '../const';
 import { getCachedWeatherData } from '../utils/cache';
@@ -241,5 +241,134 @@ export const sunshineByMonthAndBoundsQuery = queryField('sunshineByMonthAndBound
         stationName: null,
       }));
     });
+  },
+});
+
+// Query: Get sunshine data for a specific city
+export const sunshineByCityQuery = queryField('sunshineByCity', {
+  type: 'SunshineData',
+  description: 'Get sunshine data for a specific city',
+  args: {
+    city: nonNull(stringArg({ description: 'City name (case-insensitive)' })),
+    lat: floatArg({ description: 'City latitude for precise matching' }),
+    long: floatArg({ description: 'City longitude for precise matching' }),
+  },
+  async resolve(_parent, args, context) {
+    // title case the city name
+    const cityName = args.city.charAt(0).toUpperCase() + args.city.slice(1).toLowerCase();
+
+    // find the city - use coordinates for precise matching if provided
+    if (args.lat !== null && args.lat !== undefined && 
+        args.long !== null && args.long !== undefined) {
+      // if coordinates provided, use them for precise matching
+      const cities = await context.prisma.city.findMany({
+        where: { 
+          name: cityName,
+        },
+      });
+      
+      // find the city with closest coordinates
+      let closestCity = null;
+      let minDistance = Infinity;
+      
+      for (const city of cities) {
+        const distance = Math.sqrt(
+          Math.pow(city.lat - args.lat, 2) + 
+          Math.pow(city.long - args.long, 2)
+        );
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestCity = city;
+        }
+      }
+      
+      if (!closestCity) {
+        return null;
+      }
+      
+      // get sunshine record for this specific city
+      const record = await context.prisma.monthlySunshine.findFirst({
+        where: {
+          cityId: closestCity.id,
+        },
+        include: {
+          city: true,
+        },
+      });
+
+      if (!record) {
+        return null;
+      }
+
+      return {
+        city: record.city.name,
+        country: record.city.country,
+        state: record.city.state,
+        suburb: record.city.suburb,
+        lat: record.city.lat,
+        long: record.city.long,
+        population: record.city.population,
+        jan: record.jan,
+        feb: record.feb,
+        mar: record.mar,
+        apr: record.apr,
+        may: record.may,
+        jun: record.jun,
+        jul: record.jul,
+        aug: record.aug,
+        sep: record.sep,
+        oct: record.oct,
+        nov: record.nov,
+        dec: record.dec,
+        stationName: null,
+      };
+    }
+
+    // no coordinates provided, find any matching city
+    const cities = await context.prisma.city.findMany({
+      where: { name: cityName },
+    });
+
+    if (cities.length === 0) {
+      return null;
+    }
+
+    // get sunshine record for the first matching city
+    const cityIds = cities.map((c: City) => c.id);
+    const record = await context.prisma.monthlySunshine.findFirst({
+      where: {
+        cityId: { in: cityIds },
+      },
+      include: {
+        city: true,
+      },
+    });
+
+    if (!record) {
+      return null;
+    }
+
+    return {
+      city: record.city.name,
+      country: record.city.country,
+      state: record.city.state,
+      suburb: record.city.suburb,
+      lat: record.city.lat,
+      long: record.city.long,
+      population: record.city.population,
+      jan: record.jan,
+      feb: record.feb,
+      mar: record.mar,
+      apr: record.apr,
+      may: record.may,
+      jun: record.jun,
+      jul: record.jul,
+      aug: record.aug,
+      sep: record.sep,
+      oct: record.oct,
+      nov: record.nov,
+      dec: record.dec,
+      stationName: null,
+    };
   },
 });

@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client/react';
 import { useState, useEffect } from 'react';
 import { WeatherData } from '@/types/cityWeatherDataType';
 import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
-import { GET_WEATHER_BY_DATE } from '../queries';
+import { GET_WEATHER_BY_CITY_AND_DATE } from '../queries';
 import { useCityDataCacheStore } from '@/stores/useCityDataCacheStore';
 
 interface UseWeatherDataForCityParams {
@@ -13,17 +13,20 @@ interface UseWeatherDataForCityParams {
   skipFetch?: boolean;
 }
 
-interface WeatherByDateResponse {
-  weatherByDate: WeatherData[];
+interface WeatherByCityAndDateResponse {
+  weatherByCityAndDate: WeatherData | null;
 }
 
-interface WeatherByDateVars {
+interface WeatherByCityAndDateVars {
+  city: string;
+  lat?: number | null;
+  long?: number | null;
   monthDay: string;
 }
 
 /**
  * Hook to fetch weather data for a specific city on a specific date
- * Uses the weatherByDate query and filters for the specific city on the client side
+ * Uses city-specific query with LRU caching (max 30 cities)
  */
 function useWeatherDataForCity({
   cityName,
@@ -46,7 +49,7 @@ function useWeatherDataForCity({
       ? `weather-${cityName.toLowerCase()}-${lat || 0}-${long || 0}-${formattedDate}`
       : '';
 
-  // Check cache first
+  // Check cache first and initialize weatherData
   useEffect(() => {
     if (cacheKey) {
       const cachedData = getFromCache(cacheKey);
@@ -56,35 +59,34 @@ function useWeatherDataForCity({
     }
   }, [cacheKey, getFromCache]);
 
-  // Fetch weather data for the date if not in cache
+  // Fetch weather data for the specific city and date
   const {
     data: weatherResponse,
     loading: weatherLoading,
     error: weatherError,
-  } = useQuery<WeatherByDateResponse, WeatherByDateVars>(GET_WEATHER_BY_DATE, {
-    variables: { monthDay: formattedDate },
+  } = useQuery<WeatherByCityAndDateResponse, WeatherByCityAndDateVars>(GET_WEATHER_BY_CITY_AND_DATE, {
+    variables: { 
+      city: cityName || '',
+      lat: lat,
+      long: long,
+      monthDay: formattedDate 
+    },
     skip: skipFetch || !formattedDate || formattedDate.length !== 4 || !cityName || !!weatherData,
-    fetchPolicy: 'network-only', // Always fetch fresh data when needed
+    fetchPolicy: 'cache-first', // Use Apollo cache first, then network
   });
 
   // Process weather data when it's loaded
   useEffect(() => {
-    if (weatherResponse?.weatherByDate && weatherResponse.weatherByDate.length > 0 && cityName) {
-      // Find the weather data for the exact city
-      const cityWeather = weatherResponse.weatherByDate.find(
-        (w) => w.city.toLowerCase() === cityName.toLowerCase()
-      );
+    if (weatherResponse?.weatherByCityAndDate) {
+      const cityWeather = weatherResponse.weatherByCityAndDate;
+      setWeatherData(cityWeather);
 
-      if (cityWeather) {
-        setWeatherData(cityWeather);
-
-        // Update cache
-        if (cacheKey) {
-          addToCache(cacheKey, cityWeather, null);
-        }
+      // Update cache
+      if (cacheKey) {
+        addToCache(cacheKey, cityWeather, null);
       }
     }
-  }, [weatherResponse, cityName, cacheKey, addToCache]);
+  }, [weatherResponse, cacheKey, addToCache]);
 
   // Handle errors
   useEffect(() => {

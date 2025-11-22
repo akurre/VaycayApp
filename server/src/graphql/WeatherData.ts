@@ -1,13 +1,10 @@
 import { objectType, queryField, nonNull, stringArg, intArg, floatArg, list } from 'nexus';
-import type { City, WeatherStation, WeatherRecord } from '@prisma/client';
+import type { City } from '@prisma/client';
 import { getCachedWeatherData } from '../utils/cache';
 import queryCityIds from '../utils/weatherQueries';
 import calculateDistance from '../utils/calculateDistance';
-
-type WeatherRecordWithRelations = WeatherRecord & {
-  city: City;
-  station: WeatherStation;
-};
+import { mapWeatherRecord, mapWeatherRecords, type WeatherRecordWithRelations } from '../utils/weatherDataMappers';
+import { findCityByNameAndCoords, formatMonthDayToDate, titleCaseCityName } from '../utils/cityHelpers';
 
 // GraphQL WeatherData type definition
 export const WeatherData = objectType({
@@ -49,22 +46,7 @@ export const weatherDataQuery = queryField('weatherData', {
       },
     });
 
-    return records.map((record: WeatherRecordWithRelations) => ({
-      city: record.city.name,
-      country: record.city.country,
-      state: record.city.state,
-      suburb: record.city.suburb,
-      date: record.date,
-      lat: record.city.lat,
-      long: record.city.long,
-      population: record.city.population,
-      precipitation: record.PRCP,
-      snowDepth: record.SNWD,
-      avgTemperature: record.TAVG,
-      maxTemperature: record.TMAX,
-      minTemperature: record.TMIN,
-      stationName: record.station.name,
-    }));
+    return mapWeatherRecords(records);
   },
 });
 
@@ -76,10 +58,7 @@ export const weatherByDateQuery = queryField('weatherByDate', {
     monthDay: nonNull(stringArg({ description: 'Date in MMDD format (e.g., "0315")' })),
   },
   async resolve(_parent, args, context) {
-    // convert MMDD to 2020-MM-DD format (matching Python API logic)
-    const month = args.monthDay.slice(0, 2);
-    const day = args.monthDay.slice(2);
-    const dateStr = `2020-${month}-${day}`;
+    const dateStr = formatMonthDayToDate(args.monthDay);
 
     // use caching to avoid repeated queries for the same date
     const cacheKey = `weather:${dateStr}`;
@@ -259,10 +238,8 @@ export const weatherByCityQuery = queryField('weatherByCity', {
     city: nonNull(stringArg({ description: 'City name (case-insensitive)' })),
   },
   async resolve(_parent, args, context) {
-    // title case the city name (matching Python API logic)
-    const cityName = args.city.charAt(0).toUpperCase() + args.city.slice(1).toLowerCase();
+    const cityName = titleCaseCityName(args.city);
 
-    // find the city first
     const cities = await context.prisma.city.findMany({
       where: { name: cityName },
     });
@@ -284,24 +261,42 @@ export const weatherByCityQuery = queryField('weatherByCity', {
       },
     });
 
-    return records.map((record: WeatherRecordWithRelations) => ({
-      city: record.city.name,
-      country: record.city.country,
-      state: record.city.state,
-      suburb: record.city.suburb,
-      date: record.date,
-      lat: record.city.lat,
-      long: record.city.long,
-      population: record.city.population,
-      precipitation: record.PRCP,
-      snowDepth: record.SNWD,
-      avgTemperature: record.TAVG,
-      maxTemperature: record.TMAX,
-      minTemperature: record.TMIN,
-      stationName: record.station.name,
-    }));
+    return mapWeatherRecords(records);
   },
 });
+
+// Query: Get weather data for a specific city and date
+export const weatherByCityAndDateQuery = queryField('weatherByCityAndDate', {
+  type: 'WeatherData',
+  description: 'Get weather data for a specific city on a specific date',
+  args: {
+    city: nonNull(stringArg({ description: 'City name (case-insensitive)' })),
+    lat: floatArg({ description: 'City latitude for precise matching' }),
+    long: floatArg({ description: 'City longitude for precise matching' }),
+    monthDay: nonNull(stringArg({ description: 'Date in MMDD format (e.g., "0315")' })),
+  },
+  async resolve(_parent, args, context) {
+    const dateStr = formatMonthDayToDate(args.monthDay);
+    const city = await findCityByNameAndCoords(context.prisma, args.city, args.lat, args.long);
+
+    if (!city) {
+      return null;
+    }
+
+    const record = await context.prisma.weatherRecord.findFirst({
+      where: {
+        cityId: city.id,
+        date: dateStr,
+      },
+      include: {
+        city: true,
+        station: true,
+      },
+    });
+
+    return record ? mapWeatherRecord(record) : null;
+  },
+});;
 
 // Query: Get all unique cities
 export const citiesQuery = queryField('cities', {
