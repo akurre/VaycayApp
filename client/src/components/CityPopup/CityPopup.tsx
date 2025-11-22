@@ -69,7 +69,6 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
     cityName: city?.city ?? null,
     lat: city?.lat ?? null,
     long: city?.long ?? null,
-    selectedMonth: monthToUse,
     skipFetch: !shouldFetchSunshine,
   });
 

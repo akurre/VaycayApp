@@ -9,7 +9,6 @@ interface UseSunshineDataForCityParams {
   cityName: string | null;
   lat?: number | null;
   long?: number | null;
-  selectedMonth: number;
   skipFetch?: boolean;
 }
 
@@ -31,7 +30,6 @@ function useSunshineDataForCity({
   cityName,
   lat,
   long,
-  selectedMonth,
   skipFetch = false,
 }: UseSunshineDataForCityParams) {
   const [sunshineData, setSunshineData] = useState<SunshineData | null>(null);
