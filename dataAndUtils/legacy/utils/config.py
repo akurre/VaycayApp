@@ -46,7 +46,10 @@ SEARCH_RADIUS_KM_FALLBACK = 30.0  # Base radius for fallback search (only if pri
 # Note: Cities get effective_radius = base + sqrt(population_millions) * 3
 #       London (10.9M): 20 + sqrt(10.9)*3 = ~30km effective reach
 #       Smaller cities stay close to base radius
-MATCHING_VERSION = "v4_population_radius"  # Version marker for checkpoint compatibility
+MATCHING_VERSION = "v4_population_radius_averaged"  # Version marker for checkpoint compatibility
+# Changes in v4:
+#   - Population-based city radius expansion (base + sqrt(pop_millions) * 3)
+#   - Multiple stations per city are averaged (not kept separate)
 
 # ============================================================================
 # CHECKPOINT FILE PATHS

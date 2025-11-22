@@ -109,29 +109,50 @@ def pivot_and_clean_data(df: pd.DataFrame) -> pd.DataFrame:
     """
     Pivot data and clean weather values with validation.
     
-    IMPORTANT: This function averages data from multiple stations in the same city.
-    When multiple stations match to the same city (e.g., HAMPSTEAD and HEATHROW → London),
-    we aggregate by city/date (excluding station name from index) to get city-wide averages.
+    IMPORTANT CHANGE (v4_population_radius_averaged):
+    Multiple stations in the same city are now AVERAGED together at the source.
+    This provides true city-wide averages rather than keeping separate station data.
+    
+    Uses MEAN aggregation which:
+    - Averages values when multiple stations have the same data type
+    - Preserves values when only one station has that data type
+    - Example: If only Heathrow has SNWD, that value is kept (not lost)
+    
+    Example: London with HAMPSTEAD and HEATHROW stations
+    - Both have TMAX/TMIN → averaged
+    - Only HEATHROW has SNWD → kept as-is
+    - Result: Best of both stations combined
     """
     logger.info("Pivoting data by location and date...")
     
     # DEBUG: Log input data state
     logger.info(f"DEBUG: Input dataframe shape: {df.shape}")
     logger.info(f"DEBUG: Input columns: {list(df.columns)}")
-    logger.info(f"DEBUG: Data types:\n{df.dtypes}")
-    logger.info(f"DEBUG: Null counts:\n{df.isnull().sum()}")
-    logger.info(f"DEBUG: Unique data_types: {df['data_type'].unique() if 'data_type' in df.columns else 'N/A'}")
     logger.info(f"DEBUG: Sample of first 3 rows:\n{df.head(3)}")
+    
+    # Count stations per city BEFORE aggregation
+    if 'city' in df.columns and 'name' in df.columns and 'date' in df.columns:
+        station_counts = df.groupby(['city', 'date'])['name'].nunique()
+        cities_with_multiple = station_counts[station_counts > 1]
+        if len(cities_with_multiple) > 0:
+            # Get unique cities (not city-date pairs)
+            cities_list = df[df.groupby(['city', 'date'])['name'].transform('nunique') > 1]['city'].unique()
+            logger.info(f"\n✓ Found {len(cities_list)} cities with multiple stations (will be averaged):")
+            for city in sorted(cities_list)[:10]:  # Show first 10
+                num_stations = df[df['city'] == city]['name'].nunique()
+                station_names = df[df['city'] == city]['name'].unique()
+                logger.info(f"  - {city}: {num_stations} stations ({', '.join(station_names[:3])})")
+            if len(cities_list) > 10:
+                logger.info(f"  ... and {len(cities_list) - 10} more")
     
     # save population column separately to add back after pivot (to avoid overflow)
     population_map = None
     if 'population' in df.columns:
-        # create a mapping of (lat, long) -> population
-        population_map = df[['lat', 'long', 'population']].drop_duplicates().set_index(['lat', 'long'])['population']
+        # create a mapping of city -> population (use first non-null value per city)
+        population_map = df.groupby('city')['population'].first()
     
-    # build index columns dynamically based on what's available
-    # IMPORTANT: Exclude 'name' (station name) to aggregate multiple stations per city
-    # IMPORTANT: Exclude 'lat'/'long' to aggregate stations at different coordinates in same city
+    # Build index columns - EXCLUDE 'name' (station name) and 'lat'/'long' (station coords)
+    # This causes multiple stations in the same city to be aggregated together
     base_index = ['city', 'country', 'state', 'suburb', 'date']
     additional_index = ['city_ascii', 'iso2', 'iso3', 'capital', 
                        'worldcities_id', 'data_source']
@@ -139,71 +160,47 @@ def pivot_and_clean_data(df: pd.DataFrame) -> pd.DataFrame:
     # only include columns that exist in the dataframe
     index_cols = [col for col in base_index + additional_index if col in df.columns]
     
-    # DEBUG: Check for NaN in index columns before pivot
-    logger.info(f"DEBUG: Index columns to use: {index_cols}")
+    # Check for NaN in index columns before pivot
+    logger.info(f"Index columns (excluding station name/coords for aggregation): {index_cols}")
     for col in index_cols:
         nan_count = df[col].isnull().sum()
         if nan_count > 0:
-            logger.warning(f"DEBUG: Column '{col}' has {nan_count} NaN values ({100*nan_count/len(df):.1f}%)")
+            logger.warning(f"Column '{col}' has {nan_count} NaN values ({100*nan_count/len(df):.1f}%)")
             # Fill NaN with empty string to prevent pivot issues
-            logger.info(f"DEBUG: Filling NaN in '{col}' with empty string")
             df[col] = df[col].fillna('')
     
-    # Count stations per city before aggregation
-    if 'city' in df.columns and 'name' in df.columns:
-        stations_per_city = df.groupby('city')['name'].nunique()
-        cities_with_multiple = stations_per_city[stations_per_city > 1]
-        if len(cities_with_multiple) > 0:
-            logger.info(f"\nCities with multiple stations (will be averaged):")
-            for city, count in cities_with_multiple.head(10).items():
-                logger.info(f"  - {city}: {count} stations")
-    
-    # DEBUG: Test pivot on small sample first
-    logger.info("DEBUG: Testing pivot on first 1000 rows...")
-    df_sample = df.head(1000).copy()
-    try:
-        df_pivot_sample = df_sample.pivot_table(
-            index=index_cols,
-            columns='data_type',
-            values='value',
-            aggfunc='mean'  # Average multiple stations
-        ).reset_index()
-        logger.info(f"DEBUG: Sample pivot successful! Produced {len(df_pivot_sample)} records from {len(df_sample)} input records")
-    except Exception as e:
-        logger.error(f"DEBUG: Sample pivot FAILED with error: {e}")
-        import traceback
-        traceback.print_exc()
-    
-    # Perform actual pivot with MEAN aggregation
-    # This averages values from multiple stations in the same city
-    logger.info("DEBUG: Performing full pivot with MEAN aggregation...")
+    # Perform pivot with MEAN aggregation to average multiple stations
+    # IMPORTANT: mean() automatically handles missing values:
+    # - If 2 stations both have TMAX: averages them
+    # - If only 1 station has SNWD: keeps that value (mean of 1 value = that value)
+    # - If 0 stations have a type: NaN (which is correct)
+    logger.info("\nPerforming pivot with MEAN aggregation (averaging multiple stations per city)...")
+    logger.info("  Note: Mean preserves values from single stations (no data loss)")
     df_pivot = df.pivot_table(
         index=index_cols,
         columns='data_type',
         values='value',
-        aggfunc='mean'  # Changed from 'first' to 'mean' to average multiple stations
+        aggfunc='mean'  # Average when multiple values exist, keep when only one exists
     ).reset_index()
     
-    logger.info(f"DEBUG: Pivot complete! Result shape: {df_pivot.shape}")
-    logger.info(f"DEBUG: Pivot result columns: {list(df_pivot.columns)}")
+    logger.info(f"✓ Pivot complete! Result shape: {df_pivot.shape}")
+    logger.info(f"  (Each row = one city/date with averaged data from all stations)")
+    logger.info(f"  Available data types: {[col for col in df_pivot.columns if col not in index_cols]}")
     
-    # Add representative lat/long back (use mean of all stations' coordinates)
+    # Add representative lat/long back (use mean of all stations' coordinates per city)
     if 'lat' in df.columns and 'long' in df.columns:
-        # Group by index columns and get mean lat/long for each city/date
+        logger.info("Calculating representative coordinates (mean of all stations per city)...")
+        # Group by city and get mean coordinates
         coords_mean = df.groupby([col for col in index_cols if col in df.columns])[['lat', 'long']].mean().reset_index()
         df_pivot = df_pivot.merge(coords_mean, on=[col for col in index_cols if col in df.columns], how='left')
-        logger.info("Added representative lat/long as mean of all stations in each city")
+        logger.info("✓ Added representative lat/long (averaged across all stations)")
     
     # add population back after pivot
-    if population_map is not None and 'lat' in df_pivot.columns and 'long' in df_pivot.columns:
-        # Round coordinates to match population_map index
-        df_pivot_coords = df_pivot[['lat', 'long']].round(4)
-        df_pivot['population'] = df_pivot_coords.apply(
-            lambda row: population_map.get((row['lat'], row['long']), None), 
-            axis=1
-        )
+    if population_map is not None and 'city' in df_pivot.columns:
+        df_pivot['population'] = df_pivot['city'].map(population_map)
+        logger.info("✓ Added population data back")
     
-    logger.info("Processing weather values...")
+    logger.info("\nProcessing weather values...")
     
     # Fill missing TAVG with improved formula
     # Research shows TAVG ≈ TMIN + 0.44 * (TMAX - TMIN) is more accurate than simple average
@@ -220,8 +217,9 @@ def pivot_and_clean_data(df: pd.DataFrame) -> pd.DataFrame:
                 0.44 * (df_pivot.loc[imputed_mask, 'TMAX'] - df_pivot.loc[imputed_mask, 'TMIN'])
             )
 
-            logger.info(f"Imputed {filled_count:,} missing TAVG values using improved formula")
-            logger.info("  Formula: TAVG = TMIN + 0.44 * (TMAX - TMIN)")
+            if filled_count > 0:
+                logger.info(f"✓ Imputed {filled_count:,} missing TAVG values using improved formula")
+                logger.info("  Formula: TAVG = TMIN + 0.44 * (TMAX - TMIN)")
     
     # Convert temperatures from tenths of degrees to degrees
     for col in ['TMAX', 'TMIN', 'TAVG']:
@@ -231,6 +229,10 @@ def pivot_and_clean_data(df: pd.DataFrame) -> pd.DataFrame:
     # Handle precipitation if present
     if 'PRCP' in df_pivot.columns:
         df_pivot['PRCP'] = df_pivot['PRCP'].div(10).round(2)  # Convert to mm
+    
+    # Handle snow depth if present
+    if 'SNWD' in df_pivot.columns:
+        df_pivot['SNWD'] = df_pivot['SNWD'].div(10).round(2)  # Convert to cm
     
     # Format date
     df_pivot['date'] = df_pivot['date'].dt.strftime('%Y-%m-%d')
@@ -242,8 +244,12 @@ def pivot_and_clean_data(df: pd.DataFrame) -> pd.DataFrame:
             if extreme_temps.any():
                 logger.warning(f"Found {extreme_temps.sum()} extreme {col} values (< -90°C or > 60°C)")
     
-    logger.info(f"Final dataset has {len(df_pivot):,} records")
-    logger.info(f"NOTE: Multiple stations per city have been averaged together")
+    logger.info(f"\n{'='*60}")
+    logger.info(f"✓ Final dataset: {len(df_pivot):,} records (city-date level)")
+    logger.info(f"  Multiple stations per city have been averaged")
+    logger.info(f"  All available data types preserved (no data loss)")
+    logger.info(f"{'='*60}\n")
+    
     return df_pivot
 
 
