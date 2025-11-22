@@ -44,9 +44,7 @@ const WeatherDataSection = ({
           )}
         </>
       ) : (
-        <>
-          No weather data to show.
-        </>
+        <>No weather data to show.</>
       )}
     </>
   );

@@ -3,8 +3,16 @@ import type { City } from '@prisma/client';
 import { getCachedWeatherData } from '../utils/cache';
 import queryCityIds from '../utils/weatherQueries';
 import calculateDistance from '../utils/calculateDistance';
-import { mapWeatherRecord, mapWeatherRecords, type WeatherRecordWithRelations } from '../utils/weatherDataMappers';
-import { findCityByNameAndCoords, formatMonthDayToDate, titleCaseCityName } from '../utils/cityHelpers';
+import {
+  mapWeatherRecord,
+  mapWeatherRecords,
+  type WeatherRecordWithRelations,
+} from '../utils/weatherDataMappers';
+import {
+  findCityByNameAndCoords,
+  formatMonthDayToDate,
+  titleCaseCityName,
+} from '../utils/cityHelpers';
 
 // GraphQL WeatherData type definition
 export const WeatherData = objectType({
@@ -296,7 +304,7 @@ export const weatherByCityAndDateQuery = queryField('weatherByCityAndDate', {
 
     return record ? mapWeatherRecord(record) : null;
   },
-});;
+});
 
 // Query: Get all unique cities
 export const citiesQuery = queryField('cities', {

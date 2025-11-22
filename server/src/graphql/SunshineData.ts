@@ -258,34 +258,37 @@ export const sunshineByCityQuery = queryField('sunshineByCity', {
     const cityName = args.city.charAt(0).toUpperCase() + args.city.slice(1).toLowerCase();
 
     // find the city - use coordinates for precise matching if provided
-    if (args.lat !== null && args.lat !== undefined && 
-        args.long !== null && args.long !== undefined) {
+    if (
+      args.lat !== null &&
+      args.lat !== undefined &&
+      args.long !== null &&
+      args.long !== undefined
+    ) {
       // if coordinates provided, use them for precise matching
       const cities = await context.prisma.city.findMany({
-        where: { 
+        where: {
           name: cityName,
         },
       });
-      
+
       // find the city with closest coordinates
       let closestCity = null;
       let minDistance = Infinity;
-      
+
       for (const city of cities) {
         const distance = Math.sqrt(
-          Math.pow(city.lat - args.lat, 2) + 
-          Math.pow(city.long - args.long, 2)
+          Math.pow(city.lat - args.lat, 2) + Math.pow(city.long - args.long, 2)
         );
         if (distance < minDistance) {
           minDistance = distance;
           closestCity = city;
         }
       }
-      
+
       if (!closestCity) {
         return null;
       }
-      
+
       // get sunshine record for this specific city
       const record = await context.prisma.monthlySunshine.findFirst({
         where: {

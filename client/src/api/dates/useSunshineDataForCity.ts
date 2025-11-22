@@ -40,9 +40,7 @@ function useSunshineDataForCity({
   const { getFromCache, addToCache } = useCityDataCacheStore();
 
   // Generate a unique cache key for this city (sunshine data includes all months)
-  const cacheKey = cityName
-    ? `sunshine-${cityName.toLowerCase()}-${lat || 0}-${long || 0}`
-    : '';
+  const cacheKey = cityName ? `sunshine-${cityName.toLowerCase()}-${lat || 0}-${long || 0}` : '';
 
   // Check cache first
   useEffect(() => {
@@ -60,7 +58,7 @@ function useSunshineDataForCity({
     loading: sunshineLoading,
     error: sunshineError,
   } = useQuery<SunshineByCityResponse, SunshineByCityVars>(GET_SUNSHINE_BY_CITY, {
-    variables: { 
+    variables: {
       city: cityName || '',
       lat: lat,
       long: long,

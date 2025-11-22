@@ -64,16 +64,19 @@ function useWeatherDataForCity({
     data: weatherResponse,
     loading: weatherLoading,
     error: weatherError,
-  } = useQuery<WeatherByCityAndDateResponse, WeatherByCityAndDateVars>(GET_WEATHER_BY_CITY_AND_DATE, {
-    variables: { 
-      city: cityName || '',
-      lat: lat,
-      long: long,
-      monthDay: formattedDate 
-    },
-    skip: skipFetch || !formattedDate || formattedDate.length !== 4 || !cityName || !!weatherData,
-    fetchPolicy: 'cache-first', // Use Apollo cache first, then network
-  });
+  } = useQuery<WeatherByCityAndDateResponse, WeatherByCityAndDateVars>(
+    GET_WEATHER_BY_CITY_AND_DATE,
+    {
+      variables: {
+        city: cityName || '',
+        lat: lat,
+        long: long,
+        monthDay: formattedDate,
+      },
+      skip: skipFetch || !formattedDate || formattedDate.length !== 4 || !cityName || !!weatherData,
+      fetchPolicy: 'cache-first', // Use Apollo cache first, then network
+    }
+  );
 
   // Process weather data when it's loaded
   useEffect(() => {

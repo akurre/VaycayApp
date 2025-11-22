@@ -221,5 +221,3 @@ export const GET_SUNSHINE_BY_MONTH = gql`
     }
   }
 `;
-
-

@@ -10,7 +10,11 @@ export function titleCaseCityName(cityName: string): string {
 /**
  * Finds the closest city by coordinates from a list of cities with the same name
  */
-export function findClosestCity(cities: City[], targetLat: number, targetLong: number): City | null {
+export function findClosestCity(
+  cities: City[],
+  targetLat: number,
+  targetLong: number
+): City | null {
   let closestCity: City | null = null;
   let minDistance = Infinity;
 
