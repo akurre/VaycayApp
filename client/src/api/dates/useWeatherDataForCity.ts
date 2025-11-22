@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client/react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { WeatherData } from '@/types/cityWeatherDataType';
 import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
 import { GET_WEATHER_BY_CITY_AND_DATE } from '../queries';
@@ -35,31 +35,37 @@ function useWeatherDataForCity({
   selectedDate,
   skipFetch = false,
 }: UseWeatherDataForCityParams) {
-  const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
-
   // Get cache functions from the store
   const { getFromCache, addToCache } = useCityDataCacheStore();
 
   // Format the date for the query (remove any dashes)
-  const formattedDate = selectedDate ? selectedDate.replaceAll('-', '') : '';
+  const formattedDate = useMemo(() => {
+    return selectedDate ? selectedDate.replaceAll('-', '') : '';
+  }, [selectedDate]);
 
   // Generate a unique cache key for this city and date
-  const cacheKey =
-    cityName && formattedDate
-      ? `weather-${cityName.toLowerCase()}-${lat || 0}-${long || 0}-${formattedDate}`
-      : '';
-
-  // Check cache first and initialize weatherData
-  useEffect(() => {
-    if (cacheKey) {
-      const cachedData = getFromCache(cacheKey);
-      if (cachedData && cachedData.weatherData) {
-        setWeatherData(cachedData.weatherData);
-      }
+  // Only create key if we have valid coordinates to avoid collisions
+  const cacheKey = useMemo(() => {
+    if (cityName && formattedDate && lat != null && long != null) {
+      return `weather-${cityName.toLowerCase()}-${lat}-${long}-${formattedDate}`;
     }
+    return null;
+  }, [cityName, lat, long, formattedDate]);
+
+  // Check cache synchronously before query initialization
+  const cachedData = useMemo(() => {
+    if (cacheKey) {
+      return getFromCache(cacheKey);
+    }
+    return null;
   }, [cacheKey, getFromCache]);
 
-  // Fetch weather data for the specific city and date
+  // Initialize state with cached data if available
+  const [weatherData, setWeatherData] = useState<WeatherData | null>(
+    cachedData?.weatherData || null
+  );
+
+  // Fetch weather data for the specific city and date only if not in cache
   const {
     data: weatherResponse,
     loading: weatherLoading,
@@ -73,8 +79,14 @@ function useWeatherDataForCity({
         long: long,
         monthDay: formattedDate,
       },
-      skip: skipFetch || !formattedDate || formattedDate.length !== 4 || !cityName || !!weatherData,
-      fetchPolicy: 'cache-first', // Use Apollo cache first, then network
+      skip:
+        skipFetch ||
+        !formattedDate ||
+        formattedDate.length !== 4 ||
+        !cityName ||
+        !cacheKey ||
+        !!cachedData?.weatherData,
+      fetchPolicy: 'network-only', // Use custom cache, bypass Apollo cache
     }
   );
 

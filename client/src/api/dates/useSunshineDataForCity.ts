@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client/react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { SunshineData } from '@/types/sunshineDataType';
 import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
 import { GET_SUNSHINE_BY_CITY } from '../queries';
@@ -32,25 +32,32 @@ function useSunshineDataForCity({
   long,
   skipFetch = false,
 }: UseSunshineDataForCityParams) {
-  const [sunshineData, setSunshineData] = useState<SunshineData | null>(null);
-
   // Get cache functions from the store
   const { getFromCache, addToCache } = useCityDataCacheStore();
 
   // Generate a unique cache key for this city (sunshine data includes all months)
-  const cacheKey = cityName ? `sunshine-${cityName.toLowerCase()}-${lat || 0}-${long || 0}` : '';
-
-  // Check cache first
-  useEffect(() => {
-    if (cacheKey) {
-      const cachedData = getFromCache(cacheKey);
-      if (cachedData && cachedData.sunshineData) {
-        setSunshineData(cachedData.sunshineData);
-      }
+  // Only create key if we have valid coordinates to avoid collisions
+  const cacheKey = useMemo(() => {
+    if (cityName && lat != null && long != null) {
+      return `sunshine-${cityName.toLowerCase()}-${lat}-${long}`;
     }
+    return null;
+  }, [cityName, lat, long]);
+
+  // Check cache synchronously before query initialization
+  const cachedData = useMemo(() => {
+    if (cacheKey) {
+      return getFromCache(cacheKey);
+    }
+    return null;
   }, [cacheKey, getFromCache]);
 
-  // Fetch sunshine data for the specific city
+  // Initialize state with cached data if available
+  const [sunshineData, setSunshineData] = useState<SunshineData | null>(
+    cachedData?.sunshineData || null
+  );
+
+  // Fetch sunshine data for the specific city only if not in cache
   const {
     data: sunshineResponse,
     loading: sunshineLoading,
@@ -61,8 +68,8 @@ function useSunshineDataForCity({
       lat: lat,
       long: long,
     },
-    skip: skipFetch || !cityName || !!sunshineData, // Skip if we have cached data
-    fetchPolicy: 'cache-first', // Use Apollo cache first, then network
+    skip: skipFetch || !cityName || !cacheKey || !!cachedData?.sunshineData,
+    fetchPolicy: 'network-only', // Use custom cache, bypass Apollo cache
   });
 
   // Process sunshine data when it's loaded

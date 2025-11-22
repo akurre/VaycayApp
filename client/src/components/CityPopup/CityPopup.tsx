@@ -24,9 +24,12 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
     return 'avgTemperature' in data;
   };
 
-  // cast city to WeatherData if it is one, otherwise null
-  const cityAsWeather = city && isWeatherData(city) ? city : null;
-  const cityAsSunshine = city && !isWeatherData(city) ? city : null;
+  // Determine what type of data we have
+  const hasWeatherData = city && isWeatherData(city);
+  const hasSunshineData = city && !isWeatherData(city);
+
+  const cityAsWeather = hasWeatherData ? city : null;
+  const cityAsSunshine = hasSunshineData ? city : null;
 
   // determine the month to use with validation
   // prefer selectedMonth from parent, fall back to extracting from weather data
@@ -39,7 +42,7 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
   const dateToUse =
     cityAsWeather?.date ??
     (() => {
-      if (selectedDate && !cityAsSunshine) {
+      if (selectedDate && !hasSunshineData) {
         // temperature mode: use the selected date
         return selectedDate;
       }
@@ -49,8 +52,8 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
     })();
 
   // determine if we should fetch weather data
-  // fetch when: we're in temperature view (cityAsWeather is null) and we have a valid date
-  const shouldFetchWeather = cityAsWeather === null && !!dateToUse;
+  // fetch when: we don't have weather data and we have a valid date
+  const shouldFetchWeather = !hasWeatherData && !!dateToUse;
 
   // always call hooks unconditionally (rules of hooks)
   const { weatherData, weatherLoading, weatherError } = useWeatherDataForCity({
@@ -62,8 +65,8 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
   });
 
   // determine if we should fetch sunshine data
-  // fetch when: we're in sunshine view (cityAsSunshine is null) and we have a valid month
-  const shouldFetchSunshine = cityAsSunshine === null && monthToUse >= 1 && monthToUse <= 12;
+  // fetch when: we don't have sunshine data and we have a valid month
+  const shouldFetchSunshine = !hasSunshineData && monthToUse >= 1 && monthToUse <= 12;
 
   const { sunshineData, sunshineLoading, sunshineError } = useSunshineDataForCity({
     cityName: city?.city ?? null,

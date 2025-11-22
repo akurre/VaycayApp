@@ -1,5 +1,5 @@
 import { objectType, queryField, nonNull, intArg, list, stringArg, floatArg } from 'nexus';
-import type { City, MonthlySunshine } from '@prisma/client';
+import type { City, MonthlySunshine, PrismaClient } from '@prisma/client';
 import { MAX_CITIES_GLOBAL_VIEW, MONTH_FIELDS } from '../const';
 import { getCachedWeatherData } from '../utils/cache';
 
@@ -40,6 +40,112 @@ export const SunshineData = objectType({
   },
 });
 
+// Helper function to map sunshine records to GraphQL response format
+function mapSunshineRecords(records: MonthlySunshineWithRelations[]) {
+  return records.map((record) => ({
+    city: record.city.name,
+    country: record.city.country,
+    state: record.city.state,
+    suburb: record.city.suburb,
+    lat: record.city.lat,
+    long: record.city.long,
+    population: record.city.population,
+    jan: record.jan,
+    feb: record.feb,
+    mar: record.mar,
+    apr: record.apr,
+    may: record.may,
+    jun: record.jun,
+    jul: record.jul,
+    aug: record.aug,
+    sep: record.sep,
+    oct: record.oct,
+    nov: record.nov,
+    dec: record.dec,
+    stationName: null,
+  }));
+}
+
+// Helper function to log query statistics
+function logQueryStats(
+  month: number,
+  records: MonthlySunshineWithRelations[],
+  queryTime: number,
+  bounds?: { minLat: number; maxLat: number; minLong: number; maxLong: number }
+) {
+  const countryDistribution = records.reduce(
+    (acc: Record<string, number>, record) => {
+      const { country } = record.city;
+      acc[country] = (acc[country] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
+
+  const countriesCount = Object.keys(countryDistribution).length;
+  const maxCitiesPerCountry =
+    countriesCount > 0 ? Math.max(...(Object.values(countryDistribution) as number[])) : 0;
+  const avgCitiesPerCountry =
+    countriesCount > 0 ? (records.length / countriesCount).toFixed(1) : '0.0';
+
+  console.log(`\n📊 Sunshine query${bounds ? ' (BOUNDS)' : ''} for month ${month}:`);
+  if (bounds) {
+    console.log(
+      `  📍 Bounds: lat[${bounds.minLat}, ${bounds.maxLat}], long[${bounds.minLong}, ${bounds.maxLong}]`
+    );
+  }
+  console.log(`  ⏱️  Query time: ${queryTime}ms`);
+  console.log(`  🌍 Countries: ${countriesCount}`);
+  console.log(`  🏙️  Total cities: ${records.length}`);
+  console.log(`  📈 Max per country: ${maxCitiesPerCountry}`);
+  console.log(`  📊 Avg per country: ${avgCitiesPerCountry}`);
+
+  const topCountries = Object.entries(countryDistribution)
+    .sort(([, a], [, b]) => (b as number) - (a as number))
+    .slice(0, 5);
+  console.log(`  🔝 Top countries: ${topCountries.map(([c, n]) => `${c}(${n})`).join(', ')}`);
+}
+
+// Shared function to fetch sunshine data by month with optional bounds
+async function fetchSunshineByMonth(
+  prisma: PrismaClient,
+  month: number,
+  bounds?: { minLat: number; maxLat: number; minLong: number; maxLong: number }
+) {
+  const monthIndex = month - 1;
+  const monthField = MONTH_FIELDS[monthIndex];
+
+  if (!monthField) {
+    console.warn(`fetchSunshineByMonth: invalid month ${month}`);
+    return [];
+  }
+
+  const startTime = Date.now();
+
+  const where: Record<string, unknown> = {
+    [monthField]: { not: null },
+  };
+
+  if (bounds) {
+    where.city = {
+      lat: { gte: bounds.minLat, lte: bounds.maxLat },
+      long: { gte: bounds.minLong, lte: bounds.maxLong },
+    };
+  }
+
+  const records = await prisma.monthlySunshine.findMany({
+    where,
+    include: { city: true },
+    take: MAX_CITIES_GLOBAL_VIEW,
+    orderBy: { city: { population: 'desc' } },
+  });
+
+  const queryTime = Date.now() - startTime;
+  logQueryStats(month, records, queryTime, bounds);
+
+  return mapSunshineRecords(records);
+}
+
 // query: get sunshine data for a specific month (1-12) across all cities
 export const sunshineByMonthQuery = queryField('sunshineByMonth', {
   type: list('SunshineData'),
@@ -48,88 +154,9 @@ export const sunshineByMonthQuery = queryField('sunshineByMonth', {
     month: nonNull(intArg({ description: 'month number (1-12)' })),
   },
   async resolve(_parent, args, context) {
-    const monthIndex = args.month - 1;
-    const monthField = MONTH_FIELDS[monthIndex];
-
-    if (!monthField) {
-      console.warn(`sunshineByMonth: invalid month ${args.month}`);
-      return [];
-    }
-
     const cacheKey = `sunshine:month:${args.month}`;
-
     return getCachedWeatherData(cacheKey, async () => {
-      const startTime = Date.now();
-
-      const records = await context.prisma.monthlySunshine.findMany({
-        where: {
-          // ensure we only return cities with sunshine data for the requested month
-          [monthField]: {
-            not: null,
-          },
-        } as Record<string, unknown>,
-        include: {
-          city: true,
-        },
-        take: MAX_CITIES_GLOBAL_VIEW,
-        orderBy: {
-          city: {
-            population: 'desc',
-          },
-        },
-      });
-
-      const countryDistribution = records.reduce(
-        (acc: Record<string, number>, record: MonthlySunshineWithRelations) => {
-          const { country } = record.city;
-          acc[country] = (acc[country] || 0) + 1;
-          return acc;
-        },
-        {} as Record<string, number>
-      );
-
-      const queryTime = Date.now() - startTime;
-      const countriesCount = Object.keys(countryDistribution).length;
-      const maxCitiesPerCountry =
-        countriesCount > 0 ? Math.max(...(Object.values(countryDistribution) as number[])) : 0;
-      const avgCitiesPerCountry =
-        countriesCount > 0 ? (records.length / countriesCount).toFixed(1) : '0.0';
-
-      console.log(`\n📊 Sunshine query for month ${args.month}:`);
-      console.log(`  ⏱️  Query time: ${queryTime}ms`);
-      console.log(`  🌍 Countries: ${countriesCount}`);
-      console.log(`  🏙️  Total cities: ${records.length}`);
-      console.log(`  📈 Max per country: ${maxCitiesPerCountry}`);
-      console.log(`  📊 Avg per country: ${avgCitiesPerCountry}`);
-
-      const topCountries = Object.entries(countryDistribution)
-        .sort(([, a], [, b]) => (b as number) - (a as number))
-        .slice(0, 5);
-      console.log(`  🔝 Top countries: ${topCountries.map(([c, n]) => `${c}(${n})`).join(', ')}`);
-
-      return records.map((record: MonthlySunshineWithRelations) => ({
-        city: record.city.name,
-        country: record.city.country,
-        state: record.city.state,
-        suburb: record.city.suburb,
-        lat: record.city.lat,
-        long: record.city.long,
-        population: record.city.population,
-        jan: record.jan,
-        feb: record.feb,
-        mar: record.mar,
-        apr: record.apr,
-        may: record.may,
-        jun: record.jun,
-        jul: record.jul,
-        aug: record.aug,
-        sep: record.sep,
-        oct: record.oct,
-        nov: record.nov,
-        dec: record.dec,
-        // no station information for sunshine data yet
-        stationName: null,
-      }));
+      return fetchSunshineByMonth(context.prisma, args.month);
     });
   },
 });
@@ -147,99 +174,15 @@ export const sunshineByMonthAndBoundsQuery = queryField('sunshineByMonthAndBound
     maxLong: nonNull(intArg({ description: 'maximum longitude' })),
   },
   async resolve(_parent, args, context) {
-    const monthIndex = args.month - 1;
-    const monthField = MONTH_FIELDS[monthIndex];
-
-    if (!monthField) {
-      console.warn(`sunshineByMonthAndBounds: invalid month ${args.month}`);
-      return [];
-    }
-
     const cacheKey = `sunshine:month:${args.month}:bounds:${args.minLat}-${args.maxLat}:${args.minLong}-${args.maxLong}`;
 
     return getCachedWeatherData(cacheKey, async () => {
-      const startTime = Date.now();
-
-      const records = await context.prisma.monthlySunshine.findMany({
-        where: {
-          [monthField]: {
-            not: null,
-          },
-          city: {
-            lat: {
-              gte: args.minLat,
-              lte: args.maxLat,
-            },
-            long: {
-              gte: args.minLong,
-              lte: args.maxLong,
-            },
-          },
-        } as Record<string, unknown>,
-        include: {
-          city: true,
-        },
-        take: MAX_CITIES_GLOBAL_VIEW,
-        orderBy: {
-          city: {
-            population: 'desc',
-          },
-        },
+      return fetchSunshineByMonth(context.prisma, args.month, {
+        minLat: args.minLat,
+        maxLat: args.maxLat,
+        minLong: args.minLong,
+        maxLong: args.maxLong,
       });
-
-      const countryDistribution = records.reduce(
-        (acc: Record<string, number>, record: MonthlySunshineWithRelations) => {
-          const { country } = record.city;
-          acc[country] = (acc[country] || 0) + 1;
-          return acc;
-        },
-        {} as Record<string, number>
-      );
-
-      const queryTime = Date.now() - startTime;
-      const countriesCount = Object.keys(countryDistribution).length;
-      const maxCitiesPerCountry =
-        countriesCount > 0 ? Math.max(...(Object.values(countryDistribution) as number[])) : 0;
-      const avgCitiesPerCountry =
-        countriesCount > 0 ? (records.length / countriesCount).toFixed(1) : '0.0';
-
-      console.log(`\n📊 Sunshine query (BOUNDS) for month ${args.month}:`);
-      console.log(
-        `  📍 Bounds: lat[${args.minLat}, ${args.maxLat}], long[${args.minLong}, ${args.maxLong}]`
-      );
-      console.log(`  ⏱️  Query time: ${queryTime}ms`);
-      console.log(`  🌍 Countries: ${countriesCount}`);
-      console.log(`  🏙️  Total cities: ${records.length}`);
-      console.log(`  📈 Max per country: ${maxCitiesPerCountry}`);
-      console.log(`  📊 Avg per country: ${avgCitiesPerCountry}`);
-
-      const topCountries = Object.entries(countryDistribution)
-        .sort(([, a], [, b]) => (b as number) - (a as number))
-        .slice(0, 5);
-      console.log(`  🔝 Top countries: ${topCountries.map(([c, n]) => `${c}(${n})`).join(', ')}`);
-
-      return records.map((record: MonthlySunshineWithRelations) => ({
-        city: record.city.name,
-        country: record.city.country,
-        state: record.city.state,
-        suburb: record.city.suburb,
-        lat: record.city.lat,
-        long: record.city.long,
-        population: record.city.population,
-        jan: record.jan,
-        feb: record.feb,
-        mar: record.mar,
-        apr: record.apr,
-        may: record.may,
-        jun: record.jun,
-        jul: record.jul,
-        aug: record.aug,
-        sep: record.sep,
-        oct: record.oct,
-        nov: record.nov,
-        dec: record.dec,
-        stationName: null,
-      }));
     });
   },
 });

@@ -62,10 +62,13 @@ export const useCityDataCacheStore = create<CityDataCacheStore>()(
             }
           }
 
-          // Add or update the cache entry
+          // Get existing cache entry to preserve data when updating
+          const existing = state.cache[key];
+
+          // Add or update the cache entry, merging with existing data
           newCache[key] = {
-            weatherData,
-            sunshineData,
+            weatherData: weatherData ?? existing?.weatherData ?? null,
+            sunshineData: sunshineData ?? existing?.sunshineData ?? null,
             timestamp: Date.now(),
           };
 

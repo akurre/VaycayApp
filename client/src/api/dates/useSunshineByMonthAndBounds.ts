@@ -52,21 +52,17 @@ function useSunshineByMonthAndBounds({
 
   const activeQuery = shouldUseBounds ? boundsQuery : globalQuery;
 
+  // Handle errors from the active query
   useEffect(() => {
-    if (!shouldUseBounds && globalQuery.error) {
-      parseErrorAndNotify(globalQuery.error, 'failed to load sunshine data');
+    if (activeQuery.error) {
+      parseErrorAndNotify(activeQuery.error, 'failed to load sunshine data');
     }
-  }, [globalQuery.error, shouldUseBounds]);
+  }, [activeQuery.error]);
 
-  useEffect(() => {
-    if (shouldUseBounds && boundsQuery.error) {
-      parseErrorAndNotify(boundsQuery.error, 'failed to load sunshine data');
-    }
-  }, [boundsQuery.error, shouldUseBounds]);
-
+  // Extract data based on which query is active
   const sunshineData = shouldUseBounds
-    ? activeQuery.data?.sunshineByMonthAndBounds
-    : activeQuery.data?.sunshineByMonth;
+    ? boundsQuery.data?.sunshineByMonthAndBounds
+    : globalQuery.data?.sunshineByMonth;
 
   return {
     dataReturned: sunshineData,
