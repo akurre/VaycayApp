@@ -173,18 +173,21 @@ describe('CityPopup', () => {
     expect(screen.getByText('Failed to load sunshine data for this city.')).toBeInTheDocument();
   });
 
-  it('uses selectedMonth prop over extracting from date', () => {
+  it('fetches sunshine data without selectedMonth parameter', () => {
     render(<CityPopup city={weatherData} onClose={mockOnClose} selectedMonth={6} />);
 
-    // verify useSunshineDataForCity was called with selectedMonth prop (not extracted from date)
+    // verify useSunshineDataForCity was called without selectedMonth (it fetches all 12 months)
     expect(useSunshineDataForCity).toHaveBeenCalledWith(
       expect.objectContaining({
-        selectedMonth: 6, // uses selectedMonth prop
+        cityName: 'New York',
+        lat: 40.7128,
+        long: -74.006,
+        skipFetch: false,
       })
     );
   });
 
-  it('uses selectedMonth prop when city is sunshine data', () => {
+  it('uses selectedMonth to construct date when city is sunshine data', () => {
     render(<CityPopup city={sunshineData} onClose={mockOnClose} selectedMonth={6} />);
 
     // verify useWeatherDataForCity was called with date constructed from selectedMonth
