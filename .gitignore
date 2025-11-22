@@ -56,3 +56,4 @@ vaycay/weather_data/minimized_weather_population_station_data_cleaned_30k_popula
 # Python files are now in legacy/python-api/
 .DS_Store
 /.serena/cache
+.claude/settings.json

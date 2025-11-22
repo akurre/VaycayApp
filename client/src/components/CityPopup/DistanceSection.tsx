@@ -1,4 +1,4 @@
-import { Divider, Text } from '@mantine/core';
+import { Text } from '@mantine/core';
 import { useAppStore } from '@/stores/useAppStore';
 import { calculateDistanceFromHome } from '@/utils/location/calculateDistanceFromHome';
 import { formatDistance } from '@/utils/location/formatDistance';
@@ -17,7 +17,6 @@ const DistanceSection = ({ lat, long }: DistanceSectionProps) => {
 
   return (
     <div>
-      <Divider />
       {homeLocation ? (
         distance !== null ? (
           <Field label="Distance from home" value={formatDistance(distance)} />

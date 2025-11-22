@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { Text } from '@mantine/core';
 import CustomPopover from '@/components/Shared/CustomPopover';
 

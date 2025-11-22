@@ -5,7 +5,7 @@ import {
   DEBOUNCE_DELAY,
   BOUNDS_BUFFER_PERCENT,
   ZOOM_AMPLIFICATION_FACTOR,
-} from '@/constants';
+} from '@/const';
 
 /**
  * hook to track map viewport bounds and zoom level for intelligent query switching.

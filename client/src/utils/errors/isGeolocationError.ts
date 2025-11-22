@@ -1,4 +1,4 @@
-import { GeolocationErrorLike } from '@/types/errorTypes';
+import type { GeolocationErrorLike } from '@/types/errorTypes';
 
 /**
  * type guard for geolocation errors

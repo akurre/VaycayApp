@@ -1,3 +1,5 @@
+import { MonthlySunshine } from '@prisma/client';
+
 // global map display configuration
 export const MAX_CITIES_GLOBAL_VIEW = 300;
 
@@ -32,3 +34,19 @@ export const ZOOM_THRESHOLDS = {
   // debounce delay for zoom/pan events (ms)
   DEBOUNCE_DELAY: 150,
 };
+
+// ordered list of monthly field names used for dynamic column selection
+export const MONTH_FIELDS: Array<keyof MonthlySunshine> = [
+  'jan',
+  'feb',
+  'mar',
+  'apr',
+  'may',
+  'jun',
+  'jul',
+  'aug',
+  'sep',
+  'oct',
+  'nov',
+  'dec',
+];

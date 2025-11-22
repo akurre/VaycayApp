@@ -30,6 +30,7 @@ model City {
   // Relations
   weatherStations WeatherStation[]
   weatherRecords  WeatherRecord[]
+  monthlySunshine MonthlySunshine?
   
   // Ensure uniqueness based on name, country, and coordinates
   @@unique([name, country, lat, long])
@@ -103,4 +104,33 @@ model WeatherRecord {
   @@index([date, TAVG])              // For filtering by date with non-null temperature
   
   @@map("weather_records")
+}
+
+// Monthly sunshine hours table - stores aggregated monthly sunshine data
+model MonthlySunshine {
+  id        Int     @id @default(autoincrement())
+  cityId    Int     @unique
+  
+  // Monthly sunshine hours (in hours)
+  jan       Float?
+  feb       Float?
+  mar       Float?
+  apr       Float?
+  may       Float?
+  jun       Float?
+  jul       Float?
+  aug       Float?
+  sep       Float?
+  oct       Float?
+  nov       Float?
+  dec       Float?
+  annual    Float?  // Total annual sunshine hours
+  
+  // Relations
+  city      City    @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  
+  // Indexes for fast lookups
+  @@index([cityId])
+  
+  @@map("monthly_sunshine")
 }

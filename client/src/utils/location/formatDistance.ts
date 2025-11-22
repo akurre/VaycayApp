@@ -1,6 +1,6 @@
 // formats distance for display, using miles for US/UK locales and km for others
 
-import { KM_TO_MILES, MILES_LOCALES } from '@/constants';
+import { KM_TO_MILES, MILES_LOCALES } from '@/const';
 
 function shouldUseMiles(): boolean {
   const locale = navigator.language;
@@ -13,6 +13,7 @@ export function formatDistance(distanceKm: number): string {
   const unit = useMiles ? 'mi' : 'km';
 
   // for distances less than 10, show 1 decimal place
+  // eslint-disable-next-line no-magic-numbers
   if (distance < 10) {
     return `${distance.toFixed(1)} ${unit}`;
   }

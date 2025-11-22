@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { getTooltipContent } from '@/utils/map/getTooltipContent';
-import { WeatherData } from '@/types/cityWeatherDataType';
+import type { WeatherData } from '@/types/cityWeatherDataType';
 
 describe('getTooltipContent', () => {
   const createMockCity = (overrides?: Partial<WeatherData>): WeatherData => ({

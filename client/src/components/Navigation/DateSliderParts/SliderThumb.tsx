@@ -1,6 +1,6 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { IconGripVertical } from '@tabler/icons-react';
-import { SLIDER_THUMB_WIDTH } from '@/constants';
+import { SLIDER_THUMB_WIDTH } from '@/const';
 import CustomLoader from '@/components/Shared/CustomLoader';
 
 interface SliderThumbProps {

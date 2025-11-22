@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
-import { ReactElement } from 'react';
-import { render, RenderOptions } from '@testing-library/react';
+import type { ReactElement } from 'react';
+import { render } from '@testing-library/react';
+import type { RenderOptions } from '@testing-library/react';
 import { MantineProvider } from '@mantine/core';
 import { theme } from './theme';
 
