@@ -1,19 +1,72 @@
 /**
  * Merge Duplicate Cities - PRCP Data Consolidation (Efficient Approach)
  *
- * This script consolidates precipitation (PRCP) data from duplicate city entries
- * into cities that have temperature data, then removes PRCP-only cities.
+ * PROBLEM THIS SOLVES:
+ * Weather data from NOAA often comes from multiple weather stations in the same city,
+ * resulting in duplicate city entries in our database. Some stations only report
+ * temperature data (TAVG/TMAX/TMIN), while others only report precipitation (PRCP).
+ * This creates an incomplete picture where we have cities with temperature but no
+ * precipitation data, and vice versa.
+ *
+ * WHAT THIS SCRIPT DOES:
+ * This script consolidates weather data from duplicate city entries by:
+ * 1. Identifying cities that have temperature data but are missing precipitation data
+ * 2. Finding duplicate cities (same name, country, state) that have precipitation data
+ * 3. Transferring precipitation data to the temperature-containing cities by matching dates
+ * 4. Filling any remaining gaps in precipitation coverage from other duplicate sources
+ * 5. Deleting all cities that only have precipitation data (no temperature)
+ * 6. Managing weather station associations to prevent duplicates
+ *
+ * WHY TEMPERATURE TAKES PRIORITY:
+ * Temperature data is the primary metric for our application's use case (vacation planning).
+ * Precipitation is supplementary information. Therefore, we keep cities with temperature
+ * data and enhance them with precipitation, rather than the other way around.
  *
  * EFFICIENT APPROACH:
- * 1. Find cities with TEMP but no PRCP (these need PRCP data)
- * 2. For each TEMP-only city, find duplicate cities with PRCP data
- * 3. Transfer PRCP data by matching dates
- * 4. Delete ALL PRCP-only cities in one final sweep
+ * Instead of processing all duplicate city groups (which would be thousands), this script:
+ * 1. Finds only cities with TEMP but no PRCP (the subset that needs enhancement)
+ * 2. For each TEMP-only city, finds duplicate cities with PRCP data
+ * 3. Transfers PRCP data by matching dates between weather records
+ * 4. Fills any remaining PRCP gaps from cities with complete data
+ * 5. Deletes ALL PRCP-only cities in one final sweep
  *
- * WHY THIS IS BETTER:
- * - Most duplicate groups have cities with BOTH temp & PRCP (no action needed)
- * - Only a small subset have TEMP-only cities that need PRCP
+ * WHY THIS IS BETTER THAN NAIVE APPROACH:
+ * - Most duplicate groups already have cities with BOTH temp & PRCP (no action needed)
+ * - Only a small subset have TEMP-only cities that need PRCP enhancement
  * - By focusing on TEMP-only cities, we skip processing thousands of groups unnecessarily
+ * - Single final deletion sweep is more efficient than deleting cities one-by-one
+ *
+ * EXAMPLE SCENARIO:
+ * Before: 
+ *   - City A (Rome, Italy): Has TAVG, TMAX, TMIN for all dates, but no PRCP
+ *   - City B (Rome, Italy): Has only PRCP for all dates, no temperature
+ *   - City C (Rome, Italy): Has both TEMP and PRCP for all dates
+ * 
+ * After:
+ *   - City A (Rome, Italy): Now has TAVG, TMAX, TMIN, and PRCP for all dates
+ *   - City B: Deleted (PRCP-only city)
+ *   - City C: Unchanged (already complete)
+ *
+ * WEATHER STATION HANDLING:
+ * When merging cities, the script also handles weather station associations:
+ * - If a station name already exists in the target city, the duplicate is deleted
+ * - If a station name is unique, it's reassigned to the target city
+ * - This prevents duplicate station entries while preserving unique data sources
+ *
+ * USAGE:
+ * Run this script after importing weather data to consolidate duplicate cities:
+ *   npm run merge-duplicates
+ * or:
+ *   npx ts-node server/scripts/merge-duplicate-cities-optimized.ts
+ *
+ * PREREQUISITES:
+ * - Database must be populated with cities and weather records
+ * - Backup recommended before running (script modifies and deletes data)
+ *
+ * PERFORMANCE:
+ * - Processes cities in batches with progress reporting
+ * - Uses efficient SQL queries with proper indexing
+ * - Typical runtime: 5-15 minutes depending on database size
  */
 
 import { PrismaClient } from '@prisma/client';
