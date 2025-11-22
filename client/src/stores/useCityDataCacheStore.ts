@@ -30,6 +30,9 @@ interface CityDataCacheStore {
   // Get a city from the cache
   getFromCache: (key: string) => CachedCityData | undefined;
 
+  // Mark a cache key as recently used (for LRU tracking)
+  markAsRecentlyUsed: (key: string) => void;
+
   // Clear the entire cache
   clearCache: () => void;
 }
@@ -81,18 +84,16 @@ export const useCityDataCacheStore = create<CityDataCacheStore>()(
 
       getFromCache: (key) => {
         const state = get();
-        const cachedData = state.cache[key];
+        return state.cache[key];
+      },
 
-        if (cachedData) {
-          // Update recently used list (move this key to the end)
-          set((state) => {
-            const newRecentlyUsed = state.recentlyUsed.filter((k) => k !== key);
-            newRecentlyUsed.push(key);
-            return { recentlyUsed: newRecentlyUsed };
-          });
-        }
-
-        return cachedData;
+      // Separate method to update recency - should be called in useEffect
+      markAsRecentlyUsed: (key) => {
+        set((state) => {
+          const newRecentlyUsed = state.recentlyUsed.filter((k) => k !== key);
+          newRecentlyUsed.push(key);
+          return { recentlyUsed: newRecentlyUsed };
+        });
       },
 
       clearCache: () => set({ cache: {}, recentlyUsed: [] }),

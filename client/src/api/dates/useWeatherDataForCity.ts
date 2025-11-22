@@ -36,7 +36,7 @@ function useWeatherDataForCity({
   skipFetch = false,
 }: UseWeatherDataForCityParams) {
   // Get cache functions from the store
-  const { getFromCache, addToCache } = useCityDataCacheStore();
+  const { getFromCache, addToCache, markAsRecentlyUsed } = useCityDataCacheStore();
 
   // Format the date for the query (remove any dashes)
   const formattedDate = useMemo(() => {
@@ -86,6 +86,13 @@ function useWeatherDataForCity({
       addToCache(cacheKey, weatherResponse.weatherByCityAndDate, null);
     }
   }, [weatherResponse, cacheKey, addToCache]);
+
+  // Mark cache as recently used when accessed
+  useEffect(() => {
+    if (cacheKey && cachedData) {
+      markAsRecentlyUsed(cacheKey);
+    }
+  }, [cacheKey, cachedData, markAsRecentlyUsed]);
 
   // Handle errors with context
   useEffect(() => {
