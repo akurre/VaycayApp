@@ -1,6 +1,7 @@
-import { Divider, Text } from '@mantine/core';
 import Field from './Field';
 import { formatTemperature } from '@/utils/tempFormatting/formatTemperature';
+import GreaterSection from './GreaterSection';
+import getTemperatureIcon from '@/utils/iconMapping/getTemperatureIcon';
 
 interface TemperatureSectionProps {
   avgTemperature: number | null;
@@ -13,17 +14,16 @@ const TemperatureSection = ({
   maxTemperature,
   minTemperature,
 }: TemperatureSectionProps) => {
+  const temperatureIcon = getTemperatureIcon(avgTemperature);
   return (
     <div className="mt-2">
-      <Divider />
-      <Text size="sm" fw={600} mb="xs">
-        Temperature
-      </Text>
-      <div className="grid grid-cols-3 gap-2">
-        <Field label="Average" value={formatTemperature(avgTemperature) ?? 'N/A'} />
-        <Field label="Max" value={formatTemperature(maxTemperature) ?? 'N/A'} />
-        <Field label="Min" value={formatTemperature(minTemperature) ?? 'N/A'} />
-      </div>
+      <GreaterSection title="Temperature" icon={temperatureIcon}>
+        <div className="grid grid-cols-3 gap-2">
+          <Field label="Average" value={formatTemperature(avgTemperature) ?? 'N/A'} />
+          <Field label="Max" value={formatTemperature(maxTemperature) ?? 'N/A'} />
+          <Field label="Min" value={formatTemperature(minTemperature) ?? 'N/A'} />
+        </div>
+      </GreaterSection>
     </div>
   );
 };

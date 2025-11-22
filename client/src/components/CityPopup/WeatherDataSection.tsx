@@ -1,0 +1,53 @@
+import { Alert, Loader } from '@mantine/core';
+import { IconAlertCircle } from '@tabler/icons-react';
+import type { WeatherData } from '@/types/cityWeatherDataType';
+import TemperatureSection from './TemperatureSection';
+import PrecipitationSection from './PrecipitationSection';
+
+interface WeatherDataSectionProps {
+  displayWeatherData: WeatherData | null;
+  isLoading: boolean;
+  hasError: boolean;
+}
+
+const WeatherDataSection = ({
+  displayWeatherData,
+  isLoading,
+  hasError,
+}: WeatherDataSectionProps) => {
+  return (
+    <>
+      {isLoading && !displayWeatherData && (
+        <div className="flex justify-center py-4">
+          <Loader size="sm" />
+        </div>
+      )}
+
+      {hasError && !displayWeatherData && (
+        <Alert icon={<IconAlertCircle size="1rem" />} color="red" title="Error">
+          Failed to load temperature data for this city.
+        </Alert>
+      )}
+
+      {displayWeatherData ? (
+        <>
+          <TemperatureSection
+            avgTemperature={displayWeatherData.avgTemperature}
+            maxTemperature={displayWeatherData.maxTemperature}
+            minTemperature={displayWeatherData.minTemperature}
+          />
+          {displayWeatherData.precipitation && (
+            <PrecipitationSection
+              precipitation={displayWeatherData.precipitation}
+              snowDepth={displayWeatherData.snowDepth}
+            />
+          )}
+        </>
+      ) : (
+        <>No weather data to show.</>
+      )}
+    </>
+  );
+};
+
+export default WeatherDataSection;

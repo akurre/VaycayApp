@@ -11,6 +11,7 @@ const MapViewToggle = ({ viewMode, onViewModeChange }: MapViewToggleProps) => {
   return (
     <MapToggle
       value={viewMode}
+      size="lg"
       onChange={onViewModeChange}
       options={[
         {

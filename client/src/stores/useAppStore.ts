@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { HomeLocation } from '@/types/userLocationType';
+import type { HomeLocation } from '@/types/userLocationType';
 
 interface AppState {
   homeLocation: HomeLocation | null;

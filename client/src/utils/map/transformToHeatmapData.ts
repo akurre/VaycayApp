@@ -1,4 +1,4 @@
-import { WeatherData } from '../../types/cityWeatherDataType';
+import type { WeatherData } from '../../types/cityWeatherDataType';
 
 export interface HeatmapDataPoint {
   position: [number, number];

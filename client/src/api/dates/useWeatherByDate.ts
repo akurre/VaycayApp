@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 import { GET_WEATHER_BY_DATE } from '../queries';
-import {
+import type {
   WeatherData,
   WeatherByDateResponse,
   WeatherByDateVars,

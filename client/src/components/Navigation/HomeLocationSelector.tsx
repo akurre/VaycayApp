@@ -5,8 +5,8 @@ import { IconHome, IconMapPin, IconSearch } from '@tabler/icons-react';
 import { useAppStore } from '@/stores/useAppStore';
 import { useUserLocation } from '@/hooks/useUserLocation';
 import useCitySearch from '@/hooks/useCitySearch';
-import { SearchCitiesResult } from '@/types/userLocationType';
-import { TOGGLE_ICON_SIZE } from '@/constants';
+import type { SearchCitiesResult } from '@/types/userLocationType';
+import { TOGGLE_ICON_SIZE } from '@/const';
 
 function HomeLocationSelector() {
   const [opened, setOpened] = useState(false);

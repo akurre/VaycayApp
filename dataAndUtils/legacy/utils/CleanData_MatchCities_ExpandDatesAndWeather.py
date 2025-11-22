@@ -485,7 +485,15 @@ def get_unique_locations(df_weather: pd.DataFrame) -> pd.DataFrame:
 
 def load_worldcities(min_population: int = MIN_POPULATION) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
-    load worldcities.csv and return both major cities and all cities.
+    load worldcities.csv (a very large file) and return both major cities and all cities.
+
+    worldcities.csv snippet:
+    ```
+    "city","city_ascii","lat","lng","country","iso2","iso3","admin_name","capital","population","id"
+    "Tokyo","Tokyo","35.6897","139.6922","Japan","JP","JPN","Tōkyō","primary","37977000","1392685764"
+    "Jakarta","Jakarta","-6.2146","106.8451","Indonesia","ID","IDN","Jakarta","primary","34540000","1360771077"
+    "Delhi","Delhi","28.6600","77.2300","India","IN","IND","Delhi","admin","29617000","1356872604"
+    ```
     
     args:
         min_population: minimum population threshold for major cities

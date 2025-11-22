@@ -55,3 +55,4 @@ vaycay/weather_data/minimized_weather_population_station_data_cleaned_30k_popula
 # Legacy Python code (keep Python-specific ignores in legacy/.gitignore if needed)
 # Python files are now in legacy/python-api/
 .DS_Store
+.claude/settings.json

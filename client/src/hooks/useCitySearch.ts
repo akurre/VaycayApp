@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
 import { useLazyQuery } from '@apollo/client/react';
 import { SEARCH_CITIES } from '@/api/queries';
-import { SearchCitiesResult, HomeLocation, LocationSource } from '@/types/userLocationType';
+import type { SearchCitiesResult, HomeLocation } from '@/types/userLocationType';
+import { LocationSource } from '@/types/userLocationType';
 import { useAppStore } from '@/stores/useAppStore';
 import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
 

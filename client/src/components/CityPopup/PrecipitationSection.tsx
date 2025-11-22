@@ -1,6 +1,7 @@
-import { Divider, Text } from '@mantine/core';
 import Field from './Field';
 import { formatValue } from '@/utils/dataFormatting/formatValue';
+import GreaterSection from './GreaterSection';
+import getPrecipitationIcon from '@/utils/iconMapping/getPrecipitationIcon';
 
 interface PrecipitationSectionProps {
   precipitation: number | null;
@@ -8,17 +9,14 @@ interface PrecipitationSectionProps {
 }
 
 const PrecipitationSection = ({ precipitation, snowDepth }: PrecipitationSectionProps) => {
+  const precipitationIcon = getPrecipitationIcon(precipitation);
   return (
-    <div>
-      <Divider />
-      <Text size="sm" fw={600} mb="xs">
-        Precipitation
-      </Text>
+    <GreaterSection title="Precipitation" icon={precipitationIcon}>
       <div className="grid grid-cols-2 gap-2">
         <Field label="Rainfall" value={formatValue(precipitation, ' mm')} />
         <Field label="Snow Depth" value={formatValue(snowDepth, ' cm')} />
       </div>
-    </div>
+    </GreaterSection>
   );
 };
 

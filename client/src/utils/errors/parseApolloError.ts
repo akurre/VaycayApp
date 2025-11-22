@@ -1,4 +1,5 @@
-import { ApolloErrorLike, ErrorCategory, ErrorSeverity, ParsedError } from '@/types/errorTypes';
+import type { ApolloErrorLike, ParsedError } from '@/types/errorTypes';
+import { ErrorCategory, ErrorSeverity } from '@/types/errorTypes';
 
 /**
  * parses apollo graphql errors into a standardized format

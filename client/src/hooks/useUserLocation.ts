@@ -1,7 +1,8 @@
 import { useState, useCallback } from 'react';
 import { useLazyQuery } from '@apollo/client/react';
 import { GET_NEAREST_CITY } from '@/api/queries';
-import { HomeLocation, NearestCityResult, LocationSource } from '@/types/userLocationType';
+import { LocationSource } from '@/types/userLocationType';
+import type { HomeLocation, NearestCityResult } from '@/types/userLocationType';
 import { useAppStore } from '@/stores/useAppStore';
 import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
 

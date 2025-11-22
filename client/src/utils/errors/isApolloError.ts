@@ -1,4 +1,4 @@
-import { ApolloErrorLike } from '@/types/errorTypes';
+import type { ApolloErrorLike } from '@/types/errorTypes';
 
 /**
  * type guard for apollo errors

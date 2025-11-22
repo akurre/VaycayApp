@@ -16,5 +16,6 @@ export function calculateDistance(lat1: number, lon1: number, lat2: number, lon2
 }
 
 function toRadians(degrees: number): number {
+  // eslint-disable-next-line no-magic-numbers
   return degrees * (Math.PI / 180);
 }
