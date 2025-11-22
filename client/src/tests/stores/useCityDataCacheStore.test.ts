@@ -130,6 +130,9 @@ describe('useCityDataCacheStore', () => {
 
     // Access first item again
     store.getFromCache('berlin-1');
+    
+    // Mark Berlin as recently used (this would normally happen in useEffect)
+    store.markAsRecentlyUsed('berlin-1');
 
     // Berlin should now be the most recently used
     updatedState = useCityDataCacheStore.getState();

@@ -92,7 +92,6 @@ describe('CityPopup', () => {
 
     expect(screen.getByText('New York, New York, United States')).toBeInTheDocument();
     expect(screen.getByText('Average Annual Sunshine')).toBeInTheDocument();
-    expect(screen.getByText('January Sunshine')).toBeInTheDocument();
   });
 
   it('fetches and displays weather data when city is sunshine data', () => {

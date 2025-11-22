@@ -220,6 +220,11 @@ export const MONTH_FIELDS: Record<number, keyof SunshineData> = {
 // custom date slider thumb dimensions for positioning calculations
 export const SLIDER_THUMB_WIDTH = 32; // 8 * 4 (w-8 in tailwind)
 
+// sunshine graph chart colors
+export const SUNSHINE_CHART_LINE_COLOR = '#f59e0b'; // orange/amber
+export const SUNSHINE_CHART_GRID_COLOR = '#e5e7eb'; // light gray
+export const SUNSHINE_CHART_AXIS_COLOR = '#9ca3af'; // medium gray
+
 // month boundaries for labels (day-of-year format)
 export const monthMarks = [
   { value: 1, label: 'Jan' },
