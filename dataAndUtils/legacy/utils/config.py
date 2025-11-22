@@ -1,13 +1,83 @@
-import os
+"""
+Configuration module for weather data processing.
 
-class Configuration:
-    host = os.getenv('POSTGRES_HOST', 'localhost')
-    port = os.getenv('POSTGRES_PORT', '5432')
-    dbname = os.getenv('POSTGRES_DB', 'postgres')
-    username = os.getenv('POSTGRES_USER', 'postgres')
-    password = os.getenv('POSTGRES_PASSWORD', 'iwantsun')
-    table_name = 'all_city_weather_data'
-    dbschema = 'public'
+This module contains all constants, paths, and configuration settings
+used across the weather data processing pipeline.
+"""
 
-    # Use DATABASE_URL from environment if available, otherwise construct from parts
-    postgres_url = os.getenv('DATABASE_URL', f'postgresql://{username}:{password}@{host}:{port}/{dbname}')
+from pathlib import Path
+import logging
+
+# Setup logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('weather_processing.log'),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+
+# ============================================================================
+# PATH CONFIGURATION
+# ============================================================================
+
+# Constants - Make these configurable
+PROJECT_ROOT = Path(__file__).parent.parent.parent.parent  # Go up to repo root
+UNCLEANED_DATA_DIR = PROJECT_ROOT / 'uncleaned_data'
+OUTPUT_DIR = PROJECT_ROOT / 'dataAndUtils' / 'vaycay' / 'weather_data'
+CITY_DATA_DIR = PROJECT_ROOT / 'dataAndUtils' / 'vaycay' / 'city_data'
+BATCH_OUTPUT_DIR = PROJECT_ROOT / 'dataAndUtils' / 'worldData'  # New batch output directory
+WORLDCITIES_PATH = PROJECT_ROOT / 'dataAndUtils' / 'worldcities.csv'
+
+# ============================================================================
+# PROCESSING SETTINGS
+# ============================================================================
+
+# Default processing settings
+DEFAULT_BATCH_SIZE_LOCATIONS = 500  # Number of locations per output batch
+DEFAULT_GEOCODING_DELAY = 1.5  # Seconds between geocoding requests (Nominatim limit)
+
+# Worldcities matching settings
+MIN_POPULATION = 100000  # Minimum population for major cities
+SEARCH_RADIUS_KM_PRIMARY = 20.0  # Primary search radius in kilometers
+SEARCH_RADIUS_KM_FALLBACK = 30.0  # Fallback search radius in kilometers
+MATCHING_VERSION = "v2_worldcities"  # Version marker for checkpoint compatibility
+
+# ============================================================================
+# CHECKPOINT FILE PATHS
+# ============================================================================
+
+def get_checkpoint_path() -> Path:
+    """Get the path to the geocoding checkpoint file."""
+    return CITY_DATA_DIR / 'geocoding_checkpoint.csv'
+
+def get_progress_path() -> Path:
+    """Get the path to the geocoding progress metadata file."""
+    return CITY_DATA_DIR / 'geocoding_progress.json'
+
+def get_failed_geocodes_path() -> Path:
+    """Get the path to the failed geocodes file."""
+    return CITY_DATA_DIR / 'failed_geocodes.json'
+
+def get_simplified_data_path() -> Path:
+    """Get the path to simplified geocoded data."""
+    return CITY_DATA_DIR / 'ALL_location_specific_data_simplified.csv'
+
+def get_full_data_path() -> Path:
+    """Get the path to full geocoded data."""
+    return CITY_DATA_DIR / 'ALL_location_specific_data.csv'
+
+def get_unmatched_coords_path() -> Path:
+    """Get the path to unmatched coordinates file."""
+    return CITY_DATA_DIR / 'unmatched_coordinates.csv'
+
+# ============================================================================
+# DIRECTORY MANAGEMENT
+# ============================================================================
+
+def ensure_directories():
+    """Create necessary directories if they don't exist."""
+    for directory in [OUTPUT_DIR, CITY_DATA_DIR, BATCH_OUTPUT_DIR]:
+        directory.mkdir(parents=True, exist_ok=True)
