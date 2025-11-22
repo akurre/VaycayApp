@@ -1,5 +1,5 @@
 import { ActionIcon, Button, Popover, Title, Text } from '@mantine/core';
-import { useMemo } from 'react';
+import { useMemo, memo } from 'react';
 import { IconX } from '@tabler/icons-react';
 import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
 import type { WeatherDataUnion } from '@/types/mapTypes';
@@ -77,9 +77,6 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
     skipFetch: !shouldFetchSunshine,
   });
 
-  // early return AFTER all hooks have been called
-  if (!city) return null;
-
   // use what we already have, or fall back to fetched data
   const displayWeatherData = cityAsWeather ?? weatherData;
   const displaySunshineData = cityAsSunshine ?? sunshineData;
@@ -90,6 +87,9 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
     const chartData = transformSunshineDataForChart(displaySunshineData);
     return calculateAverageSunshine(chartData);
   }, [displaySunshineData]);
+
+  // early return AFTER all hooks have been called
+  if (!city) return null;
 
   // Get the sunshine icon
   const SunshineIcon = getSunshineHoursIcon(averageSunshine);
@@ -103,84 +103,106 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
 
   const formattedDate = formatDateString(displayWeatherData?.date);
 
-  if (!city) return null;
-
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700 shadow-lg z-50"
+      className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700 shadow-lg z-50 flex flex-col"
       style={{ height: '33.333vh', pointerEvents: 'auto' }}
     >
-    
-      <div className='absolute top-2 right-2'>
+      <div className="absolute top-2 right-2 z-10">
         {/* close button */}
-        <ActionIcon
-          onClick={onClose}
-          aria-label="Close"
-        >
+        <ActionIcon onClick={onClose} aria-label="Close">
           <IconX size={24} />
         </ActionIcon>
       </div>
       {/* Content area with horizontal layout */}
-      <div className="flex gap-6 px-6 py-4 h-full overflow-y-auto">
+      <div className="flex h-full overflow-hidden">
         {/* Left section - City info and metadata */}
-        <div className="flex flex-col gap-3 min-w-[300px]">
-        <Title order={4}>
-          {cityAndCountry}
-        </Title>
-          <div className="flex justify-between items-center">
-            <Field label="Date" value={formattedDate} />
-            <Popover position="top" withArrow shadow="md">
-              <Popover.Target>
-                <Button variant="subtle" size="compact-xs">
-                  More Info
-                </Button>
-              </Popover.Target>
-              <Popover.Dropdown>
-                {city.stationName && (
-                  <div>
-                    <Field label="Weather Station" value={city.stationName} />
-                  </div>
-                )}
-                {city.lat && city.long && (
-                  <Field
-                    label="Coordinates"
-                    value={`${city.lat.toFixed(4)}°, ${city.long.toFixed(4)}°`}
-                    monospace
-                  />
-                )}
-              </Popover.Dropdown>
-            </Popover>
+        <div className="flex flex-col gap-3 px-6 py-4 h-full w-1/2 overflow-y-auto">
+          <div className="flex w-full justify-between">
+            <div className="flex gap-2 items-center">
+              <Title order={4}>{cityAndCountry}</Title>
+              <Popover position="top" withArrow shadow="md">
+                <Popover.Target>
+                  <Button variant="subtle" size="compact-xs">
+                    More Info
+                  </Button>
+                </Popover.Target>
+                <Popover.Dropdown>
+                  {city.stationName && (
+                    <div>
+                      <Field label="Weather Station" value={city.stationName} />
+                    </div>
+                  )}
+                  {city.lat && city.long && (
+                    <Field
+                      label="Coordinates"
+                      value={`${city.lat.toFixed(4)}°, ${city.long.toFixed(4)}°`}
+                      monospace
+                    />
+                  )}
+                </Popover.Dropdown>
+              </Popover>
+            </div>
+            {formattedDate}
           </div>
-          <AdditionalInfo city={city} />
-        </div>
+          <div className="flex">
+            <div className="flex gap-3">
+              <AdditionalInfo city={city} />
+            </div>
 
-        {/* Middle section - Weather data */}
-        <div className="flex-1 min-w-0">
-          <WeatherDataSection
-            displayWeatherData={displayWeatherData}
-            isLoading={weatherLoading}
-            hasError={weatherError}
-          />
-          {/* Average annual sunshine */}
-          {averageSunshine !== null && (
-            <GreaterSection title="Average Annual Sunshine" icon={SunshineIcon}>
-              <Text size="md">{averageSunshine.toFixed(1)} hours</Text>
-            </GreaterSection>
-          )}
+            {/* Middle section - Weather data */}
+            <div className="flex-1 min-w-0">
+              <WeatherDataSection
+                displayWeatherData={displayWeatherData}
+                isLoading={weatherLoading}
+                hasError={weatherError}
+              />
+              {/* Average annual sunshine */}
+              {averageSunshine !== null && (
+                <GreaterSection title="Average Annual Sunshine" icon={SunshineIcon}>
+                  <Text size="md">{averageSunshine.toFixed(1)} hours</Text>
+                </GreaterSection>
+              )}
+            </div>
+          </div>
         </div>
-
         {/* Right section - Sunshine data */}
-      <div className="flex-1 min-w-0">
-        <SunshineDataSection
-          displaySunshineData={displaySunshineData}
-          isLoading={sunshineLoading}
-          hasError={sunshineError}
-          selectedMonth={monthToUse}
-        />
-      </div>
+        <div className="flex-1 min-w-0 p-3">
+          <SunshineDataSection
+            displaySunshineData={displaySunshineData}
+            isLoading={sunshineLoading}
+            hasError={sunshineError}
+            selectedMonth={monthToUse}
+          />
+        </div>
       </div>
     </div>
   );
 };
 
-export default CityPopup;
+// Custom comparison function to prevent unnecessary re-renders
+const arePropsEqual = (prevProps: CityPopupProps, nextProps: CityPopupProps): boolean => {
+  // Check if city objects are the same by comparing key properties
+  const prevCity = prevProps.city;
+  const nextCity = nextProps.city;
+
+  if (prevCity === nextCity) return true;
+  if (!prevCity || !nextCity) return false;
+
+  // Compare city identity by key properties
+  const cityEqual =
+    prevCity.city === nextCity.city &&
+    prevCity.country === nextCity.country &&
+    prevCity.lat === nextCity.lat &&
+    prevCity.long === nextCity.long;
+
+  // Compare other props
+  const propsEqual =
+    prevProps.selectedMonth === nextProps.selectedMonth &&
+    prevProps.selectedDate === nextProps.selectedDate &&
+    prevProps.onClose === nextProps.onClose;
+
+  return cityEqual && propsEqual;
+};
+
+export default memo(CityPopup, arePropsEqual);

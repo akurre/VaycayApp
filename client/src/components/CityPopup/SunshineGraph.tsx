@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, memo, useRef, useEffect } from 'react';
 import type { SunshineData } from '@/types/sunshineDataType';
 import {
   LineChart,
@@ -11,7 +11,6 @@ import {
   ReferenceLine,
   Legend,
 } from 'recharts';
-import { Text } from '@mantine/core';
 import { transformSunshineDataForChart } from '@/utils/dataFormatting/transformSunshineDataForChart';
 import { calculateAverageSunshine } from '@/utils/dataFormatting/calculateAverageSunshine';
 import { generateTheoreticalMaxSunshineData } from '@/utils/dataFormatting/generateTheoreticalMaxSunshineData';
@@ -30,6 +29,14 @@ interface SunshineGraphProps {
 }
 
 const SunshineGraph = ({ sunshineData, selectedMonth }: SunshineGraphProps) => {
+  const previousCityRef = useRef<string | null>(null);
+  const currentCityKey = `${sunshineData.city}-${sunshineData.lat}-${sunshineData.long}`;
+  const shouldAnimate = previousCityRef.current !== currentCityKey;
+
+  useEffect(() => {
+    previousCityRef.current = currentCityKey;
+  }, [currentCityKey]);
+
   const chartData = useMemo(() => transformSunshineDataForChart(sunshineData), [sunshineData]);
 
   const averageSunshine = useMemo(() => calculateAverageSunshine(chartData), [chartData]);
@@ -53,8 +60,8 @@ const SunshineGraph = ({ sunshineData, selectedMonth }: SunshineGraphProps) => {
   );
 
   return (
-    <div className="w-full">
-      <ResponsiveContainer width="100%" height={240}>
+    <div className="w-full h-full border border-solid">
+      <ResponsiveContainer width="100%" height="100%">
         <LineChart data={combinedChartData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke={SUNSHINE_CHART_GRID_COLOR} />
           <XAxis dataKey="month" tick={{ fontSize: 12 }} stroke={SUNSHINE_CHART_AXIS_COLOR} />
@@ -65,10 +72,13 @@ const SunshineGraph = ({ sunshineData, selectedMonth }: SunshineGraphProps) => {
           />
           <Tooltip content={<SunshineGraphTooltip />} />
           <Legend
-            wrapperStyle={{ fontSize: '12px' }}
+            wrapperStyle={{ fontSize: '12px', paddingLeft: '13px' }}
+            layout="vertical"
+            verticalAlign="middle"
+            align="right"
             iconType="line"
-            verticalAlign="bottom"
             height={24}
+            spacing={3}
           />
           {selectedMonth && (
             <ReferenceLine
@@ -88,7 +98,7 @@ const SunshineGraph = ({ sunshineData, selectedMonth }: SunshineGraphProps) => {
               strokeDasharray="5 5"
               dot={false}
               name="100% Sun"
-              isAnimationActive={true}
+              isAnimationActive={shouldAnimate}
               animationDuration={800}
               animationEasing="ease-in-out"
             />
@@ -102,7 +112,7 @@ const SunshineGraph = ({ sunshineData, selectedMonth }: SunshineGraphProps) => {
             dot={(props) => <SunshineGraphDot {...props} selectedMonth={selectedMonth} />}
             connectNulls
             name="Actual"
-            isAnimationActive={true}
+            isAnimationActive={shouldAnimate}
             animationDuration={800}
             animationEasing="ease-in-out"
           />
@@ -110,6 +120,6 @@ const SunshineGraph = ({ sunshineData, selectedMonth }: SunshineGraphProps) => {
       </ResponsiveContainer>
     </div>
   );
-}
+};
 
-export default SunshineGraph;
+export default memo(SunshineGraph);

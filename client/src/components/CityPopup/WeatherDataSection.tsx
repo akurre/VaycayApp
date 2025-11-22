@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Alert, Loader } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
 import type { WeatherData } from '@/types/cityWeatherDataType';
@@ -50,4 +51,4 @@ const WeatherDataSection = ({
   );
 };
 
-export default WeatherDataSection;
+export default memo(WeatherDataSection);

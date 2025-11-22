@@ -1,7 +1,8 @@
+import { memo } from 'react';
 import { Alert, Loader } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
 import type { SunshineData } from '@/types/sunshineDataType';
-import SunshineSection from './SunshineSection';
+import SunshineGraph from './SunshineGraph';
 
 interface SunshineDataSectionProps {
   displaySunshineData: SunshineData | null;
@@ -31,10 +32,12 @@ const SunshineDataSection = ({
       )}
 
       {displaySunshineData && (
-        <SunshineSection sunshineData={displaySunshineData} selectedMonth={selectedMonth} />
+        <div className='h-full p-3'>
+          <SunshineGraph sunshineData={displaySunshineData} selectedMonth={selectedMonth} />
+        </div>
       )}
     </>
   );
 };
 
-export default SunshineDataSection;
+export default memo(SunshineDataSection);

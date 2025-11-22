@@ -13,12 +13,14 @@ const GreaterSection = ({ children, title, icon: IconComponent }: GreaterSection
     <div>
       <div className="flex justify-between items-end">
         <div className="flex flex-col justify-between grow">
-          <Text size="sm" fw={600} mb="xs" mt="sm" c="secondary-teal.5">
-            {title}
-          </Text>
+          <div className="flex gap-3 items-center">
+            <Text size="sm" fw={600} mb="xs" mt="sm" c="secondary-teal.5">
+              {title}
+            </Text>
+            {IconComponent && <IconComponent size={24} color={appColors.primary} />}
+          </div>
           <div className="w-full">{children}</div>
         </div>
-        {IconComponent && <IconComponent size={32} color={appColors.primary} />}
       </div>
     </div>
   );
