@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import type { SunshineData } from '@/types/sunshineDataType';
 import {
   LineChart,
@@ -8,16 +9,19 @@ import {
   Tooltip,
   ResponsiveContainer,
   ReferenceLine,
+  Legend,
 } from 'recharts';
 import { Text } from '@mantine/core';
 import { transformSunshineDataForChart } from '@/utils/dataFormatting/transformSunshineDataForChart';
 import { calculateAverageSunshine } from '@/utils/dataFormatting/calculateAverageSunshine';
+import { generateTheoreticalMaxSunshineData } from '@/utils/dataFormatting/generateTheoreticalMaxSunshineData';
 import SunshineGraphTooltip from './SunshineGraphTooltip';
 import SunshineGraphDot from './SunshineGraphDot';
 import {
   SUNSHINE_CHART_LINE_COLOR,
   SUNSHINE_CHART_GRID_COLOR,
   SUNSHINE_CHART_AXIS_COLOR,
+  SUNSHINE_CHART_MAX_LINE_COLOR,
 } from '@/const';
 
 interface SunshineGraphProps {
@@ -26,8 +30,27 @@ interface SunshineGraphProps {
 }
 
 function SunshineGraph({ sunshineData, selectedMonth }: SunshineGraphProps) {
-  const chartData = transformSunshineDataForChart(sunshineData);
-  const averageSunshine = calculateAverageSunshine(chartData);
+  const chartData = useMemo(() => transformSunshineDataForChart(sunshineData), [sunshineData]);
+
+  const averageSunshine = useMemo(() => calculateAverageSunshine(chartData), [chartData]);
+
+  // Calculate theoretical maximum sunshine based on latitude (memoized per city)
+  const latitude = sunshineData.lat;
+  const theoreticalMaxData = useMemo(
+    () => (latitude !== null ? generateTheoreticalMaxSunshineData(latitude) : null),
+    [latitude]
+  );
+
+  // Combine actual data with theoretical max for chart (memoized)
+  const combinedChartData = useMemo(
+    () =>
+      chartData.map((point, index) => ({
+        ...point,
+        theoreticalMax: theoreticalMaxData ? theoreticalMaxData[index] : null,
+        baseline: 0, // 0% sunshine baseline
+      })),
+    [chartData, theoreticalMaxData]
+  );
 
   return (
     <div className="w-full">
@@ -39,8 +62,8 @@ function SunshineGraph({ sunshineData, selectedMonth }: SunshineGraphProps) {
           <Text size="md">{averageSunshine.toFixed(1)} hours</Text>
         </div>
       )}
-      <ResponsiveContainer width="100%" height={220}>
-        <LineChart data={chartData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
+      <ResponsiveContainer width="100%" height={240}>
+        <LineChart data={combinedChartData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke={SUNSHINE_CHART_GRID_COLOR} />
           <XAxis dataKey="month" tick={{ fontSize: 12 }} stroke={SUNSHINE_CHART_AXIS_COLOR} />
           <YAxis
@@ -49,14 +72,33 @@ function SunshineGraph({ sunshineData, selectedMonth }: SunshineGraphProps) {
             label={{ value: 'Hours', angle: -90, position: 'insideLeft', style: { fontSize: 12 } }}
           />
           <Tooltip content={<SunshineGraphTooltip />} />
+          <Legend
+            wrapperStyle={{ fontSize: '12px' }}
+            iconType="line"
+            verticalAlign="bottom"
+            height={24}
+          />
           {selectedMonth && (
             <ReferenceLine
-              x={chartData[selectedMonth - 1]?.month}
+              x={combinedChartData[selectedMonth - 1]?.month}
               stroke={SUNSHINE_CHART_LINE_COLOR}
               strokeWidth={2}
               strokeDasharray="5 5"
             />
           )}
+          {/* Theoretical maximum sunshine line (100% sun) */}
+          {theoreticalMaxData && (
+            <Line
+              type="monotone"
+              dataKey="theoreticalMax"
+              stroke={SUNSHINE_CHART_MAX_LINE_COLOR}
+              strokeWidth={1.5}
+              strokeDasharray="5 5"
+              dot={false}
+              name="100% Sun"
+            />
+          )}
+          {/* Actual sunshine line */}
           <Line
             type="monotone"
             dataKey="hours"
@@ -64,6 +106,7 @@ function SunshineGraph({ sunshineData, selectedMonth }: SunshineGraphProps) {
             strokeWidth={2}
             dot={(props) => <SunshineGraphDot {...props} selectedMonth={selectedMonth} />}
             connectNulls
+            name="Actual"
           />
         </LineChart>
       </ResponsiveContainer>
