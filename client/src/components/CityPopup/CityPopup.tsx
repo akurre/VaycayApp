@@ -117,7 +117,7 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
       {/* Content area with horizontal layout */}
       <div className="flex h-full overflow-hidden">
         {/* Left section - City info and metadata */}
-        <div className="flex flex-col gap-3 px-6 py-4 h-full w-1/2 overflow-y-auto">
+        <div className="flex flex-col gap-3 px-6 py-4 h-full min-w-1/2 overflow-y-auto">
           <div className="flex w-full justify-between">
             <div className="flex gap-2 items-center">
               <Title order={4}>{cityAndCountry}</Title>
@@ -145,18 +145,18 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
             </div>
             {formattedDate}
           </div>
-          <div className="flex">
-            <div className="flex gap-3">
-              <AdditionalInfo city={city} />
-            </div>
+          <div className="flex gap-10">
+            <AdditionalInfo city={city} />
 
             {/* Middle section - Weather data */}
-            <div className="flex-1 min-w-0">
+            <div className="flex flex-col">
               <WeatherDataSection
                 displayWeatherData={displayWeatherData}
                 isLoading={weatherLoading}
                 hasError={weatherError}
               />
+              </div>
+              <div>
               {/* Average annual sunshine */}
               {averageSunshine !== null && (
                 <GreaterSection title="Average Annual Sunshine" icon={SunshineIcon}>
@@ -167,7 +167,7 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
           </div>
         </div>
         {/* Right section - Sunshine data */}
-        <div className="flex-1 min-w-0 p-3">
+        <div className="w-full p-3 h-full">
           <SunshineDataSection
             displaySunshineData={displaySunshineData}
             isLoading={sunshineLoading}

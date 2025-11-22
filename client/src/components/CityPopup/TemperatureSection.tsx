@@ -17,7 +17,6 @@ const TemperatureSection = ({
 }: TemperatureSectionProps) => {
   const temperatureIcon = getTemperatureIcon(avgTemperature);
   return (
-    <div className="mt-2">
       <GreaterSection title="Temperature" icon={temperatureIcon}>
         <div className="flex gap-10">
           <Field label="Average" value={formatTemperature(avgTemperature) ?? 'N/A'} />
@@ -25,7 +24,6 @@ const TemperatureSection = ({
           <Field label="Min" value={formatTemperature(minTemperature) ?? 'N/A'} />
         </div>
       </GreaterSection>
-    </div>
   );
 };
 
