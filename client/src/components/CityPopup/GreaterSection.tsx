@@ -11,7 +11,6 @@ interface GreaterSectionProps {
 const GreaterSection = ({ children, title, icon: IconComponent }: GreaterSectionProps) => {
   return (
     <div>
-      <Divider />
       <div className="flex justify-between items-end">
         <div className="flex flex-col justify-between grow">
           <Text size="sm" fw={600} mb="xs" mt="sm" c="secondary-teal.5">

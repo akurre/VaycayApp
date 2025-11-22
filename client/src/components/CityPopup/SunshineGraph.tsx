@@ -29,7 +29,7 @@ interface SunshineGraphProps {
   selectedMonth?: number;
 }
 
-function SunshineGraph({ sunshineData, selectedMonth }: SunshineGraphProps) {
+const SunshineGraph = ({ sunshineData, selectedMonth }: SunshineGraphProps) => {
   const chartData = useMemo(() => transformSunshineDataForChart(sunshineData), [sunshineData]);
 
   const averageSunshine = useMemo(() => calculateAverageSunshine(chartData), [chartData]);
@@ -54,14 +54,6 @@ function SunshineGraph({ sunshineData, selectedMonth }: SunshineGraphProps) {
 
   return (
     <div className="w-full">
-      {averageSunshine !== null && (
-        <div className="mb-2">
-          <Text size="sm" c="tertiary-purple.4">
-            Average Annual Sunshine
-          </Text>
-          <Text size="md">{averageSunshine.toFixed(1)} hours</Text>
-        </div>
-      )}
       <ResponsiveContainer width="100%" height={240}>
         <LineChart data={combinedChartData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke={SUNSHINE_CHART_GRID_COLOR} />
@@ -96,6 +88,9 @@ function SunshineGraph({ sunshineData, selectedMonth }: SunshineGraphProps) {
               strokeDasharray="5 5"
               dot={false}
               name="100% Sun"
+              isAnimationActive={true}
+              animationDuration={800}
+              animationEasing="ease-in-out"
             />
           )}
           {/* Actual sunshine line */}
@@ -107,6 +102,9 @@ function SunshineGraph({ sunshineData, selectedMonth }: SunshineGraphProps) {
             dot={(props) => <SunshineGraphDot {...props} selectedMonth={selectedMonth} />}
             connectNulls
             name="Actual"
+            isAnimationActive={true}
+            animationDuration={800}
+            animationEasing="ease-in-out"
           />
         </LineChart>
       </ResponsiveContainer>

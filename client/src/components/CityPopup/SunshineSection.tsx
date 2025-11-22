@@ -9,7 +9,7 @@ interface SunshineSectionProps {
   selectedMonth?: number;
 }
 
-function SunshineSection({ sunshineData, selectedMonth }: SunshineSectionProps) {
+const SunshineSection = ({ sunshineData, selectedMonth }: SunshineSectionProps) => {
   // get the sunshine hours for the selected month
   const getMonthValue = (month: number): number | null => {
     const field = MONTH_FIELDS[month];

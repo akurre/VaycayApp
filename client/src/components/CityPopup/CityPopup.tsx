@@ -1,5 +1,6 @@
-import { Button, Modal, Popover } from '@mantine/core';
+import { ActionIcon, Button, Popover, Title, Text } from '@mantine/core';
 import { useMemo } from 'react';
+import { IconX } from '@tabler/icons-react';
 import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
 import type { WeatherDataUnion } from '@/types/mapTypes';
 import useWeatherDataForCity from '@/api/dates/useWeatherDataForCity';
@@ -8,9 +9,13 @@ import WeatherDataSection from './WeatherDataSection';
 import SunshineDataSection from './SunshineDataSection';
 import AdditionalInfo from './AdditionalInfo';
 import Field from './Field';
+import GreaterSection from './GreaterSection';
 import formatDateString from '@/utils/dateFormatting/formatDateString';
 import { extractMonthFromDate } from '@/utils/dateFormatting/extractMonthFromDate';
 import { isWeatherData } from '@/utils/typeGuards';
+import { transformSunshineDataForChart } from '@/utils/dataFormatting/transformSunshineDataForChart';
+import { calculateAverageSunshine } from '@/utils/dataFormatting/calculateAverageSunshine';
+import getSunshineHoursIcon from '@/utils/iconMapping/getSunshineIcon';
 
 interface CityPopupProps {
   city: WeatherDataUnion | null;
@@ -79,48 +84,93 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
   const displayWeatherData = cityAsWeather ?? weatherData;
   const displaySunshineData = cityAsSunshine ?? sunshineData;
 
+  // Calculate average sunshine if we have sunshine data
+  const averageSunshine = useMemo(() => {
+    if (!displaySunshineData) return null;
+    const chartData = transformSunshineDataForChart(displaySunshineData);
+    return calculateAverageSunshine(chartData);
+  }, [displaySunshineData]);
+
+  // Get the sunshine icon
+  const SunshineIcon = getSunshineHoursIcon(averageSunshine);
+
   // Create the modal title
-  let modalTitle = toTitleCase(city.city);
+  let cityAndCountry = toTitleCase(city.city);
   if (city.state) {
-    modalTitle += `, ${toTitleCase(city.state)}`;
+    cityAndCountry += `, ${toTitleCase(city.state)}`;
   }
-  modalTitle += `, ${city.country}`;
+  cityAndCountry += `, ${city.country}`;
 
   const formattedDate = formatDateString(displayWeatherData?.date);
 
+  if (!city) return null;
+
   return (
-    <Modal opened={!!city} onClose={onClose} title={modalTitle} size="md">
-      <div className="flex flex-col gap-3">
-        <div className="flex justify-between items-center">
-          <Field label="Date" value={formattedDate} />
-          <Popover position="bottom" withArrow shadow="md">
-            <Popover.Target>
-              <Button variant="subtle" size="compact-xs">
-                More Info
-              </Button>
-            </Popover.Target>
-            <Popover.Dropdown>
-              {city.stationName && (
-                <div>
-                  <Field label="Weather Station" value={city.stationName} />
-                </div>
-              )}
-              {city.lat && city.long && (
-                <Field
-                  label="Coordinates"
-                  value={`${city.lat.toFixed(4)}°, ${city.long.toFixed(4)}°`}
-                  monospace
-                />
-              )}
-            </Popover.Dropdown>
-          </Popover>
+    <div
+      className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700 shadow-lg z-50"
+      style={{ height: '33.333vh', pointerEvents: 'auto' }}
+    >
+    
+      <div className='absolute top-2 right-2'>
+        {/* close button */}
+        <ActionIcon
+          onClick={onClose}
+          aria-label="Close"
+        >
+          <IconX size={24} />
+        </ActionIcon>
+      </div>
+      {/* Content area with horizontal layout */}
+      <div className="flex gap-6 px-6 py-4 h-full overflow-y-auto">
+        {/* Left section - City info and metadata */}
+        <div className="flex flex-col gap-3 min-w-[300px]">
+        <Title order={4}>
+          {cityAndCountry}
+        </Title>
+          <div className="flex justify-between items-center">
+            <Field label="Date" value={formattedDate} />
+            <Popover position="top" withArrow shadow="md">
+              <Popover.Target>
+                <Button variant="subtle" size="compact-xs">
+                  More Info
+                </Button>
+              </Popover.Target>
+              <Popover.Dropdown>
+                {city.stationName && (
+                  <div>
+                    <Field label="Weather Station" value={city.stationName} />
+                  </div>
+                )}
+                {city.lat && city.long && (
+                  <Field
+                    label="Coordinates"
+                    value={`${city.lat.toFixed(4)}°, ${city.long.toFixed(4)}°`}
+                    monospace
+                  />
+                )}
+              </Popover.Dropdown>
+            </Popover>
+          </div>
+          <AdditionalInfo city={city} />
         </div>
-        <AdditionalInfo city={city} />
-        <WeatherDataSection
-          displayWeatherData={displayWeatherData}
-          isLoading={weatherLoading}
-          hasError={weatherError}
-        />
+
+        {/* Middle section - Weather data */}
+        <div className="flex-1 min-w-0">
+          <WeatherDataSection
+            displayWeatherData={displayWeatherData}
+            isLoading={weatherLoading}
+            hasError={weatherError}
+          />
+          {/* Average annual sunshine */}
+          {averageSunshine !== null && (
+            <GreaterSection title="Average Annual Sunshine" icon={SunshineIcon}>
+              <Text size="md">{averageSunshine.toFixed(1)} hours</Text>
+            </GreaterSection>
+          )}
+        </div>
+
+        {/* Right section - Sunshine data */}
+      <div className="flex-1 min-w-0">
         <SunshineDataSection
           displaySunshineData={displaySunshineData}
           isLoading={sunshineLoading}
@@ -128,7 +178,8 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
           selectedMonth={monthToUse}
         />
       </div>
-    </Modal>
+      </div>
+    </div>
   );
 };
 
