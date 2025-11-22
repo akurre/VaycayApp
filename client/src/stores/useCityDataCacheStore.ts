@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { WeatherData } from '@/types/cityWeatherDataType';
-import { SunshineData } from '@/types/sunshineDataType';
-import { CITY_CACHE_MAX_SIZE } from '@/constants';
+import type { WeatherData } from '@/types/cityWeatherDataType';
+import type { SunshineData } from '@/types/sunshineDataType';
+import { CITY_CACHE_MAX_SIZE } from '@/const';
 
 interface CachedCityData {
   weatherData: WeatherData | null;

@@ -1,6 +1,6 @@
-import { WeatherData } from '@/types/cityWeatherDataType';
-import { SunshineData } from '@/types/sunshineDataType';
-import { WeatherDataUnion } from '@/types/mapTypes';
+import type { WeatherData } from '@/types/cityWeatherDataType';
+import type { SunshineData } from '@/types/sunshineDataType';
+import type { WeatherDataUnion } from '@/types/mapTypes';
 
 /**
  * Type guard to check if data is WeatherData

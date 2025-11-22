@@ -1,4 +1,4 @@
-import { SunshineData } from '@/types/sunshineDataType';
+import type { SunshineData } from '@/types/sunshineDataType';
 
 /**
  * Transforms sunshine data into a format suitable for the heatmap layer

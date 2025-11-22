@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { WeatherData } from '../types/cityWeatherDataType';
-import { MAX_CITIES_SHOWN } from '@/constants';
+import type { WeatherData } from '../types/cityWeatherDataType';
+import { MAX_CITIES_SHOWN } from '@/const';
 
 interface WeatherStore {
   displayedWeatherData: WeatherData[] | null;

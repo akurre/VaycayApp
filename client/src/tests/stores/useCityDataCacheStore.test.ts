@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useCityDataCacheStore } from '@/stores/useCityDataCacheStore';
-import { WeatherData } from '@/types/cityWeatherDataType';
-import { SunshineData } from '@/types/sunshineDataType';
+import type { WeatherData } from '@/types/cityWeatherDataType';
+import type { SunshineData } from '@/types/sunshineDataType';
 
 // Mock storage implementation for testing
 const createMockStorage = () => {

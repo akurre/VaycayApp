@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@/test-utils';
 import SunshineSection from '@/components/CityPopup/SunshineSection';
-import { SunshineData } from '@/types/sunshineDataType';
+import type { SunshineData } from '@/types/sunshineDataType';
 
 describe('SunshineSection', () => {
   const mockSunshineData: SunshineData = {

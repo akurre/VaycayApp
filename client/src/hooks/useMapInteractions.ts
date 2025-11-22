@@ -1,8 +1,8 @@
 import { useState, useCallback } from 'react';
 import type { PickingInfo } from '@deck.gl/core';
 import { getTooltipContent } from '../utils/map/getTooltipContent';
-import { DataType, ViewMode, WeatherDataUnion } from '@/types/mapTypes';
-import { HomeLocation } from '@/types/userLocationType';
+import type { DataType, ViewMode, WeatherDataUnion } from '@/types/mapTypes';
+import type { HomeLocation } from '@/types/userLocationType';
 
 /**
  * hook to manage map interactions including hover tooltips and city selection.

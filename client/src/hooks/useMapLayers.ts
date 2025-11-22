@@ -1,27 +1,29 @@
 import { useMemo } from 'react';
 import { HeatmapLayer } from '@deck.gl/aggregation-layers';
 import { ScatterplotLayer, IconLayer } from '@deck.gl/layers';
-import { Layer } from '@deck.gl/core';
-import { WeatherData, ValidMarkerData } from '../types/cityWeatherDataType';
-import { SunshineData } from '@/types/sunshineDataType';
+import type { Layer } from '@deck.gl/core';
+import type { WeatherData, ValidMarkerData } from '../types/cityWeatherDataType';
+import type { SunshineData } from '@/types/sunshineDataType';
 import { transformToHeatmapData } from '../utils/map/transformToHeatmapData';
 import { transformToSunshineHeatmapData } from '../utils/map/transformToSunshineHeatmapData';
 import { getMarkerColor, COLOR_RANGE } from '../utils/map/getMarkerColor';
-import { DataType, ViewMode, WeatherDataUnion } from '@/types/mapTypes';
-import { HomeLocation } from '@/types/userLocationType';
+import { DataType } from '@/types/mapTypes';
+import type { ViewMode, WeatherDataUnion } from '@/types/mapTypes';
+import type { HomeLocation } from '@/types/userLocationType';
 import {
   HOME_ICON_SIZE,
   HOME_ICON_OBJECT,
   SUNSHINE_COLOR_RANGE,
-  ColorCacheEntry,
   SUNSHINE_LOADING_COLOR,
   TEMPERATURE_LOADING_COLOR,
   MONTH_FIELDS,
-} from '@/constants';
+} from '@/const';
+import type { ColorCacheEntry } from '@/const';
 import getSunshineMarkerColor from '@/utils/map/getSunshineMarkerColor';
 import { useWeatherStore } from '@/stores/useWeatherStore';
 import { useSunshineStore } from '@/stores/useSunshineStore';
-import { isWeatherData, isSunshineData, ValidSunshineMarkerData } from '@/utils/typeGuards';
+import { isWeatherData, isSunshineData } from '@/utils/typeGuards';
+import type { ValidSunshineMarkerData } from '@/utils/typeGuards';
 
 /**
  * hook to create and manage deck.gl map layers for both heatmap and marker views.

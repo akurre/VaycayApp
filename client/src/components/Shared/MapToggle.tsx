@@ -1,5 +1,6 @@
-import { SegmentedControl, SegmentedControlProps, Tooltip } from '@mantine/core';
-import { ComponentType } from 'react';
+import { SegmentedControl, Tooltip } from '@mantine/core';
+import type { SegmentedControlProps } from '@mantine/core';
+import type { ComponentType } from 'react';
 import getIconSizeFromControlSize from '@/utils/map/getIconSizeFromControlSize';
 
 interface MapToggleOption<T extends string> {

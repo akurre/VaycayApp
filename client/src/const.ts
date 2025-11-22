@@ -2,7 +2,7 @@
 // MAP CONSTANTS
 // ============================================================================
 
-import { SunshineData } from './types/sunshineDataType';
+import type { SunshineData } from './types/sunshineDataType';
 import {
   IconCloudStorm,
   IconCloudFilled,

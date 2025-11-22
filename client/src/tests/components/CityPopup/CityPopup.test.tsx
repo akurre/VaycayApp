@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@/test-utils';
 import CityPopup from '@/components/CityPopup/CityPopup';
-import { WeatherData } from '@/types/cityWeatherDataType';
-import { SunshineData } from '@/types/sunshineDataType';
+import type { WeatherData } from '@/types/cityWeatherDataType';
+import type { SunshineData } from '@/types/sunshineDataType';
 
 // mock the weather data hook
 vi.mock('@/api/dates/useWeatherDataForCity', () => ({

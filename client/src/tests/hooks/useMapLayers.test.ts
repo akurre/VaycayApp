@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, assert } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import useMapLayers from '@/hooks/useMapLayers';
-import { WeatherData } from '@/types/cityWeatherDataType';
-import { SunshineData } from '@/types/sunshineDataType';
+import type { WeatherData } from '@/types/cityWeatherDataType';
+import type { SunshineData } from '@/types/sunshineDataType';
 import { DataType, ViewMode } from '@/types/mapTypes';
-import { HomeLocation } from '@/types/userLocationType';
-import { TEMPERATURE_LOADING_COLOR, SUNSHINE_LOADING_COLOR } from '@/constants';
+import type { HomeLocation } from '@/types/userLocationType';
+import { TEMPERATURE_LOADING_COLOR, SUNSHINE_LOADING_COLOR } from '@/const';
 
 // Define a type for layer props with getFillColor function
 interface LayerPropsWithFillColor {

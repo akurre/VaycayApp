@@ -1,8 +1,9 @@
-import { WeatherData } from '../../types/cityWeatherDataType';
-import { SunshineData } from '@/types/sunshineDataType';
+import type { WeatherData } from '../../types/cityWeatherDataType';
+import type { SunshineData } from '@/types/sunshineDataType';
 import { formatTemperature } from '../tempFormatting/formatTemperature';
-import { DataType, WeatherDataUnion } from '@/types/mapTypes';
-import { MONTH_FIELDS } from '@/constants';
+import type { WeatherDataUnion } from '@/types/mapTypes';
+import { DataType } from '@/types/mapTypes';
+import { MONTH_FIELDS } from '@/const';
 
 /**
  * Determines if a data object is a WeatherData object

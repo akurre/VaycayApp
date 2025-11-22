@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { SunshineData } from '../types/sunshineDataType';
-import { MAX_CITIES_SHOWN } from '@/constants';
+import type { SunshineData } from '../types/sunshineDataType';
+import { MAX_CITIES_SHOWN } from '@/const';
 
 interface SunshineStore {
   displayedSunshineData: SunshineData[] | null;

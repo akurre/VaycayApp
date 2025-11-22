@@ -1,4 +1,5 @@
-import { FC, useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import type { FC } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useDebouncedValue } from '@mantine/hooks';
 import useWeatherByDateAndBounds from '../api/dates/useWeatherByDateAndBounds';

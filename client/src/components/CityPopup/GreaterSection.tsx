@@ -1,6 +1,6 @@
 import { appColors } from '@/theme';
 import { Divider, Text } from '@mantine/core';
-import { ComponentType, ReactNode } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 
 interface GreaterSectionProps {
   children: ReactNode;

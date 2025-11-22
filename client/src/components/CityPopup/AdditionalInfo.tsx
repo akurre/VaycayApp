@@ -1,4 +1,4 @@
-import { WeatherDataUnion } from '@/types/mapTypes';
+import type { WeatherDataUnion } from '@/types/mapTypes';
 import Field from './Field';
 import DistanceSection from './DistanceSection';
 import GreaterSection from './GreaterSection';

@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 import { useEffect, useMemo } from 'react';
-import { WeatherData } from '@/types/cityWeatherDataType';
+import type { WeatherData } from '@/types/cityWeatherDataType';
 import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
 import { GET_WEATHER_BY_CITY_AND_DATE } from '../queries';
 import { useCityDataCacheStore } from '@/stores/useCityDataCacheStore';

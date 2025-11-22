@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 import { useEffect, useMemo } from 'react';
-import { SunshineData } from '@/types/sunshineDataType';
+import type { SunshineData } from '@/types/sunshineDataType';
 import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
 import { GET_SUNSHINE_BY_CITY } from '../queries';
 import { useCityDataCacheStore } from '@/stores/useCityDataCacheStore';

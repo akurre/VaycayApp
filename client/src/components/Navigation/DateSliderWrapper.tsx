@@ -1,9 +1,9 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { dateToDayOfYear } from '@/utils/dateFormatting/dateToDayOfYear';
 import { dayOfYearToDate } from '@/utils/dateFormatting/dayOfYearToDate';
 import { useWeatherStore } from '@/stores/useWeatherStore';
 import CustomDateSlider from './CustomDateSlider';
-import { monthMarks, monthlyMarks } from '@/constants';
+import { monthMarks, monthlyMarks } from '@/const';
 
 interface DateSliderWrapperProps {
   currentDate: string;

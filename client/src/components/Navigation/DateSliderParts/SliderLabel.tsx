@@ -1,8 +1,8 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import formatSliderLabel from '@/utils/dateFormatting/formatSliderLabel';
 import { Text } from '@mantine/core';
 import CustomPopover from '@/components/Shared/CustomPopover';
-import { monthlyMarks } from '@/constants';
+import { monthlyMarks } from '@/const';
 
 interface SliderLabelProps {
   value: number;

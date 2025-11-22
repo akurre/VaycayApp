@@ -1,4 +1,5 @@
-import { ErrorCategory, ErrorSeverity, ParsedError } from '@/types/errorTypes';
+import type { ParsedError } from '@/types/errorTypes';
+import { ErrorCategory, ErrorSeverity } from '@/types/errorTypes';
 import { isApolloError } from './isApolloError';
 import { isGeolocationError } from './isGeolocationError';
 import { parseApolloError } from './parseApolloError';

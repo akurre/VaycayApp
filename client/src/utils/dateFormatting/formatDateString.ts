@@ -1,4 +1,4 @@
-import { MONTH_NAMES } from '@/constants';
+import { MONTH_NAMES } from '@/const';
 
 /**
  * formats a date string in format "YYYY-MM-DD" to a readable format like "January 1st"

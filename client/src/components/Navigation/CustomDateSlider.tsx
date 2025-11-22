@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { clamp, useMove } from '@mantine/hooks';
 import SliderTrack from './DateSliderParts/SliderTrack';
 import SliderThumb from './DateSliderParts/SliderThumb';

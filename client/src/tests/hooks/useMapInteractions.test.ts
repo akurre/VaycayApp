@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useMapInteractions } from '@/hooks/useMapInteractions';
-import { WeatherData } from '@/types/cityWeatherDataType';
+import type { WeatherData } from '@/types/cityWeatherDataType';
 import type { PickingInfo } from '@deck.gl/core';
 import { ViewMode, DataType } from '@/types/mapTypes';
 

@@ -1,6 +1,6 @@
-import { SunshineData } from '@/types/sunshineDataType';
+import type { SunshineData } from '@/types/sunshineDataType';
 import Field from './Field';
-import { MONTH_FIELDS, MONTH_NAMES } from '@/constants';
+import { MONTH_FIELDS, MONTH_NAMES } from '@/const';
 import GreaterSection from './GreaterSection';
 import getSunshineHoursIcon from '@/utils/iconMapping/getSunshineIcon';
 

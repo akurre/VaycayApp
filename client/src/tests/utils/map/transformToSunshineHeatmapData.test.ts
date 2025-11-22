@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { transformToSunshineHeatmapData } from '@/utils/map/transformToSunshineHeatmapData';
-import { SunshineData } from '@/types/sunshineDataType';
+import type { SunshineData } from '@/types/sunshineDataType';
 
 describe('transformToSunshineHeatmapData', () => {
   const mockSunshineData: SunshineData[] = [

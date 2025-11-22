@@ -1,7 +1,7 @@
 import { Button, Modal, Popover } from '@mantine/core';
 import { useMemo } from 'react';
 import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
-import { WeatherDataUnion } from '@/types/mapTypes';
+import type { WeatherDataUnion } from '@/types/mapTypes';
 import useWeatherDataForCity from '@/api/dates/useWeatherDataForCity';
 import useSunshineDataForCity from '@/api/dates/useSunshineDataForCity';
 import WeatherDataSection from './WeatherDataSection';

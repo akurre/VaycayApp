@@ -1,5 +1,5 @@
-import { WeatherData } from './cityWeatherDataType';
-import { SunshineData } from './sunshineDataType';
+import type { WeatherData } from './cityWeatherDataType';
+import type { SunshineData } from './sunshineDataType';
 
 export enum MapTheme {
   Light = 'light',

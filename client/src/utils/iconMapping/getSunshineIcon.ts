@@ -1,6 +1,6 @@
-import { SUNSHINE_ICON_THRESHOLDS } from '@/constants';
+import { SUNSHINE_ICON_THRESHOLDS } from '@/const';
 import { IconSunFilled } from '@tabler/icons-react';
-import { ComponentType } from 'react';
+import type { ComponentType } from 'react';
 
 /**
  * returns the appropriate icon component based on sunshine hours

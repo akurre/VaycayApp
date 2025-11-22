@@ -1,6 +1,6 @@
-import { PRECIPITATION_ICON_THRESHOLDS } from '@/constants';
+import { PRECIPITATION_ICON_THRESHOLDS } from '@/const';
 import { IconDroplet } from '@tabler/icons-react';
-import { ComponentType } from 'react';
+import type { ComponentType } from 'react';
 
 /**
  * returns the appropriate icon component based on precipitation amount

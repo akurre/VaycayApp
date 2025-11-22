@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useQuery } from '@apollo/client/react';
 import { GET_SUNSHINE_BY_MONTH, GET_SUNSHINE_BY_MONTH_AND_BOUNDS } from '@/api/queries';
-import {
+import type {
   SunshineByMonthResponse,
   SunshineByMonthVars,
   SunshineByMonthAndBoundsVars,

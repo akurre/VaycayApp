@@ -4,14 +4,15 @@ import { useComputedColorScheme } from '@mantine/core';
 import useMapLayers from '../../hooks/useMapLayers';
 import { useMapInteractions } from '../../hooks/useMapInteractions';
 import { useMapBounds } from '../../hooks/useMapBounds';
-import { INITIAL_VIEW_STATE, MAP_STYLES } from '@/constants';
+import { INITIAL_VIEW_STATE, MAP_STYLES } from '@/const';
 import CityPopup from '../CityPopup/CityPopup';
 import MapTooltip from './MapTooltip';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useWeatherStore } from '@/stores/useWeatherStore';
 import { useSunshineStore } from '@/stores/useSunshineStore';
 import { useAppStore } from '@/stores/useAppStore';
-import { DataType, ViewMode, WeatherDataUnion } from '@/types/mapTypes';
+import { DataType } from '@/types/mapTypes';
+import type { ViewMode, WeatherDataUnion } from '@/types/mapTypes';
 
 interface WorldMapProps {
   cities: WeatherDataUnion[];

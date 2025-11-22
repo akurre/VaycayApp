@@ -1,4 +1,4 @@
-import { MONTH_ABBREVIATIONS } from '@/constants';
+import { MONTH_ABBREVIATIONS } from '@/const';
 import { dayOfYearToDate } from './dayOfYearToDate';
 
 /**

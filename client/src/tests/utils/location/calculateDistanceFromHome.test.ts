@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { calculateDistanceFromHome } from '@/utils/location/calculateDistanceFromHome';
 import { useAppStore } from '@/stores/useAppStore';
-import { HomeLocation } from '@/types/userLocationType';
+import type { HomeLocation } from '@/types/userLocationType';
 
 describe('calculateDistanceFromHome', () => {
   beforeEach(() => {

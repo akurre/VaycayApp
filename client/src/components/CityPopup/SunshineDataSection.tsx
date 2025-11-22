@@ -1,6 +1,6 @@
 import { Alert, Loader } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
-import { SunshineData } from '@/types/sunshineDataType';
+import type { SunshineData } from '@/types/sunshineDataType';
 import SunshineSection from './SunshineSection';
 
 interface SunshineDataSectionProps {

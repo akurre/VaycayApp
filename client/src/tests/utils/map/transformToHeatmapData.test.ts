@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { transformToHeatmapData } from '@/utils/map/transformToHeatmapData';
-import { WeatherData } from '@/types/cityWeatherDataType';
+import type { WeatherData } from '@/types/cityWeatherDataType';
 
 describe('transformToHeatmapData', () => {
   const createMockCity = (overrides?: Partial<WeatherData>): WeatherData => ({

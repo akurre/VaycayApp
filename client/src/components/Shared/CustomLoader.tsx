@@ -1,6 +1,7 @@
 import { appColors } from '@/theme';
-import { Loader, LoaderProps } from '@mantine/core';
-import { FC } from 'react';
+import type { LoaderProps } from '@mantine/core';
+import { Loader } from '@mantine/core';
+import type { FC } from 'react';
 
 const CustomLoader: FC<LoaderProps> = () => {
   return <Loader type="dots" color={appColors.tertiary} size={20} />;

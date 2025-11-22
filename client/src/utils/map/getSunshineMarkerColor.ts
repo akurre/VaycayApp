@@ -1,4 +1,4 @@
-import { SUNSHINE_THRESHOLDS } from '@/constants';
+import { SUNSHINE_THRESHOLDS } from '@/const';
 
 /**
  * Determines the color for a marker based on sunshine hours

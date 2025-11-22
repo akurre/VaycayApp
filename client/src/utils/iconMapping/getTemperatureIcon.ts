@@ -1,6 +1,6 @@
-import { TEMPERATURE_ICON_THRESHOLDS } from '@/constants';
+import { TEMPERATURE_ICON_THRESHOLDS } from '@/const';
 import { IconTemperatureSun } from '@tabler/icons-react';
-import { ComponentType } from 'react';
+import type { ComponentType } from 'react';
 
 /**
  * returns the appropriate icon component based on temperature

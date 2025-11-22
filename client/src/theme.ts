@@ -1,4 +1,5 @@
-import { createTheme, MantineThemeOverride, Button, Text, Popover, Divider } from '@mantine/core';
+import { createTheme, Button, Text, Popover, Divider } from '@mantine/core';
+import type { MantineThemeOverride } from '@mantine/core';
 
 // custom color palette for the application
 export const appColors = {

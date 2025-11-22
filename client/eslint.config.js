@@ -57,8 +57,6 @@ export default tseslint.config(
       'react/jsx-no-useless-fragment': ['error', { allowExpressions: true }],
       'react-hooks/exhaustive-deps': 'warn',
       '@typescript-eslint/no-unused-expressions': 'warn',
-      '@typescript-eslint/prefer-optional-chain': 'warn',
-      '@typescript-eslint/prefer-nullish-coalescing': 'warn',
     },
     settings: {
       react: {
