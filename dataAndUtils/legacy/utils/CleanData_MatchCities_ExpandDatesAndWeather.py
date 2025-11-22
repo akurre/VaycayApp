@@ -314,6 +314,14 @@ def main():
 
             # No filtering needed - all locations are now successfully geocoded
             logger.info(f"Loaded {len(geocoded_data):,} geocoded locations (100% coverage)")
+
+            # SORTING FIX: Sort by city to keep same-city stations together in batches
+            logger.info("Sorting locations by city to keep same-city stations together...")
+            geocoded_data = geocoded_data.sort_values(
+                ['city', 'country', 'state', 'lat', 'long']
+            ).reset_index(drop=True)
+            logger.info("✓ Locations sorted - same-city stations will be in same batch")
+
             total_locations = len(geocoded_data)
         else:
             # geocoding step - commented out to prevent accidental re-geocoding
@@ -330,6 +338,14 @@ def main():
 
             # No filtering needed - all locations are now successfully geocoded
             logger.info(f"Loaded {len(geocoded_data):,} geocoded locations (100% coverage)")
+
+            # SORTING FIX: Sort by city to keep same-city stations together in batches
+            logger.info("Sorting locations by city to keep same-city stations together...")
+            geocoded_data = geocoded_data.sort_values(
+                ['city', 'country', 'state', 'lat', 'long']
+            ).reset_index(drop=True)
+            logger.info("✓ Locations sorted - same-city stations will be in same batch")
+
             total_locations = len(geocoded_data)
 
             if args.resume_only:
