@@ -37,11 +37,11 @@
  * - Single final deletion sweep is more efficient than deleting cities one-by-one
  *
  * EXAMPLE SCENARIO:
- * Before: 
+ * Before:
  *   - City A (Rome, Italy): Has TAVG, TMAX, TMIN for all dates, but no PRCP
  *   - City B (Rome, Italy): Has only PRCP for all dates, no temperature
  *   - City C (Rome, Italy): Has both TEMP and PRCP for all dates
- * 
+ *
  * After:
  *   - City A (Rome, Italy): Now has TAVG, TMAX, TMIN, and PRCP for all dates
  *   - City B: Deleted (PRCP-only city)
