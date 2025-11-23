@@ -1,0 +1,19 @@
+{
+  "batch_number": 70,
+  "location_range": {
+    "start": 34501,
+    "end": 35000
+  },
+  "total_records": 38704,
+  "unique_cities": 106,
+  "unique_countries": 35,
+  "date_range": {
+    "min": "2020-01-01",
+    "max": "2020-12-31"
+  },
+  "processing_timestamp": "2025-11-23T10:08:16.511374",
+  "temperature_range": {
+    "min": -38.82,
+    "max": 38.4
+  }
+}
