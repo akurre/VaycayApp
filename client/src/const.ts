@@ -44,7 +44,7 @@ export const ZOOM_AMPLIFICATION_FACTOR = 3; // amplify zoom changes for more sen
 export const INITIAL_VIEW_STATE = {
   longitude: 0,
   latitude: 20,
-  zoom: 2,
+  zoom: 1.9,
   pitch: 0,
   bearing: 0,
 };

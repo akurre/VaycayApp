@@ -15,6 +15,7 @@ import { useSunshineStore } from '../stores/useSunshineStore';
 import DateSliderWrapper from '@/components/Navigation/DateSliderWrapper';
 import { DataType, ViewMode } from '@/types/mapTypes';
 import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
+import { INITIAL_VIEW_STATE, ZOOM_THRESHOLD } from '@/const';
 
 interface MapBounds {
   minLat: number;
@@ -32,7 +33,9 @@ const MapPage: FC = () => {
   const [viewMode, setViewMode] = useState<ViewMode>(ViewMode.Markers);
   const [dataType, setDataType] = useState<DataType>(DataType.Temperature);
   const [bounds, setBounds] = useState<MapBounds | null>(null);
-  const [shouldUseBounds, setShouldUseBounds] = useState(false);
+  const [shouldUseBounds, setShouldUseBounds] = useState(
+    INITIAL_VIEW_STATE.zoom >= ZOOM_THRESHOLD
+  );
 
   // debounce the date to avoid excessive api calls while dragging slider
   const [debouncedDate] = useDebouncedValue(selectedDate, 300);
