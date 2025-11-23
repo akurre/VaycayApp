@@ -32,7 +32,7 @@ const SunshineDataSection = ({
       )}
 
       {displaySunshineData && (
-        <div className='h-full p-3'>
+        <div className="h-full p-3">
           <SunshineGraph sunshineData={displaySunshineData} selectedMonth={selectedMonth} />
         </div>
       )}

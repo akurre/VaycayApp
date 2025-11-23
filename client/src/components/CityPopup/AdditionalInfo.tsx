@@ -10,9 +10,7 @@ interface AdditionalInfoProps {
 const AdditionalInfo = ({ city }: AdditionalInfoProps) => (
   <GreaterSection title="City Info">
     <div className="flex justify-between mb-3">
-      {city.population && (
-        <Field label="Population" value={city.population.toLocaleString()} />
-      )}
+      {city.population && <Field label="Population" value={city.population.toLocaleString()} />}
     </div>
     <DistanceSection lat={city.lat} long={city.long} />
   </GreaterSection>

@@ -155,8 +155,8 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
                 isLoading={weatherLoading}
                 hasError={weatherError}
               />
-              </div>
-              <div>
+            </div>
+            <div>
               {/* Average annual sunshine */}
               {averageSunshine !== null && (
                 <GreaterSection title="Average Annual Sunshine" icon={SunshineIcon}>

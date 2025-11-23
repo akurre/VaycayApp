@@ -17,13 +17,13 @@ const TemperatureSection = ({
 }: TemperatureSectionProps) => {
   const temperatureIcon = getTemperatureIcon(avgTemperature);
   return (
-      <GreaterSection title="Temperature" icon={temperatureIcon}>
-        <div className="flex gap-10">
-          <Field label="Average" value={formatTemperature(avgTemperature) ?? 'N/A'} />
-          <Field label="Max" value={formatTemperature(maxTemperature) ?? 'N/A'} />
-          <Field label="Min" value={formatTemperature(minTemperature) ?? 'N/A'} />
-        </div>
-      </GreaterSection>
+    <GreaterSection title="Temperature" icon={temperatureIcon}>
+      <div className="flex gap-10">
+        <Field label="Average" value={formatTemperature(avgTemperature) ?? 'N/A'} />
+        <Field label="Max" value={formatTemperature(maxTemperature) ?? 'N/A'} />
+        <Field label="Min" value={formatTemperature(minTemperature) ?? 'N/A'} />
+      </div>
+    </GreaterSection>
   );
 };
 
