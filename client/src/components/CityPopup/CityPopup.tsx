@@ -6,8 +6,8 @@ import type { WeatherDataUnion } from '@/types/mapTypes';
 import useWeatherDataForCity from '@/api/dates/useWeatherDataForCity';
 import useSunshineDataForCity from '@/api/dates/useSunshineDataForCity';
 import WeatherDataSection from './WeatherDataSection';
-import SunshineDataSection from './SunshineDataSection';
 import AdditionalInfo from './AdditionalInfo';
+import DataChartTabs from './DataChartTabs';
 import Field from './Field';
 import GreaterSection from './GreaterSection';
 import formatDateString from '@/utils/dateFormatting/formatDateString';
@@ -118,8 +118,8 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
       <div className="flex h-full overflow-hidden">
         {/* Left section - City info and metadata */}
         <div className="flex flex-col gap-3 px-6 py-4 h-full min-w-1/2 overflow-y-auto">
-          <div className="flex w-full justify-between">
-            <div className="flex gap-2 items-center">
+          <div className="flex w-full">
+            <div className="flex gap-4 items-center">
               <Title order={4}>{cityAndCountry}</Title>
               <Popover position="top" withArrow shadow="md">
                 <Popover.Target>
@@ -143,7 +143,6 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
                 </Popover.Dropdown>
               </Popover>
             </div>
-            {formattedDate}
           </div>
           <div className="flex gap-10">
             <AdditionalInfo city={city} />
@@ -166,12 +165,12 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
             </div>
           </div>
         </div>
-        {/* Right section - Sunshine data */}
+        {/* Right section - Data Charts */}
         <div className="w-full p-3 h-full">
-          <SunshineDataSection
+          <DataChartTabs
             displaySunshineData={displaySunshineData}
-            isLoading={sunshineLoading}
-            hasError={sunshineError}
+            sunshineLoading={sunshineLoading}
+            sunshineError={sunshineError}
             selectedMonth={monthToUse}
           />
         </div>
