@@ -33,9 +33,7 @@ const MapPage: FC = () => {
   const [viewMode, setViewMode] = useState<ViewMode>(ViewMode.Markers);
   const [dataType, setDataType] = useState<DataType>(DataType.Temperature);
   const [bounds, setBounds] = useState<MapBounds | null>(null);
-  const [shouldUseBounds, setShouldUseBounds] = useState(
-    INITIAL_VIEW_STATE.zoom >= ZOOM_THRESHOLD
-  );
+  const [shouldUseBounds, setShouldUseBounds] = useState(INITIAL_VIEW_STATE.zoom >= ZOOM_THRESHOLD);
 
   // debounce the date to avoid excessive api calls while dragging slider
   const [debouncedDate] = useDebouncedValue(selectedDate, 300);

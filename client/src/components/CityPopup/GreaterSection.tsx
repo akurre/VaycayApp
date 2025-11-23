@@ -12,15 +12,13 @@ const GreaterSection = ({ children, title, icon: IconComponent }: GreaterSection
   const titleColor = colorScheme === 'dark' ? 'primary-red.5' : 'primary-red.7';
 
   return (
-    <div className='pb-3'>
+    <div className="pb-3">
       <div className="flex flex-col justify-between grow">
         <div className="flex gap-3 items-center pb-2">
           <Text size="sm" fw={600} c={titleColor}>
             {title}
           </Text>
-          {IconComponent && 
-            <IconComponent size={16} color="var(--mantine-primary-color-filled)" />
-          }
+          {IconComponent && <IconComponent size={16} color="var(--mantine-primary-color-filled)" />}
         </div>
         <div className="w-full">{children}</div>
       </div>

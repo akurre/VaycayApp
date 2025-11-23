@@ -117,7 +117,12 @@ function RechartsLineGraphComponent<T extends ChartDataPoint>({
             stroke={chartColors.axisColor}
             label={
               xAxisLabel
-                ? { value: xAxisLabel, position: 'insideBottom', offset: -5, style: { fontSize: 12, fill: chartColors.textColor } }
+                ? {
+                    value: xAxisLabel,
+                    position: 'insideBottom',
+                    offset: -5,
+                    style: { fontSize: 12, fill: chartColors.textColor },
+                  }
                 : undefined
             }
           />

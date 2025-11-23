@@ -3,6 +3,16 @@
 ## Executive Summary
 Implement weekly aggregated temperature and precipitation data using a separate table pattern (mirroring `MonthlySunshine`), with proper statistical aggregation and integration into the existing `make db-setup` workflow.
 
+## Current Status Update
+
+**Weather Data Regeneration (2025-11-23)**
+- ✅ All weather data batch files have been regenerated and are now located in `dataAndUtils/worldData_v2/`
+- 🎯 **Dual Database Strategy**: To compare the new data against the existing data, we will:
+  1. Create a second PostgreSQL container (`db-v2`) running alongside the original (`db`)
+  2. Temporarily reroute the `make db-setup` command to populate `db-v2` with the new batch files
+  3. Maintain both databases during testing and comparison phase
+  4. This allows side-by-side comparison of old vs. new data before committing to the new dataset
+
 ---
 
 ## Architecture Decisions
@@ -28,6 +38,131 @@ Implement weekly aggregated temperature and precipitation data using a separate 
 2. Statistically sound (7-day samples)
 3. Manageable data size (52 points vs 365)
 4. Standard meteorological practice
+
+---
+
+## Dual Database Setup for Data Comparison
+
+### Docker Compose Configuration
+
+To enable side-by-side comparison of old and new weather data, we'll run two PostgreSQL containers:
+
+**File:** `docker-compose.yml`
+
+```yaml
+services:
+  # Original database with existing data
+  db:
+    image: postgres:15
+    container_name: vaycay-postgres-original
+    environment:
+      POSTGRES_DB: vaycay
+      POSTGRES_USER: ${DB_USER:-vaycay_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-vaycay_pass}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # New database for v2 data comparison
+  db-v2:
+    image: postgres:15
+    container_name: vaycay-postgres-v2
+    environment:
+      POSTGRES_DB: vaycay_v2
+      POSTGRES_USER: ${DB_USER:-vaycay_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-vaycay_pass}
+    ports:
+      - "5433:5432"  # Map to different host port
+    volumes:
+      - postgres_data_v2:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+  postgres_data_v2:
+```
+
+### Environment Configuration
+
+**File:** `.env` (add these variables)
+
+```bash
+# Database connection for original DB
+DATABASE_URL="postgresql://vaycay_user:vaycay_pass@localhost:5432/vaycay"
+
+# Database connection for v2 comparison
+DATABASE_URL_V2="postgresql://vaycay_user:vaycay_pass@localhost:5433/vaycay_v2"
+```
+
+### Makefile Updates
+
+Update the `db-setup` target to use `db-v2`:
+
+**File:** `Makefile`
+
+```makefile
+# Temporary target for setting up v2 database with new data
+db-setup-v2: check-prereqs
+	@echo "$(GREEN)Setting up v2 database with new weather data...$(NC)"
+	@echo "$(YELLOW)Starting PostgreSQL v2 container...$(NC)"
+	docker compose up -d db-v2
+	@echo "$(YELLOW)Waiting for database to be ready...$(NC)"
+	@sleep 5
+	@echo "$(YELLOW)Exporting DATABASE_URL_V2 for Prisma...$(NC)"
+	@export DATABASE_URL="postgresql://vaycay_user:vaycay_pass@localhost:5433/vaycay_v2" && \
+	cd server && npm run prisma:migrate && \
+	cd server && npm run prisma:generate && \
+	cd server && npm run import-csv-data && \
+	cd server && npx tsx scripts/merge-duplicate-cities-optimized.ts && \
+	cd server && npx tsx scripts/import-sunshine-hours.ts && \
+	cd server && npx tsx scripts/reassign-cities-to-major-cities.ts && \
+	cd server && npm run aggregate-weekly-weather
+	@echo "$(GREEN)✓ V2 Database setup complete$(NC)"
+
+# Original db-setup (unchanged for now)
+db-setup: db-setup-v2  # Temporarily redirect to v2
+```
+
+### Data Comparison Strategy
+
+Once both databases are populated:
+
+1. **Query Comparison Script** - Create a script to compare statistics:
+   ```typescript
+   // server/scripts/compare-database-stats.ts
+   // Connect to both DBs and compare:
+   // - Total records count
+   // - City coverage
+   // - Data quality metrics
+   // - Sample city comparisons
+   ```
+
+2. **Manual Testing** - Switch `DATABASE_URL` between the two to test:
+   ```bash
+   # Test with v2 data
+   export DATABASE_URL="postgresql://vaycay_user:vaycay_pass@localhost:5433/vaycay_v2"
+   cd server && npm run dev
+   
+   # Test with original data
+   export DATABASE_URL="postgresql://vaycay_user:vaycay_pass@localhost:5432/vaycay"
+   cd server && npm run dev
+   ```
+
+3. **Migration Decision** - After validation:
+   - If v2 data is better → update default `DATABASE_URL` to use v2
+   - If original is better → keep using original, remove v2 container
+   - Archive the unused container: `docker compose down db-v2 -v`
+
+### Update CSV Import Script
+
+**File:** `server/scripts/import-csv-data.ts` (or wherever the import logic is)
+
+Update the file path to point to the new location:
+
+```typescript
+// OLD: const DATA_PATH = path.join(__dirname, '../../dataAndUtils/worldData/');
+const DATA_PATH = path.join(__dirname, '../../dataAndUtils/worldData_v2/');
+```
 
 ---
 

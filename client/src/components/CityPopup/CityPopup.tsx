@@ -103,11 +103,11 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
   return (
     <div
       className="fixed bottom-0 left-0 right-0 shadow-lg z-50 flex flex-col"
-      style={{ 
-        height: '33.333vh', 
+      style={{
+        height: '33.333vh',
         pointerEvents: 'auto',
         backgroundColor: 'var(--mantine-color-body)',
-        borderTop: '1px solid var(--mantine-color-default-border)'
+        borderTop: '1px solid var(--mantine-color-default-border)',
       }}
     >
       <div className="absolute top-2 right-2 z-10">
