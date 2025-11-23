@@ -230,6 +230,12 @@ export const SUNSHINE_CHART_MIN_LINE_COLOR = '#6b7280'; // gray for baseline
 // days in each month (using 28.25 for February to account for leap years)
 export const DAYS_IN_MONTH = [31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
+// calendar days in each month (non-leap year) - for iteration
+export const CALENDAR_DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+// standard month length for normalizing sunshine calculations (365.25 / 12)
+export const STANDARD_MONTH_LENGTH = 30.4375;
+
 // month boundaries for labels (day-of-year format)
 export const monthMarks = [
   { value: 1, label: 'Jan' },
