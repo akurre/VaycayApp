@@ -73,18 +73,21 @@ const WorldMap = ({
         onHover={handleHover}
         onClick={handleClick}
         getTooltip={() => null}
+        style={{ pointerEvents: 'auto' }}
       >
         <Map mapStyle={MAP_STYLES[colorScheme]} attributionControl={false} />
       </DeckGL>
 
       {hoverInfo && <MapTooltip x={hoverInfo.x} y={hoverInfo.y} content={hoverInfo.content} />}
 
-      <CityPopup
-        city={selectedCity}
-        onClose={handleClosePopup}
-        selectedMonth={selectedMonth}
-        selectedDate={selectedDate}
-      />
+      {selectedCity && (
+        <CityPopup
+          city={selectedCity}
+          onClose={handleClosePopup}
+          selectedMonth={selectedMonth}
+          selectedDate={selectedDate}
+        />
+      )}
     </div>
   );
 };

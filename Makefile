@@ -133,9 +133,9 @@ lint: check-prereqs
 	fi
 	@echo ""
 	@echo "$(YELLOW)Running ESLint checks...$(NC)"
-	@cd client && npm run lint || true
+	@cd client && npm run lint -- --quiet || true
 	@echo ""
-	@cd server && npm run lint || true
+	@cd server && npm run lint -- --quiet || true
 	@echo ""
 	@echo "$(GREEN)✓ Lint check complete$(NC)"
 

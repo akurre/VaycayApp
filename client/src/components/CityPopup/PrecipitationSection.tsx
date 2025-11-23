@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import Field from './Field';
 import { formatValue } from '@/utils/dataFormatting/formatValue';
 import GreaterSection from './GreaterSection';
@@ -20,4 +21,4 @@ const PrecipitationSection = ({ precipitation, snowDepth }: PrecipitationSection
   );
 };
 
-export default PrecipitationSection;
+export default memo(PrecipitationSection);

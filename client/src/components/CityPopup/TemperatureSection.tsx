@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import Field from './Field';
 import { formatTemperature } from '@/utils/tempFormatting/formatTemperature';
 import GreaterSection from './GreaterSection';
@@ -16,16 +17,14 @@ const TemperatureSection = ({
 }: TemperatureSectionProps) => {
   const temperatureIcon = getTemperatureIcon(avgTemperature);
   return (
-    <div className="mt-2">
-      <GreaterSection title="Temperature" icon={temperatureIcon}>
-        <div className="grid grid-cols-3 gap-2">
-          <Field label="Average" value={formatTemperature(avgTemperature) ?? 'N/A'} />
-          <Field label="Max" value={formatTemperature(maxTemperature) ?? 'N/A'} />
-          <Field label="Min" value={formatTemperature(minTemperature) ?? 'N/A'} />
-        </div>
-      </GreaterSection>
-    </div>
+    <GreaterSection title="Temperature" icon={temperatureIcon}>
+      <div className="flex gap-10">
+        <Field label="Average" value={formatTemperature(avgTemperature) ?? 'N/A'} />
+        <Field label="Max" value={formatTemperature(maxTemperature) ?? 'N/A'} />
+        <Field label="Min" value={formatTemperature(minTemperature) ?? 'N/A'} />
+      </div>
+    </GreaterSection>
   );
 };
 
-export default TemperatureSection;
+export default memo(TemperatureSection);

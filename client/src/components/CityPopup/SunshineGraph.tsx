@@ -1,43 +1,31 @@
-import { useMemo } from 'react';
+import { useMemo, memo, useCallback } from 'react';
 import type { SunshineData } from '@/types/sunshineDataType';
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  ReferenceLine,
-  Legend,
-} from 'recharts';
-import { Text } from '@mantine/core';
 import { transformSunshineDataForChart } from '@/utils/dataFormatting/transformSunshineDataForChart';
-import { calculateAverageSunshine } from '@/utils/dataFormatting/calculateAverageSunshine';
 import { generateTheoreticalMaxSunshineData } from '@/utils/dataFormatting/generateTheoreticalMaxSunshineData';
 import SunshineGraphTooltip from './SunshineGraphTooltip';
 import SunshineGraphDot from './SunshineGraphDot';
-import {
-  SUNSHINE_CHART_LINE_COLOR,
-  SUNSHINE_CHART_GRID_COLOR,
-  SUNSHINE_CHART_AXIS_COLOR,
-  SUNSHINE_CHART_MAX_LINE_COLOR,
-} from '@/const';
+import RechartsLineGraph, { type LineConfig, type ReferenceLineConfig } from './RechartsLineGraph';
+import { useChartColors } from '@/hooks/useChartColors';
 
 interface SunshineGraphProps {
   sunshineData: SunshineData;
   selectedMonth?: number;
 }
 
-function SunshineGraph({ sunshineData, selectedMonth }: SunshineGraphProps) {
-  const chartData = useMemo(() => transformSunshineDataForChart(sunshineData), [sunshineData]);
+const SunshineGraph = ({ sunshineData, selectedMonth }: SunshineGraphProps) => {
+  // Get theme-aware colors
+  const chartColors = useChartColors();
 
-  const averageSunshine = useMemo(() => calculateAverageSunshine(chartData), [chartData]);
+  // Generate unique city key for animation control
+  const cityKey = `${sunshineData.city}-${sunshineData.lat}-${sunshineData.long}`;
+
+  // Transform sunshine data for chart
+  const chartData = useMemo(() => transformSunshineDataForChart(sunshineData), [sunshineData]);
 
   // Calculate theoretical maximum sunshine based on latitude (memoized per city)
   const latitude = sunshineData.lat;
   const theoreticalMaxData = useMemo(
-    () => (latitude !== null ? generateTheoreticalMaxSunshineData(latitude) : null),
+    () => (latitude === null ? null : generateTheoreticalMaxSunshineData(latitude)),
     [latitude]
   );
 
@@ -52,66 +40,68 @@ function SunshineGraph({ sunshineData, selectedMonth }: SunshineGraphProps) {
     [chartData, theoreticalMaxData]
   );
 
-  return (
-    <div className="w-full">
-      {averageSunshine !== null && (
-        <div className="mb-2">
-          <Text size="sm" c="tertiary-purple.4">
-            Average Annual Sunshine
-          </Text>
-          <Text size="md">{averageSunshine.toFixed(1)} hours</Text>
-        </div>
-      )}
-      <ResponsiveContainer width="100%" height={240}>
-        <LineChart data={combinedChartData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke={SUNSHINE_CHART_GRID_COLOR} />
-          <XAxis dataKey="month" tick={{ fontSize: 12 }} stroke={SUNSHINE_CHART_AXIS_COLOR} />
-          <YAxis
-            tick={{ fontSize: 12 }}
-            stroke={SUNSHINE_CHART_AXIS_COLOR}
-            label={{ value: 'Hours', angle: -90, position: 'insideLeft', style: { fontSize: 12 } }}
-          />
-          <Tooltip content={<SunshineGraphTooltip />} />
-          <Legend
-            wrapperStyle={{ fontSize: '12px' }}
-            iconType="line"
-            verticalAlign="bottom"
-            height={24}
-          />
-          {selectedMonth && (
-            <ReferenceLine
-              x={combinedChartData[selectedMonth - 1]?.month}
-              stroke={SUNSHINE_CHART_LINE_COLOR}
-              strokeWidth={2}
-              strokeDasharray="5 5"
-            />
-          )}
-          {/* Theoretical maximum sunshine line (100% sun) */}
-          {theoreticalMaxData && (
-            <Line
-              type="monotone"
-              dataKey="theoreticalMax"
-              stroke={SUNSHINE_CHART_MAX_LINE_COLOR}
-              strokeWidth={1.5}
-              strokeDasharray="5 5"
-              dot={false}
-              name="100% Sun"
-            />
-          )}
-          {/* Actual sunshine line */}
-          <Line
-            type="monotone"
-            dataKey="hours"
-            stroke={SUNSHINE_CHART_LINE_COLOR}
-            strokeWidth={2}
-            dot={(props) => <SunshineGraphDot {...props} selectedMonth={selectedMonth} />}
-            connectNulls
-            name="Actual"
-          />
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
+  // Memoize custom dot render function
+  const renderCustomDot = useCallback(
+    (props: Record<string, unknown>) => (
+      <SunshineGraphDot {...props} selectedMonth={selectedMonth} />
+    ),
+    [selectedMonth]
   );
-}
 
-export default SunshineGraph;
+  // Configure lines
+  const lines: LineConfig[] = useMemo(() => {
+    const lineConfigs: LineConfig[] = [];
+
+    // Add theoretical maximum line if data exists
+    if (theoreticalMaxData) {
+      lineConfigs.push({
+        dataKey: 'theoreticalMax',
+        name: '100% Sun',
+        stroke: chartColors.maxLineColor,
+        strokeWidth: 1.5,
+        strokeDasharray: '5 5',
+        dot: false,
+      });
+    }
+
+    // Add actual sunshine line
+    lineConfigs.push({
+      dataKey: 'hours',
+      name: 'Actual',
+      stroke: chartColors.lineColor,
+      strokeWidth: 2,
+      dot: renderCustomDot,
+      connectNulls: true,
+    });
+
+    return lineConfigs;
+  }, [theoreticalMaxData, renderCustomDot, chartColors]);
+
+  // Configure reference line for selected month
+  const referenceLines: ReferenceLineConfig[] = useMemo(() => {
+    if (!selectedMonth) return [];
+
+    return [
+      {
+        x: combinedChartData[selectedMonth - 1]?.month,
+        stroke: chartColors.lineColor,
+        strokeWidth: 2,
+        strokeDasharray: '5 5',
+      },
+    ];
+  }, [selectedMonth, combinedChartData, chartColors]);
+
+  return (
+    <RechartsLineGraph
+      data={combinedChartData}
+      cityKey={cityKey}
+      xAxisDataKey="month"
+      yAxisLabel="Hours"
+      lines={lines}
+      referenceLines={referenceLines}
+      tooltipContent={<SunshineGraphTooltip />}
+    />
+  );
+};
+
+export default memo(SunshineGraph);

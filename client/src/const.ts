@@ -44,7 +44,7 @@ export const ZOOM_AMPLIFICATION_FACTOR = 3; // amplify zoom changes for more sen
 export const INITIAL_VIEW_STATE = {
   longitude: 0,
   latitude: 20,
-  zoom: 2,
+  zoom: 1.9,
   pitch: 0,
   bearing: 0,
 };
@@ -221,14 +221,20 @@ export const MONTH_FIELDS: Record<number, keyof SunshineData> = {
 export const SLIDER_THUMB_WIDTH = 32; // 8 * 4 (w-8 in tailwind)
 
 // sunshine graph chart colors
-export const SUNSHINE_CHART_LINE_COLOR = '#f59e0b'; // orange/amber
+export const SUNSHINE_CHART_LINE_COLOR = '#20A39E'; // secondary teal
 export const SUNSHINE_CHART_GRID_COLOR = '#e5e7eb'; // light gray
 export const SUNSHINE_CHART_AXIS_COLOR = '#9ca3af'; // medium gray
-export const SUNSHINE_CHART_MAX_LINE_COLOR = '#3b82f6'; // blue for theoretical max
+export const SUNSHINE_CHART_MAX_LINE_COLOR = '#E63E55'; // theme red for theoretical max
 export const SUNSHINE_CHART_MIN_LINE_COLOR = '#6b7280'; // gray for baseline
 
 // days in each month (using 28.25 for February to account for leap years)
 export const DAYS_IN_MONTH = [31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+// calendar days in each month (non-leap year) - for iteration
+export const CALENDAR_DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+// standard month length for normalizing sunshine calculations (365.25 / 12)
+export const STANDARD_MONTH_LENGTH = 30.4375;
 
 // month boundaries for labels (day-of-year format)
 export const monthMarks = [
