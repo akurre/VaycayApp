@@ -1,4 +1,4 @@
-import { Text } from '@mantine/core';
+import { Text, useMantineColorScheme } from '@mantine/core';
 
 interface FieldProps {
   label: string;
@@ -7,9 +7,12 @@ interface FieldProps {
 }
 
 const Field = ({ label, value, monospace }: FieldProps) => {
+  const { colorScheme } = useMantineColorScheme();
+  const labelColor = colorScheme === 'dark' ? 'tertiary-purple.4' : 'tertiary-purple.7';
+
   return (
     <div>
-      <Text size="sm" c="tertiary-purple.4">
+      <Text size="sm" c={labelColor}>
         {label}
       </Text>
       <Text size="md" ff={monospace ? 'monospace' : undefined}>

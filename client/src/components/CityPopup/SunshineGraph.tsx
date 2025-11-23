@@ -5,10 +5,7 @@ import { generateTheoreticalMaxSunshineData } from '@/utils/dataFormatting/gener
 import SunshineGraphTooltip from './SunshineGraphTooltip';
 import SunshineGraphDot from './SunshineGraphDot';
 import RechartsLineGraph, { type LineConfig, type ReferenceLineConfig } from './RechartsLineGraph';
-import {
-  SUNSHINE_CHART_LINE_COLOR,
-  SUNSHINE_CHART_MAX_LINE_COLOR,
-} from '@/const';
+import { useChartColors } from '@/hooks/useChartColors';
 
 interface SunshineGraphProps {
   sunshineData: SunshineData;
@@ -16,6 +13,9 @@ interface SunshineGraphProps {
 }
 
 const SunshineGraph = ({ sunshineData, selectedMonth }: SunshineGraphProps) => {
+  // Get theme-aware colors
+  const chartColors = useChartColors();
+
   // Generate unique city key for animation control
   const cityKey = `${sunshineData.city}-${sunshineData.lat}-${sunshineData.long}`;
 
@@ -55,7 +55,7 @@ const SunshineGraph = ({ sunshineData, selectedMonth }: SunshineGraphProps) => {
       lineConfigs.push({
         dataKey: 'theoreticalMax',
         name: '100% Sun',
-        stroke: SUNSHINE_CHART_MAX_LINE_COLOR,
+        stroke: chartColors.maxLineColor,
         strokeWidth: 1.5,
         strokeDasharray: '5 5',
         dot: false,
@@ -66,14 +66,14 @@ const SunshineGraph = ({ sunshineData, selectedMonth }: SunshineGraphProps) => {
     lineConfigs.push({
       dataKey: 'hours',
       name: 'Actual',
-      stroke: SUNSHINE_CHART_LINE_COLOR,
+      stroke: chartColors.lineColor,
       strokeWidth: 2,
       dot: renderCustomDot,
       connectNulls: true,
     });
 
     return lineConfigs;
-  }, [theoreticalMaxData, renderCustomDot]);
+  }, [theoreticalMaxData, renderCustomDot, chartColors]);
 
   // Configure reference line for selected month
   const referenceLines: ReferenceLineConfig[] = useMemo(() => {
@@ -82,12 +82,12 @@ const SunshineGraph = ({ sunshineData, selectedMonth }: SunshineGraphProps) => {
     return [
       {
         x: combinedChartData[selectedMonth - 1]?.month,
-        stroke: SUNSHINE_CHART_LINE_COLOR,
+        stroke: chartColors.lineColor,
         strokeWidth: 2,
         strokeDasharray: '5 5',
       },
     ];
-  }, [selectedMonth, combinedChartData]);
+  }, [selectedMonth, combinedChartData, chartColors]);
 
   return (
     <RechartsLineGraph

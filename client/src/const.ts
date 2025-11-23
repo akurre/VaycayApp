@@ -221,10 +221,10 @@ export const MONTH_FIELDS: Record<number, keyof SunshineData> = {
 export const SLIDER_THUMB_WIDTH = 32; // 8 * 4 (w-8 in tailwind)
 
 // sunshine graph chart colors
-export const SUNSHINE_CHART_LINE_COLOR = '#f59e0b'; // orange/amber
+export const SUNSHINE_CHART_LINE_COLOR = '#20A39E'; // secondary teal
 export const SUNSHINE_CHART_GRID_COLOR = '#e5e7eb'; // light gray
 export const SUNSHINE_CHART_AXIS_COLOR = '#9ca3af'; // medium gray
-export const SUNSHINE_CHART_MAX_LINE_COLOR = '#3b82f6'; // blue for theoretical max
+export const SUNSHINE_CHART_MAX_LINE_COLOR = '#E63E55'; // theme red for theoretical max
 export const SUNSHINE_CHART_MIN_LINE_COLOR = '#6b7280'; // gray for baseline
 
 // days in each month (using 28.25 for February to account for leap years)

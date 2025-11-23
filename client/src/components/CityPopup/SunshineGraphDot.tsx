@@ -1,4 +1,4 @@
-import { SUNSHINE_CHART_LINE_COLOR } from '@/const';
+import { useChartColors } from '@/hooks/useChartColors';
 
 interface SunshineGraphDotProps {
   cx?: number;
@@ -11,6 +11,8 @@ interface SunshineGraphDotProps {
 }
 
 function SunshineGraphDot({ cx, cy, payload, selectedMonth }: SunshineGraphDotProps) {
+  const chartColors = useChartColors();
+
   if (!cx || !cy || !payload || !selectedMonth) {
     return null;
   }
@@ -21,7 +23,7 @@ function SunshineGraphDot({ cx, cy, payload, selectedMonth }: SunshineGraphDotPr
         cx={cx}
         cy={cy}
         r={6}
-        fill={SUNSHINE_CHART_LINE_COLOR}
+        fill={chartColors.lineColor}
         stroke="#fff"
         strokeWidth={2}
       />

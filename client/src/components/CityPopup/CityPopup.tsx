@@ -10,7 +10,6 @@ import AdditionalInfo from './AdditionalInfo';
 import DataChartTabs from './DataChartTabs';
 import Field from './Field';
 import GreaterSection from './GreaterSection';
-import formatDateString from '@/utils/dateFormatting/formatDateString';
 import { extractMonthFromDate } from '@/utils/dateFormatting/extractMonthFromDate';
 import { isWeatherData } from '@/utils/typeGuards';
 import { transformSunshineDataForChart } from '@/utils/dataFormatting/transformSunshineDataForChart';
@@ -101,12 +100,15 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
   }
   cityAndCountry += `, ${city.country}`;
 
-  const formattedDate = formatDateString(displayWeatherData?.date);
-
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700 shadow-lg z-50 flex flex-col"
-      style={{ height: '33.333vh', pointerEvents: 'auto' }}
+      className="fixed bottom-0 left-0 right-0 shadow-lg z-50 flex flex-col"
+      style={{ 
+        height: '33.333vh', 
+        pointerEvents: 'auto',
+        backgroundColor: 'var(--mantine-color-body)',
+        borderTop: '1px solid var(--mantine-color-default-border)'
+      }}
     >
       <div className="absolute top-2 right-2 z-10">
         {/* close button */}

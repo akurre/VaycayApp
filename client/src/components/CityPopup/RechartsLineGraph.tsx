@@ -10,10 +10,7 @@ import {
   ReferenceLine,
   Legend,
 } from 'recharts';
-import {
-  SUNSHINE_CHART_GRID_COLOR,
-  SUNSHINE_CHART_AXIS_COLOR,
-} from '@/const';
+import { useChartColors } from '@/hooks/useChartColors';
 
 // Generic data point type - charts can add extra fields
 export interface ChartDataPoint {
@@ -76,7 +73,7 @@ export interface RechartsLineGraphProps<T extends ChartDataPoint> {
   legendAlign?: 'left' | 'center' | 'right';
 }
 
-function RechartsLineGraph<T extends ChartDataPoint>({
+function RechartsLineGraphComponent<T extends ChartDataPoint>({
   data,
   cityKey,
   xAxisDataKey,
@@ -93,6 +90,9 @@ function RechartsLineGraph<T extends ChartDataPoint>({
   legendVerticalAlign = 'middle',
   legendAlign = 'right',
 }: RechartsLineGraphProps<T>) {
+  // Get theme-aware colors
+  const chartColors = useChartColors();
+
   // Track previous city for animation control
   const previousCityRef = useRef<string | null>(null);
   const shouldAnimate = previousCityRef.current !== cityKey;
@@ -108,29 +108,29 @@ function RechartsLineGraph<T extends ChartDataPoint>({
     <div className="w-full h-full">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={chartData} margin={margin}>
-          <CartesianGrid strokeDasharray="3 3" stroke={SUNSHINE_CHART_GRID_COLOR} />
+          <CartesianGrid strokeDasharray="3 3" stroke={chartColors.gridColor} />
 
           {/* X Axis */}
           <XAxis
             dataKey={xAxisDataKey}
-            tick={{ fontSize: 12 }}
-            stroke={SUNSHINE_CHART_AXIS_COLOR}
+            tick={{ fontSize: 12, fill: chartColors.textColor }}
+            stroke={chartColors.axisColor}
             label={
               xAxisLabel
-                ? { value: xAxisLabel, position: 'insideBottom', offset: -5, style: { fontSize: 12 } }
+                ? { value: xAxisLabel, position: 'insideBottom', offset: -5, style: { fontSize: 12, fill: chartColors.textColor } }
                 : undefined
             }
           />
 
           {/* Y Axis */}
           <YAxis
-            tick={{ fontSize: 12 }}
-            stroke={SUNSHINE_CHART_AXIS_COLOR}
+            tick={{ fontSize: 12, fill: chartColors.textColor }}
+            stroke={chartColors.axisColor}
             label={{
               value: yAxisLabel,
               angle: -90,
               position: 'insideLeft',
-              style: { fontSize: 12 },
+              style: { fontSize: 12, fill: chartColors.textColor },
             }}
           />
 
@@ -155,9 +155,9 @@ function RechartsLineGraph<T extends ChartDataPoint>({
           )}
 
           {/* Reference Lines */}
-          {referenceLines.map((refLine, index) => (
+          {referenceLines.map((refLine) => (
             <ReferenceLine
-              key={`ref-line-${index}`}
+              key={`ref-${refLine.x ?? ''}-${refLine.y ?? ''}-${refLine.label ?? ''}`}
               x={refLine.x}
               y={refLine.y}
               stroke={refLine.stroke}
@@ -191,4 +191,5 @@ function RechartsLineGraph<T extends ChartDataPoint>({
 }
 
 // Export with memo for performance optimization
-export default memo(RechartsLineGraph) as typeof RechartsLineGraph;
+const RechartsLineGraph = memo(RechartsLineGraphComponent) as typeof RechartsLineGraphComponent;
+export default RechartsLineGraph;
