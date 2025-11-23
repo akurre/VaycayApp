@@ -24,7 +24,7 @@ export interface LineConfig {
   stroke: string;
   strokeWidth?: number;
   strokeDasharray?: string;
-  dot?: boolean | ((props: any) => ReactElement);
+  dot?: boolean | ((props: Record<string, unknown>) => ReactElement);
   connectNulls?: boolean;
 }
 

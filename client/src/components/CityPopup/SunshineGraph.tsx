@@ -42,7 +42,9 @@ const SunshineGraph = ({ sunshineData, selectedMonth }: SunshineGraphProps) => {
 
   // Memoize custom dot render function
   const renderCustomDot = useCallback(
-    (props: any) => <SunshineGraphDot {...props} selectedMonth={selectedMonth} />,
+    (props: Record<string, unknown>) => (
+      <SunshineGraphDot {...props} selectedMonth={selectedMonth} />
+    ),
     [selectedMonth]
   );
 
