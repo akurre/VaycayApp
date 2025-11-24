@@ -101,6 +101,11 @@ interface CityKey {
   country: string;
   lat: number;
   long: number;
+  coordSum?: {
+    lat: number;
+    long: number;
+    count: number;
+  };
 }
 
 // helper to parse csv line respecting quoted fields
@@ -135,14 +140,24 @@ function parseFloat(value: string | undefined): number | null {
 
 // helper to create city key for deduplication
 function createCityKey(row: CSVRow): string {
-  // Round coordinates to 1 decimal place (~11km precision) to group nearby stations
-  // This prevents weather stations 100m apart from creating duplicate cities,
-  // while still distinguishing between different cities with the same name
-  // (e.g., multiple "Jackson" cities in the same state)
-  const lat = parseFloat(row.lat) || 0;
-  const long = parseFloat(row.long) || 0;
+  // CRITICAL: For cities from worldcities.csv (major cities with worldcities_id),
+  // use ONLY name|country|state to group ALL weather stations together.
+  // This ensures Rome's 366 records with varying coordinates become ONE city.
+  //
+  // For cities NOT in worldcities (small towns), add rounded coordinates
+  // to distinguish between different places with the same name (e.g., multiple "Jackson"s).
   const state = row.state || '';
-  return `${row.city}|${row.country}|${state}|${lat.toFixed(1)}|${long.toFixed(1)}`;
+  const hasWorldcitiesId = row.worldcities_id && row.worldcities_id !== '' && row.worldcities_id !== 'null';
+
+  if (hasWorldcitiesId) {
+    // Major city from worldcities - group all weather data regardless of coordinates
+    return `${row.city}|${row.country}|${state}`;
+  } else {
+    // Small city not in worldcities - add coordinates to distinguish
+    const lat = parseFloat(row.lat) || 0;
+    const long = parseFloat(row.long) || 0;
+    return `${row.city}|${row.country}|${state}|${lat.toFixed(1)}|${long.toFixed(1)}`;
+  }
 }
 
 async function importCSVData(batchDir: string) {
@@ -197,16 +212,28 @@ async function importCSVData(batchDir: string) {
             row[header as keyof CSVRow] = values[index];
           });
 
-          // collect unique cities
+          // collect unique cities and accumulate coordinates for averaging
           const cityKey = createCityKey(row);
+          const lat = parseFloat(row.lat) || 0;
+          const long = parseFloat(row.long) || 0;
+
           if (!cityMap.has(cityKey)) {
             cityMap.set(cityKey, {
               name: row.city,
               country: row.country,
-              lat: parseFloat(row.lat) || 0,
-              long: parseFloat(row.long) || 0,
+              lat,
+              long,
               data: row,
+              coordSum: { lat, long, count: 1 }, // Track for averaging
             });
+          } else {
+            // Accumulate coordinates for averaging
+            const existing = cityMap.get(cityKey)!;
+            if (existing.coordSum) {
+              existing.coordSum.lat += lat;
+              existing.coordSum.long += long;
+              existing.coordSum.count++;
+            }
           }
 
           // collect unique stations (will link to cities later)
@@ -245,16 +272,24 @@ async function importCSVData(batchDir: string) {
     for (let i = 0; i < cityEntries.length; i += cityBatchSize) {
       const batch = cityEntries.slice(i, i + cityBatchSize);
 
-      try {
-        // insert cities and get their ids (upsert to handle existing cities)
-        for (const [cityKey, cityInfo] of batch) {
+      // insert cities and get their ids (upsert to handle existing cities)
+      for (const [cityKey, cityInfo] of batch) {
+        try {
+          // Use averaged coordinates if we accumulated multiple coordinate pairs
+          const avgLat = cityInfo.coordSum
+            ? cityInfo.coordSum.lat / cityInfo.coordSum.count
+            : cityInfo.lat;
+          const avgLong = cityInfo.coordSum
+            ? cityInfo.coordSum.long / cityInfo.coordSum.count
+            : cityInfo.long;
+
           const cityData = {
             name: cityInfo.name,
             country: cityInfo.country,
             state: cityInfo.data.state || null,
             suburb: cityInfo.data.suburb || null,
-            lat: cityInfo.lat,
-            long: cityInfo.long,
+            lat: avgLat,
+            long: avgLong,
             cityAscii: cityInfo.data.city_ascii || null,
             iso2: cityInfo.data.iso2 || null,
             iso3: cityInfo.data.iso3 || null,
@@ -264,32 +299,40 @@ async function importCSVData(batchDir: string) {
             dataSource: cityInfo.data.data_source || null,
           };
 
-          // Use upsert to handle existing cities
+          // Standard upsert based on unique constraint (name, country, lat, long)
+          // This handles both new cities and updates to existing ones
+          // The reassign-cities-to-major-cities script will later:
+          // 1. Merge duplicates (multiple entries with same name/country)
+          // 2. Update coordinates to match worldcities.csv official values
+          // 3. Update populations from worldcities.csv
           const city = await prisma.city.upsert({
             where: {
               name_country_lat_long: {
                 name: cityInfo.name,
                 country: cityInfo.country,
-                lat: cityInfo.lat,
-                long: cityInfo.long,
+                lat: avgLat,
+                long: avgLong,
               },
             },
             create: cityData,
-            update: {}, // Don't update existing cities
+            update: cityData,
           });
 
           cityIdMap.set(cityKey, city.id);
           stats.citiesCreated++;
+        } catch (error) {
+          console.error(
+            `  ✗ Error inserting city ${cityInfo.name}, ${cityInfo.country}:`,
+            error instanceof Error ? error.message : error
+          );
+          stats.errors++;
         }
-
-        const progress = ((i + batch.length) / cityEntries.length) * 100;
-        console.log(
-          `  ✓ Processed ${stats.citiesCreated.toLocaleString()} cities (${progress.toFixed(1)}%)`
-        );
-      } catch (error) {
-        console.error(`  ✗ Error processing city batch:`, error);
-        stats.errors += batch.length;
       }
+
+      const progress = ((i + batch.length) / cityEntries.length) * 100;
+      console.log(
+        `  ✓ Processed ${stats.citiesCreated.toLocaleString()} cities (${progress.toFixed(1)}%)`
+      );
     }
 
     console.log(`\n✅ Cities inserted: ${stats.citiesCreated.toLocaleString()}`);
