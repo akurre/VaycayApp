@@ -131,6 +131,20 @@ async function mergeDuplicateCities() {
       for (let i = 0; i < tempOnlyCities.length; i++) {
         const targetCity = tempOnlyCities[i];
 
+        // check if this city still needs PRCP data (might have been updated by previous merges)
+        const stillNeedsPrcp = await prisma.$queryRaw<Array<{ needs_prcp: boolean }>>`
+          SELECT NOT EXISTS (
+            SELECT 1 FROM weather_records wr
+            WHERE wr."cityId" = ${targetCity.id}
+            AND wr."PRCP" IS NOT NULL
+          ) as needs_prcp
+        `;
+
+        if (!stillNeedsPrcp[0].needs_prcp) {
+          // Skip - already has PRCP data (updated by previous merge)
+          continue;
+        }
+
         // find duplicate cities (same name, country, state) with PRCP data
         const prcpCities = targetCity.state
           ? await prisma.$queryRaw<Array<{ id: number }>>`
@@ -226,18 +240,22 @@ async function mergeDuplicateCities() {
             }
           }
 
-          console.log(`    ✓ Updated ${recordsUpdated} weather records with PRCP data`);
+          if (recordsUpdated > 0) {
+            console.log(`    ✓ Updated ${recordsUpdated} weather records with PRCP data`);
+            stats.tempOnlyCitiesUpdated++;
+            stats.weatherRecordsUpdated += recordsUpdated;
+          } else {
+            console.log(`    ⊘ No overlapping dates - cannot transfer PRCP data`);
+          }
+
           if (stationsReassigned > 0) {
             console.log(`    ✓ Reassigned ${stationsReassigned} stations`);
+            stats.stationsReassigned += stationsReassigned;
           }
           if (stationsDeleted > 0) {
             console.log(`    ✓ Deleted ${stationsDeleted} duplicate stations`);
+            stats.stationsDeleted += stationsDeleted;
           }
-
-          stats.tempOnlyCitiesUpdated++;
-          stats.weatherRecordsUpdated += recordsUpdated;
-          stats.stationsReassigned += stationsReassigned;
-          stats.stationsDeleted += stationsDeleted;
         }
 
         // show progress every 50 cities
@@ -365,29 +383,57 @@ async function mergeDuplicateCities() {
 
     if (prcpOnlyCities.length > 0) {
       const cityIds = prcpOnlyCities.map((c) => c.id);
+      const batchSize = 1000; // Process 1000 cities at a time
 
-      // delete weather records
-      console.log('  Deleting weather records...');
-      const deletedRecords = await prisma.weatherRecord.deleteMany({
-        where: { cityId: { in: cityIds } },
-      });
-      stats.weatherRecordsDeleted = deletedRecords.count;
-      console.log(`  ✓ Deleted ${deletedRecords.count.toLocaleString()} weather records`);
+      // delete weather records in batches
+      console.log('  Deleting weather records in batches...');
+      let totalRecordsDeleted = 0;
+      for (let i = 0; i < cityIds.length; i += batchSize) {
+        const batch = cityIds.slice(i, i + batchSize);
+        const deletedRecords = await prisma.weatherRecord.deleteMany({
+          where: { cityId: { in: batch } },
+        });
+        totalRecordsDeleted += deletedRecords.count;
 
-      // delete weather stations
-      console.log('  Deleting weather stations...');
-      const deletedStations = await prisma.weatherStation.deleteMany({
-        where: { cityId: { in: cityIds } },
-      });
-      console.log(`  ✓ Deleted ${deletedStations.count.toLocaleString()} weather stations`);
+        if ((i + batch.length) % 5000 === 0 || i + batch.length === cityIds.length) {
+          console.log(`    Progress: ${i + batch.length}/${cityIds.length} cities processed, ${totalRecordsDeleted.toLocaleString()} records deleted`);
+        }
+      }
+      stats.weatherRecordsDeleted = totalRecordsDeleted;
+      console.log(`  ✓ Deleted ${totalRecordsDeleted.toLocaleString()} weather records`);
 
-      // delete cities
-      console.log('  Deleting cities...');
-      const deletedCities = await prisma.city.deleteMany({
-        where: { id: { in: cityIds } },
-      });
-      stats.prcpOnlyCitiesDeleted = deletedCities.count;
-      console.log(`  ✓ Deleted ${deletedCities.count.toLocaleString()} cities`);
+      // delete weather stations in batches
+      console.log('  Deleting weather stations in batches...');
+      let totalStationsDeleted = 0;
+      for (let i = 0; i < cityIds.length; i += batchSize) {
+        const batch = cityIds.slice(i, i + batchSize);
+        const deletedStations = await prisma.weatherStation.deleteMany({
+          where: { cityId: { in: batch } },
+        });
+        totalStationsDeleted += deletedStations.count;
+
+        if ((i + batch.length) % 5000 === 0 || i + batch.length === cityIds.length) {
+          console.log(`    Progress: ${i + batch.length}/${cityIds.length} cities processed, ${totalStationsDeleted.toLocaleString()} stations deleted`);
+        }
+      }
+      console.log(`  ✓ Deleted ${totalStationsDeleted.toLocaleString()} weather stations`);
+
+      // delete cities in batches
+      console.log('  Deleting cities in batches...');
+      let totalCitiesDeleted = 0;
+      for (let i = 0; i < cityIds.length; i += batchSize) {
+        const batch = cityIds.slice(i, i + batchSize);
+        const deletedCities = await prisma.city.deleteMany({
+          where: { id: { in: batch } },
+        });
+        totalCitiesDeleted += deletedCities.count;
+
+        if ((i + batch.length) % 5000 === 0 || i + batch.length === cityIds.length) {
+          console.log(`    Progress: ${i + batch.length}/${cityIds.length} cities processed`);
+        }
+      }
+      stats.prcpOnlyCitiesDeleted = totalCitiesDeleted;
+      console.log(`  ✓ Deleted ${totalCitiesDeleted.toLocaleString()} cities`);
     }
 
     // final summary

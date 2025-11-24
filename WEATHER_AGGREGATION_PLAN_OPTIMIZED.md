@@ -6,7 +6,7 @@ Implement weekly aggregated temperature and precipitation data using a separate 
 ## Current Status Update
 
 **Weather Data Regeneration (2025-11-23)**
-- ✅ All weather data batch files have been regenerated and are now located in `dataAndUtils/worldData_v2/`
+- ✅ All weather data batch files have been regenerated from dataAndUtils/legacy/utils/CleanData_MatchCities_ExpandDatesAndWeather.py and are now located in `dataAndUtils/worldData_v2/`
 - 🎯 **Dual Database Strategy**: To compare the new data against the existing data, we will:
   1. Create a second PostgreSQL container (`db-v2`) running alongside the original (`db`)
   2. Temporarily reroute the `make db-setup` command to populate `db-v2` with the new batch files
@@ -800,7 +800,7 @@ const DataChartTabs = ({
   weeklyWeatherError,
 }: DataChartTabsProps) => {
   return (
-    <Tabs orientation="vertical" defaultValue="sun" className="h-full">
+    <Tabs orientation="vertical" defaultValue="temp" className="h-full">
       <Tabs.List>
         <Tabs.Tab value="temp" leftSection={<IconTemperature size={12} />}>
           Temp

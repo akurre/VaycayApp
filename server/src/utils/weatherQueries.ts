@@ -36,7 +36,7 @@ async function queryCityIds({ prisma, dateStr, bounds }: QueryCityIdsParams): Pr
   const cityIds = await prisma.$queryRaw<Array<{ id: number }>>`
     WITH city_weather AS (
       -- get all cities with weather data in visible region
-      SELECT 
+      SELECT
         c.id,
         c.country,
         c.lat,
@@ -44,16 +44,17 @@ async function queryCityIds({ prisma, dateStr, bounds }: QueryCityIdsParams): Pr
         c.population
       FROM cities c
       INNER JOIN weather_records wr ON wr."cityId" = c.id
-      WHERE wr.date = ${dateStr} 
+      WHERE wr.date = ${dateStr}
         AND wr."TAVG" IS NOT NULL
         ${boundsCondition}
     ),
     country_areas AS (
       -- calculate approximate area for each country in visible region
-      -- uses bounding box: (max_lat - min_lat) * (max_long - min_long)
-      SELECT 
+      -- use square root to reduce dominance of large countries
+      -- this gives more balanced representation across all countries
+      SELECT
         country,
-        (MAX(lat) - MIN(lat)) * (MAX(long) - MIN(long)) as area,
+        SQRT((MAX(lat) - MIN(lat)) * (MAX(long) - MIN(long))) as area,
         COUNT(*) as available_cities
       FROM city_weather
       GROUP BY country
@@ -63,9 +64,10 @@ async function queryCityIds({ prisma, dateStr, bounds }: QueryCityIdsParams): Pr
       SELECT SUM(area) as total FROM country_areas
     ),
     country_quotas AS (
-      -- distribute cities proportionally by area
-      -- every country gets at least 1 city (minimum representation)
-      SELECT 
+      -- distribute cities more evenly across countries
+      -- base allocation: equal distribution, then add small bonus based on area
+      -- this prevents large countries from dominating while still giving them slightly more representation
+      SELECT
         ca.country,
         ca.area,
         ca.available_cities,
@@ -73,7 +75,12 @@ async function queryCityIds({ prisma, dateStr, bounds }: QueryCityIdsParams): Pr
           1,  -- minimum 1 city per country
           LEAST(
             ca.available_cities,  -- can't exceed available cities
-            FLOOR((ca.area / NULLIF(tva.total, 0)) * ${MAX_CITIES_GLOBAL_VIEW})
+            FLOOR(
+              -- base allocation: equal share across all countries
+              (${MAX_CITIES_GLOBAL_VIEW} / (SELECT COUNT(*) FROM country_areas)::float) +
+              -- small area bonus (only 20% of the total budget)
+              ((ca.area / NULLIF(tva.total, 0)) * ${MAX_CITIES_GLOBAL_VIEW} * 0.2)
+            )
           )
         ) as quota
       FROM country_areas ca
@@ -81,12 +88,12 @@ async function queryCityIds({ prisma, dateStr, bounds }: QueryCityIdsParams): Pr
     ),
     ranked_cities AS (
       -- rank cities by population within each country
-      SELECT 
+      SELECT
         cw.id,
         cw.country,
         cw.population,
         ROW_NUMBER() OVER (
-          PARTITION BY cw.country 
+          PARTITION BY cw.country
           ORDER BY cw.population DESC NULLS LAST
         ) as rank
       FROM city_weather cw

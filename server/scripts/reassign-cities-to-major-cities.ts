@@ -122,6 +122,9 @@ async function handleDuplicateCities() {
     },
   });
 
+  // Configuration for duplicate detection
+  const DUPLICATE_RADIUS_KM = 5; // Cities within 5km are considered duplicates
+
   // Group cities by name and country
   const cityGroups = new Map<string, typeof cities>();
   for (const city of cities) {
@@ -141,56 +144,148 @@ async function handleDuplicateCities() {
 
   for (const [, group] of cityGroups.entries()) {
     if (group.length > 1) {
-      duplicateCount++;
+      // For cities with the same name/country, only merge if they're very close geographically
+      // Create clusters of nearby cities (within DUPLICATE_RADIUS_KM)
+      // Use Union-Find algorithm to properly handle transitive closures
+      const clusters: typeof cities[] = [];
+      const cityToCluster = new Map<number, number>();
+      
+      for (const city of group) {
 
-      // Sort by number of weather records (descending)
-      group.sort((a, b) => {
-        const { weatherRecords: aRecords } = getCounts(a);
-        const { weatherRecords: bRecords } = getCounts(b);
-        return bRecords - aRecords;
-      });
-
-      // Keep the city with the most weather records
-      const primaryCity = group[0];
-      const duplicateCities = group.slice(1);
-
-      // Process each duplicate
-      for (const duplicateCity of duplicateCities) {
-        // One-liner overview of the duplicate city
-        const { weatherStations: stationCount, weatherRecords: recordCount } =
-          getCounts(duplicateCity);
-        console.log(
-          `  ✓ Merging duplicate: ${duplicateCity.name}, ${duplicateCity.country} → ${primaryCity.name} (${stationCount} stations, ${recordCount} records)`
-        );
-
-        if (!DRY_RUN) {
-          try {
-            // Step 1: Reassign weather stations to the primary city
-            const { weatherStations: stationCount } = getCounts(duplicateCity);
-            if (stationCount > 0) {
-              await prisma.weatherStation.updateMany({
-                where: { cityId: duplicateCity.id },
-                data: { cityId: primaryCity.id },
-              });
-              totalStationsReassigned += stationCount;
+        // Find all clusters this city should belong to
+        const clustersToMerge = new Set<number>();
+        for (let clusterIdx = 0; clusterIdx < clusters.length; clusterIdx++) {
+          const cluster = clusters[clusterIdx];
+          for (const clusterCity of cluster) {
+            const distance = calculateDistance(city.lat, city.long, clusterCity.lat, clusterCity.long);
+            if (distance <= DUPLICATE_RADIUS_KM) {
+              clustersToMerge.add(clusterIdx);
+              break; // No need to check other cities in this cluster
             }
-
-            // Step 2: Reassign weather records to the primary city
-            const { weatherRecords: recordCount } = getCounts(duplicateCity);
-            if (recordCount > 0) {
-              await prisma.weatherRecord.updateMany({
-                where: { cityId: duplicateCity.id },
-                data: { cityId: primaryCity.id },
-              });
-              totalRecordsReassigned += recordCount;
+          }
+        }
+        
+        if (clustersToMerge.size === 0) {
+          // Create new cluster
+          clusters.push([city]);
+          cityToCluster.set(city.id, clusters.length - 1);
+        } else if (clustersToMerge.size === 1) {
+          // Add to existing cluster
+          const clusterIdx = Array.from(clustersToMerge)[0];
+          clusters[clusterIdx].push(city);
+          cityToCluster.set(city.id, clusterIdx);
+        } else {
+          // Merge multiple clusters together
+          const sortedClusters = Array.from(clustersToMerge).sort((a, b) => a - b);
+          const primaryCluster = sortedClusters[0];
+          
+          // Add city to primary cluster
+          clusters[primaryCluster].push(city);
+          cityToCluster.set(city.id, primaryCluster);
+          
+          // Merge all other clusters into primary
+          for (let i = sortedClusters.length - 1; i >= 1; i--) {
+            const clusterIdx = sortedClusters[i];
+            clusters[primaryCluster].push(...clusters[clusterIdx]);
+            // Update cityToCluster mapping for merged cities
+            for (const mergedCity of clusters[clusterIdx]) {
+              cityToCluster.set(mergedCity.id, primaryCluster);
             }
+            clusters.splice(clusterIdx, 1);
+          }
+        }
+      }
+      
+      // Now process each cluster as a duplicate group
+      for (const cluster of clusters) {
+        if (cluster.length <= 1) continue; // Skip if no actual duplicates
+        
+        duplicateCount++;
 
-            // Step 3: Delete the duplicate city
-            await prisma.city.delete({
-              where: { id: duplicateCity.id },
-            });
-          } catch (error) {
-            console.error(`    ✗ Error merging duplicate city ${duplicateCity.name}: ${error}`);
+        // Sort by number of weather records (descending)
+        cluster.sort((a, b) => {
+          const { weatherRecords: aRecords } = getCounts(a);
+          const { weatherRecords: bRecords } = getCounts(b);
+          return bRecords - aRecords;
+        });
+
+        // Keep the city with the most weather records
+        const primaryCity = cluster[0];
+        const duplicateCities = cluster.slice(1);
+
+        // Process each duplicate
+        for (const duplicateCity of duplicateCities) {
+          // One-liner overview of the duplicate city
+          const { weatherStations: stationCount, weatherRecords: recordCount } =
+            getCounts(duplicateCity);
+          console.log(
+            `  ✓ Merging duplicate: ${duplicateCity.name}, ${duplicateCity.country} (${duplicateCity.lat.toFixed(4)}, ${duplicateCity.long.toFixed(4)}) → ${primaryCity.name} (${stationCount} stations, ${recordCount} records)`
+          );
+
+          if (!DRY_RUN) {
+            try {
+              // Step 1: Reassign weather stations to the primary city
+              const { weatherStations: stationCount } = getCounts(duplicateCity);
+              if (stationCount > 0) {
+                // Get all stations from the duplicate city
+                const duplicateStations = await prisma.weatherStation.findMany({
+                  where: { cityId: duplicateCity.id },
+                });
+
+                // Get all station names in the primary city
+                const primaryStations = await prisma.weatherStation.findMany({
+                  where: { cityId: primaryCity.id },
+                  select: { name: true },
+                });
+                const primaryStationNames = new Set(primaryStations.map(s => s.name));
+
+                // Check and rename stations if they conflict
+                for (const station of duplicateStations) {
+                  if (primaryStationNames.has(station.name)) {
+                    // Find a unique name by appending a suffix
+                    let suffix = 2;
+                    let newName = `${station.name} (${suffix})`;
+                    while (primaryStationNames.has(newName)) {
+                      suffix++;
+                      newName = `${station.name} (${suffix})`;
+                    }
+                    
+                    // Rename the station before reassigning
+                    await prisma.weatherStation.update({
+                      where: { id: station.id },
+                      data: { name: newName },
+                    });
+                    
+                    // Add the new name to the set so we don't reuse it
+                    primaryStationNames.add(newName);
+                  }
+                }
+
+                // Now reassign all stations to the primary city
+                await prisma.weatherStation.updateMany({
+                  where: { cityId: duplicateCity.id },
+                  data: { cityId: primaryCity.id },
+                });
+                totalStationsReassigned += stationCount;
+              }
+
+              // Step 2: Reassign weather records to the primary city
+              const { weatherRecords: recordCount } = getCounts(duplicateCity);
+              if (recordCount > 0) {
+                await prisma.weatherRecord.updateMany({
+                  where: { cityId: duplicateCity.id },
+                  data: { cityId: primaryCity.id },
+                });
+                totalRecordsReassigned += recordCount;
+              }
+
+              // Step 3: Delete the duplicate city
+              await prisma.city.delete({
+                where: { id: duplicateCity.id },
+              });
+            } catch (error) {
+              console.error(`    ✗ Error merging duplicate city ${duplicateCity.name}: ${error}`);
+            }
           }
         }
       }
@@ -256,6 +351,57 @@ async function readMajorCities(): Promise<WorldCity[]> {
   }
 }
 
+// Function to update major cities with worldcities.csv data
+async function updateMajorCitiesFromWorldcities(majorCities: WorldCity[]) {
+  console.log('\n📊 Updating major cities from worldcities.csv...');
+  console.log('  This ensures all major cities have correct population and coordinates');
+
+  let updatedCount = 0;
+
+  for (const majorCity of majorCities) {
+    // Find the major city in our database
+    const dbCities = await prisma.city.findMany({
+      where: {
+        name: majorCity.city,
+        country: majorCity.country,
+      },
+    });
+
+    if (dbCities.length === 0) continue;
+
+    // Update ALL matching cities with worldcities data
+    // This handles cases where there are multiple entries for the same city
+    for (const dbCity of dbCities) {
+      const needsUpdate =
+        dbCity.lat !== majorCity.lat ||
+        dbCity.long !== majorCity.lng ||
+        dbCity.population !== majorCity.population;
+
+      if (needsUpdate) {
+        if (!DRY_RUN) {
+          try {
+            await prisma.city.update({
+              where: { id: dbCity.id },
+              data: {
+                lat: majorCity.lat,
+                long: majorCity.lng,
+                population: majorCity.population,
+              },
+            });
+            updatedCount++;
+          } catch (error) {
+            console.error(`  ✗ Error updating ${majorCity.city}: ${error}`);
+          }
+        } else {
+          updatedCount++;
+        }
+      }
+    }
+  }
+
+  console.log(`  ✓ Updated ${updatedCount} cities with worldcities.csv data`);
+}
+
 // Main function to reassign small cities to major cities
 async function reassignCitiesToMajorCities() {
   console.log('🔄 Reassigning Small Cities to Major Cities');
@@ -286,14 +432,17 @@ async function reassignCitiesToMajorCities() {
     weatherRecordsAffected: 0,
   };
 
-  // Step 0: First, let's handle duplicate cities in the database
-  console.log('\n📊 Checking for duplicate cities in the database...');
-  await handleDuplicateCities();
-
   try {
-    // Step 1: Read major cities from worldcities.csv
+    // Step 0: Read major cities from worldcities.csv
     const majorCities = await readMajorCities();
     stats.majorCitiesFound = majorCities.length;
+
+    // Step 1: Update major cities with worldcities.csv data (population + coordinates)
+    await updateMajorCitiesFromWorldcities(majorCities);
+
+    // Step 2: Handle duplicate cities in the database
+    console.log('\n📊 Checking for duplicate cities in the database...');
+    await handleDuplicateCities();
 
     // Step 2: Process each major city
     console.log('\n📊 Processing major cities and finding nearby smaller cities...\n');
@@ -502,6 +651,41 @@ async function reassignCitiesToMajorCities() {
         try {
           // Step 1: Reassign weather stations to the major city
           if (stationCount > 0) {
+            // Get all stations from the small city
+            const smallCityStations = await prisma.weatherStation.findMany({
+              where: { cityId: smallCity.id },
+            });
+
+            // Get all station names in the major city
+            const majorCityStations = await prisma.weatherStation.findMany({
+              where: { cityId: dbMajorCity.id },
+              select: { name: true },
+            });
+            const majorCityStationNames = new Set(majorCityStations.map(s => s.name));
+
+            // Check and rename stations if they conflict
+            for (const station of smallCityStations) {
+              if (majorCityStationNames.has(station.name)) {
+                // Find a unique name by appending a suffix
+                let suffix = 2;
+                let newName = `${station.name} (${suffix})`;
+                while (majorCityStationNames.has(newName)) {
+                  suffix++;
+                  newName = `${station.name} (${suffix})`;
+                }
+                
+                // Rename the station before reassigning
+                await prisma.weatherStation.update({
+                  where: { id: station.id },
+                  data: { name: newName },
+                });
+                
+                // Add the new name to the set so we don't reuse it
+                majorCityStationNames.add(newName);
+              }
+            }
+
+            // Now reassign all stations to the major city
             await prisma.weatherStation.updateMany({
               where: { cityId: smallCity.id },
               data: { cityId: dbMajorCity.id },

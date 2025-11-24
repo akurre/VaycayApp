@@ -146,10 +146,10 @@ export const weatherByDateAndBoundsQuery = queryField('weatherByDateAndBounds', 
   description: 'Get weather data for a specific date within geographic bounds (for zoomed views)',
   args: {
     monthDay: nonNull(stringArg({ description: 'Date in MMDD format (e.g., "0315")' })),
-    minLat: nonNull(intArg({ description: 'Minimum latitude' })),
-    maxLat: nonNull(intArg({ description: 'Maximum latitude' })),
-    minLong: nonNull(intArg({ description: 'Minimum longitude' })),
-    maxLong: nonNull(intArg({ description: 'Maximum longitude' })),
+    minLat: nonNull(floatArg({ description: 'Minimum latitude' })),
+    maxLat: nonNull(floatArg({ description: 'Maximum latitude' })),
+    minLong: nonNull(floatArg({ description: 'Minimum longitude' })),
+    maxLong: nonNull(floatArg({ description: 'Maximum longitude' })),
   },
   async resolve(_parent, args, context) {
     // convert MMDD to 2020-MM-DD format

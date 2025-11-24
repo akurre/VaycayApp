@@ -31,20 +31,23 @@ interface UseMapBoundsReturn {
 function calculateBounds(viewState: MapViewState): MapBounds {
   const { latitude, longitude, zoom } = viewState;
 
-  // approximate degrees visible based on zoom level
-  // zoom 0 = ~360° longitude, zoom increases by factor of 2
+  // calculate degrees visible based on zoom level
+  // Web Mercator: world width = 360° longitude, each zoom level doubles scale
   const degreesLongitude = 360 / Math.pow(2, zoom);
+
+  // latitude degrees are roughly the same as longitude at the equator
+  // deck.gl uses a roughly square viewport in Web Mercator projection
   const degreesLatitude = 180 / Math.pow(2, zoom);
 
-  // add buffer to include nearby areas (helps show cities in adjacent countries)
+  // add buffer to include nearby cities
   const bufferLat = degreesLatitude * BOUNDS_BUFFER_PERCENT;
   const bufferLong = degreesLongitude * BOUNDS_BUFFER_PERCENT;
 
   return {
-    minLat: Math.max(-90, Math.floor(latitude - degreesLatitude / 2 - bufferLat)),
-    maxLat: Math.min(90, Math.ceil(latitude + degreesLatitude / 2 + bufferLat)),
-    minLong: Math.max(-180, Math.floor(longitude - degreesLongitude / 2 - bufferLong)),
-    maxLong: Math.min(180, Math.ceil(longitude + degreesLongitude / 2 + bufferLong)),
+    minLat: Math.max(-90, latitude - degreesLatitude / 2 - bufferLat),
+    maxLat: Math.min(90, latitude + degreesLatitude / 2 + bufferLat),
+    minLong: Math.max(-180, longitude - degreesLongitude / 2 - bufferLong),
+    maxLong: Math.min(180, longitude + degreesLongitude / 2 + bufferLong),
   };
 }
 
@@ -79,11 +82,11 @@ export const useMapBounds = (
 
       // debounce bounds calculation and query trigger
       debounceTimerRef.current = setTimeout(() => {
-        const useBounds = newViewState.zoom >= ZOOM_THRESHOLD;
+        const useBounds = amplifiedViewState.zoom >= ZOOM_THRESHOLD;
         setShouldUseBounds(useBounds);
 
         if (useBounds) {
-          const newBounds = calculateBounds(newViewState);
+          const newBounds = calculateBounds(amplifiedViewState);
           setBounds(newBounds);
           onBoundsChange?.(newBounds, true);
         } else {

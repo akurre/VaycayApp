@@ -168,10 +168,10 @@ export const sunshineByMonthAndBoundsQuery = queryField('sunshineByMonthAndBound
     'get monthly sunshine data for a given month (1-12) within geographic bounds (for zoomed views)',
   args: {
     month: nonNull(intArg({ description: 'month number (1-12)' })),
-    minLat: nonNull(intArg({ description: 'minimum latitude' })),
-    maxLat: nonNull(intArg({ description: 'maximum latitude' })),
-    minLong: nonNull(intArg({ description: 'minimum longitude' })),
-    maxLong: nonNull(intArg({ description: 'maximum longitude' })),
+    minLat: nonNull(floatArg({ description: 'minimum latitude' })),
+    maxLat: nonNull(floatArg({ description: 'maximum latitude' })),
+    minLong: nonNull(floatArg({ description: 'minimum longitude' })),
+    maxLong: nonNull(floatArg({ description: 'maximum longitude' })),
   },
   async resolve(_parent, args, context) {
     const cacheKey = `sunshine:month:${args.month}:bounds:${args.minLat}-${args.maxLat}:${args.minLong}-${args.maxLong}`;

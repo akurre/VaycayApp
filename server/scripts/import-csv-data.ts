@@ -3,7 +3,7 @@
  *
  * this script imports historical weather data from batch csv files into the postgres database.
  * it processes data from multiple batch directories (batch1, batch2, etc.) located in
- * dataAndUtils/worldData/, where each batch contains a csv file with weather records.
+ * dataAndUtils/worldData_v2/, where each batch contains a csv file with weather records.
  *
  * the import process runs in 4 phases:
  *
@@ -42,7 +42,7 @@
  * npm run import-csv-data
  *
  * the script expects batch directories to be located at:
- * ../dataAndUtils/worldData/batch1/, batch2/, etc.
+ * ../dataAndUtils/worldData_v2/batch1/, batch2/, etc.
  */
 
 import { PrismaClient } from '@prisma/client';
@@ -135,9 +135,14 @@ function parseFloat(value: string | undefined): number | null {
 
 // helper to create city key for deduplication
 function createCityKey(row: CSVRow): string {
+  // Round coordinates to 1 decimal place (~11km precision) to group nearby stations
+  // This prevents weather stations 100m apart from creating duplicate cities,
+  // while still distinguishing between different cities with the same name
+  // (e.g., multiple "Jackson" cities in the same state)
   const lat = parseFloat(row.lat) || 0;
   const long = parseFloat(row.long) || 0;
-  return `${row.city}|${row.country}|${lat.toFixed(6)}|${long.toFixed(6)}`;
+  const state = row.state || '';
+  return `${row.city}|${row.country}|${state}|${lat.toFixed(1)}|${long.toFixed(1)}`;
 }
 
 async function importCSVData(batchDir: string) {
@@ -205,10 +210,12 @@ async function importCSVData(batchDir: string) {
           }
 
           // collect unique stations (will link to cities later)
-          const stationKey = `${row.name}|${cityKey}`;
+          // Generate station name if not present in CSV (v2 data doesn't have station names)
+          const stationName = row.name || `${row.city} Weather Station`;
+          const stationKey = `${stationName}|${cityKey}`;
           if (!stationMap.has(stationKey)) {
             stationMap.set(stationKey, {
-              name: row.name,
+              name: stationName,
               cityKey,
             });
           }
@@ -238,46 +245,49 @@ async function importCSVData(batchDir: string) {
     for (let i = 0; i < cityEntries.length; i += cityBatchSize) {
       const batch = cityEntries.slice(i, i + cityBatchSize);
 
-      const citiesToInsert = batch.map(([, city]) => ({
-        name: city.name,
-        country: city.country,
-        state: city.data.state || null,
-        suburb: city.data.suburb || null,
-        lat: city.lat,
-        long: city.long,
-        cityAscii: city.data.city_ascii || null,
-        iso2: city.data.iso2 || null,
-        iso3: city.data.iso3 || null,
-        capital: city.data.capital || null,
-        worldcitiesId: parseFloat(city.data.worldcities_id),
-        population: parseFloat(city.data.population),
-        dataSource: city.data.data_source || null,
-      }));
-
       try {
-        // insert cities and get their ids
-        for (const cityData of citiesToInsert) {
-          const city = await prisma.city.create({
-            data: cityData,
+        // insert cities and get their ids (upsert to handle existing cities)
+        for (const [cityKey, cityInfo] of batch) {
+          const cityData = {
+            name: cityInfo.name,
+            country: cityInfo.country,
+            state: cityInfo.data.state || null,
+            suburb: cityInfo.data.suburb || null,
+            lat: cityInfo.lat,
+            long: cityInfo.long,
+            cityAscii: cityInfo.data.city_ascii || null,
+            iso2: cityInfo.data.iso2 || null,
+            iso3: cityInfo.data.iso3 || null,
+            capital: cityInfo.data.capital || null,
+            worldcitiesId: parseFloat(cityInfo.data.worldcities_id),
+            population: parseFloat(cityInfo.data.population),
+            dataSource: cityInfo.data.data_source || null,
+          };
+
+          // Use upsert to handle existing cities
+          const city = await prisma.city.upsert({
+            where: {
+              name_country_lat_long: {
+                name: cityInfo.name,
+                country: cityInfo.country,
+                lat: cityInfo.lat,
+                long: cityInfo.long,
+              },
+            },
+            create: cityData,
+            update: {}, // Don't update existing cities
           });
 
-          const key = createCityKey({
-            city: city.name,
-            country: city.country,
-            lat: city.lat.toString(),
-            long: city.long.toString(),
-          } as CSVRow);
-
-          cityIdMap.set(key, city.id);
+          cityIdMap.set(cityKey, city.id);
           stats.citiesCreated++;
         }
 
         const progress = ((i + batch.length) / cityEntries.length) * 100;
         console.log(
-          `  ✓ Inserted ${stats.citiesCreated.toLocaleString()} cities (${progress.toFixed(1)}%)`
+          `  ✓ Processed ${stats.citiesCreated.toLocaleString()} cities (${progress.toFixed(1)}%)`
         );
       } catch (error) {
-        console.error(`  ✗ Error inserting city batch:`, error);
+        console.error(`  ✗ Error processing city batch:`, error);
         stats.errors += batch.length;
       }
     }
@@ -303,11 +313,18 @@ async function importCSVData(batchDir: string) {
             continue;
           }
 
-          const weatherStation = await prisma.weatherStation.create({
-            data: {
+          const weatherStation = await prisma.weatherStation.upsert({
+            where: {
+              name_cityId: {
+                name: station.name,
+                cityId,
+              },
+            },
+            create: {
               name: station.name,
               cityId,
             },
+            update: {}, // Don't update existing stations
           });
 
           stationIdMap.set(stationKey, weatherStation.id);
@@ -375,7 +392,9 @@ async function importCSVData(batchDir: string) {
           });
 
           const cityKey = createCityKey(row);
-          const stationKey = `${row.name}|${cityKey}`;
+          // Use same station name logic as collection phase
+          const stationName = row.name || `${row.city} Weather Station`;
+          const stationKey = `${stationName}|${cityKey}`;
 
           const cityId = cityIdMap.get(cityKey);
           const stationId = stationIdMap.get(stationKey);
@@ -477,7 +496,7 @@ async function importCSVData(batchDir: string) {
 
 // main execution
 async function main() {
-  const batchDir = resolve(process.cwd(), '..', 'dataAndUtils', 'worldData');
+  const batchDir = resolve(process.cwd(), '..', 'dataAndUtils', 'worldData_v2');
 
   console.log(`📍 Batch directory: ${batchDir}\n`);
 

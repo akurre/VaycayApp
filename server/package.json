@@ -14,6 +14,8 @@
     "prisma:pull": "prisma db pull",
     "import-data": "tsx scripts/import-data.ts",
     "import-csv-data": "tsx scripts/import-csv-data.ts",
+    "aggregate-weekly-weather": "tsx scripts/aggregate-weekly-weather.ts",
+    "check-db": "tsx scripts/check-db-state.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.ts\" \"scripts/**/*.ts\"",

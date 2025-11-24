@@ -1,13 +1,19 @@
 import { Tabs } from '@mantine/core';
 import { IconDroplet, IconSun, IconTemperature } from '@tabler/icons-react';
 import SunshineDataSection from './SunshineDataSection';
+import TemperatureDataSection from './TemperatureDataSection';
+import RainfallDataSection from './RainfallDataSection';
 import type { SunshineData } from '@/types/sunshineDataType';
+import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
 
 interface DataChartTabsProps {
   displaySunshineData: SunshineData | null;
   sunshineLoading: boolean;
   sunshineError: boolean;
   selectedMonth: number;
+  weeklyWeatherData: CityWeeklyWeather | null;
+  weeklyWeatherLoading: boolean;
+  weeklyWeatherError: boolean;
 }
 
 const DataChartTabs = ({
@@ -15,6 +21,9 @@ const DataChartTabs = ({
   sunshineLoading,
   sunshineError,
   selectedMonth,
+  weeklyWeatherData,
+  weeklyWeatherLoading,
+  weeklyWeatherError,
 }: DataChartTabsProps) => {
   return (
     <Tabs orientation="vertical" defaultValue="sun" className="h-full">
@@ -30,7 +39,13 @@ const DataChartTabs = ({
         </Tabs.Tab>
       </Tabs.List>
 
-      <Tabs.Panel value="temp">Temperature chart coming soon</Tabs.Panel>
+      <Tabs.Panel value="temp">
+        <TemperatureDataSection
+          weeklyWeatherData={weeklyWeatherData}
+          isLoading={weeklyWeatherLoading}
+          hasError={weeklyWeatherError}
+        />
+      </Tabs.Panel>
 
       <Tabs.Panel value="sun">
         <SunshineDataSection
@@ -41,7 +56,13 @@ const DataChartTabs = ({
         />
       </Tabs.Panel>
 
-      <Tabs.Panel value="precip">Precipitation chart coming soon</Tabs.Panel>
+      <Tabs.Panel value="precip">
+        <RainfallDataSection
+          weeklyWeatherData={weeklyWeatherData}
+          isLoading={weeklyWeatherLoading}
+          hasError={weeklyWeatherError}
+        />
+      </Tabs.Panel>
     </Tabs>
   );
 };

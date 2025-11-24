@@ -2,3 +2,4 @@
 export * from './enums';
 export * from './WeatherData';
 export * from './SunshineData';
+export * from './WeeklyWeatherData';

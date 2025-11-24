@@ -4,7 +4,7 @@
     "CLAUDE_CODE_ENABLE_TELEMETRY": "0",
     "DISABLE_TELEMETRY": "1",
     "ANTHROPIC_BASE_URL": "https://llm-proxy.edgez.live/",
-    "ANTHROPIC_AUTH_TOKEN": "sk-..",
+    "ANTHROPIC_AUTH_TOKEN": "sk-8wB0A24LEIeZO-6z5IEUpQ",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "gpt-4.1"
   },
   "hooks": {

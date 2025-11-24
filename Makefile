@@ -54,27 +54,40 @@ install: check-prereqs
 	@echo "$(YELLOW)Installing client dependencies...$(NC)"
 	cd client && npm install
 	@echo "$(GREEN)✓ All dependencies installed successfully$(NC)"
+	
+kill-ports: ## Kill processes on ports 4000 and 5173
+	@echo "$(BLUE)Checking for processes on development ports...$(NC)"
+	@echo "$(YELLOW)Killing process on port 4001 (server)...$(NC)"
+	@lsof -ti:4001 | xargs kill -9 2>/dev/null || echo "$(GREEN)✓ Port 4001 is free$(NC)"
+	@echo "$(YELLOW)Killing process on port 5173 (client)...$(NC)"
+	@lsof -ti:5173 | xargs kill -9 2>/dev/null || echo "$(GREEN)✓ Port 5173 is free$(NC)"
+	@echo "$(GREEN)✓ Ports cleared$(NC)"
 
-# Setup database
-db-setup: check-prereqs
-	@echo "$(GREEN)Setting up database...$(NC)"
-	@echo "$(YELLOW)Starting PostgreSQL...$(NC)"
-	docker compose up -d db
+# Setup v2 database with new data
+db-setup-v2: check-prereqs
+	@echo "$(GREEN)Setting up v2 database with new weather data...$(NC)"
+	@echo "$(YELLOW)Starting PostgreSQL v2 container...$(NC)"
+	docker compose up -d db-v2
 	@echo "$(YELLOW)Waiting for database to be ready...$(NC)"
 	@sleep 5
-	@echo "$(YELLOW)Running Prisma migrations...$(NC)"
-	cd server && npm run prisma:migrate
+	@echo "$(YELLOW)Running Prisma migrations on v2...$(NC)"
+	@export DATABASE_URL="postgresql://postgres:iwantsun@localhost:5433/postgres_v2" && cd server && npm run prisma:migrate
 	@echo "$(YELLOW)Generating Prisma client...$(NC)"
 	cd server && npm run prisma:generate
-	@echo "$(YELLOW)Importing CSV weather data (this will take 30-60 minutes for 7.5M records)...$(NC)"
-	cd server && npm run import-csv-data
+	@echo "$(YELLOW)Importing CSV weather data from worldData_v2 (this will take 30-60 minutes for 7.5M records)...$(NC)"
+	@export DATABASE_URL="postgresql://postgres:iwantsun@localhost:5433/postgres_v2" && cd server && npm run import-csv-data
 	@echo "$(YELLOW)Merging duplicate cities and consolidating PRCP data (this will take 5-10 minutes)...$(NC)"
-	cd server && npx tsx scripts/merge-duplicate-cities-optimized.ts
-	@echo "$(YELLOW)Importing monthly sunshine hours data...$(NC)"
-	cd server && npx tsx scripts/import-sunshine-hours.ts
+	@export DATABASE_URL="postgresql://postgres:iwantsun@localhost:5433/postgres_v2" && cd server && npx tsx scripts/merge-duplicate-cities-optimized.ts
 	@echo "$(YELLOW)Reassigning small cities to major cities...$(NC)"
-	cd server && npx tsx scripts/reassign-cities-to-major-cities.ts
-	@echo "$(GREEN)✓ Database setup complete$(NC)"
+	@export DATABASE_URL="postgresql://postgres:iwantsun@localhost:5433/postgres_v2" && cd server && npx tsx scripts/reassign-cities-to-major-cities.ts
+	@echo "$(YELLOW)Importing monthly sunshine hours data...$(NC)"
+	@export DATABASE_URL="postgresql://postgres:iwantsun@localhost:5433/postgres_v2" && cd server && npx tsx scripts/import-sunshine-hours.ts
+	@echo "$(YELLOW)Aggregating weekly weather data (this will take 2-5 minutes)...$(NC)"
+	@export DATABASE_URL="postgresql://postgres:iwantsun@localhost:5433/postgres_v2" && cd server && npm run aggregate-weekly-weather
+	@echo "$(GREEN)✓ V2 Database setup complete$(NC)"
+
+# Setup database (temporarily redirected to v2)
+db-setup: db-setup-v2
 
 # Start all services for development
 dev: check-prereqs

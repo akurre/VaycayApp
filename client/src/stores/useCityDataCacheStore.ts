@@ -2,11 +2,13 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { WeatherData } from '@/types/cityWeatherDataType';
 import type { SunshineData } from '@/types/sunshineDataType';
+import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
 import { CITY_CACHE_MAX_SIZE } from '@/const';
 
 interface CachedCityData {
   weatherData: WeatherData | null;
   sunshineData: SunshineData | null;
+  weeklyWeatherData: CityWeeklyWeather | null;
   timestamp: number;
 }
 
@@ -24,7 +26,8 @@ interface CityDataCacheStore {
   addToCache: (
     key: string,
     weatherData: WeatherData | null,
-    sunshineData: SunshineData | null
+    sunshineData: SunshineData | null,
+    weeklyWeatherData?: CityWeeklyWeather | null
   ) => void;
 
   // Get a city from the cache
@@ -44,7 +47,7 @@ export const useCityDataCacheStore = create<CityDataCacheStore>()(
       maxCacheSize: CITY_CACHE_MAX_SIZE,
       recentlyUsed: [],
 
-      addToCache: (key, weatherData, sunshineData) =>
+      addToCache: (key, weatherData, sunshineData, weeklyWeatherData = null) =>
         set((state) => {
           // Create a copy of the current cache
           const newCache = { ...state.cache };
@@ -73,6 +76,7 @@ export const useCityDataCacheStore = create<CityDataCacheStore>()(
           newCache[key] = {
             weatherData: weatherData ?? existing?.weatherData ?? null,
             sunshineData: sunshineData ?? existing?.sunshineData ?? null,
+            weeklyWeatherData: weeklyWeatherData ?? existing?.weeklyWeatherData ?? null,
             timestamp: Date.now(),
           };
 

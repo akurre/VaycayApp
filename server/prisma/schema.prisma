@@ -31,6 +31,7 @@ model City {
   weatherStations WeatherStation[]
   weatherRecords  WeatherRecord[]
   monthlySunshine MonthlySunshine?
+  weeklyWeather   WeeklyWeather?
   
   // Ensure uniqueness based on name, country, and coordinates
   @@unique([name, country, lat, long])
@@ -133,4 +134,22 @@ model MonthlySunshine {
   @@index([cityId])
   
   @@map("monthly_sunshine")
+}
+
+// Weekly weather table - stores aggregated weekly weather data
+model WeeklyWeather {
+  id        Int     @id @default(autoincrement())
+  cityId    Int     @unique  // ONE-TO-ONE with City (like MonthlySunshine)
+
+  // Store as JSON array of 52 weeks for space efficiency
+  // Each week object contains: week, avgTemp, maxTemp, minTemp, totalPrecip, avgPrecip, daysWithRain, daysWithData
+  weeklyData Json    // Array of 52 week objects
+
+  // Relations
+  city      City    @relation(fields: [cityId], references: [id], onDelete: Cascade)
+
+  // Indexes
+  @@index([cityId])
+
+  @@map("weekly_weather")
 }
