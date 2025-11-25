@@ -26,7 +26,7 @@ const DataChartTabs = ({
   weeklyWeatherError,
 }: DataChartTabsProps) => {
   return (
-    <Tabs orientation="vertical" defaultValue="sun" className="h-full">
+    <Tabs orientation="vertical" defaultValue="temp" className="h-full">
       <Tabs.List>
         <Tabs.Tab value="temp" leftSection={<IconTemperature size={12} />}>
           Temp

@@ -52,7 +52,7 @@ function getISOWeek(dateStr: string): number {
   const dayNum = d.getUTCDay() || 7;
   d.setUTCDate(d.getUTCDate() + 4 - dayNum);
   const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  const weekNo = Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
+  const weekNo = Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
   // Ensure we return 1-52, capping at 52 for week 53
   return Math.min(weekNo, 52);
 }
@@ -62,33 +62,44 @@ function getISOWeek(dateStr: string): number {
  * Requires at least 2 days of data per week for valid statistics
  */
 function calculateWeekStats(records: WeatherRecordInput[]): Omit<WeekData, 'week'> {
-  const validTemps = records.filter((r): r is WeatherRecordInput & { TAVG: number } => r.TAVG !== null);
-  const validMaxTemps = records.filter((r): r is WeatherRecordInput & { TMAX: number } => r.TMAX !== null);
-  const validMinTemps = records.filter((r): r is WeatherRecordInput & { TMIN: number } => r.TMIN !== null);
-  const validPrecip = records.filter((r): r is WeatherRecordInput & { PRCP: number } => r.PRCP !== null);
+  const validTemps = records.filter(
+    (r): r is WeatherRecordInput & { TAVG: number } => r.TAVG !== null
+  );
+  const validMaxTemps = records.filter(
+    (r): r is WeatherRecordInput & { TMAX: number } => r.TMAX !== null
+  );
+  const validMinTemps = records.filter(
+    (r): r is WeatherRecordInput & { TMIN: number } => r.TMIN !== null
+  );
+  const validPrecip = records.filter(
+    (r): r is WeatherRecordInput & { PRCP: number } => r.PRCP !== null
+  );
 
   // Require at least MIN_DAYS_FOR_VALID_STATS days of data per week for statistical validity
   const hasEnoughData = records.length >= MIN_DAYS_FOR_VALID_STATS;
 
   return {
-    avgTemp: hasEnoughData && validTemps.length >= MIN_DAYS_FOR_VALID_STATS
-      ? validTemps.reduce((sum, r) => sum + r.TAVG, 0) / validTemps.length
-      : null,
-    maxTemp: hasEnoughData && validMaxTemps.length >= MIN_DAYS_FOR_VALID_STATS
-      ? validMaxTemps.reduce((sum, r) => sum + r.TMAX, 0) / validMaxTemps.length
-      : null,
-    minTemp: hasEnoughData && validMinTemps.length >= MIN_DAYS_FOR_VALID_STATS
-      ? validMinTemps.reduce((sum, r) => sum + r.TMIN, 0) / validMinTemps.length
-      : null,
-    totalPrecip: hasEnoughData && validPrecip.length >= MIN_DAYS_FOR_VALID_STATS
-      ? validPrecip.reduce((sum, r) => sum + r.PRCP, 0)
-      : null,
-    avgPrecip: hasEnoughData && validPrecip.length >= MIN_DAYS_FOR_VALID_STATS
-      ? validPrecip.reduce((sum, r) => sum + r.PRCP, 0) / validPrecip.length
-      : null,
-    daysWithRain: hasEnoughData
-      ? validPrecip.filter(r => r.PRCP > 0).length
-      : null,
+    avgTemp:
+      hasEnoughData && validTemps.length >= MIN_DAYS_FOR_VALID_STATS
+        ? validTemps.reduce((sum, r) => sum + r.TAVG, 0) / validTemps.length
+        : null,
+    maxTemp:
+      hasEnoughData && validMaxTemps.length >= MIN_DAYS_FOR_VALID_STATS
+        ? validMaxTemps.reduce((sum, r) => sum + r.TMAX, 0) / validMaxTemps.length
+        : null,
+    minTemp:
+      hasEnoughData && validMinTemps.length >= MIN_DAYS_FOR_VALID_STATS
+        ? validMinTemps.reduce((sum, r) => sum + r.TMIN, 0) / validMinTemps.length
+        : null,
+    totalPrecip:
+      hasEnoughData && validPrecip.length >= MIN_DAYS_FOR_VALID_STATS
+        ? validPrecip.reduce((sum, r) => sum + r.PRCP, 0)
+        : null,
+    avgPrecip:
+      hasEnoughData && validPrecip.length >= MIN_DAYS_FOR_VALID_STATS
+        ? validPrecip.reduce((sum, r) => sum + r.PRCP, 0) / validPrecip.length
+        : null,
+    daysWithRain: hasEnoughData ? validPrecip.filter((r) => r.PRCP > 0).length : null,
     daysWithData: records.length,
   };
 }
@@ -126,7 +137,9 @@ async function aggregateWeeklyWeather() {
       });
 
       if (records.length === 0) {
-        console.log(`⚠️  ${city.name}, ${city.country}: No weather data available, skipping aggregation`);
+        console.log(
+          `⚠️  ${city.name}, ${city.country}: No weather data available, skipping aggregation`
+        );
         skippedCount++;
         continue;
       }

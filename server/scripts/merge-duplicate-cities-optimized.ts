@@ -396,7 +396,9 @@ async function mergeDuplicateCities() {
         totalRecordsDeleted += deletedRecords.count;
 
         if ((i + batch.length) % 5000 === 0 || i + batch.length === cityIds.length) {
-          console.log(`    Progress: ${i + batch.length}/${cityIds.length} cities processed, ${totalRecordsDeleted.toLocaleString()} records deleted`);
+          console.log(
+            `    Progress: ${i + batch.length}/${cityIds.length} cities processed, ${totalRecordsDeleted.toLocaleString()} records deleted`
+          );
         }
       }
       stats.weatherRecordsDeleted = totalRecordsDeleted;
@@ -413,7 +415,9 @@ async function mergeDuplicateCities() {
         totalStationsDeleted += deletedStations.count;
 
         if ((i + batch.length) % 5000 === 0 || i + batch.length === cityIds.length) {
-          console.log(`    Progress: ${i + batch.length}/${cityIds.length} cities processed, ${totalStationsDeleted.toLocaleString()} stations deleted`);
+          console.log(
+            `    Progress: ${i + batch.length}/${cityIds.length} cities processed, ${totalStationsDeleted.toLocaleString()} stations deleted`
+          );
         }
       }
       console.log(`  ✓ Deleted ${totalStationsDeleted.toLocaleString()} weather stations`);

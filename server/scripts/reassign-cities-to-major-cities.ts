@@ -147,24 +147,28 @@ async function handleDuplicateCities() {
       // For cities with the same name/country, only merge if they're very close geographically
       // Create clusters of nearby cities (within DUPLICATE_RADIUS_KM)
       // Use Union-Find algorithm to properly handle transitive closures
-      const clusters: typeof cities[] = [];
+      const clusters: (typeof cities)[] = [];
       const cityToCluster = new Map<number, number>();
-      
-      for (const city of group) {
 
+      for (const city of group) {
         // Find all clusters this city should belong to
         const clustersToMerge = new Set<number>();
         for (let clusterIdx = 0; clusterIdx < clusters.length; clusterIdx++) {
           const cluster = clusters[clusterIdx];
           for (const clusterCity of cluster) {
-            const distance = calculateDistance(city.lat, city.long, clusterCity.lat, clusterCity.long);
+            const distance = calculateDistance(
+              city.lat,
+              city.long,
+              clusterCity.lat,
+              clusterCity.long
+            );
             if (distance <= DUPLICATE_RADIUS_KM) {
               clustersToMerge.add(clusterIdx);
               break; // No need to check other cities in this cluster
             }
           }
         }
-        
+
         if (clustersToMerge.size === 0) {
           // Create new cluster
           clusters.push([city]);
@@ -178,11 +182,11 @@ async function handleDuplicateCities() {
           // Merge multiple clusters together
           const sortedClusters = Array.from(clustersToMerge).sort((a, b) => a - b);
           const primaryCluster = sortedClusters[0];
-          
+
           // Add city to primary cluster
           clusters[primaryCluster].push(city);
           cityToCluster.set(city.id, primaryCluster);
-          
+
           // Merge all other clusters into primary
           for (let i = sortedClusters.length - 1; i >= 1; i--) {
             const clusterIdx = sortedClusters[i];
@@ -195,11 +199,11 @@ async function handleDuplicateCities() {
           }
         }
       }
-      
+
       // Now process each cluster as a duplicate group
       for (const cluster of clusters) {
         if (cluster.length <= 1) continue; // Skip if no actual duplicates
-        
+
         duplicateCount++;
 
         // Sort by number of weather records (descending)
@@ -237,7 +241,7 @@ async function handleDuplicateCities() {
                   where: { cityId: primaryCity.id },
                   select: { name: true },
                 });
-                const primaryStationNames = new Set(primaryStations.map(s => s.name));
+                const primaryStationNames = new Set(primaryStations.map((s) => s.name));
 
                 // Check and rename stations if they conflict
                 for (const station of duplicateStations) {
@@ -249,13 +253,13 @@ async function handleDuplicateCities() {
                       suffix++;
                       newName = `${station.name} (${suffix})`;
                     }
-                    
+
                     // Rename the station before reassigning
                     await prisma.weatherStation.update({
                       where: { id: station.id },
                       data: { name: newName },
                     });
-                    
+
                     // Add the new name to the set so we don't reuse it
                     primaryStationNames.add(newName);
                   }
@@ -353,8 +357,10 @@ async function readMajorCities(): Promise<WorldCity[]> {
 
 // Function to update major cities with worldcities.csv data
 async function updateMajorCitiesFromWorldcities(majorCities: WorldCity[]) {
-  console.log('\n📊 Updating major cities from worldcities.csv...');
-  console.log('  This ensures all major cities have correct population and coordinates');
+  console.log('\n📊 Updating major cities with worldcities.csv population data...');
+  console.log('  This ensures all major cities have correct population');
+  console.log('  Note: Coordinates are NOT updated here to avoid unique constraint violations');
+  console.log('  Coordinates will be handled after duplicate cities are merged');
 
   let updatedCount = 0;
 
@@ -369,13 +375,11 @@ async function updateMajorCitiesFromWorldcities(majorCities: WorldCity[]) {
 
     if (dbCities.length === 0) continue;
 
-    // Update ALL matching cities with worldcities data
-    // This handles cases where there are multiple entries for the same city
+    // Update ALL matching cities with worldcities population ONLY
+    // We don't update coordinates here because if there are duplicates,
+    // updating one to worldcities coords will fail if another already has them
     for (const dbCity of dbCities) {
-      const needsUpdate =
-        dbCity.lat !== majorCity.lat ||
-        dbCity.long !== majorCity.lng ||
-        dbCity.population !== majorCity.population;
+      const needsUpdate = dbCity.population !== majorCity.population;
 
       if (needsUpdate) {
         if (!DRY_RUN) {
@@ -383,14 +387,12 @@ async function updateMajorCitiesFromWorldcities(majorCities: WorldCity[]) {
             await prisma.city.update({
               where: { id: dbCity.id },
               data: {
-                lat: majorCity.lat,
-                long: majorCity.lng,
                 population: majorCity.population,
               },
             });
             updatedCount++;
           } catch (error) {
-            console.error(`  ✗ Error updating ${majorCity.city}: ${error}`);
+            console.error(`  ✗ Error updating ${majorCity.city} population: ${error}`);
           }
         } else {
           updatedCount++;
@@ -399,7 +401,49 @@ async function updateMajorCitiesFromWorldcities(majorCities: WorldCity[]) {
     }
   }
 
-  console.log(`  ✓ Updated ${updatedCount} cities with worldcities.csv data`);
+  console.log(`  ✓ Updated population for ${updatedCount} cities`);
+}
+
+// Function to update coordinates for major cities AFTER duplicates are merged
+async function updateMajorCityCoordinates(majorCities: WorldCity[]) {
+  console.log('\n📊 Updating major city coordinates to worldcities.csv values...');
+  console.log('  (After duplicates are merged, safe to update coordinates)');
+
+  let updatedCount = 0;
+
+  for (const majorCity of majorCities) {
+    const dbCity = await prisma.city.findFirst({
+      where: {
+        name: majorCity.city,
+        country: majorCity.country,
+      },
+    });
+
+    if (!dbCity) continue;
+
+    const needsUpdate = dbCity.lat !== majorCity.lat || dbCity.long !== majorCity.lng;
+
+    if (needsUpdate) {
+      if (!DRY_RUN) {
+        try {
+          await prisma.city.update({
+            where: { id: dbCity.id },
+            data: {
+              lat: majorCity.lat,
+              long: majorCity.lng,
+            },
+          });
+          updatedCount++;
+        } catch (error) {
+          console.error(`  ✗ Error updating ${majorCity.city} coordinates: ${error}`);
+        }
+      } else {
+        updatedCount++;
+      }
+    }
+  }
+
+  console.log(`  ✓ Updated coordinates for ${updatedCount} cities`);
 }
 
 // Main function to reassign small cities to major cities
@@ -437,14 +481,17 @@ async function reassignCitiesToMajorCities() {
     const majorCities = await readMajorCities();
     stats.majorCitiesFound = majorCities.length;
 
-    // Step 1: Update major cities with worldcities.csv data (population + coordinates)
+    // Step 1: Update major cities with worldcities.csv data (population only)
     await updateMajorCitiesFromWorldcities(majorCities);
 
     // Step 2: Handle duplicate cities in the database
     console.log('\n📊 Checking for duplicate cities in the database...');
     await handleDuplicateCities();
 
-    // Step 2: Process each major city
+    // Step 3: Update coordinates after duplicates are merged
+    await updateMajorCityCoordinates(majorCities);
+
+    // Step 4: Process each major city
     console.log('\n📊 Processing major cities and finding nearby smaller cities...\n');
 
     // Apply limit if specified
@@ -661,7 +708,7 @@ async function reassignCitiesToMajorCities() {
               where: { cityId: dbMajorCity.id },
               select: { name: true },
             });
-            const majorCityStationNames = new Set(majorCityStations.map(s => s.name));
+            const majorCityStationNames = new Set(majorCityStations.map((s) => s.name));
 
             // Check and rename stations if they conflict
             for (const station of smallCityStations) {
@@ -673,13 +720,13 @@ async function reassignCitiesToMajorCities() {
                   suffix++;
                   newName = `${station.name} (${suffix})`;
                 }
-                
+
                 // Rename the station before reassigning
                 await prisma.weatherStation.update({
                   where: { id: station.id },
                   data: { name: newName },
                 });
-                
+
                 // Add the new name to the set so we don't reuse it
                 majorCityStationNames.add(newName);
               }

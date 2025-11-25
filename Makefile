@@ -71,7 +71,7 @@ db-setup-v2: check-prereqs
 	@echo "$(YELLOW)Waiting for database to be ready...$(NC)"
 	@sleep 5
 	@echo "$(YELLOW)Running Prisma migrations on v2...$(NC)"
-	@export DATABASE_URL="postgresql://postgres:iwantsun@localhost:5433/postgres_v2" && cd server && npm run prisma:migrate
+	@export DATABASE_URL="postgresql://postgres:iwantsun@localhost:5433/postgres_v2" && cd server && npx prisma migrate reset --force --skip-seed
 	@echo "$(YELLOW)Generating Prisma client...$(NC)"
 	cd server && npm run prisma:generate
 	@echo "$(YELLOW)Importing CSV weather data from worldData_v2 (this will take 30-60 minutes for 7.5M records)...$(NC)"

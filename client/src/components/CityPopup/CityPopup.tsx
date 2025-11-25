@@ -78,13 +78,16 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
   });
 
   // Fetch weekly weather data for the city (always fetch when we have a city)
-  const { weeklyWeatherData, loading: weeklyWeatherLoading, error: weeklyWeatherError } =
-    useWeeklyWeatherForCity({
-      cityName: city?.city ?? null,
-      lat: city?.lat ?? null,
-      long: city?.long ?? null,
-      skipFetch: !city,
-    });
+  const {
+    weeklyWeatherData,
+    loading: weeklyWeatherLoading,
+    error: weeklyWeatherError,
+  } = useWeeklyWeatherForCity({
+    cityName: city?.city ?? null,
+    lat: city?.lat ?? null,
+    long: city?.long ?? null,
+    skipFetch: !city,
+  });
 
   // use what we already have, or fall back to fetched data
   const displayWeatherData = cityAsWeather ?? weatherData;
