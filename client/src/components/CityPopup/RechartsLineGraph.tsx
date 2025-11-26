@@ -1,4 +1,4 @@
-import { memo, useRef, useEffect, type ReactElement } from 'react';
+import { memo, type ReactElement } from 'react';
 import {
   LineChart,
   Line,
@@ -93,14 +93,9 @@ function RechartsLineGraphComponent<T extends ChartDataPoint>({
 }: RechartsLineGraphProps<T>) {
   // Get theme-aware colors
   const chartColors = useChartColors();
-
-  // Track previous city for animation control
-  const previousCityRef = useRef<string | null>(null);
-  const shouldAnimate = previousCityRef.current !== cityKey;
-
-  useEffect(() => {
-    previousCityRef.current = cityKey;
-  }, [cityKey]);
+  
+  // Use smooth morphing transition for all city changes
+  const effectiveAnimationDuration = 300;
 
   return (
     <div className="w-full h-full">
@@ -182,8 +177,8 @@ function RechartsLineGraphComponent<T extends ChartDataPoint>({
               strokeDasharray={lineConfig.strokeDasharray}
               dot={lineConfig.dot ?? false}
               connectNulls={lineConfig.connectNulls ?? true}
-              isAnimationActive={shouldAnimate}
-              animationDuration={animationDuration}
+              isAnimationActive={true}
+              animationDuration={effectiveAnimationDuration}
               animationEasing={animationEasing}
             />
           ))}

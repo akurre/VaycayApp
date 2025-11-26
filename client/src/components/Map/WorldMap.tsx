@@ -142,7 +142,6 @@ const WorldMap = ({
           <div style={{ ...transitionStyle, position: 'fixed', inset: 0, pointerEvents: 'none' }}>
             {cityToRender && (
               <CityPopup
-                key={`${cityToRender.city}-${cityToRender.lat}-${cityToRender.long}`}
                 city={cityToRender}
                 onClose={handleClosePopup}
                 selectedMonth={selectedMonth}
