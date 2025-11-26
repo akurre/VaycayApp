@@ -20,7 +20,8 @@ function arePropsEqual(prevProps: CityPopupProps, nextProps: CityPopupProps): bo
   const propsEqual =
     prevProps.selectedMonth === nextProps.selectedMonth &&
     prevProps.selectedDate === nextProps.selectedDate &&
-    prevProps.onClose === nextProps.onClose;
+    prevProps.onClose === nextProps.onClose &&
+    prevProps.dataType === nextProps.dataType;
 
   return cityEqual && propsEqual;
 }
