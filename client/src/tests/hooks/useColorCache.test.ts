@@ -1,9 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { renderHook } from '@testing-library/react';
-import {
-  useTemperatureColorCache,
-  useSunshineColorCache,
-} from '@/hooks/useColorCache';
+import { useTemperatureColorCache, useSunshineColorCache } from '@/hooks/useColorCache';
 import { DataType } from '@/types/mapTypes';
 import { createMockWeatherData, createMockSunshineData } from '@/test-utils';
 
@@ -25,9 +22,7 @@ describe('useTemperatureColorCache', () => {
   describe('when dataType is not Temperature', () => {
     it('returns null for Sunshine data type', () => {
       const cities = [createMockWeatherData()];
-      const { result } = renderHook(() =>
-        useTemperatureColorCache(cities, DataType.Sunshine, 300)
-      );
+      const { result } = renderHook(() => useTemperatureColorCache(cities, DataType.Sunshine, 300));
 
       expect(result.current).toBeNull();
     });
@@ -261,9 +256,7 @@ describe('useTemperatureColorCache', () => {
     });
 
     it('handles empty cities array', () => {
-      const { result } = renderHook(() =>
-        useTemperatureColorCache([], DataType.Temperature, 300)
-      );
+      const { result } = renderHook(() => useTemperatureColorCache([], DataType.Temperature, 300));
 
       expect(result.current?.validCities).toHaveLength(0);
       expect(result.current?.cache.size).toBe(0);
@@ -300,9 +293,7 @@ describe('useSunshineColorCache', () => {
         }),
       ];
 
-      const { result } = renderHook(() =>
-        useSunshineColorCache(cities, DataType.Sunshine, 1, 300)
-      );
+      const { result } = renderHook(() => useSunshineColorCache(cities, DataType.Sunshine, 1, 300));
 
       expect(result.current).not.toBeNull();
       expect(result.current?.cache).toBeInstanceOf(Map);
@@ -325,9 +316,7 @@ describe('useSunshineColorCache', () => {
         }),
       ];
 
-      const { result } = renderHook(() =>
-        useSunshineColorCache(cities, DataType.Sunshine, 1, 300)
-      );
+      const { result } = renderHook(() => useSunshineColorCache(cities, DataType.Sunshine, 1, 300));
 
       expect(result.current?.validCities).toHaveLength(1);
       expect(result.current?.validCities[0].city).toBe('ValidCity');
@@ -349,9 +338,7 @@ describe('useSunshineColorCache', () => {
         }),
       ];
 
-      const { result } = renderHook(() =>
-        useSunshineColorCache(cities, DataType.Sunshine, 1, 300)
-      );
+      const { result } = renderHook(() => useSunshineColorCache(cities, DataType.Sunshine, 1, 300));
 
       expect(result.current?.validCities).toHaveLength(1);
       expect(result.current?.validCities[0].city).toBe('ValidCity');
@@ -367,9 +354,7 @@ describe('useSunshineColorCache', () => {
         })
       );
 
-      const { result } = renderHook(() =>
-        useSunshineColorCache(cities, DataType.Sunshine, 1, 300)
-      );
+      const { result } = renderHook(() => useSunshineColorCache(cities, DataType.Sunshine, 1, 300));
 
       expect(result.current?.validCities).toHaveLength(300);
       expect(result.current?.cache.size).toBe(300);
@@ -383,9 +368,7 @@ describe('useSunshineColorCache', () => {
         jan: 150,
       });
 
-      const { result } = renderHook(() =>
-        useSunshineColorCache([city], DataType.Sunshine, 1, 300)
-      );
+      const { result } = renderHook(() => useSunshineColorCache([city], DataType.Sunshine, 1, 300));
 
       const expectedKey = `${city.city}_${city.lat}_${city.long}`;
       expect(result.current?.cache.has(expectedKey)).toBe(true);
@@ -399,9 +382,7 @@ describe('useSunshineColorCache', () => {
         jan: 150,
       });
 
-      const { result } = renderHook(() =>
-        useSunshineColorCache([city], DataType.Sunshine, 1, 300)
-      );
+      const { result } = renderHook(() => useSunshineColorCache([city], DataType.Sunshine, 1, 300));
 
       const key = `${city.city}_${city.lat}_${city.long}`;
       const color = result.current?.cache.get(key);
@@ -450,9 +431,7 @@ describe('useSunshineColorCache', () => {
         }),
       ];
 
-      const { result } = renderHook(() =>
-        useSunshineColorCache(cities, DataType.Sunshine, 1, 300)
-      );
+      const { result } = renderHook(() => useSunshineColorCache(cities, DataType.Sunshine, 1, 300));
 
       // should only include sunshine data
       expect(result.current?.validCities).toHaveLength(1);
@@ -560,9 +539,7 @@ describe('useSunshineColorCache', () => {
     });
 
     it('handles empty cities array', () => {
-      const { result } = renderHook(() =>
-        useSunshineColorCache([], DataType.Sunshine, 1, 300)
-      );
+      const { result } = renderHook(() => useSunshineColorCache([], DataType.Sunshine, 1, 300));
 
       expect(result.current?.validCities).toHaveLength(0);
       expect(result.current?.cache.size).toBe(0);

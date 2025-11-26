@@ -78,18 +78,28 @@ export function useHomeLocationLayers(dataType: DataType, selectedMonth: number)
     let markerColor = HOME_DEFAULT_MARKER_COLOR;
     if (homeCityData && homeCityData.lat !== null && homeCityData.long !== null) {
       // Type guard: check if data type matches and has required fields
-      if (dataType === DataType.Temperature && 'avgTemperature' in homeCityData && homeCityData.avgTemperature !== null) {
+      if (
+        dataType === DataType.Temperature &&
+        'avgTemperature' in homeCityData &&
+        homeCityData.avgTemperature !== null
+      ) {
         markerColor = getColorForCity(homeCityData as ValidMarkerData, dataType, selectedMonth);
       } else if (dataType === DataType.Sunshine && 'jan' in homeCityData) {
-        markerColor = getColorForCity(homeCityData as ValidSunshineMarkerData, dataType, selectedMonth);
+        markerColor = getColorForCity(
+          homeCityData as ValidSunshineMarkerData,
+          dataType,
+          selectedMonth
+        );
       }
     }
 
     // Calculate pulse values based on animation time (0 to 1, looping)
     const pulsePhase = animationTimeRef.current * Math.PI * 2;
     const pulseValue = Math.abs(Math.sin(pulsePhase));
-    const ringRadius = HOME_RING_RADIUS_MIN + pulseValue * (HOME_RING_RADIUS_MAX - HOME_RING_RADIUS_MIN);
-    const ringOpacity = HOME_RING_OPACITY_MIN + pulseValue * (HOME_RING_OPACITY_MAX - HOME_RING_OPACITY_MIN);
+    const ringRadius =
+      HOME_RING_RADIUS_MIN + pulseValue * (HOME_RING_RADIUS_MAX - HOME_RING_RADIUS_MIN);
+    const ringOpacity =
+      HOME_RING_OPACITY_MIN + pulseValue * (HOME_RING_OPACITY_MAX - HOME_RING_OPACITY_MIN);
 
     return [
       // Pulsing ring (render first so it appears behind the center dot)

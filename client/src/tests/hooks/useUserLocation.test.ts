@@ -228,9 +228,7 @@ describe('useUserLocation', () => {
         await result.current.requestLocation();
       });
 
-      expect(parseErrorModule.parseErrorAndNotify).toHaveBeenCalledWith(
-        mockGeolocationError
-      );
+      expect(parseErrorModule.parseErrorAndNotify).toHaveBeenCalledWith(mockGeolocationError);
     });
 
     it('sets isLoading to false after error', async () => {

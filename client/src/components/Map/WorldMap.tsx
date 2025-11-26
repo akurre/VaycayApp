@@ -70,7 +70,7 @@ const WorldMap = ({
 
   // Keep track of the last selected city for exit animation
   const lastSelectedCityRef = useRef<WeatherDataUnion | null>(null);
-  
+
   useEffect(() => {
     if (selectedCity) {
       lastSelectedCityRef.current = selectedCity;

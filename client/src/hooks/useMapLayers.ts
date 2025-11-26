@@ -7,11 +7,7 @@ import type { SunshineData } from '@/types/sunshineDataType';
 import { COLOR_RANGE } from '../utils/map/getMarkerColor';
 import { DataType } from '@/types/mapTypes';
 import type { ViewMode, WeatherDataUnion } from '@/types/mapTypes';
-import {
-  SUNSHINE_COLOR_RANGE,
-  SUNSHINE_LOADING_COLOR,
-  TEMPERATURE_LOADING_COLOR,
-} from '@/const';
+import { SUNSHINE_COLOR_RANGE, SUNSHINE_LOADING_COLOR, TEMPERATURE_LOADING_COLOR } from '@/const';
 import { useWeatherStore } from '@/stores/useWeatherStore';
 import { useSunshineStore } from '@/stores/useSunshineStore';
 import type { ValidSunshineMarkerData } from '@/utils/typeGuards';
@@ -50,7 +46,12 @@ function useMapLayers({
   // Use smaller focused hooks
   const heatmapData = useHeatmapData(cities, dataType, selectedMonth);
   const temperatureCacheResult = useTemperatureColorCache(cities, dataType, maxCitiesToShow);
-  const sunshineCacheResult = useSunshineColorCache(cities, dataType, selectedMonth, maxCitiesToShow);
+  const sunshineCacheResult = useSunshineColorCache(
+    cities,
+    dataType,
+    selectedMonth,
+    maxCitiesToShow
+  );
 
   return useMemo(() => {
     // pre-create all layers and toggle visibility instead of creating/destroying

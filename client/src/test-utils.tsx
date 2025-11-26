@@ -7,6 +7,7 @@ import { theme } from './theme';
 import type { WeatherData } from './types/cityWeatherDataType';
 import type { SunshineData } from './types/sunshineDataType';
 import type { CityWeeklyWeather, WeekDataPoint } from './types/weeklyWeatherDataType';
+import type { NearestCityResult } from './types/userLocationType';
 
 // custom render function that includes all providers
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
@@ -105,7 +106,9 @@ export const createMockGeolocationPosition = (
 });
 
 // mock nearest city result for testing location queries
-export const createMockNearestCity = (overrides?: Partial<any>): any => ({
+export const createMockNearestCity = (
+  overrides?: Partial<NearestCityResult>
+): NearestCityResult => ({
   id: 123,
   name: 'New York',
   country: 'United States',

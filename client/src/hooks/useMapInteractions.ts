@@ -34,7 +34,13 @@ export const useMapInteractions = (
           setHoverInfo({
             x: info.x,
             y: info.y,
-            content: getTooltipContent([homeCityData], homeCityData.long!, homeCityData.lat!, dataType, selectedMonth)!,
+            content: getTooltipContent(
+              [homeCityData],
+              homeCityData.long!,
+              homeCityData.lat!,
+              dataType,
+              selectedMonth
+            )!,
           });
         } else if (homeLocation) {
           // Fallback: show just the city name if no data available

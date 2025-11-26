@@ -142,7 +142,7 @@ describe('useHomeLocationLayers', () => {
 
       const ringLayer = result.current[0];
       const lineColor = ringLayer.props.getLineColor;
-      
+
       // line color should be an array with HOME_RING_COLOR and opacity
       expect(Array.isArray(lineColor)).toBe(true);
       if (Array.isArray(lineColor)) {
@@ -176,7 +176,7 @@ describe('useHomeLocationLayers', () => {
 
       const ringLayer = result.current[0];
       const position = ringLayer.props.getPosition(mockHomeLocation);
-      
+
       expect(position).toEqual([
         mockHomeLocation.coordinates.long,
         mockHomeLocation.coordinates.lat,
@@ -330,7 +330,7 @@ describe('useHomeLocationLayers', () => {
 
       // simulate animation frame progression
       vi.spyOn(performance, 'now').mockReturnValue(500); // 500ms elapsed
-      
+
       // trigger animation callbacks
       if (rafCallbacks.length > 0) {
         rafCallbacks[0](500);
@@ -368,9 +368,9 @@ describe('useHomeLocationLayers', () => {
       rerender();
 
       // should have called requestAnimationFrame again
-      expect((globalThis.requestAnimationFrame as ReturnType<typeof vi.fn>).mock.calls.length).toBeGreaterThan(
-        initialCallCount
-      );
+      expect(
+        (globalThis.requestAnimationFrame as ReturnType<typeof vi.fn>).mock.calls.length
+      ).toBeGreaterThan(initialCallCount);
     });
   });
 

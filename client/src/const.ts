@@ -98,9 +98,7 @@ export const HOME_CENTER_RADIUS_MAX = 10;
  * Default marker color when no data is available (RGBA)
  * Default: White
  */
-export const HOME_DEFAULT_MARKER_COLOR: [number, number, number, number] = [
-  255, 255, 255, 255,
-];
+export const HOME_DEFAULT_MARKER_COLOR: [number, number, number, number] = [255, 255, 255, 255];
 
 /**
  * Base radius for all home location layers in map units
