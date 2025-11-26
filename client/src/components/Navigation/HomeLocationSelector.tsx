@@ -119,6 +119,6 @@ const HomeLocationSelector = () => {
       </Popover.Dropdown>
     </Popover>
   );
-}
+};
 
 export default HomeLocationSelector;

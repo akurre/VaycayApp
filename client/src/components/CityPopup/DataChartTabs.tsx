@@ -15,7 +15,7 @@ interface DataChartTabsProps {
   weeklyWeatherData: CityWeeklyWeather | null;
   weeklyWeatherLoading: boolean;
   weeklyWeatherError: boolean;
-  dataType: DataType
+  dataType: DataType;
 }
 
 const DataChartTabs = ({
@@ -26,7 +26,7 @@ const DataChartTabs = ({
   weeklyWeatherData,
   weeklyWeatherLoading,
   weeklyWeatherError,
-  dataType
+  dataType,
 }: DataChartTabsProps) => {
   return (
     <Tabs orientation="vertical" defaultValue={dataType} className="h-full">

@@ -73,7 +73,7 @@ class PerformanceMonitor {
       console.warn(
         `⚠️ performance: ${name} took ${duration.toFixed(2)}ms (threshold: ${threshold}ms)`
       );
-    } 
+    }
 
     return duration;
   }

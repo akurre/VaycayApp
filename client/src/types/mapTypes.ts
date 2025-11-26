@@ -23,5 +23,5 @@ export interface CityPopupProps {
   onClose: () => void;
   selectedMonth: number;
   selectedDate?: string;
-  dataType: DataType
+  dataType: DataType;
 }

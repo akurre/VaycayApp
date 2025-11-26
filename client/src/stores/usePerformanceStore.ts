@@ -22,9 +22,10 @@ export const usePerformanceStore = create<PerformanceState>()(
 
       metrics: [],
       setMetrics: (metrics) => set({ metrics }),
-      addMetric: (metric) => set((state) => ({
-        metrics: [...state.metrics, metric]
-      })),
+      addMetric: (metric) =>
+        set((state) => ({
+          metrics: [...state.metrics, metric],
+        })),
       clearMetrics: () => set({ metrics: [] }),
     }),
     {

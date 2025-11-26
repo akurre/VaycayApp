@@ -91,7 +91,14 @@ describe('CityPopup', () => {
   });
 
   it('renders weather data correctly when passed as city prop', () => {
-    render(<CityPopup city={weatherData} onClose={mockOnClose} selectedMonth={1} dataType={DataType.Temperature} />);
+    render(
+      <CityPopup
+        city={weatherData}
+        onClose={mockOnClose}
+        selectedMonth={1}
+        dataType={DataType.Temperature}
+      />
+    );
 
     expect(screen.getByText('New York, New York, United States')).toBeInTheDocument();
     expect(screen.getByText('Temperature')).toBeInTheDocument();
@@ -100,7 +107,14 @@ describe('CityPopup', () => {
   });
 
   it('renders sunshine data correctly when passed as city prop', () => {
-    render(<CityPopup city={sunshineData} onClose={mockOnClose} selectedMonth={1} dataType={DataType.Sunshine} />);
+    render(
+      <CityPopup
+        city={sunshineData}
+        onClose={mockOnClose}
+        selectedMonth={1}
+        dataType={DataType.Sunshine}
+      />
+    );
 
     expect(screen.getByText('New York, New York, United States')).toBeInTheDocument();
     expect(screen.getByText('Average Annual Sunshine')).toBeInTheDocument();
@@ -114,7 +128,14 @@ describe('CityPopup', () => {
       weatherError: false,
     });
 
-    render(<CityPopup city={sunshineData} onClose={mockOnClose} selectedMonth={1} dataType={DataType.Sunshine} />);
+    render(
+      <CityPopup
+        city={sunshineData}
+        onClose={mockOnClose}
+        selectedMonth={1}
+        dataType={DataType.Sunshine}
+      />
+    );
 
     // should show both sunshine and weather data
     expect(screen.getByText('Temperature')).toBeInTheDocument();
@@ -129,7 +150,14 @@ describe('CityPopup', () => {
       sunshineError: false,
     });
 
-    render(<CityPopup city={weatherData} onClose={mockOnClose} selectedMonth={1} dataType={DataType.Temperature} />);
+    render(
+      <CityPopup
+        city={weatherData}
+        onClose={mockOnClose}
+        selectedMonth={1}
+        dataType={DataType.Temperature}
+      />
+    );
 
     // should show both weather and sunshine data
     expect(screen.getByText('Temperature')).toBeInTheDocument();
@@ -143,7 +171,14 @@ describe('CityPopup', () => {
       weatherError: false,
     });
 
-    render(<CityPopup city={sunshineData} onClose={mockOnClose} selectedMonth={1} dataType={DataType.Sunshine} />);
+    render(
+      <CityPopup
+        city={sunshineData}
+        onClose={mockOnClose}
+        selectedMonth={1}
+        dataType={DataType.Sunshine}
+      />
+    );
 
     expect(document.querySelector('.mantine-Loader-root')).toBeInTheDocument();
   });
@@ -155,7 +190,14 @@ describe('CityPopup', () => {
       sunshineError: false,
     });
 
-    render(<CityPopup city={weatherData} onClose={mockOnClose} selectedMonth={1} dataType={DataType.Temperature} />);
+    render(
+      <CityPopup
+        city={weatherData}
+        onClose={mockOnClose}
+        selectedMonth={1}
+        dataType={DataType.Temperature}
+      />
+    );
 
     expect(document.querySelector('.mantine-Loader-root')).toBeInTheDocument();
   });
@@ -167,7 +209,14 @@ describe('CityPopup', () => {
       weatherError: true,
     });
 
-    render(<CityPopup city={sunshineData} onClose={mockOnClose} selectedMonth={1} dataType={DataType.Sunshine} />);
+    render(
+      <CityPopup
+        city={sunshineData}
+        onClose={mockOnClose}
+        selectedMonth={1}
+        dataType={DataType.Sunshine}
+      />
+    );
 
     expect(screen.getByText('Failed to load temperature data for this city.')).toBeInTheDocument();
   });
@@ -179,13 +228,27 @@ describe('CityPopup', () => {
       sunshineError: true,
     });
 
-    render(<CityPopup city={weatherData} onClose={mockOnClose} selectedMonth={1} dataType={DataType.Temperature} />);
+    render(
+      <CityPopup
+        city={weatherData}
+        onClose={mockOnClose}
+        selectedMonth={1}
+        dataType={DataType.Temperature}
+      />
+    );
 
     expect(screen.getByText('Failed to load sunshine data for this city.')).toBeInTheDocument();
   });
 
   it('fetches sunshine data without selectedMonth parameter', () => {
-    render(<CityPopup city={weatherData} onClose={mockOnClose} selectedMonth={6} dataType={DataType.Temperature} />);
+    render(
+      <CityPopup
+        city={weatherData}
+        onClose={mockOnClose}
+        selectedMonth={6}
+        dataType={DataType.Temperature}
+      />
+    );
 
     // verify useSunshineDataForCity was called without selectedMonth (it fetches all 12 months)
     expect(useSunshineDataForCity).toHaveBeenCalledWith(
@@ -199,7 +262,14 @@ describe('CityPopup', () => {
   });
 
   it('uses selectedMonth to construct date when city is sunshine data', () => {
-    render(<CityPopup city={sunshineData} onClose={mockOnClose} selectedMonth={6} dataType={DataType.Sunshine} />);
+    render(
+      <CityPopup
+        city={sunshineData}
+        onClose={mockOnClose}
+        selectedMonth={6}
+        dataType={DataType.Sunshine}
+      />
+    );
 
     // verify useWeatherDataForCity was called with date constructed from selectedMonth
     expect(useWeatherDataForCity).toHaveBeenCalledWith(
@@ -210,7 +280,14 @@ describe('CityPopup', () => {
   });
 
   it('skips fetching weather data when city is already weather data', () => {
-    render(<CityPopup city={weatherData} onClose={mockOnClose} selectedMonth={1} dataType={DataType.Temperature} />);
+    render(
+      <CityPopup
+        city={weatherData}
+        onClose={mockOnClose}
+        selectedMonth={1}
+        dataType={DataType.Temperature}
+      />
+    );
 
     // verify skipFetch was true
     expect(useWeatherDataForCity).toHaveBeenCalledWith(
@@ -221,7 +298,14 @@ describe('CityPopup', () => {
   });
 
   it('skips fetching sunshine data when city is already sunshine data', () => {
-    render(<CityPopup city={sunshineData} onClose={mockOnClose} selectedMonth={1} dataType={DataType.Sunshine} />);
+    render(
+      <CityPopup
+        city={sunshineData}
+        onClose={mockOnClose}
+        selectedMonth={1}
+        dataType={DataType.Sunshine}
+      />
+    );
 
     // verify skipFetch was true
     expect(useSunshineDataForCity).toHaveBeenCalledWith(

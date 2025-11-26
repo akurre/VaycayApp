@@ -1,10 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import type { MapViewState, ViewStateChangeParameters } from '@deck.gl/core';
-import {
-  ZOOM_THRESHOLD,
-  DEBOUNCE_DELAY,
-  BOUNDS_BUFFER_PERCENT,
-} from '@/const';
+import { ZOOM_THRESHOLD, DEBOUNCE_DELAY, BOUNDS_BUFFER_PERCENT } from '@/const';
 
 /**
  * hook to track map viewport bounds and zoom level for intelligent query switching.

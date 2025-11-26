@@ -100,11 +100,7 @@ export function useHomeLocationLayers(dataType: DataType, selectedMonth: number)
       }
     } else if (dataType === DataType.Sunshine) {
       if ('jan' in homeCityData) {
-        return getColorForCity(
-          homeCityData as ValidSunshineMarkerData,
-          dataType,
-          selectedMonth
-        );
+        return getColorForCity(homeCityData as ValidSunshineMarkerData, dataType, selectedMonth);
       }
     }
 
