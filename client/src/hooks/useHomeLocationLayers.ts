@@ -20,14 +20,15 @@ import type { ValidSunshineMarkerData } from '@/utils/typeGuards';
 import { getColorForCity } from '../utils/map/getColorForCity';
 
 /**
- * Creates deck.gl layers for the home location with a pulsing ring effect.
+ * Creates deck.gl layers for the home location with a sonar ping effect.
+ * The ring expands outward while fading from opaque to transparent, then resets.
  * Follows deck.gl best practices for continuous animations by updating a time-based
  * state prop that drives the animation. Deck.gl efficiently handles high frame rate updates.
  *
  * To customize the animation, edit these constants in const.ts:
  * - HOME_PULSE_DURATION: Animation cycle duration (ms)
- * - HOME_RING_RADIUS_MIN/MAX: Ring size range (px)
- * - HOME_RING_OPACITY_MIN/MAX: Ring opacity range (0-255)
+ * - HOME_RING_RADIUS_MIN/MAX: Ring size range (px) - expands from MIN to MAX
+ * - HOME_RING_OPACITY_MIN/MAX: Ring opacity range (0-255) - fades from MIN to MAX
  * - HOME_RING_COLOR: Ring color RGB
  */
 export function useHomeLocationLayers(dataType: DataType, selectedMonth: number) {
@@ -58,7 +59,7 @@ export function useHomeLocationLayers(dataType: DataType, selectedMonth: number)
 
   // Memoize marker color separately - only recalculate when data changes, not on every frame
   const markerColor = useMemo(() => {
-    if (!homeCityData || homeCityData.lat === null || homeCityData.long === null) {
+    if (!homeCityData || homeCityData?.lat === null || homeCityData?.long === null) {
       return HOME_DEFAULT_MARKER_COLOR;
     }
 
@@ -89,13 +90,12 @@ export function useHomeLocationLayers(dataType: DataType, selectedMonth: number)
   return useMemo(() => {
     if (!homeLocation) return [];
 
-    // Calculate pulse values based on animation time (0 to 1, looping)
-    const pulsePhase = animationTime * Math.PI * 2;
-    const pulseValue = Math.abs(Math.sin(pulsePhase));
+    // Sonar ping effect: linear expansion from small/opaque to large/transparent
+    // animationTime goes from 0 to 1, creating a smooth outward pulse
     const ringRadius =
-      HOME_RING_RADIUS_MIN + pulseValue * (HOME_RING_RADIUS_MAX - HOME_RING_RADIUS_MIN);
+      HOME_RING_RADIUS_MIN + animationTime * (HOME_RING_RADIUS_MAX - HOME_RING_RADIUS_MIN);
     const ringOpacity =
-      HOME_RING_OPACITY_MIN + pulseValue * (HOME_RING_OPACITY_MAX - HOME_RING_OPACITY_MIN);
+      HOME_RING_OPACITY_MIN + animationTime * (HOME_RING_OPACITY_MAX - HOME_RING_OPACITY_MIN);
 
     return [
       // Pulsing ring (render first so it appears behind the center dot)

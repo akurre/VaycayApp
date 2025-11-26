@@ -72,15 +72,15 @@ export const HOME_PULSE_DURATION = 2000;
  * Ring radius range (in pixels)
  * The ring will pulse between MIN and MAX values
  */
-export const HOME_RING_RADIUS_MIN = 8;
-export const HOME_RING_RADIUS_MAX = 20;
+export const HOME_RING_RADIUS_MIN = 4;
+export const HOME_RING_RADIUS_MAX = 12;
 
 /**
  * Ring opacity range (0-255)
  * The ring will pulse between MIN and MAX opacity
  */
-export const HOME_RING_OPACITY_MIN = 150;
-export const HOME_RING_OPACITY_MAX = 255;
+export const HOME_RING_OPACITY_MIN = 200;
+export const HOME_RING_OPACITY_MAX = 0;
 
 /**
  * Ring color in RGB
@@ -92,7 +92,7 @@ export const HOME_RING_COLOR: [number, number, number] = [255, 215, 0];
  * Center dot radius range (in pixels)
  */
 export const HOME_CENTER_RADIUS_MIN = 5;
-export const HOME_CENTER_RADIUS_MAX = 10;
+export const HOME_CENTER_RADIUS_MAX = 8;
 
 /**
  * Default marker color when no data is available (RGBA)
