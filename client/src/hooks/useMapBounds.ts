@@ -67,12 +67,16 @@ export const useMapBounds = (
       const zoomDelta = newViewState.zoom - previousZoomRef.current;
       const amplifiedZoom = previousZoomRef.current + zoomDelta * ZOOM_AMPLIFICATION_FACTOR;
 
+      // clamp zoom to valid range to prevent viewport calculation errors
+      // deck.gl typically supports zoom levels from 0 to ~20-24
+      const clampedZoom = Math.max(0, Math.min(24, amplifiedZoom));
+
       const amplifiedViewState = {
         ...newViewState,
-        zoom: amplifiedZoom,
+        zoom: clampedZoom,
       };
 
-      previousZoomRef.current = amplifiedZoom;
+      previousZoomRef.current = clampedZoom;
       setViewState(amplifiedViewState);
 
       // clear existing debounce timer

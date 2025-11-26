@@ -79,7 +79,7 @@ export const HOME_RING_RADIUS_MAX = 12;
  * Ring opacity range (0-255)
  * The ring will pulse between MIN and MAX opacity
  */
-export const HOME_RING_OPACITY_MIN = 200;
+export const HOME_RING_OPACITY_MIN = 255;
 export const HOME_RING_OPACITY_MAX = 0;
 
 /**
