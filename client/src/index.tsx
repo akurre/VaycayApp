@@ -53,10 +53,9 @@ if (import.meta.env.DEV) {
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
-  // TEMPORARILY DISABLED STRICTMODE TO TEST PERFORMANCE
-  // <React.StrictMode>
+  <React.StrictMode>
     <ApolloProvider client={apolloClient}>
       <App />
     </ApolloProvider>
-  // </React.StrictMode>
+  </React.StrictMode>
 );
