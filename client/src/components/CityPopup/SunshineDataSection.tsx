@@ -36,10 +36,8 @@ const SunshineDataSection = ({
           <SunshineGraph sunshineData={displaySunshineData} selectedMonth={selectedMonth} />
         </div>
       ) : (
-        <div className='h-full items-center flex justify-center'>
-        <Badge size='xl'>
-          No sunshine data available
-        </Badge>
+        <div className="h-full items-center flex justify-center">
+          <Badge size="xl">No sunshine data available</Badge>
         </div>
       )}
     </>
