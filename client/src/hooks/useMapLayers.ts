@@ -1,29 +1,22 @@
 import { useMemo } from 'react';
 import { HeatmapLayer } from '@deck.gl/aggregation-layers';
-import { ScatterplotLayer, IconLayer } from '@deck.gl/layers';
+import { ScatterplotLayer } from '@deck.gl/layers';
 import type { Layer } from '@deck.gl/core';
 import type { WeatherData, ValidMarkerData } from '../types/cityWeatherDataType';
 import type { SunshineData } from '@/types/sunshineDataType';
-import { transformToHeatmapData } from '../utils/map/transformToHeatmapData';
-import { transformToSunshineHeatmapData } from '../utils/map/transformToSunshineHeatmapData';
-import { getMarkerColor, COLOR_RANGE } from '../utils/map/getMarkerColor';
+import { COLOR_RANGE } from '../utils/map/getMarkerColor';
 import { DataType } from '@/types/mapTypes';
 import type { ViewMode, WeatherDataUnion } from '@/types/mapTypes';
-import type { HomeLocation } from '@/types/userLocationType';
 import {
-  HOME_ICON_SIZE,
-  HOME_ICON_OBJECT,
   SUNSHINE_COLOR_RANGE,
   SUNSHINE_LOADING_COLOR,
   TEMPERATURE_LOADING_COLOR,
-  MONTH_FIELDS,
 } from '@/const';
-import type { ColorCacheEntry } from '@/const';
-import getSunshineMarkerColor from '@/utils/map/getSunshineMarkerColor';
 import { useWeatherStore } from '@/stores/useWeatherStore';
 import { useSunshineStore } from '@/stores/useSunshineStore';
-import { isWeatherData, isSunshineData } from '@/utils/typeGuards';
 import type { ValidSunshineMarkerData } from '@/utils/typeGuards';
+import { useHeatmapData } from './useHeatmapData';
+import { useTemperatureColorCache, useSunshineColorCache } from './useColorCache';
 
 /**
  * hook to create and manage deck.gl map layers for both heatmap and marker views.
@@ -39,106 +32,25 @@ interface UseMapLayersProps {
   dataType: DataType;
   selectedMonth?: number;
   isLoadingWeather: boolean;
-  homeLocation: HomeLocation | null;
 }
 
 function useMapLayers({
-  // todo split up
   cities,
   viewMode,
   dataType,
   selectedMonth = 1,
   isLoadingWeather,
-  homeLocation,
 }: UseMapLayersProps) {
   // Get max cities to show from appropriate store
   const maxTemperatureCities = useWeatherStore((state) => state.maxCitiesToShow || 300);
   const maxSunshineCities = useSunshineStore((state) => state.maxCitiesToShow || 300);
   const maxCitiesToShow =
     dataType === DataType.Temperature ? maxTemperatureCities : maxSunshineCities;
-  // Transform data based on data type
-  const heatmapData = useMemo(() => {
-    if (dataType === DataType.Temperature) {
-      // Filter to only WeatherData objects
-      const weatherCities = cities.filter(isWeatherData) as WeatherData[];
-      return transformToHeatmapData(weatherCities);
-    } else {
-      // Filter to only SunshineData objects
-      const sunshineCities = cities.filter(isSunshineData) as SunshineData[];
-      return transformToSunshineHeatmapData(sunshineCities, selectedMonth);
-    }
-  }, [cities, dataType, selectedMonth]);
 
-  // Temperature color cache - only calculate when needed
-  const temperatureColorCache = useMemo(() => {
-    if (dataType !== DataType.Temperature) return null;
-
-    const cache = new Map<string, ColorCacheEntry>();
-
-    // Only process the first maxCitiesToShow cities that have valid data
-    const validCities = cities
-      .filter(
-        (c): c is ValidMarkerData =>
-          isWeatherData(c) && c.lat !== null && c.long !== null && c.avgTemperature !== null
-      )
-      .slice(0, maxCitiesToShow);
-
-    // Pre-calculate colors for all valid cities
-    validCities.forEach((city) => {
-      const weatherData = city as WeatherData;
-      const [r, g, b] = getMarkerColor(weatherData.avgTemperature || 0);
-      // Use city ID as key (combination of name and coordinates for uniqueness)
-      const key = `${weatherData.city}_${weatherData.lat}_${weatherData.long}`;
-      cache.set(key, [r, g, b, 255]);
-    });
-
-    return cache;
-  }, [cities, dataType, maxCitiesToShow]);
-
-  // Sunshine color cache - only calculate when needed
-  const sunshineColorCache = useMemo(() => {
-    if (dataType !== DataType.Sunshine) return null;
-
-    const cache = new Map<string, ColorCacheEntry>();
-    const monthField = MONTH_FIELDS[selectedMonth];
-
-    // Only process the first maxCitiesToShow cities that have valid data
-    const validCities = cities
-      .filter((c): c is ValidSunshineMarkerData => {
-        if (!isSunshineData(c) || c.lat === null || c.long === null) return false;
-        return c[monthField] !== null;
-      })
-      .slice(0, maxCitiesToShow);
-
-    // Pre-calculate colors for all valid cities
-    validCities.forEach((city) => {
-      const sunshineData = city as SunshineData;
-      const sunshineHours = sunshineData[monthField] as number | null;
-      // Handle null values safely
-      const [r, g, b] = getSunshineMarkerColor(sunshineHours !== null ? sunshineHours : 0);
-      // Use city ID as key (combination of name and coordinates for uniqueness)
-      const key = `${sunshineData.city}_${sunshineData.lat}_${sunshineData.long}`;
-      cache.set(key, [r, g, b, 255]);
-    });
-
-    return cache;
-  }, [cities, dataType, selectedMonth, maxCitiesToShow]);
-
-  // memoize home icon layer separately to avoid recreating city layers when home location changes
-  const homeIconLayer = useMemo(() => {
-    if (!homeLocation) return null;
-
-    return new IconLayer({
-      id: 'home-icon',
-      data: [homeLocation],
-      getPosition: (d) => [d.coordinates.long, d.coordinates.lat],
-      getIcon: () => HOME_ICON_OBJECT, // use cached icon object
-      getSize: HOME_ICON_SIZE,
-      pickable: true,
-      // always visible regardless of view mode
-      visible: true,
-    });
-  }, [homeLocation]);
+  // Use smaller focused hooks
+  const heatmapData = useHeatmapData(cities, dataType, selectedMonth);
+  const temperatureCacheResult = useTemperatureColorCache(cities, dataType, maxCitiesToShow);
+  const sunshineCacheResult = useSunshineColorCache(cities, dataType, selectedMonth, maxCitiesToShow);
 
   return useMemo(() => {
     // pre-create all layers and toggle visibility instead of creating/destroying
@@ -170,25 +82,20 @@ function useMapLayers({
 
     // Add appropriate marker layer based on data type
     if (dataType === DataType.Temperature) {
-      // Temperature markers with color caching
+      // Temperature markers with color caching - use pre-filtered cities to avoid duplicate filtering
       layers.push(
         new ScatterplotLayer<ValidMarkerData>({
           id: 'temperature-markers',
-          data: cities
-            .filter(
-              (c): c is ValidMarkerData =>
-                isWeatherData(c) && c.lat !== null && c.long !== null && c.avgTemperature !== null
-            )
-            .slice(0, maxCitiesToShow),
+          data: temperatureCacheResult?.validCities || [],
           getPosition: (d) => [d.long, d.lat],
           getFillColor: (d) => {
-            if (!temperatureColorCache) return TEMPERATURE_LOADING_COLOR;
+            if (!temperatureCacheResult) return TEMPERATURE_LOADING_COLOR;
 
             const weatherData = d as WeatherData;
             const key = `${weatherData.city}_${weatherData.lat}_${weatherData.long}`;
 
             // Use cached color if available, otherwise use loading color
-            return temperatureColorCache.get(key) || TEMPERATURE_LOADING_COLOR;
+            return temperatureCacheResult.cache.get(key) || TEMPERATURE_LOADING_COLOR;
           },
           getRadius: 50000,
           radiusMinPixels: 3,
@@ -214,29 +121,20 @@ function useMapLayers({
         })
       );
     } else {
-      // Sunshine markers with color caching
-      const monthField = MONTH_FIELDS[selectedMonth];
-
+      // Sunshine markers with color caching - use pre-filtered cities to avoid duplicate filtering
       layers.push(
         new ScatterplotLayer<ValidSunshineMarkerData>({
           id: 'sunshine-markers',
-          data: cities
-            .filter((c): c is ValidSunshineMarkerData => {
-              if (!isSunshineData(c) || c.lat === null || c.long === null) return false;
-
-              // Check if the selected month has data
-              return c[monthField] !== null;
-            })
-            .slice(0, maxCitiesToShow),
+          data: sunshineCacheResult?.validCities || [],
           getPosition: (d) => [d.long, d.lat],
           getFillColor: (d) => {
-            if (!sunshineColorCache) return SUNSHINE_LOADING_COLOR;
+            if (!sunshineCacheResult) return SUNSHINE_LOADING_COLOR;
 
             const sunshineData = d as SunshineData;
             const key = `${sunshineData.city}_${sunshineData.lat}_${sunshineData.long}`;
 
             // Use cached color if available, otherwise use loading color
-            return sunshineColorCache.get(key) || SUNSHINE_LOADING_COLOR;
+            return sunshineCacheResult.cache.get(key) || SUNSHINE_LOADING_COLOR;
           },
           getRadius: 50000,
           radiusMinPixels: 3,
@@ -263,21 +161,13 @@ function useMapLayers({
       );
     }
 
-    // add home icon layer if it exists
-    if (homeIconLayer) {
-      layers.push(homeIconLayer);
-    }
-
     return layers;
   }, [
-    cities,
     heatmapData,
     viewMode,
     isLoadingWeather,
-    homeIconLayer,
-    temperatureColorCache,
-    sunshineColorCache,
-    maxCitiesToShow,
+    temperatureCacheResult,
+    sunshineCacheResult,
     dataType,
     selectedMonth,
   ]);

@@ -1,10 +1,13 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { HomeLocation } from '@/types/userLocationType';
+import type { WeatherDataUnion } from '@/types/mapTypes';
 
 interface AppState {
   homeLocation: HomeLocation | null;
   setHomeLocation: (location: HomeLocation | null) => void;
+  homeCityData: WeatherDataUnion | null;
+  setHomeCityData: (data: WeatherDataUnion | null) => void;
   isLocationLoading: boolean;
   setIsLocationLoading: (loading: boolean) => void;
   locationError: string | null;
@@ -15,15 +18,17 @@ export const useAppStore = create<AppState>()(
   persist(
     (set) => ({
       homeLocation: null,
-      setHomeLocation: (location) => set({ homeLocation: location }),
+      setHomeLocation: (homeLocation) => set({ homeLocation }),
+      homeCityData: null,
+      setHomeCityData: (homeCityData) => set({ homeCityData }),
       isLocationLoading: false,
-      setIsLocationLoading: (loading) => set({ isLocationLoading: loading }),
+      setIsLocationLoading: (isLocationLoading) => set({ isLocationLoading }),
       locationError: null,
-      setLocationError: (error) => set({ locationError: error }),
+      setLocationError: (locationError) => set({ locationError }),
     }),
     {
       name: 'app-storage',
-      // only persist homeLocation, not loading/error states
+      // only persist homeLocation, not loading/error states or weather data
       partialize: (state) => ({ homeLocation: state.homeLocation }),
     }
   )

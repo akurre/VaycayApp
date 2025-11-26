@@ -84,3 +84,35 @@ export const createMockWeeklyWeather = (
   weeklyData: [createMockWeekDataPoint()],
   ...overrides,
 });
+
+// mock geolocation position for testing location-based features
+export const createMockGeolocationPosition = (
+  overrides?: Partial<GeolocationPosition>
+): GeolocationPosition => ({
+  coords: {
+    latitude: 40.7128,
+    longitude: -74.006,
+    accuracy: 10,
+    altitude: null,
+    altitudeAccuracy: null,
+    heading: null,
+    speed: null,
+    toJSON: () => ({}),
+  },
+  timestamp: Date.now(),
+  toJSON: () => ({}),
+  ...overrides,
+});
+
+// mock nearest city result for testing location queries
+export const createMockNearestCity = (overrides?: Partial<any>): any => ({
+  id: 123,
+  name: 'New York',
+  country: 'United States',
+  state: 'New York',
+  lat: 40.7128,
+  long: -74.006,
+  population: 8000000,
+  distance: 0.5,
+  ...overrides,
+});

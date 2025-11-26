@@ -1,17 +1,18 @@
 import DeckGL from '@deck.gl/react';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useMemo } from 'react';
 import Map from 'react-map-gl/maplibre';
 import { Transition, useComputedColorScheme } from '@mantine/core';
 import useMapLayers from '../../hooks/useMapLayers';
 import { useMapInteractions } from '../../hooks/useMapInteractions';
 import { useMapBounds } from '../../hooks/useMapBounds';
+import { useHomeCityData } from '../../hooks/useHomeCityData';
+import { useHomeLocationLayers } from '../../hooks/useHomeLocationLayers';
 import { INITIAL_VIEW_STATE, MAP_STYLES } from '@/const';
 import CityPopup from '../CityPopup/CityPopup';
 import MapTooltip from './MapTooltip';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useWeatherStore } from '@/stores/useWeatherStore';
 import { useSunshineStore } from '@/stores/useSunshineStore';
-import { useAppStore } from '@/stores/useAppStore';
 import { DataType } from '@/types/mapTypes';
 import type { ViewMode, WeatherDataUnion } from '@/types/mapTypes';
 
@@ -38,23 +39,34 @@ const WorldMap = ({
   const colorScheme = useComputedColorScheme('dark');
   const isLoadingWeather = useWeatherStore((state) => state.isLoadingWeather);
   const isLoadingSunshine = useSunshineStore((state) => state.isLoadingSunshine);
-  const homeLocation = useAppStore((state) => state.homeLocation);
   const { viewState, onViewStateChange } = useMapBounds(INITIAL_VIEW_STATE, onBoundsChange);
+
+  // Fetch and store home city data
+  useHomeCityData(dataType, selectedDate);
 
   // Use the appropriate loading state based on data type
   const isLoading = dataType === DataType.Temperature ? isLoadingWeather : isLoadingSunshine;
 
-  const layers = useMapLayers({
+  // Get city layers (heatmap + markers) - these are expensive to recreate
+  const cityLayers = useMapLayers({
     cities,
     viewMode,
     dataType,
     selectedMonth,
     isLoadingWeather: isLoading,
-    homeLocation,
   });
 
+  // Get home location layers separately - these update 15fps for animation
+  const homeLocationLayers = useHomeLocationLayers(dataType, selectedMonth);
+
+  // Merge layers at component level - when home animates, only this merge reruns, not city layer creation
+  const layers = useMemo(
+    () => [...cityLayers, ...homeLocationLayers],
+    [cityLayers, homeLocationLayers]
+  );
+
   const { selectedCity, hoverInfo, handleHover, handleClick, handleClosePopup } =
-    useMapInteractions(cities, viewMode, dataType, selectedMonth, homeLocation);
+    useMapInteractions(cities, viewMode, dataType, selectedMonth);
 
   // Keep track of the last selected city for exit animation
   const lastSelectedCityRef = useRef<WeatherDataUnion | null>(null);

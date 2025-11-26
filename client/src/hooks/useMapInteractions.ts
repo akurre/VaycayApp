@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import type { PickingInfo } from '@deck.gl/core';
 import { getTooltipContent } from '../utils/map/getTooltipContent';
 import type { DataType, ViewMode, WeatherDataUnion } from '@/types/mapTypes';
-import type { HomeLocation } from '@/types/userLocationType';
+import { useAppStore } from '@/stores/useAppStore';
 
 /**
  * hook to manage map interactions including hover tooltips and city selection.
@@ -19,14 +19,34 @@ export const useMapInteractions = (
   cities: WeatherDataUnion[],
   viewMode: ViewMode,
   dataType: DataType,
-  selectedMonth?: number,
-  homeLocation: HomeLocation | null = null
+  selectedMonth?: number
 ) => {
   const [selectedCity, setSelectedCity] = useState<WeatherDataUnion | null>(null);
   const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null);
+  const homeLocation = useAppStore((state) => state.homeLocation);
+  const homeCityData = useAppStore((state) => state.homeCityData);
 
   const handleHover = useCallback(
     (info: PickingInfo) => {
+      // Handle home location hover
+      if (info.layer?.id === 'home-center') {
+        if (homeCityData) {
+          setHoverInfo({
+            x: info.x,
+            y: info.y,
+            content: getTooltipContent([homeCityData], homeCityData.long!, homeCityData.lat!, dataType, selectedMonth)!,
+          });
+        } else if (homeLocation) {
+          // Fallback: show just the city name if no data available
+          setHoverInfo({
+            x: info.x,
+            y: info.y,
+            content: `${homeLocation.cityName}, ${homeLocation.country}`,
+          });
+        }
+        return;
+      }
+
       if (viewMode === 'markers' && info.object) {
         const city = info.object as WeatherDataUnion;
         setHoverInfo({
@@ -50,26 +70,14 @@ export const useMapInteractions = (
         setHoverInfo(null);
       }
     },
-    [cities, viewMode, dataType, selectedMonth]
+    [cities, viewMode, dataType, selectedMonth, homeCityData, homeLocation]
   );
 
   const handleClick = useCallback(
     (info: PickingInfo) => {
-      // check if home icon was clicked
-      if (info.layer?.id === 'home-icon' && homeLocation) {
-        // find the city that matches the home location by coordinates and name
-        const homeCity = cities.find(
-          (c) =>
-            c.city === homeLocation.cityName &&
-            c.country === homeLocation.country &&
-            c.lat !== null &&
-            c.long !== null &&
-            Math.abs(c.lat - homeLocation.coordinates.lat) < 0.01 &&
-            Math.abs(c.long - homeLocation.coordinates.long) < 0.01
-        );
-        if (homeCity) {
-          setSelectedCity(homeCity);
-        }
+      // check if home location center was clicked
+      if (info.layer?.id === 'home-center' && homeCityData) {
+        setSelectedCity(homeCityData);
         return;
       }
 
@@ -89,7 +97,7 @@ export const useMapInteractions = (
         }
       }
     },
-    [cities, viewMode, homeLocation]
+    [cities, viewMode, homeCityData]
   );
 
   const handleClosePopup = useCallback(() => {

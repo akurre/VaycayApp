@@ -42,6 +42,7 @@ Review the current git changes (or specified files) for common code quality issu
 
 ### 7. Performance
 - Are expensive calculations properly memoized?
+- Are operations running unnecessarily?
 - Are dependency arrays complete and correct?
 - Could any components be split to reduce re-renders?
 - Are unnecessary re-renders happening due to derived state in useState?
@@ -51,6 +52,7 @@ Review the current git changes (or specified files) for common code quality issu
 - Are variable names descriptive?
 - Could any IIFEs be replaced with clearer patterns?
 - Are there outdated or misleading comments?
+- Is there only one export per file?
 
 ### 9. Null/Undefined Handling
 - Are fallback values appropriate (avoid `?? 0` for coordinates)?
