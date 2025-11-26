@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import type { MapViewState, ViewStateChangeParameters } from '@deck.gl/core';
+import { WebMercatorViewport } from '@deck.gl/core';
 import { ZOOM_THRESHOLD, DEBOUNCE_DELAY, BOUNDS_BUFFER_PERCENT } from '@/const';
 
 /**
@@ -26,23 +27,47 @@ interface UseMapBoundsReturn {
 function calculateBounds(viewState: MapViewState): MapBounds {
   const { latitude, longitude, zoom } = viewState;
 
-  // calculate degrees visible based on zoom level
-  // Web Mercator: world width = 360° longitude, each zoom level doubles scale
-  const degreesLongitude = 360 / Math.pow(2, zoom);
+  // get actual viewport dimensions from window
+  // use innerWidth/innerHeight for full viewport coverage
+  const width = window.innerWidth;
+  const height = window.innerHeight;
 
-  // latitude degrees are roughly the same as longitude at the equator
-  // deck.gl uses a roughly square viewport in Web Mercator projection
-  const degreesLatitude = 180 / Math.pow(2, zoom);
+  // create WebMercatorViewport with actual screen dimensions
+  // this properly accounts for aspect ratio (typically 16:9 or wider)
+  const viewport = new WebMercatorViewport({
+    width,
+    height,
+    latitude,
+    longitude,
+    zoom,
+  });
 
-  // add buffer to include nearby cities
-  const bufferLat = degreesLatitude * BOUNDS_BUFFER_PERCENT;
-  const bufferLong = degreesLongitude * BOUNDS_BUFFER_PERCENT;
+  // get bounds of the actual visible viewport
+  // getBounds() returns [minLong, minLat, maxLong, maxLat]
+  const [minLong, minLat, maxLong, maxLat] = viewport.getBounds();
+
+  console.log('📍 calculateBounds:', {
+    zoom,
+    viewport: { width, height },
+    center: { lat: latitude, long: longitude },
+    bounds: { minLat, maxLat, minLong, maxLong },
+    coverage: {
+      latRange: (maxLat - minLat).toFixed(1),
+      longRange: (maxLong - minLong).toFixed(1),
+    },
+  });
+
+  // add buffer to include nearby cities outside visible area
+  const latRange = maxLat - minLat;
+  const longRange = maxLong - minLong;
+  const bufferLat = latRange * BOUNDS_BUFFER_PERCENT;
+  const bufferLong = longRange * BOUNDS_BUFFER_PERCENT;
 
   return {
-    minLat: Math.max(-90, latitude - degreesLatitude / 2 - bufferLat),
-    maxLat: Math.min(90, latitude + degreesLatitude / 2 + bufferLat),
-    minLong: Math.max(-180, longitude - degreesLongitude / 2 - bufferLong),
-    maxLong: Math.min(180, longitude + degreesLongitude / 2 + bufferLong),
+    minLat: Math.max(-90, minLat - bufferLat),
+    maxLat: Math.min(90, maxLat + bufferLat),
+    minLong: Math.max(-180, minLong - bufferLong),
+    maxLong: Math.min(180, maxLong + bufferLong),
   };
 }
 
@@ -79,13 +104,20 @@ export const useMapBounds = (
       // debounce bounds calculation and query trigger
       debounceTimerRef.current = setTimeout(() => {
         const useBounds = newViewState.zoom >= ZOOM_THRESHOLD;
+        console.log('🔍 Zoom check:', {
+          currentZoom: newViewState.zoom.toFixed(2),
+          threshold: ZOOM_THRESHOLD,
+          shouldUseBounds: useBounds,
+        });
         setShouldUseBounds(useBounds);
 
         if (useBounds) {
           const newBounds = calculateBounds(newViewState);
+          console.log('✅ Using bounds query with:', newBounds);
           setBounds(newBounds);
           onBoundsChange?.(newBounds, true);
         } else {
+          console.log('🌍 Using global query (zoom < threshold)');
           setBounds(null);
           onBoundsChange?.(null, false);
         }
