@@ -64,10 +64,10 @@ function useSunshineDataForCity({
 
   // Update cache when new data is fetched
   useEffect(() => {
-    if (sunshineResponse?.sunshineByCity && cacheKey) {
+    if (sunshineResponse?.sunshineByCity && cacheKey && !cachedData) {
       addToCache(cacheKey, null, sunshineResponse.sunshineByCity);
     }
-  }, [sunshineResponse, cacheKey, addToCache]);
+  }, [sunshineResponse, cacheKey, addToCache, cachedData]);
 
   // Mark cache as recently used when accessed
   useEffect(() => {

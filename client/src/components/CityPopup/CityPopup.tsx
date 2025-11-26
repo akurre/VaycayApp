@@ -101,11 +101,13 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
   const SunshineIcon = getSunshineHoursIcon(averageSunshine);
 
   // Create the modal title
-  let cityAndCountry = toTitleCase(city.city);
+  let cityAndCountry = city.city ? toTitleCase(city.city) : 'Unknown City';
   if (city.state) {
     cityAndCountry += `, ${toTitleCase(city.state)}`;
   }
-  cityAndCountry += `, ${city.country}`;
+  if (city.country) {
+    cityAndCountry += `, ${city.country}`;
+  }
 
   return (
     <div

@@ -61,16 +61,7 @@ export function useHomeLocationLayers(dataType: DataType, selectedMonth: number)
       // Log performance every 60 frames (~1 second at 60fps)
       frameCount++;
       if (frameCount >= 60) {
-        const timeSinceLastLog = currentTime - lastLogTime;
-        const avgFrameTime = timeSinceLastLog / frameCount;
-        if (avgFrameTime > 16.67) {
-          // Log if average frame time exceeds 60fps threshold
-          console.log(
-            `⚠️ home animation: avg frame time ${avgFrameTime.toFixed(2)}ms (${(1000 / avgFrameTime).toFixed(1)}fps)`
-          );
-        }
         frameCount = 0;
-        lastLogTime = currentTime;
       }
 
       frameId = requestAnimationFrame(animate);
@@ -87,16 +78,22 @@ export function useHomeLocationLayers(dataType: DataType, selectedMonth: number)
     }
 
     // Type guard: check if data type matches and has required fields
-    if (
-      dataType === DataType.Temperature &&
-      'avgTemperature' in homeCityData &&
-      homeCityData.avgTemperature !== null
-    ) {
-      return getColorForCity(homeCityData as ValidMarkerData, dataType, selectedMonth);
-    } else if (dataType === DataType.Sunshine && 'jan' in homeCityData) {
-      return getColorForCity(homeCityData as ValidSunshineMarkerData, dataType, selectedMonth);
+    // Important: verify the data has the correct shape for the current dataType
+    if (dataType === DataType.Temperature) {
+      if ('avgTemperature' in homeCityData && homeCityData.avgTemperature !== null) {
+        return getColorForCity(homeCityData as ValidMarkerData, dataType, selectedMonth);
+      }
+    } else if (dataType === DataType.Sunshine) {
+      if ('jan' in homeCityData) {
+        return getColorForCity(
+          homeCityData as ValidSunshineMarkerData,
+          dataType,
+          selectedMonth
+        );
+      }
     }
 
+    // Return default color if data doesn't match current view type
     return HOME_DEFAULT_MARKER_COLOR;
   }, [homeCityData, dataType, selectedMonth]);
 

@@ -85,8 +85,8 @@ export function PerformanceDashboard() {
       }
     };
 
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
+    globalThis.addEventListener('keydown', handleKeyPress);
+    return () => globalThis.removeEventListener('keydown', handleKeyPress);
   }, [isVisible, setIsVisible]);
 
   if (!isVisible) {
@@ -98,7 +98,7 @@ export function PerformanceDashboard() {
           bottom: 20,
           right: 20,
           zIndex: 10000,
-          opacity: 0.7,
+          opacity: 0.1,
         }}
         size="xs"
         variant="filled"
