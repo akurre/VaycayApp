@@ -7,6 +7,7 @@ import type { ColorCacheEntry } from '@/const';
 import { isWeatherData, isSunshineData } from '@/utils/typeGuards';
 import type { ValidSunshineMarkerData } from '@/utils/typeGuards';
 import { getColorForCity } from '../utils/map/getColorForCity';
+import { perfMonitor } from '@/utils/performance/performanceMonitor';
 
 interface ColorCacheResult<T> {
   cache: Map<string, ColorCacheEntry>;
@@ -24,6 +25,8 @@ export function useTemperatureColorCache(
 ): ColorCacheResult<ValidMarkerData> | null {
   return useMemo(() => {
     if (dataType !== DataType.Temperature) return null;
+
+    perfMonitor.start('temperature-color-cache');
 
     const cache = new Map<string, ColorCacheEntry>();
 
@@ -43,6 +46,8 @@ export function useTemperatureColorCache(
       cache.set(key, color);
     }
 
+    perfMonitor.end('temperature-color-cache');
+
     return { cache, validCities };
   }, [cities, dataType, maxCitiesToShow]);
 }
@@ -59,6 +64,8 @@ export function useSunshineColorCache(
 ): ColorCacheResult<ValidSunshineMarkerData> | null {
   return useMemo(() => {
     if (dataType !== DataType.Sunshine) return null;
+
+    perfMonitor.start('sunshine-color-cache');
 
     const cache = new Map<string, ColorCacheEntry>();
     const monthField = MONTH_FIELDS[selectedMonth];
@@ -78,6 +85,8 @@ export function useSunshineColorCache(
       const key = `${city.city}_${city.lat}_${city.long}`;
       cache.set(key, color);
     }
+
+    perfMonitor.end('sunshine-color-cache');
 
     return { cache, validCities };
   }, [cities, dataType, selectedMonth, maxCitiesToShow]);

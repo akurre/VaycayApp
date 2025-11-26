@@ -23,9 +23,9 @@ if (import.meta.env.DEV) {
     originalError.apply(console, args);
   };
 
-  // Suppress window.onerror for this specific error
-  const originalOnError = window.onerror;
-  window.onerror = (message, source, lineno, colno, error) => {
+  // Suppress globalThis.onerror for this specific error
+  const originalOnError = globalThis.onerror;
+  globalThis.onerror = (message, source, lineno, colno, error) => {
     const errorMsg = message?.toString() || error?.message || '';
     if (
       errorMsg.includes('maxTextureDimension2D') ||
@@ -40,7 +40,7 @@ if (import.meta.env.DEV) {
   };
 
   // Suppress unhandledrejection for this specific error
-  window.addEventListener('unhandledrejection', (event) => {
+  globalThis.addEventListener('unhandledrejection', (event) => {
     const errorMsg = event.reason?.message || event.reason?.toString() || '';
     if (
       errorMsg.includes('maxTextureDimension2D') ||

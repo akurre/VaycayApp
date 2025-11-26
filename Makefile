@@ -1,4 +1,4 @@
-.PHONY: help install db-setup dev clean db-start db-stop server-dev client-dev check-prereqs lint lint-fix type-check format format-check build prisma delete-package test
+.PHONY: help install db-setup dev clean db-start db-stop server-dev client-dev check-prereqs lint lint-fix type-check format format-check build prisma delete-package test perf
 
 # Colors for output
 GREEN := \033[0;32m
@@ -33,6 +33,7 @@ help:
 	@echo "$(YELLOW)Utilities:$(NC)"
 	@echo "  make prisma         - Generate Prisma client"
 	@echo "  make delete-package - Delete root node_modules and package-lock.json, then generate Prisma client"
+	@echo "  make perf           - Show performance baseline and monitoring guide"
 	@echo "  make clean          - Stop all services and clean up"
 	@echo "  make help           - Show this help message"
 	@echo ""
@@ -226,6 +227,51 @@ test: check-prereqs
 	@echo "$(GREEN)Running tests with coverage...$(NC)"
 	@cd client && npm run test:coverage
 	@echo "$(GREEN)✓ Tests complete$(NC)"
+
+# Show performance summary
+perf:
+	@echo "$(GREEN)╔════════════════════════════════════════════════════════════════╗$(NC)"
+	@echo "$(GREEN)║           Vaycay v2 - Performance Monitoring Guide            ║$(NC)"
+	@echo "$(GREEN)╚════════════════════════════════════════════════════════════════╝$(NC)"
+	@echo ""
+	@echo "$(YELLOW)📊 Performance Thresholds & Baselines:$(NC)"
+	@echo ""
+	@grep -A 30 "const thresholds" client/src/utils/performance/performanceMonitor.ts | \
+		grep -E "^\s*'[^']+': [0-9]+," | \
+		sed "s/.*'\([^']*\)': \([0-9]*\),.*/  ✓ \1: \2ms/" || \
+		echo "  ⚠ unable to read thresholds"
+	@echo ""
+	@echo "$(GREEN)🎯 Real-Time Monitoring (3 ways):$(NC)"
+	@echo ""
+	@echo "$(YELLOW)1. Visual Dashboard (Recommended):$(NC)"
+	@echo "   • make dev"
+	@echo "   • Click 'Show Perf' button (bottom-right)"
+	@echo "   • Or press Ctrl+Shift+P to toggle"
+	@echo "   • Live metrics update every second"
+	@echo "   • Color-coded: Green=Good, Red=Over Budget"
+	@echo ""
+	@echo "$(YELLOW)2. Browser Console (Dev Tools):$(NC)"
+	@echo "   • Open browser console (F12)"
+	@echo "   • Real-time logs show each operation"
+	@echo "   • ✓ = within budget, ⚠️ = over budget"
+	@echo ""
+	@echo "$(YELLOW)3. Console API (Advanced):$(NC)"
+	@echo "   • perfMonitor.logSummary()    - aggregated stats"
+	@echo "   • perfMonitor.getBaselines()  - export current metrics"
+	@echo "   • perfMonitor.getMetrics()    - raw data array"
+	@echo "   • perfMonitor.clear()         - reset all metrics"
+	@echo ""
+	@echo "$(GREEN)📈 What Gets Tracked:$(NC)"
+	@echo "   • Map initial load time"
+	@echo "   • Layer creation & rebuilds"
+	@echo "   • Color cache computation (temperature & sunshine)"
+	@echo "   • Heatmap data transformations"
+	@echo "   • requestAnimationFrame performance (home ping animation)"
+	@echo "   • All operations logged with ✓ or ⚠️ indicators"
+	@echo ""
+	@echo "$(GREEN)💡 Quick Start:$(NC)"
+	@echo "   make dev → Click 'Show Perf' button → Interact with map"
+	@echo ""
 
 # Clean up - stop all services
 clean:

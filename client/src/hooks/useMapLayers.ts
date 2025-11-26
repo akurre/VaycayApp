@@ -13,6 +13,7 @@ import { useSunshineStore } from '@/stores/useSunshineStore';
 import type { ValidSunshineMarkerData } from '@/utils/typeGuards';
 import { useHeatmapData } from './useHeatmapData';
 import { useTemperatureColorCache, useSunshineColorCache } from './useColorCache';
+import { perfMonitor } from '@/utils/performance/performanceMonitor';
 
 /**
  * hook to create and manage deck.gl map layers for both heatmap and marker views.
@@ -54,6 +55,8 @@ function useMapLayers({
   );
 
   return useMemo(() => {
+    perfMonitor.start('map-layer-creation');
+
     // pre-create all layers and toggle visibility instead of creating/destroying
     // this prevents expensive layer creation from blocking the segmentedcontrol transition
     const layers: Layer[] = [
@@ -161,6 +164,8 @@ function useMapLayers({
         })
       );
     }
+
+    perfMonitor.end('map-layer-creation');
 
     return layers;
   }, [

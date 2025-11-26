@@ -8,7 +8,7 @@ import useCitySearch from '@/hooks/useCitySearch';
 import type { SearchCitiesResult } from '@/types/userLocationType';
 import { TOGGLE_ICON_SIZE } from '@/const';
 
-function HomeLocationSelector() {
+const HomeLocationSelector = () => {
   const [opened, setOpened] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<SearchCitiesResult[]>([]);

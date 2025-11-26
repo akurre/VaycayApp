@@ -15,6 +15,7 @@ import { useWeatherStore } from '@/stores/useWeatherStore';
 import { useSunshineStore } from '@/stores/useSunshineStore';
 import { DataType } from '@/types/mapTypes';
 import type { ViewMode, WeatherDataUnion } from '@/types/mapTypes';
+import { perfMonitor } from '@/utils/performance/performanceMonitor';
 
 interface WorldMapProps {
   cities: WeatherDataUnion[];
@@ -64,6 +65,21 @@ const WorldMap = ({
     () => [...cityLayers, ...homeLocationLayers],
     [cityLayers, homeLocationLayers]
   );
+
+  // Track initial map load time
+  const hasTrackedInitialLoad = useRef(false);
+  useEffect(() => {
+    if (!hasTrackedInitialLoad.current && cityLayers.length > 0) {
+      hasTrackedInitialLoad.current = true;
+      perfMonitor.start('map-initial-load');
+      // Use requestAnimationFrame to measure when the map is actually rendered
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          perfMonitor.end('map-initial-load');
+        });
+      });
+    }
+  }, [cityLayers]);
 
   const { selectedCity, hoverInfo, handleHover, handleClick, handleClosePopup } =
     useMapInteractions(cities, viewMode, dataType, selectedMonth);

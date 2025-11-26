@@ -5,11 +5,13 @@ import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import { theme } from './theme';
 import MapPage from './pages/map';
+import { PerformanceDashboard } from './components/PerformanceDashboard/PerformanceDashboard';
 
 function App() {
   return (
     <MantineProvider theme={theme} defaultColorScheme="dark">
       <Notifications position="top-right" zIndex={1000} />
+      <PerformanceDashboard />
       <BrowserRouter
         future={{
           v7_startTransition: true,

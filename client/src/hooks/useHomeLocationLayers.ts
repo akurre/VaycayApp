@@ -18,6 +18,7 @@ import { useAppStore } from '@/stores/useAppStore';
 import type { ValidMarkerData } from '@/types/cityWeatherDataType';
 import type { ValidSunshineMarkerData } from '@/utils/typeGuards';
 import { getColorForCity } from '../utils/map/getColorForCity';
+import { perfMonitor } from '@/utils/performance/performanceMonitor';
 
 /**
  * Creates deck.gl layers for the home location with a sonar ping effect.
@@ -45,11 +46,33 @@ export function useHomeLocationLayers(dataType: DataType, selectedMonth: number)
 
     let frameId: number;
     const startTime = performance.now();
+    let frameCount = 0;
+    let lastLogTime = startTime;
 
     const animate = (currentTime: number) => {
+      perfMonitor.start('raf-home-animation');
+
       const elapsed = currentTime - startTime;
       // Normalized time 0-1 for one complete cycle
       setAnimationTime((elapsed % HOME_PULSE_DURATION) / HOME_PULSE_DURATION);
+
+      perfMonitor.end('raf-home-animation');
+
+      // Log performance every 60 frames (~1 second at 60fps)
+      frameCount++;
+      if (frameCount >= 60) {
+        const timeSinceLastLog = currentTime - lastLogTime;
+        const avgFrameTime = timeSinceLastLog / frameCount;
+        if (avgFrameTime > 16.67) {
+          // Log if average frame time exceeds 60fps threshold
+          console.log(
+            `⚠️ home animation: avg frame time ${avgFrameTime.toFixed(2)}ms (${(1000 / avgFrameTime).toFixed(1)}fps)`
+          );
+        }
+        frameCount = 0;
+        lastLogTime = currentTime;
+      }
+
       frameId = requestAnimationFrame(animate);
     };
 
