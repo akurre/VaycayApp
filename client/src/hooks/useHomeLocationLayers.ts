@@ -109,11 +109,12 @@ export function useHomeLocationLayers(dataType: DataType, selectedMonth: number)
   }, [homeLocation]);
 
   return useMemo(() => {
-    if (!homeLocation) return [];
-
     // Read current animation time from ref (updated at 60fps)
     // This useMemo only runs at 15fps due to layerUpdateTrigger dependency
     const animationTime = animationTimeRef.current;
+
+    // Early return after reading ref to avoid conditional hook behavior
+    if (!homeLocation) return [];
 
     // Sonar ping effect: linear expansion from small/opaque to large/transparent
     // animationTime goes from 0 to 1, creating a smooth outward pulse
