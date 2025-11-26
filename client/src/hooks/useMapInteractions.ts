@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import type { PickingInfo } from '@deck.gl/core';
 import { getTooltipContent } from '../utils/map/getTooltipContent';
 import type { DataType, ViewMode, WeatherDataUnion } from '@/types/mapTypes';
@@ -26,12 +26,27 @@ export const useMapInteractions = (
   const homeLocation = useAppStore((state) => state.homeLocation);
   const homeCityData = useAppStore((state) => state.homeCityData);
 
+  // Throttle hover updates to reduce re-renders from mouse movement
+  const pendingHoverRef = useRef<HoverInfo | null>(null);
+  const throttleTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Apply pending hover update every 16ms (~60fps max)
+  useEffect(() => {
+    return () => {
+      if (throttleTimerRef.current) {
+        clearTimeout(throttleTimerRef.current);
+      }
+    };
+  }, []);
+
   const handleHover = useCallback(
     (info: PickingInfo) => {
+      let newHoverInfo: HoverInfo | null = null;
+
       // Handle home location hover
       if (info.layer?.id === 'home-center') {
         if (homeCityData) {
-          setHoverInfo({
+          newHoverInfo = {
             x: info.x,
             y: info.y,
             content: getTooltipContent(
@@ -41,39 +56,43 @@ export const useMapInteractions = (
               dataType,
               selectedMonth
             )!,
-          });
+          };
         } else if (homeLocation) {
           // Fallback: show just the city name if no data available
-          setHoverInfo({
+          newHoverInfo = {
             x: info.x,
             y: info.y,
             content: `${homeLocation.cityName}, ${homeLocation.country}`,
-          });
+          };
         }
-        return;
-      }
-
-      if (viewMode === 'markers' && info.object) {
+      } else if (viewMode === 'markers' && info.object) {
         const city = info.object as WeatherDataUnion;
-        setHoverInfo({
+        newHoverInfo = {
           x: info.x,
           y: info.y,
           content: getTooltipContent([city], city.long!, city.lat!, dataType, selectedMonth)!,
-        });
+        };
       } else if (viewMode === 'heatmap' && info.coordinate) {
         const [longitude, latitude] = info.coordinate;
         const content = getTooltipContent(cities, longitude, latitude, dataType, selectedMonth);
         if (content) {
-          setHoverInfo({
+          newHoverInfo = {
             x: info.x,
             y: info.y,
             content,
-          });
-        } else {
-          setHoverInfo(null);
+          };
         }
-      } else {
-        setHoverInfo(null);
+      }
+
+      // Store pending hover info
+      pendingHoverRef.current = newHoverInfo;
+
+      // Throttle state updates - only update every 16ms (60fps max)
+      if (!throttleTimerRef.current) {
+        throttleTimerRef.current = setTimeout(() => {
+          setHoverInfo(pendingHoverRef.current);
+          throttleTimerRef.current = null;
+        }, 16);
       }
     },
     [cities, viewMode, dataType, selectedMonth, homeCityData, homeLocation]

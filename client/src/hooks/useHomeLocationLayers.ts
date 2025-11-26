@@ -45,36 +45,46 @@ export function useHomeLocationLayers(dataType: DataType, selectedMonth: number)
   const [layerUpdateTrigger, setLayerUpdateTrigger] = useState(0);
 
   // Animation loop - runs at 60fps but only triggers React re-renders at 15fps
-  useEffect(() => {
-    if (!homeLocation) return;
+  // TEMPORARILY DISABLED TO DEBUG INFINITE LOOP
+  // useEffect(() => {
+  //   console.log('🔄 useHomeLocationLayers: Animation effect running', { homeLocation });
+  //   if (!homeLocation) return;
 
-    let frameId: number;
-    const startTime = performance.now();
-    let frameCount = 0;
+  //   let frameId: number;
+  //   const startTime = performance.now();
+  //   let frameCount = 0;
+  //   let updateCount = 0;
 
-    const animate = (currentTime: number) => {
-      perfMonitor.start('raf-home-animation');
+  //   const animate = (currentTime: number) => {
+  //     perfMonitor.start('raf-home-animation');
 
-      const elapsed = currentTime - startTime;
-      // Update ref at 60fps - this doesn't trigger React re-renders
-      animationTimeRef.current = (elapsed % HOME_PULSE_DURATION) / HOME_PULSE_DURATION;
+  //     const elapsed = currentTime - startTime;
+  //     // Update ref at 60fps - this doesn't trigger React re-renders
+  //     animationTimeRef.current = (elapsed % HOME_PULSE_DURATION) / HOME_PULSE_DURATION;
 
-      // Trigger React re-render every 4 frames (60fps / 4 = 15fps)
-      // This reduces WorldMap re-renders by 75% while maintaining smooth animation
-      frameCount++;
-      if (frameCount >= 4) {
-        setLayerUpdateTrigger((prev) => prev + 1);
-        frameCount = 0;
-      }
+  //     // Trigger React re-render every 4 frames (60fps / 4 = 15fps)
+  //     // This reduces WorldMap re-renders by 75% while maintaining smooth animation
+  //     frameCount++;
+  //     if (frameCount >= 4) {
+  //       updateCount++;
+  //       if (updateCount % 30 === 0) {
+  //         console.log('🔄 setLayerUpdateTrigger called', updateCount, 'times');
+  //       }
+  //       setLayerUpdateTrigger((prev) => prev + 1);
+  //       frameCount = 0;
+  //     }
 
-      perfMonitor.end('raf-home-animation');
+  //     perfMonitor.end('raf-home-animation');
 
-      frameId = requestAnimationFrame(animate);
-    };
+  //     frameId = requestAnimationFrame(animate);
+  //   };
 
-    frameId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(frameId);
-  }, [homeLocation]);
+  //   frameId = requestAnimationFrame(animate);
+  //   return () => {
+  //     console.log('🛑 useHomeLocationLayers: Cleanup animation');
+  //     cancelAnimationFrame(frameId);
+  //   };
+  // }, [homeLocation]);
 
   // Memoize marker color separately - only recalculate when data changes, not on every frame
   const markerColor = useMemo(() => {

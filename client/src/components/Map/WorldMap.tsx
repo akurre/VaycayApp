@@ -7,12 +7,13 @@ import { useMapInteractions } from '../../hooks/useMapInteractions';
 import { useMapBounds } from '../../hooks/useMapBounds';
 import { useHomeCityData } from '../../hooks/useHomeCityData';
 import { useHomeLocationLayers } from '../../hooks/useHomeLocationLayers';
-import { INITIAL_VIEW_STATE, MAP_STYLES } from '@/const';
+import { INITIAL_VIEW_STATE, MAP_STYLES, ZOOM_AMPLIFICATION_FACTOR } from '@/const';
 import CityPopup from '../CityPopup/CityPopup';
 import MapTooltip from './MapTooltip';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useWeatherStore } from '@/stores/useWeatherStore';
 import { useSunshineStore } from '@/stores/useSunshineStore';
+import { useAppStore } from '@/stores/useAppStore';
 import { DataType } from '@/types/mapTypes';
 import type { ViewMode, WeatherDataUnion } from '@/types/mapTypes';
 import { perfMonitor } from '@/utils/performance/performanceMonitor';
@@ -37,6 +38,9 @@ const WorldMap = ({
   selectedDate,
   onBoundsChange,
 }: WorldMapProps) => {
+  // Track initial map load time
+  const hasTrackedInitialLoad = useRef(false);
+
   const colorScheme = useComputedColorScheme('dark');
   const isLoadingWeather = useWeatherStore((state) => state.isLoadingWeather);
   const isLoadingSunshine = useSunshineStore((state) => state.isLoadingSunshine);
@@ -66,8 +70,6 @@ const WorldMap = ({
     [cityLayers, homeLocationLayers]
   );
 
-  // Track initial map load time
-  const hasTrackedInitialLoad = useRef(false);
   useEffect(() => {
     if (!hasTrackedInitialLoad.current && cityLayers.length > 0) {
       hasTrackedInitialLoad.current = true;
@@ -83,6 +85,23 @@ const WorldMap = ({
 
   const { selectedCity, hoverInfo, handleHover, handleClick, handleClosePopup } =
     useMapInteractions(cities, viewMode, dataType, selectedMonth);
+
+  // Memoize controller config to prevent DeckGL from seeing it as a new object on every render
+  const controller = useMemo(
+    () => ({
+      dragPan: true,
+      dragRotate: false,
+      scrollZoom: { speed: ZOOM_AMPLIFICATION_FACTOR / 10 },
+      touchZoom: true,
+      touchRotate: false,
+      keyboard: true,
+      doubleClickZoom: true,
+    }),
+    [] // Empty deps - controller config never changes
+  );
+
+  // Memoize DeckGL style to prevent new object reference on every render
+  const deckGLStyle = useMemo(() => ({ pointerEvents: 'auto' as const }), []);
 
   // Keep track of the last selected city for exit animation
   const lastSelectedCityRef = useRef<WeatherDataUnion | null>(null);
@@ -101,20 +120,12 @@ const WorldMap = ({
       <DeckGL
         viewState={viewState}
         onViewStateChange={onViewStateChange}
-        controller={{
-          dragPan: true,
-          dragRotate: false,
-          scrollZoom: true,
-          touchZoom: true,
-          touchRotate: false,
-          keyboard: true,
-          doubleClickZoom: true,
-        }}
+        controller={controller}
         layers={layers}
         onHover={handleHover}
         onClick={handleClick}
         getTooltip={() => null}
-        style={{ pointerEvents: 'auto' }}
+        style={deckGLStyle}
       >
         <Map mapStyle={MAP_STYLES[colorScheme]} attributionControl={false} />
       </DeckGL>

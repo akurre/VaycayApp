@@ -4,7 +4,6 @@ import {
   ZOOM_THRESHOLD,
   DEBOUNCE_DELAY,
   BOUNDS_BUFFER_PERCENT,
-  ZOOM_AMPLIFICATION_FACTOR,
 } from '@/const';
 
 /**
@@ -59,25 +58,22 @@ export const useMapBounds = (
   const [bounds, setBounds] = useState<MapBounds | null>(null);
   const [shouldUseBounds, setShouldUseBounds] = useState(false);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const previousZoomRef = useRef<number>(initialViewState.zoom);
 
   const onViewStateChange = useCallback(
     ({ viewState: newViewState }: { viewState: MapViewState }) => {
-      // amplify zoom changes for more sensitive pinch/scroll zoom
-      const zoomDelta = newViewState.zoom - previousZoomRef.current;
-      const amplifiedZoom = previousZoomRef.current + zoomDelta * ZOOM_AMPLIFICATION_FACTOR;
-
-      // clamp zoom to valid range to prevent viewport calculation errors
-      // deck.gl typically supports zoom levels from 0 to ~20-24
-      const clampedZoom = Math.max(0, Math.min(24, amplifiedZoom));
-
-      const amplifiedViewState = {
-        ...newViewState,
-        zoom: clampedZoom,
-      };
-
-      previousZoomRef.current = clampedZoom;
-      setViewState(amplifiedViewState);
+      // Only update state if values actually changed (prevent unnecessary re-renders)
+      setViewState((prev) => {
+        if (
+          prev.zoom === newViewState.zoom &&
+          prev.latitude === newViewState.latitude &&
+          prev.longitude === newViewState.longitude &&
+          prev.bearing === newViewState.bearing &&
+          prev.pitch === newViewState.pitch
+        ) {
+          return prev; // No change, return previous state to prevent re-render
+        }
+        return newViewState;
+      });
 
       // clear existing debounce timer
       if (debounceTimerRef.current) {
@@ -86,11 +82,11 @@ export const useMapBounds = (
 
       // debounce bounds calculation and query trigger
       debounceTimerRef.current = setTimeout(() => {
-        const useBounds = amplifiedViewState.zoom >= ZOOM_THRESHOLD;
+        const useBounds = newViewState.zoom >= ZOOM_THRESHOLD;
         setShouldUseBounds(useBounds);
 
         if (useBounds) {
-          const newBounds = calculateBounds(amplifiedViewState);
+          const newBounds = calculateBounds(newViewState);
           setBounds(newBounds);
           onBoundsChange?.(newBounds, true);
         } else {
