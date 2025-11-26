@@ -1,13 +1,13 @@
 {
-  "completed": 200,
+  "completed": 41481,
   "total": 41481,
-  "worldcities_matched": 83,
-  "worldcities_small": 70,
+  "worldcities_matched": 13088,
+  "worldcities_small": 16382,
   "worldcities_distant": 0,
-  "nominatim_fallback": 16,
-  "geographic_region": 31,
-  "last_updated": "2025-11-22T15:46:02.287264",
-  "current_batch": 2,
+  "nominatim_fallback": 4609,
+  "geographic_region": 7402,
+  "last_updated": "2025-11-23T10:01:56.980015",
+  "current_batch": 415,
   "matching_version": "v4_population_radius_averaged",
-  "estimated_time_remaining_minutes": 1032.025
+  "estimated_time_remaining_minutes": 0
 }

@@ -3,7 +3,7 @@
  *
  * this script imports historical weather data from batch csv files into the postgres database.
  * it processes data from multiple batch directories (batch1, batch2, etc.) located in
- * dataAndUtils/worldData/, where each batch contains a csv file with weather records.
+ * dataAndUtils/worldData_v2/, where each batch contains a csv file with weather records.
  *
  * the import process runs in 4 phases:
  *
@@ -42,11 +42,11 @@
  * npm run import-csv-data
  *
  * the script expects batch directories to be located at:
- * ../dataAndUtils/worldData/batch1/, batch2/, etc.
+ * ../dataAndUtils/worldData_v2/batch1/, batch2/, etc.
  */
 
 import { PrismaClient } from '@prisma/client';
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 
 const prisma = new PrismaClient();
@@ -101,6 +101,11 @@ interface CityKey {
   country: string;
   lat: number;
   long: number;
+  coordSum?: {
+    lat: number;
+    long: number;
+    count: number;
+  };
 }
 
 // helper to parse csv line respecting quoted fields
@@ -135,9 +140,25 @@ function parseFloat(value: string | undefined): number | null {
 
 // helper to create city key for deduplication
 function createCityKey(row: CSVRow): string {
+  // CRITICAL: For cities from worldcities.csv (major cities with worldcities_id),
+  // use ONLY name|country|state to group ALL weather stations together.
+  // This ensures Rome's 366 records with varying coordinates become ONE city.
+  //
+  // For cities NOT in worldcities (small towns), add rounded coordinates
+  // to distinguish between different places with the same name (e.g., multiple "Jackson"s).
+  const state = row.state || '';
+  const hasWorldcitiesId =
+    row.worldcities_id && row.worldcities_id !== '' && row.worldcities_id !== 'null';
+
+  if (hasWorldcitiesId) {
+    // Major city from worldcities - group all weather data regardless of coordinates
+    return `${row.city}|${row.country}|${state}`;
+  }
+
+  // Small city not in worldcities - add coordinates to distinguish
   const lat = parseFloat(row.lat) || 0;
   const long = parseFloat(row.long) || 0;
-  return `${row.city}|${row.country}|${lat.toFixed(6)}|${long.toFixed(6)}`;
+  return `${row.city}|${row.country}|${state}|${lat.toFixed(1)}|${long.toFixed(1)}`;
 }
 
 async function importCSVData(batchDir: string) {
@@ -192,23 +213,37 @@ async function importCSVData(batchDir: string) {
             row[header as keyof CSVRow] = values[index];
           });
 
-          // collect unique cities
+          // collect unique cities and accumulate coordinates for averaging
           const cityKey = createCityKey(row);
+          const lat = parseFloat(row.lat) || 0;
+          const long = parseFloat(row.long) || 0;
+
           if (!cityMap.has(cityKey)) {
             cityMap.set(cityKey, {
               name: row.city,
               country: row.country,
-              lat: parseFloat(row.lat) || 0,
-              long: parseFloat(row.long) || 0,
+              lat,
+              long,
               data: row,
+              coordSum: { lat, long, count: 1 }, // Track for averaging
             });
+          } else {
+            // Accumulate coordinates for averaging
+            const existing = cityMap.get(cityKey)!;
+            if (existing.coordSum) {
+              existing.coordSum.lat += lat;
+              existing.coordSum.long += long;
+              existing.coordSum.count++;
+            }
           }
 
           // collect unique stations (will link to cities later)
-          const stationKey = `${row.name}|${cityKey}`;
+          // Generate station name if not present in CSV (v2 data doesn't have station names)
+          const stationName = row.name || `${row.city} Weather Station`;
+          const stationKey = `${stationName}|${cityKey}`;
           if (!stationMap.has(stationKey)) {
             stationMap.set(stationKey, {
-              name: row.name,
+              name: stationName,
               cityKey,
             });
           }
@@ -228,6 +263,41 @@ async function importCSVData(batchDir: string) {
     console.log(`  • Unique cities: ${cityMap.size.toLocaleString()}`);
     console.log(`  • Unique stations: ${stationMap.size.toLocaleString()}`);
 
+    // Write diagnostic file for major cities
+    const diagnosticCities = [
+      'Rome|Italy|Lazio',
+      'London|United Kingdom|England',
+      'Tokyo|Japan|',
+      'Paris|France|Île-de-France',
+    ];
+    const diagnosticData: any = {
+      timestamp: new Date().toISOString(),
+      phase: 'collection',
+      cities: {},
+    };
+
+    for (const cityKey of diagnosticCities) {
+      if (cityMap.has(cityKey)) {
+        const cityInfo = cityMap.get(cityKey)!;
+        diagnosticData.cities[cityKey] = {
+          coordSum: cityInfo.coordSum,
+          avgLat: cityInfo.coordSum
+            ? cityInfo.coordSum.lat / cityInfo.coordSum.count
+            : cityInfo.lat,
+          avgLong: cityInfo.coordSum
+            ? cityInfo.coordSum.long / cityInfo.coordSum.count
+            : cityInfo.long,
+          worldcitiesId: cityInfo.data.worldcities_id,
+        };
+      }
+    }
+
+    writeFileSync(
+      join(process.cwd(), 'import-diagnostic-collection.json'),
+      JSON.stringify(diagnosticData, null, 2)
+    );
+    console.log(`  📝 Wrote diagnostic data to import-diagnostic-collection.json`);
+
     // phase 2: insert cities
     console.log('\n📊 Phase 2: Inserting cities...\n');
 
@@ -238,51 +308,95 @@ async function importCSVData(batchDir: string) {
     for (let i = 0; i < cityEntries.length; i += cityBatchSize) {
       const batch = cityEntries.slice(i, i + cityBatchSize);
 
-      const citiesToInsert = batch.map(([, city]) => ({
-        name: city.name,
-        country: city.country,
-        state: city.data.state || null,
-        suburb: city.data.suburb || null,
-        lat: city.lat,
-        long: city.long,
-        cityAscii: city.data.city_ascii || null,
-        iso2: city.data.iso2 || null,
-        iso3: city.data.iso3 || null,
-        capital: city.data.capital || null,
-        worldcitiesId: parseFloat(city.data.worldcities_id),
-        population: parseFloat(city.data.population),
-        dataSource: city.data.data_source || null,
-      }));
+      // insert cities and get their ids (upsert to handle existing cities)
+      for (const [cityKey, cityInfo] of batch) {
+        try {
+          // Use averaged coordinates if we accumulated multiple coordinate pairs
+          const avgLat = cityInfo.coordSum
+            ? cityInfo.coordSum.lat / cityInfo.coordSum.count
+            : cityInfo.lat;
+          const avgLong = cityInfo.coordSum
+            ? cityInfo.coordSum.long / cityInfo.coordSum.count
+            : cityInfo.long;
 
-      try {
-        // insert cities and get their ids
-        for (const cityData of citiesToInsert) {
-          const city = await prisma.city.create({
-            data: cityData,
+          const cityData = {
+            name: cityInfo.name,
+            country: cityInfo.country,
+            state: cityInfo.data.state || null,
+            suburb: cityInfo.data.suburb || null,
+            lat: avgLat,
+            long: avgLong,
+            cityAscii: cityInfo.data.city_ascii || null,
+            iso2: cityInfo.data.iso2 || null,
+            iso3: cityInfo.data.iso3 || null,
+            capital: cityInfo.data.capital || null,
+            worldcitiesId: parseFloat(cityInfo.data.worldcities_id),
+            population: parseFloat(cityInfo.data.population),
+            dataSource: cityInfo.data.data_source || null,
+          };
+
+          // Standard upsert based on unique constraint (name, country, lat, long)
+          // This handles both new cities and updates to existing ones
+          // The reassign-cities-to-major-cities script will later:
+          // 1. Merge duplicates (multiple entries with same name/country)
+          // 2. Update coordinates to match worldcities.csv official values
+          // 3. Update populations from worldcities.csv
+          const city = await prisma.city.upsert({
+            where: {
+              name_country_lat_long: {
+                name: cityInfo.name,
+                country: cityInfo.country,
+                lat: avgLat,
+                long: avgLong,
+              },
+            },
+            create: cityData,
+            update: cityData,
           });
 
-          const key = createCityKey({
-            city: city.name,
-            country: city.country,
-            lat: city.lat.toString(),
-            long: city.long.toString(),
-          } as CSVRow);
-
-          cityIdMap.set(key, city.id);
+          cityIdMap.set(cityKey, city.id);
           stats.citiesCreated++;
+        } catch (error) {
+          console.error(
+            `  ✗ Error inserting city ${cityInfo.name}, ${cityInfo.country}:`,
+            error instanceof Error ? error.message : error
+          );
+          stats.errors++;
         }
-
-        const progress = ((i + batch.length) / cityEntries.length) * 100;
-        console.log(
-          `  ✓ Inserted ${stats.citiesCreated.toLocaleString()} cities (${progress.toFixed(1)}%)`
-        );
-      } catch (error) {
-        console.error(`  ✗ Error inserting city batch:`, error);
-        stats.errors += batch.length;
       }
+
+      const progress = ((i + batch.length) / cityEntries.length) * 100;
+      console.log(
+        `  ✓ Processed ${stats.citiesCreated.toLocaleString()} cities (${progress.toFixed(1)}%)`
+      );
     }
 
     console.log(`\n✅ Cities inserted: ${stats.citiesCreated.toLocaleString()}`);
+
+    // Write diagnostic file after city insertion
+    const cityDiagnostic: any = {
+      timestamp: new Date().toISOString(),
+      phase: 'city_insertion',
+      cities: {},
+      cityIdMap: Object.fromEntries(
+        Array.from(cityIdMap.entries()).filter(([key]) => diagnosticCities.includes(key))
+      ),
+    };
+
+    for (const cityKey of diagnosticCities) {
+      const cityId = cityIdMap.get(cityKey);
+      if (cityId) {
+        cityDiagnostic.cities[cityKey] = { cityId, found: true };
+      } else {
+        cityDiagnostic.cities[cityKey] = { cityId: null, found: false };
+      }
+    }
+
+    writeFileSync(
+      join(process.cwd(), 'import-diagnostic-cities.json'),
+      JSON.stringify(cityDiagnostic, null, 2)
+    );
+    console.log(`  📝 Wrote city diagnostic data to import-diagnostic-cities.json`);
 
     // phase 3: insert weather stations
     console.log('\n📊 Phase 3: Inserting weather stations...\n');
@@ -303,11 +417,18 @@ async function importCSVData(batchDir: string) {
             continue;
           }
 
-          const weatherStation = await prisma.weatherStation.create({
-            data: {
+          const weatherStation = await prisma.weatherStation.upsert({
+            where: {
+              name_cityId: {
+                name: station.name,
+                cityId,
+              },
+            },
+            create: {
               name: station.name,
               cityId,
             },
+            update: {}, // Don't update existing stations
           });
 
           stationIdMap.set(stationKey, weatherStation.id);
@@ -375,7 +496,9 @@ async function importCSVData(batchDir: string) {
           });
 
           const cityKey = createCityKey(row);
-          const stationKey = `${row.name}|${cityKey}`;
+          // Use same station name logic as collection phase
+          const stationName = row.name || `${row.city} Weather Station`;
+          const stationKey = `${stationName}|${cityKey}`;
 
           const cityId = cityIdMap.get(cityKey);
           const stationId = stationIdMap.get(stationKey);
@@ -446,6 +569,39 @@ async function importCSVData(batchDir: string) {
       }
     }
 
+    // Write final diagnostic with sample record counts for major cities
+    console.log('\n📝 Writing final diagnostics...');
+    const finalDiagnostic: any = {
+      timestamp: new Date().toISOString(),
+      phase: 'final',
+      stats,
+      majorCities: {},
+    };
+
+    for (const cityKey of diagnosticCities) {
+      const cityId = cityIdMap.get(cityKey);
+      if (cityId) {
+        const recordCount = await prisma.weatherRecord.count({
+          where: { cityId },
+        });
+        finalDiagnostic.majorCities[cityKey] = {
+          cityId,
+          recordCount,
+        };
+      } else {
+        finalDiagnostic.majorCities[cityKey] = {
+          cityId: null,
+          recordCount: 0,
+          error: 'City not found in cityIdMap',
+        };
+      }
+    }
+
+    writeFileSync(
+      join(process.cwd(), 'import-diagnostic-final.json'),
+      JSON.stringify(finalDiagnostic, null, 2)
+    );
+
     // final statistics
     console.log(`\n${'='.repeat(80)}`);
     console.log('📊 Import Complete!');
@@ -457,6 +613,10 @@ async function importCSVData(batchDir: string) {
     console.log(`⏭️  Skipped:               ${stats.skipped.toLocaleString()}`);
     console.log(`❌ Errors:                ${stats.errors.toLocaleString()}`);
     console.log('='.repeat(80));
+    console.log(`\n📝 Diagnostic files written:`);
+    console.log(`   • import-diagnostic-collection.json`);
+    console.log(`   • import-diagnostic-cities.json`);
+    console.log(`   • import-diagnostic-final.json`);
 
     // verify import
     const cityCount = await prisma.city.count();
@@ -477,7 +637,7 @@ async function importCSVData(batchDir: string) {
 
 // main execution
 async function main() {
-  const batchDir = resolve(process.cwd(), '..', 'dataAndUtils', 'worldData');
+  const batchDir = resolve(process.cwd(), '..', 'dataAndUtils', 'worldData_v2');
 
   console.log(`📍 Batch directory: ${batchDir}\n`);
 

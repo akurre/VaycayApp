@@ -24,10 +24,10 @@ export const GET_WEATHER_BY_DATE = gql`
 export const GET_WEATHER_BY_DATE_AND_BOUNDS = gql`
   query GetWeatherByDateAndBounds(
     $monthDay: String!
-    $minLat: Int!
-    $maxLat: Int!
-    $minLong: Int!
-    $maxLong: Int!
+    $minLat: Float!
+    $maxLat: Float!
+    $minLong: Float!
+    $maxLong: Float!
   ) {
     weatherByDateAndBounds(
       monthDay: $monthDay
@@ -57,10 +57,10 @@ export const GET_WEATHER_BY_DATE_AND_BOUNDS = gql`
 export const GET_SUNSHINE_BY_MONTH_AND_BOUNDS = gql`
   query GetSunshineByMonthAndBounds(
     $month: Int!
-    $minLat: Int!
-    $maxLat: Int!
-    $minLong: Int!
-    $maxLong: Int!
+    $minLat: Float!
+    $maxLat: Float!
+    $minLong: Float!
+    $maxLong: Float!
   ) {
     sunshineByMonthAndBounds(
       month: $month
@@ -218,6 +218,29 @@ export const GET_SUNSHINE_BY_MONTH = gql`
       nov
       dec
       stationName
+    }
+  }
+`;
+
+// Query to get weekly weather data for a specific city
+export const GET_WEEKLY_WEATHER_BY_CITY = gql`
+  query GetWeeklyWeatherByCity($city: String!, $lat: Float, $long: Float) {
+    weeklyWeatherByCity(city: $city, lat: $lat, long: $long) {
+      city
+      country
+      state
+      lat
+      long
+      weeklyData {
+        week
+        avgTemp
+        maxTemp
+        minTemp
+        totalPrecip
+        avgPrecip
+        daysWithRain
+        daysWithData
+      }
     }
   }
 `;

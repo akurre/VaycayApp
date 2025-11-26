@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { Alert, Loader } from '@mantine/core';
+import { Alert, Badge, Loader } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
 import type { SunshineData } from '@/types/sunshineDataType';
 import SunshineGraph from './SunshineGraph';
@@ -31,9 +31,13 @@ const SunshineDataSection = ({
         </Alert>
       )}
 
-      {displaySunshineData && (
+      {displaySunshineData ? (
         <div className="h-full p-3">
           <SunshineGraph sunshineData={displaySunshineData} selectedMonth={selectedMonth} />
+        </div>
+      ) : (
+        <div className="h-full items-center flex justify-center">
+          <Badge size="xl">No sunshine data available</Badge>
         </div>
       )}
     </>

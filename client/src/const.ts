@@ -37,7 +37,7 @@ export const MILES_LOCALES = ['en-US', 'en-GB', 'en-LR', 'en-MM'];
 // zoom-based loading thresholds
 export const ZOOM_THRESHOLD = 2; // switch to bounds query at zoom level 2+ (continental view)
 export const DEBOUNCE_DELAY = 200; // ms - debounce delay for zoom/pan events (reduced for more responsive feel)
-export const BOUNDS_BUFFER_PERCENT = 0.8; // add 80% buffer to calculated bounds to include edge countries
+export const BOUNDS_BUFFER_PERCENT = 0.5; // add 50% buffer to viewport bounds to include nearby cities outside visible area
 export const ZOOM_AMPLIFICATION_FACTOR = 3; // amplify zoom changes for more sensitive pinch/scroll zoom
 
 // initial map view state
@@ -58,23 +58,57 @@ export const MAP_STYLES = {
   dark: '/basemaps/gl/dark-matter-gl-style/style.json',
 } as const;
 
-// home icon marker constants
-export const HOME_ICON_SIZE = 32;
+// ============================================================================
+// HOME LOCATION MARKER CONSTANTS
+// ============================================================================
 
-// pre-computed svg data url to avoid runtime encoding overhead
-// minified svg for better performance
-const HOME_ICON_SVG =
-  '<svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><g transform="translate(24,24)"><path d="M-12,-8 L0,-16 L12,-8 L12,12 L-12,12 Z" fill="#FFD700" stroke="#000" stroke-width="1.5"/><rect x="-4" y="4" width="8" height="8" fill="#8B4513" stroke="#000" stroke-width="1"/><path d="M-12,-8 L0,-16 L12,-8" fill="none" stroke="#000" stroke-width="1.5"/></g></svg>';
+/**
+ * Duration of one complete pulse cycle in milliseconds
+ * Increase for slower animation, decrease for faster
+ */
+export const HOME_PULSE_DURATION = 2000;
 
-export const HOME_ICON_DATA_URL = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(HOME_ICON_SVG)}`;
+/**
+ * Ring radius range (in pixels)
+ * The ring will pulse between MIN and MAX values
+ */
+export const HOME_RING_RADIUS_MIN = 4;
+export const HOME_RING_RADIUS_MAX = 12;
 
-// cached icon object to avoid recreating on every layer render
-export const HOME_ICON_OBJECT = {
-  url: HOME_ICON_DATA_URL,
-  width: 48,
-  height: 48,
-  anchorY: 48,
-} as const;
+/**
+ * Ring opacity range (0-255)
+ * The ring will pulse between MIN and MAX opacity
+ */
+export const HOME_RING_OPACITY_MIN = 255;
+export const HOME_RING_OPACITY_MAX = 0;
+
+/**
+ * Ring color in RGB
+ * Default: Gold [255, 215, 0]
+ */
+export const HOME_RING_COLOR: [number, number, number] = [255, 215, 0];
+
+/**
+ * Center dot radius range (in pixels)
+ */
+export const HOME_CENTER_RADIUS_MIN = 5;
+export const HOME_CENTER_RADIUS_MAX = 8;
+
+/**
+ * Default marker color when no data is available (RGBA)
+ * Default: White
+ */
+export const HOME_DEFAULT_MARKER_COLOR: [number, number, number, number] = [255, 255, 255, 255];
+
+/**
+ * Base radius for all home location layers in map units
+ */
+export const HOME_LOCATION_BASE_RADIUS = 50000;
+
+/**
+ * Ring stroke width in pixels
+ */
+export const HOME_RING_STROKE_WIDTH = 2;
 
 // ============================================================================
 // TEMPERATURE & COLOR CONSTANTS

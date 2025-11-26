@@ -149,7 +149,58 @@ describe('useWeatherStore', () => {
 
 ## Mock Data
 
-When creating mock data, use the complete `WeatherData` type:
+### Using Mock Data Factories
+
+The `test-utils` file provides convenient factory functions for creating mock data. These factories include all required fields with sensible defaults and allow you to override specific fields:
+
+```typescript
+import { 
+  createMockWeatherData, 
+  createMockSunshineData,
+  createMockWeeklyWeather,
+  createMockWeekDataPoint
+} from '@/test-utils';
+
+// Create mock weather data with defaults
+const mockCity = createMockWeatherData();
+
+// Override specific fields
+const customCity = createMockWeatherData({
+  city: 'Milan',
+  country: 'Italy',
+  avgTemperature: 25.5,
+  population: 1000000,
+});
+
+// Create mock sunshine data
+const mockSunshine = createMockSunshineData({
+  city: 'Barcelona',
+  jan: 180,
+  jul: 300,
+});
+
+// Create mock weekly weather data
+const mockWeekly = createMockWeeklyWeather({
+  city: 'Paris',
+  weeklyData: [
+    createMockWeekDataPoint({ week: 1, avgTemp: 20 }),
+    createMockWeekDataPoint({ week: 2, avgTemp: 22 }),
+  ],
+});
+```
+
+### Available Factory Functions
+
+- **`createMockWeatherData(overrides?)`** - Creates a complete `WeatherData` object
+- **`createMockSunshineData(overrides?)`** - Creates a complete `SunshineData` object
+- **`createMockWeeklyWeather(overrides?)`** - Creates a complete `CityWeeklyWeather` object
+- **`createMockWeekDataPoint(overrides?)`** - Creates a complete `WeekDataPoint` object
+
+All factories accept an optional `overrides` parameter to customize specific fields while keeping sensible defaults for the rest.
+
+### Manual Mock Data (Legacy)
+
+If you need to create mock data manually, use the complete type:
 
 ```typescript
 const mockCity: WeatherData = {
@@ -157,7 +208,7 @@ const mockCity: WeatherData = {
   country: 'Italy',
   state: null,
   suburb: null,
-  date: '0615',
+  date: '2024-01-15',
   lat: 45.4642,
   long: 9.19,
   population: 1000000,
@@ -170,6 +221,8 @@ const mockCity: WeatherData = {
   submitterId: 'test-1',
 };
 ```
+
+**Note:** Using factory functions is preferred as they ensure all required fields are present and reduce boilerplate.
 
 ## CI/CD
 

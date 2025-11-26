@@ -17,3 +17,10 @@ export enum DataType {
 }
 
 export type WeatherDataUnion = WeatherData | SunshineData;
+
+export interface CityPopupProps {
+  city: WeatherDataUnion | null;
+  onClose: () => void;
+  selectedMonth: number;
+  selectedDate?: string;
+}

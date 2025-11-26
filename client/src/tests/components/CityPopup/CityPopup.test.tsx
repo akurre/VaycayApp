@@ -14,8 +14,14 @@ vi.mock('@/api/dates/useSunshineDataForCity', () => ({
   default: vi.fn(),
 }));
 
+// mock the weekly weather data hook
+vi.mock('@/api/dates/useWeeklyWeatherForCity', () => ({
+  default: vi.fn(),
+}));
+
 import useWeatherDataForCity from '@/api/dates/useWeatherDataForCity';
 import useSunshineDataForCity from '@/api/dates/useSunshineDataForCity';
+import useWeeklyWeatherForCity from '@/api/dates/useWeeklyWeatherForCity';
 
 describe('CityPopup', () => {
   const mockOnClose = vi.fn();
@@ -75,6 +81,11 @@ describe('CityPopup', () => {
       sunshineData: null,
       sunshineLoading: false,
       sunshineError: false,
+    });
+    vi.mocked(useWeeklyWeatherForCity).mockReturnValue({
+      weeklyWeatherData: null,
+      loading: false,
+      error: false,
     });
   });
 

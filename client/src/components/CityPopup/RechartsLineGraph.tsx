@@ -1,4 +1,4 @@
-import { useMemo, memo, useRef, useEffect, type ReactElement } from 'react';
+import { memo, useRef, useEffect, type ReactElement } from 'react';
 import {
   LineChart,
   Line,
@@ -10,6 +10,7 @@ import {
   ReferenceLine,
   Legend,
 } from 'recharts';
+
 import { useChartColors } from '@/hooks/useChartColors';
 
 // Generic data point type - charts can add extra fields
@@ -101,13 +102,10 @@ function RechartsLineGraphComponent<T extends ChartDataPoint>({
     previousCityRef.current = cityKey;
   }, [cityKey]);
 
-  // Memoize chart data to prevent unnecessary re-renders
-  const chartData = useMemo(() => data, [data]);
-
   return (
     <div className="w-full h-full">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={chartData} margin={margin}>
+        <LineChart data={data} margin={margin}>
           <CartesianGrid strokeDasharray="3 3" stroke={chartColors.gridColor} />
 
           {/* X Axis */}

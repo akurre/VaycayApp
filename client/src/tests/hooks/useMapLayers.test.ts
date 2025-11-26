@@ -4,7 +4,6 @@ import useMapLayers from '@/hooks/useMapLayers';
 import type { WeatherData } from '@/types/cityWeatherDataType';
 import type { SunshineData } from '@/types/sunshineDataType';
 import { DataType, ViewMode } from '@/types/mapTypes';
-import type { HomeLocation } from '@/types/userLocationType';
 import { TEMPERATURE_LOADING_COLOR, SUNSHINE_LOADING_COLOR } from '@/const';
 
 // Define a type for layer props with getFillColor function
@@ -28,6 +27,15 @@ vi.mock('@/stores/useSunshineStore', () => ({
     selector({
       maxCitiesToShow: 300,
       isLoadingSunshine: false,
+    })
+  ),
+}));
+
+vi.mock('@/stores/useAppStore', () => ({
+  useAppStore: vi.fn().mockImplementation((selector) =>
+    selector({
+      homeLocation: null,
+      homeCityData: null,
     })
   ),
 }));
@@ -78,18 +86,6 @@ describe('useMapLayers', () => {
     },
   ];
 
-  const mockHomeLocation: HomeLocation = {
-    cityId: 1,
-    cityName: 'San Francisco',
-    country: 'USA',
-    state: 'CA',
-    coordinates: {
-      lat: 37.7749,
-      long: -122.4194,
-    },
-    source: 'manual',
-  };
-
   it('returns heatmap and marker layers for temperature data', () => {
     const { result } = renderHook(() =>
       useMapLayers({
@@ -98,7 +94,6 @@ describe('useMapLayers', () => {
         dataType: DataType.Temperature,
         selectedMonth: 1,
         isLoadingWeather: false,
-        homeLocation: null,
       })
     );
 
@@ -115,7 +110,6 @@ describe('useMapLayers', () => {
         dataType: DataType.Sunshine,
         selectedMonth: 1,
         isLoadingWeather: false,
-        homeLocation: null,
       })
     );
 
@@ -124,7 +118,7 @@ describe('useMapLayers', () => {
     expect(result.current[1].id).toBe('sunshine-markers');
   });
 
-  it('adds home icon layer when homeLocation is provided', () => {
+  it('returns heatmap and marker layers without home location', () => {
     const { result } = renderHook(() =>
       useMapLayers({
         cities: mockWeatherCities,
@@ -132,12 +126,13 @@ describe('useMapLayers', () => {
         dataType: DataType.Temperature,
         selectedMonth: 1,
         isLoadingWeather: false,
-        homeLocation: mockHomeLocation,
       })
     );
 
-    expect(result.current).toHaveLength(3);
-    expect(result.current[2].id).toBe('home-icon');
+    // Should have 2 layers: heatmap + markers (no home location since store is mocked with null)
+    expect(result.current).toHaveLength(2);
+    expect(result.current[0].id).toBe('data-heatmap');
+    expect(result.current[1].id).toBe('temperature-markers');
   });
 
   it('does not add home icon layer when homeLocation is null', () => {
@@ -148,7 +143,6 @@ describe('useMapLayers', () => {
         dataType: DataType.Temperature,
         selectedMonth: 1,
         isLoadingWeather: false,
-        homeLocation: null,
       })
     );
 
@@ -164,7 +158,6 @@ describe('useMapLayers', () => {
         dataType: DataType.Temperature,
         selectedMonth: 1,
         isLoadingWeather: false,
-        homeLocation: null,
       })
     );
 
@@ -180,7 +173,6 @@ describe('useMapLayers', () => {
         dataType: DataType.Temperature,
         selectedMonth: 1,
         isLoadingWeather: false,
-        homeLocation: null,
       })
     );
 
@@ -196,7 +188,6 @@ describe('useMapLayers', () => {
         dataType: DataType.Sunshine,
         selectedMonth: 1,
         isLoadingWeather: false,
-        homeLocation: null,
       })
     );
 
@@ -204,7 +195,7 @@ describe('useMapLayers', () => {
     expect(markerLayer?.props.visible).toBe(true);
   });
 
-  it('home icon layer is always visible regardless of view mode', () => {
+  it('no home location layers when store has null', () => {
     const { result: resultMarkers } = renderHook(() =>
       useMapLayers({
         cities: mockWeatherCities,
@@ -212,12 +203,12 @@ describe('useMapLayers', () => {
         dataType: DataType.Temperature,
         selectedMonth: 1,
         isLoadingWeather: false,
-        homeLocation: mockHomeLocation,
       })
     );
 
-    const homeLayerMarkers = resultMarkers.current.find((layer) => layer.id === 'home-icon');
-    expect(homeLayerMarkers?.props.visible).toBe(true);
+    // With null home location in store, should not have home layers
+    expect(resultMarkers.current.find((layer) => layer.id === 'home-ring')).toBeUndefined();
+    expect(resultMarkers.current.find((layer) => layer.id === 'home-center')).toBeUndefined();
 
     const { result: resultHeatmap } = renderHook(() =>
       useMapLayers({
@@ -226,12 +217,11 @@ describe('useMapLayers', () => {
         dataType: DataType.Temperature,
         selectedMonth: 1,
         isLoadingWeather: false,
-        homeLocation: mockHomeLocation,
       })
     );
 
-    const homeLayerHeatmap = resultHeatmap.current.find((layer) => layer.id === 'home-icon');
-    expect(homeLayerHeatmap?.props.visible).toBe(true);
+    expect(resultHeatmap.current.find((layer) => layer.id === 'home-ring')).toBeUndefined();
+    expect(resultHeatmap.current.find((layer) => layer.id === 'home-center')).toBeUndefined();
   });
 
   it('reduces temperature marker opacity when loading weather', () => {
@@ -242,7 +232,6 @@ describe('useMapLayers', () => {
         dataType: DataType.Temperature,
         selectedMonth: 1,
         isLoadingWeather: true,
-        homeLocation: null,
       })
     );
 
@@ -258,7 +247,6 @@ describe('useMapLayers', () => {
         dataType: DataType.Temperature,
         selectedMonth: 1,
         isLoadingWeather: false,
-        homeLocation: null,
       })
     );
 
@@ -274,7 +262,6 @@ describe('useMapLayers', () => {
         dataType: DataType.Sunshine,
         selectedMonth: 1,
         isLoadingWeather: true,
-        homeLocation: null,
       })
     );
 
@@ -290,7 +277,6 @@ describe('useMapLayers', () => {
         dataType: DataType.Sunshine,
         selectedMonth: 1,
         isLoadingWeather: false,
-        homeLocation: null,
       })
     );
 
@@ -312,7 +298,6 @@ describe('useMapLayers', () => {
         dataType: DataType.Temperature,
         selectedMonth: 1,
         isLoadingWeather: false,
-        homeLocation: null,
       })
     );
 
@@ -347,7 +332,6 @@ describe('useMapLayers', () => {
         dataType: DataType.Sunshine,
         selectedMonth: 1, // January
         isLoadingWeather: false,
-        homeLocation: null,
       })
     );
 
