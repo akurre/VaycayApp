@@ -136,6 +136,7 @@ const WorldMap = ({
                 onClose={handleClosePopup}
                 selectedMonth={selectedMonth}
                 selectedDate={selectedDate}
+                dataType={dataType}
               />
             )}
           </div>

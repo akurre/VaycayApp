@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import arePropsEqual from '@/components/CityPopup/utils/arePropsEqual';
 import type { CityPopupProps } from '@/types/mapTypes';
+import { DataType } from '@/types/mapTypes';
 import { createMockWeatherData, createMockSunshineData } from '@/test-utils';
 
 describe('arePropsEqual', () => {
@@ -12,6 +13,7 @@ describe('arePropsEqual', () => {
     selectedMonth: 7,
     selectedDate: '2024-07-15',
     onClose: mockOnClose,
+    dataType: DataType.Temperature,
   };
 
   it('returns true when props are identical (same reference)', () => {
@@ -148,12 +150,14 @@ describe('arePropsEqual', () => {
       selectedMonth: 7,
       selectedDate: '2024-07-15',
       onClose,
+      dataType: DataType.Temperature,
     };
     const nextProps: CityPopupProps = {
       city: city2,
       selectedMonth: 8,
       selectedDate: '2024-07-15',
       onClose,
+      dataType: DataType.Temperature,
     };
 
     expect(arePropsEqual(prevProps, nextProps)).toBe(false);
@@ -169,12 +173,14 @@ describe('arePropsEqual', () => {
       selectedMonth: 7,
       selectedDate: '2024-07-15',
       onClose,
+      dataType: DataType.Temperature,
     };
     const nextProps: CityPopupProps = {
       city: city2,
       selectedMonth: 7,
       selectedDate: '2024-07-16',
       onClose,
+      dataType: DataType.Temperature,
     };
 
     expect(arePropsEqual(prevProps, nextProps)).toBe(false);
@@ -191,12 +197,37 @@ describe('arePropsEqual', () => {
       selectedMonth: 7,
       selectedDate: '2024-07-15',
       onClose: onClose1,
+      dataType: DataType.Temperature,
     };
     const nextProps: CityPopupProps = {
       city: city2,
       selectedMonth: 7,
       selectedDate: '2024-07-15',
       onClose: onClose2,
+      dataType: DataType.Temperature,
+    };
+
+    expect(arePropsEqual(prevProps, nextProps)).toBe(false);
+  });
+
+  it('returns false when dataType is different', () => {
+    const city1 = createMockWeatherData();
+    const city2 = createMockWeatherData();
+    const onClose = vi.fn();
+
+    const prevProps: CityPopupProps = {
+      city: city1,
+      selectedMonth: 7,
+      selectedDate: '2024-07-15',
+      onClose,
+      dataType: DataType.Temperature,
+    };
+    const nextProps: CityPopupProps = {
+      city: city2,
+      selectedMonth: 7,
+      selectedDate: '2024-07-15',
+      onClose,
+      dataType: DataType.Sunshine,
     };
 
     expect(arePropsEqual(prevProps, nextProps)).toBe(false);

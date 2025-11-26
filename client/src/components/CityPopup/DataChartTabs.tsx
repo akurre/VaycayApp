@@ -5,6 +5,7 @@ import TemperatureDataSection from './TemperatureDataSection';
 import RainfallDataSection from './RainfallDataSection';
 import type { SunshineData } from '@/types/sunshineDataType';
 import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
+import { DataType } from '@/types/mapTypes';
 
 interface DataChartTabsProps {
   displaySunshineData: SunshineData | null;
@@ -14,6 +15,7 @@ interface DataChartTabsProps {
   weeklyWeatherData: CityWeeklyWeather | null;
   weeklyWeatherLoading: boolean;
   weeklyWeatherError: boolean;
+  dataType: DataType
 }
 
 const DataChartTabs = ({
@@ -24,14 +26,15 @@ const DataChartTabs = ({
   weeklyWeatherData,
   weeklyWeatherLoading,
   weeklyWeatherError,
+  dataType
 }: DataChartTabsProps) => {
   return (
-    <Tabs orientation="vertical" defaultValue="temp" className="h-full">
+    <Tabs orientation="vertical" defaultValue={dataType} className="h-full">
       <Tabs.List>
-        <Tabs.Tab value="temp" leftSection={<IconTemperature size={12} />}>
+        <Tabs.Tab value="temperature" leftSection={<IconTemperature size={12} />}>
           Temp
         </Tabs.Tab>
-        <Tabs.Tab value="sun" leftSection={<IconSun size={12} />}>
+        <Tabs.Tab value="sunshine" leftSection={<IconSun size={12} />}>
           Sun
         </Tabs.Tab>
         <Tabs.Tab value="precip" leftSection={<IconDroplet size={12} />}>
@@ -39,7 +42,7 @@ const DataChartTabs = ({
         </Tabs.Tab>
       </Tabs.List>
 
-      <Tabs.Panel value="temp">
+      <Tabs.Panel value="temperature">
         <TemperatureDataSection
           weeklyWeatherData={weeklyWeatherData}
           isLoading={weeklyWeatherLoading}
@@ -47,7 +50,7 @@ const DataChartTabs = ({
         />
       </Tabs.Panel>
 
-      <Tabs.Panel value="sun">
+      <Tabs.Panel value="sunshine">
         <SunshineDataSection
           displaySunshineData={displaySunshineData}
           isLoading={sunshineLoading}

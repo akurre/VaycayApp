@@ -18,7 +18,7 @@ import { calculateAverageSunshine } from '@/utils/dataFormatting/calculateAverag
 import getSunshineHoursIcon from '@/utils/iconMapping/getSunshineIcon';
 import arePropsEqual from './utils/arePropsEqual';
 
-const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProps) => {
+const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: CityPopupProps) => {
   // Determine what type of data we have
   const hasWeatherData = city && isWeatherData(city);
   const hasSunshineData = city && !isWeatherData(city);
@@ -111,7 +111,7 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
 
   return (
     <div
-      className="fixed bottom-5 left-5 right-5 shadow-lg rounded-xl z-50 flex flex-col"
+      className="fixed bottom-4 left-4 right-4 shadow-lg rounded-xl z-50 flex flex-col"
       style={{
         height: '33.333vh',
         pointerEvents: 'auto',
@@ -179,6 +179,7 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
         {/* Right section - Data Charts */}
         <div className="w-full p-3 h-full">
           <DataChartTabs
+            dataType={dataType}
             displaySunshineData={displaySunshineData}
             sunshineLoading={sunshineLoading}
             sunshineError={sunshineError}
