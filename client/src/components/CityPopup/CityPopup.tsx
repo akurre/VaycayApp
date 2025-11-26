@@ -2,7 +2,7 @@ import { ActionIcon, Button, Popover, Title, Text } from '@mantine/core';
 import { useMemo, memo } from 'react';
 import { IconX } from '@tabler/icons-react';
 import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
-import type { WeatherDataUnion } from '@/types/mapTypes';
+import type { CityPopupProps } from '@/types/mapTypes';
 import useWeatherDataForCity from '@/api/dates/useWeatherDataForCity';
 import useSunshineDataForCity from '@/api/dates/useSunshineDataForCity';
 import useWeeklyWeatherForCity from '@/api/dates/useWeeklyWeatherForCity';
@@ -16,13 +16,7 @@ import { isWeatherData } from '@/utils/typeGuards';
 import { transformSunshineDataForChart } from '@/utils/dataFormatting/transformSunshineDataForChart';
 import { calculateAverageSunshine } from '@/utils/dataFormatting/calculateAverageSunshine';
 import getSunshineHoursIcon from '@/utils/iconMapping/getSunshineIcon';
-
-interface CityPopupProps {
-  city: WeatherDataUnion | null;
-  onClose: () => void;
-  selectedMonth: number;
-  selectedDate?: string;
-}
+import arePropsEqual from './utils/arePropsEqual';
 
 const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProps) => {
   // Determine what type of data we have
@@ -115,7 +109,7 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
 
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 shadow-lg z-50 flex flex-col"
+      className="fixed bottom-5 left-5 right-5 shadow-lg rounded-xl z-50 flex flex-col"
       style={{
         height: '33.333vh',
         pointerEvents: 'auto',
@@ -195,31 +189,6 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
       </div>
     </div>
   );
-};
-
-// Custom comparison function to prevent unnecessary re-renders
-const arePropsEqual = (prevProps: CityPopupProps, nextProps: CityPopupProps): boolean => {
-  // Check if city objects are the same by comparing key properties
-  const prevCity = prevProps.city;
-  const nextCity = nextProps.city;
-
-  if (prevCity === nextCity) return true;
-  if (!prevCity || !nextCity) return false;
-
-  // Compare city identity by key properties
-  const cityEqual =
-    prevCity.city === nextCity.city &&
-    prevCity.country === nextCity.country &&
-    prevCity.lat === nextCity.lat &&
-    prevCity.long === nextCity.long;
-
-  // Compare other props
-  const propsEqual =
-    prevProps.selectedMonth === nextProps.selectedMonth &&
-    prevProps.selectedDate === nextProps.selectedDate &&
-    prevProps.onClose === nextProps.onClose;
-
-  return cityEqual && propsEqual;
 };
 
 export default memo(CityPopup, arePropsEqual);

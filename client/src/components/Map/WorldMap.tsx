@@ -1,6 +1,7 @@
 import DeckGL from '@deck.gl/react';
+import { useRef, useEffect } from 'react';
 import Map from 'react-map-gl/maplibre';
-import { useComputedColorScheme } from '@mantine/core';
+import { Transition, useComputedColorScheme } from '@mantine/core';
 import useMapLayers from '../../hooks/useMapLayers';
 import { useMapInteractions } from '../../hooks/useMapInteractions';
 import { useMapBounds } from '../../hooks/useMapBounds';
@@ -55,6 +56,18 @@ const WorldMap = ({
   const { selectedCity, hoverInfo, handleHover, handleClick, handleClosePopup } =
     useMapInteractions(cities, viewMode, dataType, selectedMonth, homeLocation);
 
+  // Keep track of the last selected city for exit animation
+  const lastSelectedCityRef = useRef<WeatherDataUnion | null>(null);
+  
+  useEffect(() => {
+    if (selectedCity) {
+      lastSelectedCityRef.current = selectedCity;
+    }
+  }, [selectedCity]);
+
+  // Use the current or last selected city for rendering during transition
+  const cityToRender = selectedCity || lastSelectedCityRef.current;
+
   return (
     <div className="relative h-full w-full">
       <DeckGL
@@ -80,14 +93,25 @@ const WorldMap = ({
 
       {hoverInfo && <MapTooltip x={hoverInfo.x} y={hoverInfo.y} content={hoverInfo.content} />}
 
-      {selectedCity && (
-        <CityPopup
-          city={selectedCity}
-          onClose={handleClosePopup}
-          selectedMonth={selectedMonth}
-          selectedDate={selectedDate}
-        />
-      )}
+<Transition
+        mounted={!!selectedCity}
+        transition="fade-up"
+        duration={500}
+        timingFunction="ease"
+      >
+        {(transitionStyle) => (
+          <div style={{ ...transitionStyle, position: 'fixed', inset: 0, pointerEvents: 'none' }}>
+            {cityToRender && (
+              <CityPopup
+                city={cityToRender}
+                onClose={handleClosePopup}
+                selectedMonth={selectedMonth}
+                selectedDate={selectedDate}
+              />
+            )}
+          </div>
+        )}
+      </Transition>
     </div>
   );
 };
