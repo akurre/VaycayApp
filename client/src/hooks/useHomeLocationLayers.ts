@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect, useCallback, useRef } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { ScatterplotLayer } from '@deck.gl/layers';
 import {
   HOME_PULSE_DURATION,
@@ -21,8 +21,8 @@ import { getColorForCity } from '../utils/map/getColorForCity';
 
 /**
  * Creates deck.gl layers for the home location with a pulsing ring effect.
- * Uses an external animation loop that updates layer props without triggering React re-renders.
- * The animation is handled by updating the layers' updateTriggers, which DeckGL monitors.
+ * Follows deck.gl best practices for continuous animations by updating a time-based
+ * state prop that drives the animation. Deck.gl efficiently handles high frame rate updates.
  *
  * To customize the animation, edit these constants in const.ts:
  * - HOME_PULSE_DURATION: Animation cycle duration (ms)
@@ -31,25 +31,14 @@ import { getColorForCity } from '../utils/map/getColorForCity';
  * - HOME_RING_COLOR: Ring color RGB
  */
 export function useHomeLocationLayers(dataType: DataType, selectedMonth: number) {
-  // Separate selectors per Zustand documentation
   const homeLocation = useAppStore((state) => state.homeLocation);
   const homeCityData = useAppStore((state) => state.homeCityData);
 
-  // Track animation time externally - no state updates during animation
-  const animationTimeRef = useRef(0);
-  const [animationTick, setAnimationTick] = useState(0);
-  const updateCountRef = useRef(0);
+  // Animation time state - updated at 60fps per deck.gl animation best practices
+  // "deck.gl is designed to handle layer updates very efficiently at high frame rate"
+  const [animationTime, setAnimationTime] = useState(0);
 
-  // Throttled update: only trigger React re-render ~15 times per second instead of 60
-  const scheduleUpdate = useCallback(() => {
-    updateCountRef.current++;
-    // Update every 4th frame (~15fps instead of 60fps)
-    if (updateCountRef.current % 4 === 0) {
-      setAnimationTick((n) => n + 1);
-    }
-  }, []);
-
-  // Animation loop that updates time reference without triggering re-renders on every frame
+  // Animation loop following deck.gl documentation pattern
   useEffect(() => {
     if (!homeLocation) return;
 
@@ -58,43 +47,50 @@ export function useHomeLocationLayers(dataType: DataType, selectedMonth: number)
 
     const animate = (currentTime: number) => {
       const elapsed = currentTime - startTime;
-      // Store time in ref to avoid state updates
-      animationTimeRef.current = (elapsed % HOME_PULSE_DURATION) / HOME_PULSE_DURATION;
-
-      scheduleUpdate();
+      // Normalized time 0-1 for one complete cycle
+      setAnimationTime((elapsed % HOME_PULSE_DURATION) / HOME_PULSE_DURATION);
       frameId = requestAnimationFrame(animate);
     };
 
     frameId = requestAnimationFrame(animate);
-
     return () => cancelAnimationFrame(frameId);
-  }, [homeLocation, scheduleUpdate]);
+  }, [homeLocation]);
+
+  // Memoize marker color separately - only recalculate when data changes, not on every frame
+  const markerColor = useMemo(() => {
+    if (!homeCityData || homeCityData.lat === null || homeCityData.long === null) {
+      return HOME_DEFAULT_MARKER_COLOR;
+    }
+
+    // Type guard: check if data type matches and has required fields
+    if (
+      dataType === DataType.Temperature &&
+      'avgTemperature' in homeCityData &&
+      homeCityData.avgTemperature !== null
+    ) {
+      return getColorForCity(homeCityData as ValidMarkerData, dataType, selectedMonth);
+    } else if (dataType === DataType.Sunshine && 'jan' in homeCityData) {
+      return getColorForCity(
+        homeCityData as ValidSunshineMarkerData,
+        dataType,
+        selectedMonth
+      );
+    }
+
+    return HOME_DEFAULT_MARKER_COLOR;
+  }, [homeCityData, dataType, selectedMonth]);
+
+  // Memoize position data - only recreate when home location changes
+  const positionData = useMemo(() => {
+    if (!homeLocation) return [];
+    return [homeLocation];
+  }, [homeLocation]);
 
   return useMemo(() => {
     if (!homeLocation) return [];
 
-    // Compute the marker color directly from home city data using shared utility
-    // Only use getColorForCity if we have valid data with non-null coordinates
-    let markerColor = HOME_DEFAULT_MARKER_COLOR;
-    if (homeCityData && homeCityData.lat !== null && homeCityData.long !== null) {
-      // Type guard: check if data type matches and has required fields
-      if (
-        dataType === DataType.Temperature &&
-        'avgTemperature' in homeCityData &&
-        homeCityData.avgTemperature !== null
-      ) {
-        markerColor = getColorForCity(homeCityData as ValidMarkerData, dataType, selectedMonth);
-      } else if (dataType === DataType.Sunshine && 'jan' in homeCityData) {
-        markerColor = getColorForCity(
-          homeCityData as ValidSunshineMarkerData,
-          dataType,
-          selectedMonth
-        );
-      }
-    }
-
     // Calculate pulse values based on animation time (0 to 1, looping)
-    const pulsePhase = animationTimeRef.current * Math.PI * 2;
+    const pulsePhase = animationTime * Math.PI * 2;
     const pulseValue = Math.abs(Math.sin(pulsePhase));
     const ringRadius =
       HOME_RING_RADIUS_MIN + pulseValue * (HOME_RING_RADIUS_MAX - HOME_RING_RADIUS_MIN);
@@ -105,7 +101,7 @@ export function useHomeLocationLayers(dataType: DataType, selectedMonth: number)
       // Pulsing ring (render first so it appears behind the center dot)
       new ScatterplotLayer({
         id: 'home-ring',
-        data: [homeLocation],
+        data: positionData,
         getPosition: (d) => [d.coordinates.long, d.coordinates.lat],
         getFillColor: [0, 0, 0, 0], // Transparent fill
         getLineColor: [...HOME_RING_COLOR, ringOpacity],
@@ -121,7 +117,7 @@ export function useHomeLocationLayers(dataType: DataType, selectedMonth: number)
       // Solid center dot with normal marker color
       new ScatterplotLayer({
         id: 'home-center',
-        data: [homeLocation],
+        data: positionData,
         getPosition: (d) => [d.coordinates.long, d.coordinates.lat],
         getFillColor: markerColor,
         getRadius: HOME_LOCATION_BASE_RADIUS,
@@ -131,5 +127,5 @@ export function useHomeLocationLayers(dataType: DataType, selectedMonth: number)
         visible: true,
       }),
     ];
-  }, [homeLocation, homeCityData, dataType, selectedMonth, animationTick]);
+  }, [homeLocation, markerColor, positionData, animationTime]);
 }
