@@ -58,7 +58,7 @@ const WorldMap = ({
 
   // Keep track of the last selected city for exit animation
   const lastSelectedCityRef = useRef<WeatherDataUnion | null>(null);
-  
+
   useEffect(() => {
     if (selectedCity) {
       lastSelectedCityRef.current = selectedCity;
@@ -93,7 +93,7 @@ const WorldMap = ({
 
       {hoverInfo && <MapTooltip x={hoverInfo.x} y={hoverInfo.y} content={hoverInfo.content} />}
 
-<Transition
+      <Transition
         mounted={!!selectedCity}
         transition="fade-up"
         duration={500}
