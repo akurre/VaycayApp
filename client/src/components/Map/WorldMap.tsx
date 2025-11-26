@@ -58,7 +58,7 @@ const WorldMap = ({
 
   // Keep track of the last selected city for exit animation
   const lastSelectedCityRef = useRef<WeatherDataUnion | null>(null);
-
+  
   useEffect(() => {
     if (selectedCity) {
       lastSelectedCityRef.current = selectedCity;
@@ -103,6 +103,7 @@ const WorldMap = ({
           <div style={{ ...transitionStyle, position: 'fixed', inset: 0, pointerEvents: 'none' }}>
             {cityToRender && (
               <CityPopup
+                key={`${cityToRender.city}-${cityToRender.lat}-${cityToRender.long}`}
                 city={cityToRender}
                 onClose={handleClosePopup}
                 selectedMonth={selectedMonth}

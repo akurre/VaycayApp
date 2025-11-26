@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { getTooltipContent } from '@/utils/map/getTooltipContent';
 import type { WeatherData } from '@/types/cityWeatherDataType';
+import { DataType } from '@/types/mapTypes';
+import { createMockSunshineData } from '@/test-utils';
 
 describe('getTooltipContent', () => {
   const createMockCity = (overrides?: Partial<WeatherData>): WeatherData => ({
@@ -156,5 +158,119 @@ describe('getTooltipContent', () => {
     const result = getTooltipContent(cities, 9.19, 45.4642);
 
     expect(result).toBe('Milan, Italy\n25.5°C');
+  });
+
+  describe('Sunshine data', () => {
+    it('returns sunshine tooltip for matching city with selected month', () => {
+      const cities = [
+        createMockSunshineData({
+          city: 'Barcelona',
+          country: 'Spain',
+          lat: 41.3851,
+          long: 2.1734,
+          jul: 310,
+        }),
+      ];
+
+      const result = getTooltipContent(cities, 2.1734, 41.3851, DataType.Sunshine, 7);
+
+      expect(result).toBe('Barcelona, Spain\n310.0 hours');
+    });
+
+    it('returns null when selectedMonth is not provided for sunshine data', () => {
+      const cities = [
+        createMockSunshineData({
+          city: 'Barcelona',
+          lat: 41.3851,
+          long: 2.1734,
+          jul: 310,
+        }),
+      ];
+
+      const result = getTooltipContent(cities, 2.1734, 41.3851, DataType.Sunshine);
+
+      expect(result).toBeNull();
+    });
+
+    it('returns null when sunshine hours is null for selected month', () => {
+      const cities = [
+        createMockSunshineData({
+          city: 'Barcelona',
+          lat: 41.3851,
+          long: 2.1734,
+          jul: null,
+        }),
+      ];
+
+      const result = getTooltipContent(cities, 2.1734, 41.3851, DataType.Sunshine, 7);
+
+      expect(result).toBeNull();
+    });
+
+    it('handles different months correctly', () => {
+      const cities = [
+        createMockSunshineData({
+          city: 'Barcelona',
+          country: 'Spain',
+          lat: 41.3851,
+          long: 2.1734,
+          jan: 149,
+          jul: 310,
+        }),
+      ];
+
+      // Test January
+      let result = getTooltipContent(cities, 2.1734, 41.3851, DataType.Sunshine, 1);
+      expect(result).toBe('Barcelona, Spain\n149.0 hours');
+
+      // Test July
+      result = getTooltipContent(cities, 2.1734, 41.3851, DataType.Sunshine, 7);
+      expect(result).toBe('Barcelona, Spain\n310.0 hours');
+    });
+
+    it('returns null when month is out of range', () => {
+      const cities = [
+        createMockSunshineData({
+          city: 'Barcelona',
+          lat: 41.3851,
+          long: 2.1734,
+        }),
+      ];
+
+      expect(getTooltipContent(cities, 2.1734, 41.3851, DataType.Sunshine, 0)).toBeNull();
+      expect(getTooltipContent(cities, 2.1734, 41.3851, DataType.Sunshine, 13)).toBeNull();
+    });
+
+    it('formats sunshine hours with decimal places', () => {
+      const cities = [
+        createMockSunshineData({
+          city: 'Barcelona',
+          country: 'Spain',
+          lat: 41.3851,
+          long: 2.1734,
+          jul: 310.567,
+        }),
+      ];
+
+      const result = getTooltipContent(cities, 2.1734, 41.3851, DataType.Sunshine, 7);
+
+      expect(result).toBe('Barcelona, Spain\n310.6 hours');
+    });
+
+    it('finds sunshine city within tolerance', () => {
+      const cities = [
+        createMockSunshineData({
+          city: 'Barcelona',
+          country: 'Spain',
+          lat: 41.3851,
+          long: 2.1734,
+          jul: 310,
+        }),
+      ];
+
+      const result = getTooltipContent(cities, 2.2, 41.4, DataType.Sunshine, 7);
+
+      expect(result).toBe('Barcelona, Spain\n310.0 hours');
+    });
   });
 });
