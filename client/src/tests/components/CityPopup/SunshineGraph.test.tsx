@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@/test-utils';
-import SunshineGraph from '@/components/CityPopup/SunshineGraph';
+import SunshineGraph from '@/components/CityPopup/graphs/SunshineGraph';
 import type { SunshineData } from '@/types/sunshineDataType';
 
 describe('SunshineGraph', () => {

@@ -3,7 +3,7 @@ import { render } from '@/test-utils';
 import RechartsLineGraph, {
   type LineConfig,
   type ReferenceLineConfig,
-} from '@/components/CityPopup/RechartsLineGraph';
+} from '@/components/CityPopup/graphs/RechartsLineGraph';
 
 describe('RechartsLineGraph', () => {
   const mockData = [

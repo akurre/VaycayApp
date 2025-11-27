@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Popover, Title, Text } from '@mantine/core';
+import { ActionIcon, Button, Popover, Title, Badge } from '@mantine/core';
 import { useMemo, memo } from 'react';
 import { IconX } from '@tabler/icons-react';
 import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
@@ -6,16 +6,13 @@ import type { CityPopupProps } from '@/types/mapTypes';
 import useWeatherDataForCity from '@/api/dates/useWeatherDataForCity';
 import useSunshineDataForCity from '@/api/dates/useSunshineDataForCity';
 import useWeeklyWeatherForCity from '@/api/dates/useWeeklyWeatherForCity';
-import WeatherDataSection from './WeatherDataSection';
+import PrecipAndTempValues from './PrecipAndTempValues';
+import SunshineValues from './SunshineValues';
 import AdditionalInfo from './AdditionalInfo';
 import DataChartTabs from './DataChartTabs';
 import Field from './Field';
-import GreaterSection from './GreaterSection';
 import { extractMonthFromDate } from '@/utils/dateFormatting/extractMonthFromDate';
 import { isWeatherData } from '@/utils/typeGuards';
-import { transformSunshineDataForChart } from '@/utils/dataFormatting/transformSunshineDataForChart';
-import { calculateAverageSunshine } from '@/utils/dataFormatting/calculateAverageSunshine';
-import getSunshineHoursIcon from '@/utils/iconMapping/getSunshineIcon';
 import arePropsEqual from './utils/arePropsEqual';
 
 const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: CityPopupProps) => {
@@ -87,18 +84,8 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: Cit
   const displayWeatherData = cityAsWeather ?? weatherData;
   const displaySunshineData = cityAsSunshine ?? sunshineData;
 
-  // Calculate average sunshine if we have sunshine data
-  const averageSunshine = useMemo(() => {
-    if (!displaySunshineData) return null;
-    const chartData = transformSunshineDataForChart(displaySunshineData);
-    return calculateAverageSunshine(chartData);
-  }, [displaySunshineData]);
-
   // early return AFTER all hooks have been called
   if (!city) return null;
-
-  // Get the sunshine icon
-  const SunshineIcon = getSunshineHoursIcon(averageSunshine);
 
   // Create the modal title
   let cityAndCountry = city.city ? toTitleCase(city.city) : 'Unknown City';
@@ -126,58 +113,41 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: Cit
         </ActionIcon>
       </div>
       {/* Content area with horizontal layout */}
-      <div className="flex h-full overflow-hidden">
+      <div className="flex h-full overflow-hidden py-3 px-6 gap-6">
         {/* Left section - City info and metadata */}
-        <div className="flex flex-col gap-3 px-6 py-4 h-full min-w-1/2 overflow-y-auto">
-          <div className="flex w-full">
-            <div className="flex gap-4 items-center">
-              <Title order={4}>{cityAndCountry}</Title>
-              <Popover position="top" withArrow shadow="md">
-                <Popover.Target>
-                  <Button variant="subtle" size="compact-xs">
-                    More Info
-                  </Button>
-                </Popover.Target>
-                <Popover.Dropdown>
-                  {city.stationName && (
-                    <div>
-                      <Field label="Weather Station" value={city.stationName} />
-                    </div>
-                  )}
-                  {city.lat && city.long && (
-                    <Field
-                      label="Coordinates"
-                      value={`${city.lat.toFixed(4)}°, ${city.long.toFixed(4)}°`}
-                      monospace
-                    />
-                  )}
-                </Popover.Dropdown>
-              </Popover>
+        <div className="flex flex-col gap-3 h-full min-w-1/2 overflow-y-auto grow">
+          <div className="flex gap-6">
+            <div className="flex items-center">
+              <Badge size="xl">
+                <Title order={4}>{cityAndCountry}</Title>
+              </Badge>
+            </div>
+            <div className="flex-1" />
+            <div className="flex justify-end">
+              <Button>placeholder</Button>
             </div>
           </div>
-          <div className="flex gap-10">
+          <div className="flex gap-6 w-full justify-end">
             <AdditionalInfo city={city} />
 
             {/* Middle section - Weather data */}
-            <div className="flex flex-col">
-              <WeatherDataSection
+            <div className="flex flex-col w-5/12">
+              <PrecipAndTempValues
                 displayWeatherData={displayWeatherData}
                 isLoading={weatherLoading}
                 hasError={weatherError}
               />
             </div>
-            <div>
-              {/* Average annual sunshine */}
-              {averageSunshine !== null && (
-                <GreaterSection title="Average Annual Sunshine" icon={SunshineIcon}>
-                  <Text size="md">{averageSunshine.toFixed(1)} hours</Text>
-                </GreaterSection>
-              )}
-            </div>
+            {/* Average annual sunshine */}
+            <SunshineValues
+              displaySunshineData={displaySunshineData}
+              isLoading={sunshineLoading}
+              hasError={sunshineError}
+            />
           </div>
         </div>
         {/* Right section - Data Charts */}
-        <div className="w-full p-3 h-full">
+        <div className="w-full h-full">
           <DataChartTabs
             dataType={dataType}
             displaySunshineData={displaySunshineData}

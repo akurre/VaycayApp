@@ -1,8 +1,7 @@
 import { memo } from 'react';
-import { Alert, Badge, Loader } from '@mantine/core';
-import { IconAlertCircle } from '@tabler/icons-react';
 import type { SunshineData } from '@/types/sunshineDataType';
-import SunshineGraph from './SunshineGraph';
+import SunshineGraph from './graphs/SunshineGraph';
+import WeatherDataSection from './WeatherDataSection';
 
 interface SunshineDataSectionProps {
   displaySunshineData: SunshineData | null;
@@ -18,29 +17,16 @@ const SunshineDataSection = ({
   selectedMonth,
 }: SunshineDataSectionProps) => {
   return (
-    <div className="h-full flex flex-col">
-      {isLoading && !displaySunshineData && (
-        <div className="flex justify-center py-4">
-          <Loader size="sm" />
-        </div>
-      )}
-
-      {hasError && !displaySunshineData && (
-        <Alert icon={<IconAlertCircle size="1rem" />} color="red" title="Error">
-          Failed to load sunshine data for this city.
-        </Alert>
-      )}
-
-      {displaySunshineData ? (
-        <div className="flex-1 min-h-0 p-3">
-          <SunshineGraph sunshineData={displaySunshineData} selectedMonth={selectedMonth} />
-        </div>
-      ) : (
-        <div className="flex-1 min-h-0 items-center flex justify-center">
-          <Badge size="xl">No sunshine data available</Badge>
-        </div>
-      )}
-    </div>
+    <WeatherDataSection
+      data={displaySunshineData}
+      isLoading={isLoading}
+      hasError={hasError}
+      errorMessage="Failed to load sunshine data for this city."
+      showNoDataBadge={true}
+      noDataMessage="No sunshine data available"
+    >
+      {(data) => <SunshineGraph sunshineData={data} selectedMonth={selectedMonth} />}
+    </WeatherDataSection>
   );
 };
 

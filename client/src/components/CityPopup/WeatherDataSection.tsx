@@ -1,54 +1,53 @@
-import { memo } from 'react';
-import { Alert, Loader } from '@mantine/core';
+import { memo, type ReactNode } from 'react';
+import { Alert, Badge, Loader } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
-import type { WeatherData } from '@/types/cityWeatherDataType';
-import TemperatureSection from './TemperatureSection';
-import PrecipitationSection from './PrecipitationSection';
 
-interface WeatherDataSectionProps {
-  displayWeatherData: WeatherData | null;
+interface WeatherDataSectionProps<T> {
+  data: T | null;
   isLoading: boolean;
   hasError: boolean;
+  errorMessage: string;
+  showNoDataBadge?: boolean;
+  noDataMessage?: string;
+  children: (data: T) => ReactNode;
 }
 
-const WeatherDataSection = ({
-  displayWeatherData,
+const WeatherDataSectionInner = <T,>({
+  data,
   isLoading,
   hasError,
-}: WeatherDataSectionProps) => {
+  errorMessage,
+  showNoDataBadge = false,
+  noDataMessage = 'No data available',
+  children,
+}: WeatherDataSectionProps<T>) => {
   return (
-    <>
-      {isLoading && !displayWeatherData && (
+    <div className="h-full flex flex-col">
+      {isLoading && !data && (
         <div className="flex justify-center py-4">
           <Loader size="sm" />
         </div>
       )}
 
-      {hasError && !displayWeatherData && (
+      {hasError && !data && (
         <Alert icon={<IconAlertCircle size="1rem" />} color="red" title="Error">
-          Failed to load temperature data for this city.
+          {errorMessage}
         </Alert>
       )}
 
-      {displayWeatherData ? (
-        <>
-          <TemperatureSection
-            avgTemperature={displayWeatherData.avgTemperature}
-            maxTemperature={displayWeatherData.maxTemperature}
-            minTemperature={displayWeatherData.minTemperature}
-          />
-          {displayWeatherData.precipitation && (
-            <PrecipitationSection
-              precipitation={displayWeatherData.precipitation}
-              snowDepth={displayWeatherData.snowDepth}
-            />
-          )}
-        </>
+      {data ? (
+        <div className="flex-1 min-h-0 h-full px-3">{children(data)}</div>
       ) : (
-        <>No weather data to show.</>
+        showNoDataBadge && (
+          <div className="flex-1 min-h-0 items-center flex justify-center">
+            <Badge size="xl">{noDataMessage}</Badge>
+          </div>
+        )
       )}
-    </>
+    </div>
   );
 };
 
-export default memo(WeatherDataSection);
+const WeatherDataSection = memo(WeatherDataSectionInner) as typeof WeatherDataSectionInner;
+
+export default WeatherDataSection;

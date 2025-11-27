@@ -75,7 +75,7 @@ const TemperatureGraph = ({ weeklyWeatherData }: TemperatureGraphProps) => {
       legendLayout="horizontal"
       legendVerticalAlign="top"
       legendAlign="center"
-      margin={{ top: 30, right: 20, left: 0, bottom: 5 }}
+      margin={{ left: 0 }}
     />
   );
 };

@@ -98,8 +98,12 @@ const SunshineGraph = ({ sunshineData, selectedMonth }: SunshineGraphProps) => {
       xAxisDataKey="month"
       yAxisLabel="Hours"
       lines={lines}
+      legendLayout="horizontal"
+      legendVerticalAlign="top"
+      legendAlign="center"
       referenceLines={referenceLines}
       tooltipContent={<SunshineGraphTooltip />}
+      margin={{ left: 0 }}
     />
   );
 };

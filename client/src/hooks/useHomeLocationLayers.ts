@@ -53,8 +53,6 @@ export function useHomeLocationLayers(dataType: DataType, selectedMonth: number)
     let frameCount = 0;
 
     const animate = (currentTime: number) => {
-      perfMonitor.start('raf-home-animation');
-
       const elapsed = currentTime - startTime;
       // Update ref at 60fps - this doesn't trigger React re-renders
       animationTimeRef.current = (elapsed % HOME_PULSE_DURATION) / HOME_PULSE_DURATION;
@@ -66,8 +64,6 @@ export function useHomeLocationLayers(dataType: DataType, selectedMonth: number)
         setLayerUpdateTrigger((prev) => prev + 1);
         frameCount = 0;
       }
-
-      perfMonitor.end('raf-home-animation');
 
       frameId = requestAnimationFrame(animate);
     };

@@ -93,7 +93,7 @@ function RechartsLineGraphComponent<T extends ChartDataPoint>({
 }: RechartsLineGraphProps<T>) {
   // Get theme-aware colors
   const chartColors = useChartColors();
-  
+
   // Use smooth morphing transition for all city changes
   const effectiveAnimationDuration = 300;
 

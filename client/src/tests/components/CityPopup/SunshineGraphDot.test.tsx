@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@/test-utils';
-import SunshineGraphDot from '@/components/CityPopup/SunshineGraphDot';
+import SunshineGraphDot from '@/components/CityPopup/graphs/SunshineGraphDot';
 
 describe('SunshineGraphDot', () => {
   const mockPayload = {

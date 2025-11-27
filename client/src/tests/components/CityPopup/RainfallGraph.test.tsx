@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@/test-utils';
-import RainfallGraph from '@/components/CityPopup/RainfallGraph';
+import RainfallGraph from '@/components/CityPopup/graphs/RainfallGraph';
 import { createMockWeeklyWeather } from '@/test-utils';
 
 describe('RainfallGraph', () => {
