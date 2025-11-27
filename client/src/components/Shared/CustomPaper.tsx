@@ -5,9 +5,10 @@ import { ReactNode } from 'react';
 interface CustomPaperProps {
   children: ReactNode;
   className?: string;
+  p?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 }
 
-const CustomPaper = ({ children, className }: CustomPaperProps) => {
+const CustomPaper = ({ children, className, p="lg" }: CustomPaperProps) => {
   const { colorScheme } = useMantineColorScheme();
   return (
     <Paper
@@ -15,7 +16,7 @@ const CustomPaper = ({ children, className }: CustomPaperProps) => {
         backgroundColor: colorScheme === 'dark' ? appColors.dark.paper : appColors.light.surface,
       }}
       shadow="sm"
-      p="lg"
+      p={p}
       withBorder
       className={`${className} h-full`}
     >

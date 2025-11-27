@@ -14,32 +14,51 @@ import { useChartColors } from '@/hooks/useChartColors';
 
 interface RainfallGraphProps {
   weeklyWeatherData: CityWeeklyWeather;
+  comparisonWeeklyWeatherData?: CityWeeklyWeather | null;
 }
 
-const RainfallGraph = ({ weeklyWeatherData }: RainfallGraphProps) => {
+const RainfallGraph = ({
+  weeklyWeatherData,
+  comparisonWeeklyWeatherData,
+}: RainfallGraphProps) => {
   // Get theme-aware colors
   const chartColors = useChartColors();
 
   // Transform weekly weather data for chart - filter out weeks with no precipitation data
   // to prevent displaying zero values where no measurements exist
-  const chartData = useMemo(
-    () =>
-      weeklyWeatherData.weeklyData
-        .filter((week) => week.totalPrecip !== null || week.avgPrecip !== null)
-        .map((week) => ({
-          week: week.week,
-          totalPrecip: week.totalPrecip,
-          avgPrecip: week.avgPrecip,
-          daysWithRain: week.daysWithRain,
-          daysWithData: week.daysWithData,
-        })),
-    [weeklyWeatherData.weeklyData]
-  );
+  // Merge main city data with comparison city data
+  const chartData = useMemo(() => {
+    const mainData = weeklyWeatherData.weeklyData
+      .filter((week) => week.totalPrecip !== null || week.avgPrecip !== null)
+      .map((week) => ({
+        week: week.week,
+        totalPrecip: week.totalPrecip,
+        avgPrecip: week.avgPrecip,
+        daysWithRain: week.daysWithRain,
+        daysWithData: week.daysWithData,
+      }));
+
+    // If we have comparison data, merge it
+    if (comparisonWeeklyWeatherData) {
+      return mainData.map((mainWeek) => {
+        const compWeek = comparisonWeeklyWeatherData.weeklyData.find(
+          (w) => w.week === mainWeek.week
+        );
+        return {
+          ...mainWeek,
+          compTotalPrecip: compWeek?.totalPrecip ?? null,
+          compAvgPrecip: compWeek?.avgPrecip ?? null,
+        };
+      });
+    }
+
+    return mainData;
+  }, [weeklyWeatherData.weeklyData, comparisonWeeklyWeatherData]);
 
   return (
     <div className="w-full h-full">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData} margin={{ left: 0 }}>
+        <BarChart data={chartData} margin={{ left: 0, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke={chartColors.gridColor} />
 
           {/* X Axis */}
@@ -95,13 +114,25 @@ const RainfallGraph = ({ weeklyWeatherData }: RainfallGraphProps) => {
             iconType="rect"
           />
 
-          {/* Bars */}
+          {/* Bars - City 1 (blue), City 2 (purple) */}
           <Bar
             dataKey="totalPrecip"
-            name="Total Precipitation"
-            fill={chartColors.lineColor || '#3b82f6'}
+            name={
+              comparisonWeeklyWeatherData
+                ? `${weeklyWeatherData.city} Total Precip`
+                : 'Total Precipitation'
+            }
+            fill="#3b82f6"
             radius={[4, 4, 0, 0]}
           />
+          {comparisonWeeklyWeatherData && (
+            <Bar
+              dataKey="compTotalPrecip"
+              name={`${comparisonWeeklyWeatherData.city} Total Precip`}
+              fill="#a855f7"
+              radius={[4, 4, 0, 0]}
+            />
+          )}
         </BarChart>
       </ResponsiveContainer>
     </div>

@@ -1,5 +1,5 @@
-import { ActionIcon, Button, Popover, Title, Badge } from '@mantine/core';
-import { useMemo, memo } from 'react';
+import { ActionIcon, Title, Badge } from '@mantine/core';
+import { useMemo, memo, useState } from 'react';
 import { IconX } from '@tabler/icons-react';
 import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
 import type { CityPopupProps } from '@/types/mapTypes';
@@ -10,12 +10,16 @@ import PrecipAndTempValues from './PrecipAndTempValues';
 import SunshineValues from './SunshineValues';
 import AdditionalInfo from './AdditionalInfo';
 import DataChartTabs from './DataChartTabs';
-import Field from './Field';
 import { extractMonthFromDate } from '@/utils/dateFormatting/extractMonthFromDate';
 import { isWeatherData } from '@/utils/typeGuards';
 import arePropsEqual from './utils/arePropsEqual';
+import ComparisonCitySelector from './ComparisonCitySelector';
+import type { SearchCitiesResult } from '@/types/userLocationType';
 
 const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: CityPopupProps) => {
+  // State for comparison city
+  const [comparisonCity, setComparisonCity] = useState<SearchCitiesResult | null>(null);
+
   // Determine what type of data we have
   const hasWeatherData = city && isWeatherData(city);
   const hasSunshineData = city && !isWeatherData(city);
@@ -80,6 +84,30 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: Cit
     skipFetch: !city,
   });
 
+  // Fetch weekly weather data for the comparison city
+  const {
+    weeklyWeatherData: comparisonWeeklyWeatherData,
+    loading: comparisonWeeklyWeatherLoading,
+    error: comparisonWeeklyWeatherError,
+  } = useWeeklyWeatherForCity({
+    cityName: comparisonCity?.name ?? null,
+    lat: comparisonCity?.lat ?? null,
+    long: comparisonCity?.long ?? null,
+    skipFetch: !comparisonCity,
+  });
+
+  // Fetch sunshine data for the comparison city
+  const {
+    sunshineData: comparisonSunshineData,
+    sunshineLoading: comparisonSunshineLoading,
+    sunshineError: comparisonSunshineError,
+  } = useSunshineDataForCity({
+    cityName: comparisonCity?.name ?? null,
+    lat: comparisonCity?.lat ?? null,
+    long: comparisonCity?.long ?? null,
+    skipFetch: !comparisonCity,
+  });
+
   // use what we already have, or fall back to fetched data
   const displayWeatherData = cityAsWeather ?? weatherData;
   const displaySunshineData = cityAsSunshine ?? sunshineData;
@@ -124,7 +152,20 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: Cit
             </div>
             <div className="flex-1" />
             <div className="flex justify-end">
-              <Button>placeholder</Button>
+              <ComparisonCitySelector
+                onCitySelect={setComparisonCity}
+                onCityRemove={() => setComparisonCity(null)}
+                selectedCity={comparisonCity}
+                excludeCity={
+                  city
+                    ? {
+                        name: city.city,
+                        state: city.state ?? null,
+                        country: city.country ?? null,
+                      }
+                    : undefined
+                }
+              />
             </div>
           </div>
           <div className="flex gap-6 w-full justify-end">
@@ -141,6 +182,7 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: Cit
             {/* Average annual sunshine */}
             <SunshineValues
               displaySunshineData={displaySunshineData}
+              weeklyWeatherData={weeklyWeatherData?.weeklyData ?? null}
               isLoading={sunshineLoading}
               hasError={sunshineError}
             />
@@ -157,6 +199,12 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: Cit
             weeklyWeatherData={weeklyWeatherData}
             weeklyWeatherLoading={weeklyWeatherLoading}
             weeklyWeatherError={weeklyWeatherError}
+            comparisonSunshineData={comparisonSunshineData}
+            comparisonSunshineLoading={comparisonSunshineLoading}
+            comparisonSunshineError={comparisonSunshineError}
+            comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
+            comparisonWeeklyWeatherLoading={comparisonWeeklyWeatherLoading}
+            comparisonWeeklyWeatherError={comparisonWeeklyWeatherError}
           />
         </div>
       </div>

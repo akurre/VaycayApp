@@ -8,6 +8,9 @@ interface SunshineDataSectionProps {
   isLoading: boolean;
   hasError: boolean;
   selectedMonth: number;
+  comparisonSunshineData?: SunshineData | null;
+  comparisonIsLoading?: boolean;
+  comparisonHasError?: boolean;
 }
 
 const SunshineDataSection = ({
@@ -15,6 +18,9 @@ const SunshineDataSection = ({
   isLoading,
   hasError,
   selectedMonth,
+  comparisonSunshineData,
+  comparisonIsLoading,
+  comparisonHasError,
 }: SunshineDataSectionProps) => {
   return (
     <WeatherDataSection
@@ -25,7 +31,13 @@ const SunshineDataSection = ({
       showNoDataBadge={true}
       noDataMessage="No sunshine data available"
     >
-      {(data) => <SunshineGraph sunshineData={data} selectedMonth={selectedMonth} />}
+      {(data) => (
+        <SunshineGraph
+          sunshineData={data}
+          selectedMonth={selectedMonth}
+          comparisonSunshineData={comparisonSunshineData}
+        />
+      )}
     </WeatherDataSection>
   );
 };

@@ -7,12 +7,18 @@ interface TemperatureDataSectionProps {
   weeklyWeatherData: CityWeeklyWeather | null;
   isLoading: boolean;
   hasError: boolean;
+  comparisonWeeklyWeatherData?: CityWeeklyWeather | null;
+  comparisonIsLoading?: boolean;
+  comparisonHasError?: boolean;
 }
 
 const TemperatureDataSection = ({
   weeklyWeatherData,
   isLoading,
   hasError,
+  comparisonWeeklyWeatherData,
+  comparisonIsLoading,
+  comparisonHasError,
 }: TemperatureDataSectionProps) => {
   return (
     <WeatherDataSection
@@ -22,7 +28,12 @@ const TemperatureDataSection = ({
       errorMessage="Failed to load temperature data for this city."
       showNoDataBadge={false}
     >
-      {(data) => <TemperatureGraph weeklyWeatherData={data} />}
+      {(data) => (
+        <TemperatureGraph
+          weeklyWeatherData={data}
+          comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
+        />
+      )}
     </WeatherDataSection>
   );
 };

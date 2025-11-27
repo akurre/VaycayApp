@@ -17,6 +17,12 @@ interface DataChartTabsProps {
   weeklyWeatherLoading: boolean;
   weeklyWeatherError: boolean;
   dataType: DataType;
+  comparisonSunshineData?: SunshineData | null;
+  comparisonSunshineLoading?: boolean;
+  comparisonSunshineError?: boolean;
+  comparisonWeeklyWeatherData?: CityWeeklyWeather | null;
+  comparisonWeeklyWeatherLoading?: boolean;
+  comparisonWeeklyWeatherError?: boolean;
 }
 
 const DataChartTabs = ({
@@ -28,9 +34,15 @@ const DataChartTabs = ({
   weeklyWeatherLoading,
   weeklyWeatherError,
   dataType,
+  comparisonSunshineData,
+  comparisonSunshineLoading,
+  comparisonSunshineError,
+  comparisonWeeklyWeatherData,
+  comparisonWeeklyWeatherLoading,
+  comparisonWeeklyWeatherError,
 }: DataChartTabsProps) => {
   return (
-    <CustomPaper className="h-full">
+    <CustomPaper className="h-full" p='sm'>
       <Tabs orientation="vertical" defaultValue={dataType} className="h-full flex">
         <Tabs.List>
           <Tabs.Tab value="temperature" leftSection={<IconTemperature size={12} />}>
@@ -49,6 +61,9 @@ const DataChartTabs = ({
             weeklyWeatherData={weeklyWeatherData}
             isLoading={weeklyWeatherLoading}
             hasError={weeklyWeatherError}
+            comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
+            comparisonIsLoading={comparisonWeeklyWeatherLoading}
+            comparisonHasError={comparisonWeeklyWeatherError}
           />
         </Tabs.Panel>
 
@@ -58,6 +73,9 @@ const DataChartTabs = ({
             isLoading={sunshineLoading}
             hasError={sunshineError}
             selectedMonth={selectedMonth}
+            comparisonSunshineData={comparisonSunshineData}
+            comparisonIsLoading={comparisonSunshineLoading}
+            comparisonHasError={comparisonSunshineError}
           />
         </Tabs.Panel>
 
@@ -66,6 +84,9 @@ const DataChartTabs = ({
             weeklyWeatherData={weeklyWeatherData}
             isLoading={weeklyWeatherLoading}
             hasError={weeklyWeatherError}
+            comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
+            comparisonIsLoading={comparisonWeeklyWeatherLoading}
+            comparisonHasError={comparisonWeeklyWeatherError}
           />
         </Tabs.Panel>
       </Tabs>

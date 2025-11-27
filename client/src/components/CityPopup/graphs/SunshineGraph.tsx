@@ -10,9 +10,14 @@ import { useChartColors } from '@/hooks/useChartColors';
 interface SunshineGraphProps {
   sunshineData: SunshineData;
   selectedMonth?: number;
+  comparisonSunshineData?: SunshineData | null;
 }
 
-const SunshineGraph = ({ sunshineData, selectedMonth }: SunshineGraphProps) => {
+const SunshineGraph = ({
+  sunshineData,
+  selectedMonth,
+  comparisonSunshineData,
+}: SunshineGraphProps) => {
   // Get theme-aware colors
   const chartColors = useChartColors();
 
@@ -22,6 +27,12 @@ const SunshineGraph = ({ sunshineData, selectedMonth }: SunshineGraphProps) => {
   // Transform sunshine data for chart
   const chartData = useMemo(() => transformSunshineDataForChart(sunshineData), [sunshineData]);
 
+  // Transform comparison sunshine data if available
+  const comparisonChartData = useMemo(
+    () => (comparisonSunshineData ? transformSunshineDataForChart(comparisonSunshineData) : null),
+    [comparisonSunshineData]
+  );
+
   // Calculate theoretical maximum sunshine based on latitude (memoized per city)
   const latitude = sunshineData.lat;
   const theoreticalMaxData = useMemo(
@@ -29,15 +40,16 @@ const SunshineGraph = ({ sunshineData, selectedMonth }: SunshineGraphProps) => {
     [latitude]
   );
 
-  // Combine actual data with theoretical max for chart (memoized)
+  // Combine actual data with theoretical max and comparison data for chart (memoized)
   const combinedChartData = useMemo(
     () =>
       chartData.map((point, index) => ({
         ...point,
         theoreticalMax: theoreticalMaxData ? theoreticalMaxData[index] : null,
         baseline: 0, // 0% sunshine baseline
+        comparisonHours: comparisonChartData ? comparisonChartData[index]?.hours : null,
       })),
-    [chartData, theoreticalMaxData]
+    [chartData, theoreticalMaxData, comparisonChartData]
   );
 
   // Memoize custom dot render function
@@ -50,6 +62,8 @@ const SunshineGraph = ({ sunshineData, selectedMonth }: SunshineGraphProps) => {
 
   // Configure lines
   const lines: LineConfig[] = useMemo(() => {
+    const mainCityName = sunshineData.city;
+    const compCityName = comparisonSunshineData?.city;
     const lineConfigs: LineConfig[] = [];
 
     // Add theoretical maximum line if data exists
@@ -64,18 +78,37 @@ const SunshineGraph = ({ sunshineData, selectedMonth }: SunshineGraphProps) => {
       });
     }
 
-    // Add actual sunshine line
+    // Add actual sunshine line - City 1 (blue)
     lineConfigs.push({
       dataKey: 'hours',
-      name: 'Actual',
-      stroke: chartColors.lineColor,
+      name: comparisonSunshineData ? `${mainCityName}` : 'Actual',
+      stroke: '#3b82f6', // medium blue (same as temp avg)
       strokeWidth: 2,
       dot: renderCustomDot,
       connectNulls: true,
     });
 
+    // Add comparison city sunshine line if data exists - City 2 (purple)
+    if (comparisonSunshineData) {
+      lineConfigs.push({
+        dataKey: 'comparisonHours',
+        name: `${compCityName}`,
+        stroke: '#a855f7', // medium purple (same as temp avg)
+        strokeWidth: 2,
+        strokeDasharray: '5 5',
+        dot: false,
+        connectNulls: true,
+      });
+    }
+
     return lineConfigs;
-  }, [theoreticalMaxData, renderCustomDot, chartColors]);
+  }, [
+    theoreticalMaxData,
+    renderCustomDot,
+    chartColors,
+    sunshineData.city,
+    comparisonSunshineData,
+  ]);
 
   // Configure reference line for selected month
   const referenceLines: ReferenceLineConfig[] = useMemo(() => {

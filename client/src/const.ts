@@ -255,7 +255,7 @@ export const MONTH_FIELDS: Record<number, keyof SunshineData> = {
 export const SLIDER_THUMB_WIDTH = 32; // 8 * 4 (w-8 in tailwind)
 
 // sunshine graph chart colors
-export const SUNSHINE_CHART_LINE_COLOR = '#20A39E'; // secondary teal
+export const SUNSHINE_CHART_LINE_COLOR = '#20A39E'; // secondary teal 
 export const SUNSHINE_CHART_GRID_COLOR = '#e5e7eb'; // light gray
 export const SUNSHINE_CHART_AXIS_COLOR = '#9ca3af'; // medium gray
 export const SUNSHINE_CHART_MAX_LINE_COLOR = '#E63E55'; // theme red for theoretical max
