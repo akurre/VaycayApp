@@ -95,37 +95,39 @@ export const HOME_RING_STROKE_WIDTH = 2;
 // ============================================================================
 
 // fixed temperature thresholds (in celsius) and their corresponding colors
-// using a sequential blue-to-red color scheme for cleaner heatmap visualization
-// this prevents the "rainbow edge" effect that occurs with diverging color palettes
+// the interpolation function in getMarkerColor.ts creates smooth gradients between these points
+// so we only need key transition points, not every degree
 export const TEMP_THRESHOLDS = [
-  { temp: -20, color: [8, 48, 107] as [number, number, number] }, // dark blue (very cold)
-  { temp: -10, color: [33, 102, 172] as [number, number, number] }, // blue (cold)
-  { temp: 0, color: [67, 147, 195] as [number, number, number] }, // light blue (freezing)
-  { temp: 10, color: [146, 197, 222] as [number, number, number] }, // pale blue (cool)
-  { temp: 18, color: [209, 229, 240] as [number, number, number] }, // very pale blue (mild)
-  { temp: 22, color: [253, 219, 199] as [number, number, number] }, // pale orange (comfortable)
-  { temp: 26, color: [244, 165, 130] as [number, number, number] }, // light orange (warm)
-  { temp: 30, color: [214, 96, 77] as [number, number, number] }, // orange-red (hot)
-  { temp: 35, color: [178, 24, 43] as [number, number, number] }, // red (very hot)
-  { temp: 45, color: [103, 0, 31] as [number, number, number] }, // dark red (extreme heat)
+  { temp: -20, color: [75, 0, 130] as [number, number, number] }, // deep purple (-20 or below)
+  { temp: -10, color: [0, 0, 255] as [number, number, number] }, // blue (-20 to -10)
+  { temp: 0, color: [135, 206, 250] as [number, number, number] }, // light blue (-10 to 0)
+  { temp: 8, color: [64, 224, 208] as [number, number, number] }, // greenish blue (0 to 8)
+  { temp: 13, color: [34, 139, 34] as [number, number, number] }, // green with a little yellow (8 to 13)
+  { temp: 19, color: [255, 255, 0] as [number, number, number] }, // mostly yellow (13 to 19)
+  { temp: 24, color: [255, 180, 0] as [number, number, number] }, // yellow-y orange (19 to 24)
+  { temp: 29, color: [255, 100, 0] as [number, number, number] }, // orange (24 to 29)
+  { temp: 34, color: [255, 69, 0] as [number, number, number] }, // orange-red (29 to 34)
+  { temp: 45, color: [255, 0, 0] as [number, number, number] }, // red (34+)
 ];
 
 // color range for heatmap layer (extracted from thresholds)
 export const COLOR_RANGE: [number, number, number][] = TEMP_THRESHOLDS.map((t) => t.color);
 
 // sunshine hours color thresholds for heatmap visualization
-// using a sequential yellow-to-orange color scheme for cleaner visualization
-// this prevents the "rainbow edge" effect that occurs with diverging color palettes
+// ranges from low sunshine (dark/cool colors) to high sunshine (bright/warm colors)
 export const SUNSHINE_THRESHOLDS = [
-  { hours: 0, color: [255, 255, 217] as const }, // very pale yellow (very low sunshine)
-  { hours: 50, color: [255, 247, 188] as const }, // pale yellow (low sunshine)
-  { hours: 100, color: [254, 227, 145] as const }, // light yellow (below average)
-  { hours: 150, color: [254, 196, 79] as const }, // yellow (average sunshine)
-  { hours: 200, color: [254, 153, 41] as const }, // golden yellow (good sunshine)
-  { hours: 250, color: [236, 112, 20] as const }, // orange (very good sunshine)
-  { hours: 300, color: [204, 76, 2] as const }, // dark orange (excellent sunshine)
-  { hours: 350, color: [153, 52, 4] as const }, // brown-orange (extreme sunshine)
-  { hours: 380, color: [102, 37, 6] as const }, // dark brown (maximum sunshine)
+  { hours: 0, color: [100, 20, 150] as const }, // brighter purple (very low sunshine)
+  { hours: 25, color: [70, 40, 190] as const }, // lighter purple-blue (very low sunshine)
+  { hours: 50, color: [0, 120, 200] as const }, // bright blue (low sunshine)
+  { hours: 80, color: [0, 180, 180] as const }, // cyan/turquoise (below average sunshine)
+  { hours: 110, color: [60, 140, 40] as const }, // olive green (transitional sunshine)
+  { hours: 140, color: [100, 200, 0] as const }, // lime green (average sunshine)
+  { hours: 180, color: [173, 255, 47] as const }, // green-yellow (good sunshine)
+  { hours: 220, color: [255, 255, 0] as const }, // yellow (very good sunshine)
+  { hours: 260, color: [255, 165, 0] as const }, // orange (excellent sunshine)
+  { hours: 300, color: [255, 69, 0] as const }, // orange-red (extreme sunshine)
+  { hours: 340, color: [255, 20, 0] as const }, // bright red (near maximum sunshine)
+  { hours: 380, color: [220, 0, 0] as const }, // deep red (maximum sunshine)
 ];
 
 // extract color range from sunshine thresholds for heatmap layer
