@@ -253,11 +253,11 @@ export const monthlyMarks = [
 // ============================================================================
 
 // City 1 (main city) colors - Blue shades
-export const CITY1_PRIMARY_COLOR = '#3b82f6'; // medium blue
-export const CITY1_MAX_COLOR = '#93c5fd'; // light blue
-export const CITY1_MIN_COLOR = '#1e40af'; // dark blue
+export const CITY1_PRIMARY_COLOR = '#BB4A52'; // medium burgundy
+export const CITY1_MAX_COLOR = '#eb3845'; // light burgundy
+export const CITY1_MIN_COLOR = '#9F2042'; // dark burgundy
 
 // City 2 (comparison city) colors - Purple shades
-export const CITY2_PRIMARY_COLOR = '#a855f7'; // medium purple
-export const CITY2_MAX_COLOR = '#d8b4fe'; // light purple
-export const CITY2_MIN_COLOR = '#7e22ce'; // dark purple
+export const CITY2_PRIMARY_COLOR = '#b47ad6'; // medium purple
+export const CITY2_MAX_COLOR = '#C9B8DC'; // light purple
+export const CITY2_MIN_COLOR = '#9c74c2'; // dark purple

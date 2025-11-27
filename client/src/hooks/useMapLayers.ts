@@ -67,8 +67,8 @@ function useMapLayers({
         getWeight: (d) => d.weight,
         // Use radiusMeters instead of radiusPixels for natural zoom scaling
         radiusMeters: 80000, // ~80km radius - scales naturally with zoom level
-        intensity: 1.2, // Slightly increased for more vivid colors
-        threshold: 0.15, // Increased from 0.03 to reduce rainbow edge bleeding
+        intensity: 1, // Higher intensity = more vivid colors at center
+        threshold: 0.5, // Higher threshold = smoother boundaries, fades edges to transparent
         colorRange:
           dataType === DataType.Temperature
             ? COLOR_RANGE

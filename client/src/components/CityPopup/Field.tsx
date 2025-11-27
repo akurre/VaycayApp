@@ -7,6 +7,7 @@ interface FieldProps {
   valueColor?: string;
   secondaryValue?: string | number;
   secondaryValueColor?: string;
+  isHorizontal?: boolean;
 }
 
 const Field = ({
@@ -16,12 +17,14 @@ const Field = ({
   valueColor,
   secondaryValue,
   secondaryValueColor,
+  isHorizontal,
 }: FieldProps) => {
   const { colorScheme } = useMantineColorScheme();
   const labelColor = colorScheme === 'dark' ? 'tertiary-purple.4' : 'tertiary-purple.7';
+  const classNames = `w-full ${isHorizontal ? 'flex gap-2': ''}`
 
   return (
-    <div>
+    <div className={classNames}>
       <Text size="sm" c={labelColor}>
         {label}
       </Text>

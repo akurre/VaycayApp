@@ -1,5 +1,5 @@
 import { memo, useMemo } from 'react';
-import { Alert, Loader, Text } from '@mantine/core';
+import { Alert, Badge, Loader, Text } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
 import type { SunshineData } from '@/types/sunshineDataType';
 import type { WeekDataPoint } from '@/types/weeklyWeatherDataType';
@@ -18,6 +18,8 @@ interface SunshineValuesProps {
   hasError: boolean;
   comparisonSunshineData?: SunshineData | null;
   comparisonWeeklyWeatherData?: WeekDataPoint[] | null;
+  comparisonCity?: string;
+  baseCity: string;
 }
 
 const SunshineValues = ({
@@ -27,6 +29,8 @@ const SunshineValues = ({
   hasError,
   comparisonSunshineData,
   comparisonWeeklyWeatherData,
+  comparisonCity,
+  baseCity,
 }: SunshineValuesProps) => {
   // Calculate average sunshine if we have sunshine data
   const averageSunshine = useMemo(() => {
@@ -62,7 +66,7 @@ const SunshineValues = ({
   const hasAnyData = hasSunshineData || hasRainfallData;
 
   return (
-    <CustomPaper>
+    <CustomPaper className="h-full">
       {isLoading && !displaySunshineData && (
         <div className="flex justify-center py-4">
           <Loader size="sm" />
@@ -80,13 +84,24 @@ const SunshineValues = ({
           {hasSunshineData && (
             <GreaterSection title="Average Annual Sunshine">
               <div className="flex flex-col gap-1">
-                <Text size="md" style={{ color: hasComparison ? CITY1_PRIMARY_COLOR : undefined }}>
-                  {averageSunshine.toFixed(1)} hours
-                </Text>
-                {hasComparison && comparisonAverageSunshine !== null && (
-                  <Text size="md" style={{ color: CITY2_PRIMARY_COLOR }}>
-                    {comparisonAverageSunshine.toFixed(1)} hours
+                <div className="flex gap-2 justify-between">
+                  {comparisonCity && (
+                    <Badge variant='light'>{baseCity}</Badge>
+                  )}
+                  <Text
+                    size="md"
+                    style={{ color: hasComparison ? CITY1_PRIMARY_COLOR : undefined }}
+                  >
+                    {averageSunshine.toFixed(1)} hours
                   </Text>
+                </div>
+                {hasComparison && comparisonAverageSunshine !== null && (
+                  <div className="flex gap-2 justify-between">
+                    <Badge variant='light' style={{ color: CITY2_PRIMARY_COLOR }}>{comparisonCity}</Badge>
+                    <Text size="md" style={{ color: CITY2_PRIMARY_COLOR }}>
+                      {comparisonAverageSunshine.toFixed(1)} hours
+                    </Text>
+                  </div>
                 )}
               </div>
             </GreaterSection>
@@ -94,13 +109,24 @@ const SunshineValues = ({
           {hasRainfallData && (
             <GreaterSection title="Average Annual Rainfall">
               <div className="flex flex-col gap-1">
-                <Text size="md" style={{ color: hasComparison ? CITY1_PRIMARY_COLOR : undefined }}>
-                  {averageRainfall.toFixed(1)} mm
-                </Text>
-                {hasComparison && comparisonAverageRainfall !== null && (
-                  <Text size="md" style={{ color: CITY2_PRIMARY_COLOR }}>
-                    {comparisonAverageRainfall.toFixed(1)} mm
+                <div className="flex gap-2 items-center justify-between">
+                  {comparisonCity && (
+                    <Badge variant='light'>{baseCity}</Badge>
+                  )}
+                  <Text
+                    size="md"
+                    style={{ color: hasComparison ? CITY1_PRIMARY_COLOR : undefined }}
+                  >
+                    {averageRainfall.toFixed(1)} mm
                   </Text>
+                </div>
+                {hasComparison && comparisonAverageRainfall !== null && (
+                  <div className="flex gap-2 items-center justify-between">
+                    <Badge variant='light' style={{ color: CITY2_PRIMARY_COLOR }}>{comparisonCity}</Badge>
+                    <Text size="md" style={{ color: CITY2_PRIMARY_COLOR }}>
+                      {comparisonAverageRainfall.toFixed(1)} mm
+                    </Text>
+                  </div>
                 )}
               </div>
             </GreaterSection>

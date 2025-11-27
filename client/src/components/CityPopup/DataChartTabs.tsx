@@ -43,8 +43,13 @@ const DataChartTabs = ({
 }: DataChartTabsProps) => {
   return (
     <CustomPaper className="h-full" p="sm">
-      <Tabs orientation="vertical" defaultValue={dataType} className="h-full flex">
-        <Tabs.List>
+      <Tabs
+        orientation="vertical"
+        variant="outline"
+        defaultValue={dataType}
+        className="h-full flex"
+      >
+        <Tabs.List grow>
           <Tabs.Tab value="temperature" leftSection={<IconTemperature size={12} />}>
             Temp
           </Tabs.Tab>

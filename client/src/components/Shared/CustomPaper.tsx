@@ -8,7 +8,7 @@ interface CustomPaperProps {
   p?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 }
 
-const CustomPaper = ({ children, className, p = 'lg' }: CustomPaperProps) => {
+const CustomPaper = ({ children, className, p = 'md' }: CustomPaperProps) => {
   const { colorScheme } = useMantineColorScheme();
   return (
     <Paper
@@ -18,7 +18,7 @@ const CustomPaper = ({ children, className, p = 'lg' }: CustomPaperProps) => {
       shadow="sm"
       p={p}
       withBorder
-      className={`${className} h-full`}
+      className={className}
     >
       {children}
     </Paper>

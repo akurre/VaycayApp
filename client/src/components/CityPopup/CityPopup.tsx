@@ -6,7 +6,7 @@ import type { CityPopupProps } from '@/types/mapTypes';
 import useWeatherDataForCity from '@/api/dates/useWeatherDataForCity';
 import useSunshineDataForCity from '@/api/dates/useSunshineDataForCity';
 import useWeeklyWeatherForCity from '@/api/dates/useWeeklyWeatherForCity';
-import PrecipAndTempValues from './PrecipAndTempValues';
+import DailyTempValues from './DailyTempValues';
 import SunshineValues from './SunshineValues';
 import AdditionalInfo from './AdditionalInfo';
 import DataChartTabs from './DataChartTabs';
@@ -149,7 +149,8 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: Cit
   // Create the modal title
   let cityAndCountry = city.city ? toTitleCase(city.city) : 'Unknown City';
   if (city.state) {
-    cityAndCountry += `, ${toTitleCase(city.state.substring(0,7)+'.')}`;
+    const state = city.state.length > 8 ? city.state.substring(0, 8) + '.' : city.state;
+    cityAndCountry += `, ${toTitleCase(state)}`;
   }
   if (city.country) {
     cityAndCountry += `, ${city.country}`;
@@ -172,9 +173,9 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: Cit
         </ActionIcon>
       </div>
       {/* Content area with horizontal layout */}
-      <div className="flex h-full overflow-hidden py-3 px-6 gap-6">
+      <div className="flex h-full py-3 px-6 gap-6">
         {/* Left section - City info and metadata */}
-        <div className="flex flex-col gap-3 h-full min-w-1/2 overflow-y-auto grow">
+        <div className="flex flex-col gap-3 min-w-1/2 grow">
           <div className="flex gap-6">
             <div className="flex items-center">
               <Badge size="xl">
@@ -191,27 +192,32 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: Cit
               />
             </div>
           </div>
-          <div className="flex gap-6 w-full justify-end">
-            <AdditionalInfo city={city} />
+          <div className="flex gap-6 w-full flex-1 min-h-0 justify-end">
+            {/* city info */}
+            <AdditionalInfo city={city} isShowCity={!!comparisonSunshineData} />
 
-            {/* Middle section - Weather data */}
+            {/* Average annual sunshine */}
             <div className="flex flex-col w-5/12">
-              <PrecipAndTempValues
+              <SunshineValues
+                baseCity={city?.city}
+                comparisonCity={comparisonCity?.name}
+                displaySunshineData={displaySunshineData}
+                weeklyWeatherData={weeklyWeatherData?.weeklyData ?? null}
+                isLoading={sunshineLoading}
+                hasError={sunshineError}
+                comparisonSunshineData={comparisonSunshineData}
+                comparisonWeeklyWeatherData={comparisonWeeklyWeatherData?.weeklyData ?? null}
+              />
+            </div>
+            <div className="flex flex-col w-5/12">
+              {/* Middle section - Weather data */}
+              <DailyTempValues
                 displayWeatherData={displayWeatherData}
                 isLoading={weatherLoading}
                 hasError={weatherError}
                 comparisonWeatherData={comparisonWeatherData}
               />
             </div>
-            {/* Average annual sunshine */}
-            <SunshineValues
-              displaySunshineData={displaySunshineData}
-              weeklyWeatherData={weeklyWeatherData?.weeklyData ?? null}
-              isLoading={sunshineLoading}
-              hasError={sunshineError}
-              comparisonSunshineData={comparisonSunshineData}
-              comparisonWeeklyWeatherData={comparisonWeeklyWeatherData?.weeklyData ?? null}
-            />
           </div>
         </div>
         {/* Right section - Data Charts */}

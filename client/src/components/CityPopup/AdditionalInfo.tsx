@@ -3,15 +3,21 @@ import Field from './Field';
 import DistanceSection from './DistanceSection';
 import GreaterSection from './GreaterSection';
 import CustomPaper from '../Shared/CustomPaper';
-import { Popover, Button } from '@mantine/core';
+import { Popover, Button, Badge } from '@mantine/core';
 
 interface AdditionalInfoProps {
   city: WeatherDataUnion;
+  isShowCity?: boolean;
 }
 
-const AdditionalInfo = ({ city }: AdditionalInfoProps) => {
+const AdditionalInfo = ({ city, isShowCity }: AdditionalInfoProps) => {
   return (
-    <CustomPaper className="w-3/12">
+    <CustomPaper className="w-3/12 flex flex-col">
+      {isShowCity && (
+        <div className='pb-2'>
+          <Badge variant='light'>{city.city}</Badge>
+        </div>
+      )}
       <GreaterSection title="City Info">
         <div className="flex flex-col">
           <div className="pb-3 flex-col">

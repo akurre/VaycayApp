@@ -5,21 +5,21 @@ import type { WeatherData } from '@/types/cityWeatherDataType';
 import TemperatureSection from './TemperatureSection';
 import CustomPaper from '../Shared/CustomPaper';
 
-interface PrecipAndTempValuesProps {
+interface DailyTempValuesProps {
   displayWeatherData: WeatherData | null;
   isLoading: boolean;
   hasError: boolean;
   comparisonWeatherData?: WeatherData | null;
 }
 
-const PrecipAndTempValues = ({
+const DailyTempValues = ({
   displayWeatherData,
   isLoading,
   hasError,
   comparisonWeatherData,
-}: PrecipAndTempValuesProps) => {
+}: DailyTempValuesProps) => {
   return (
-    <CustomPaper>
+    <CustomPaper className='h-full'>
       {isLoading && !displayWeatherData && (
         <div className="flex justify-center py-4">
           <Loader size="sm" />
@@ -40,6 +40,8 @@ const PrecipAndTempValues = ({
           comparisonAvgTemperature={comparisonWeatherData?.avgTemperature}
           comparisonMaxTemperature={comparisonWeatherData?.maxTemperature}
           comparisonMinTemperature={comparisonWeatherData?.minTemperature}
+          comparisonCity={comparisonWeatherData?.city}
+          baseCity={displayWeatherData.city}
         />
       ) : (
         <>No weather data to show.</>
@@ -48,4 +50,4 @@ const PrecipAndTempValues = ({
   );
 };
 
-export default memo(PrecipAndTempValues);
+export default memo(DailyTempValues);

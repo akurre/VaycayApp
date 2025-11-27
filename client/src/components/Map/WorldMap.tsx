@@ -138,7 +138,15 @@ const WorldMap = ({
         timingFunction="ease"
       >
         {(transitionStyle) => (
-          <div style={{ ...transitionStyle, position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 50 }}>
+          <div
+            style={{
+              ...transitionStyle,
+              position: 'fixed',
+              inset: 0,
+              pointerEvents: 'none',
+              zIndex: 50,
+            }}
+          >
             {cityToRender && (
               <CityPopup
                 city={cityToRender}
