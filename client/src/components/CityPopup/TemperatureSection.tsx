@@ -2,7 +2,7 @@ import { memo } from 'react';
 import Field from './Field';
 import { formatTemperature } from '@/utils/tempFormatting/formatTemperature';
 import GreaterSection from './GreaterSection';
-import getTemperatureIcon from '@/utils/iconMapping/getTemperatureIcon';
+
 import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
 
 interface TemperatureSectionProps {
@@ -22,14 +22,13 @@ const TemperatureSection = ({
   comparisonMaxTemperature,
   comparisonMinTemperature,
 }: TemperatureSectionProps) => {
-  const temperatureIcon = getTemperatureIcon(avgTemperature);
   const hasComparison =
     comparisonAvgTemperature !== undefined ||
     comparisonMaxTemperature !== undefined ||
     comparisonMinTemperature !== undefined;
 
   return (
-    <GreaterSection title="Temperature" icon={temperatureIcon}>
+    <GreaterSection title="Temperature">
       <div className="flex gap-10">
         <Field
           label="Average"

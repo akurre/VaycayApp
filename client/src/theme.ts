@@ -36,7 +36,7 @@ export const appColors = {
   dark: {
     background: '#1a1b1e',
     surface: '#25262b',
-    paper: '#380c18',
+    paper: '#282E33',
     border: '#373a40',
     text: '#DBF9F4',
     textSecondary: '#B49FCC',

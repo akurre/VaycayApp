@@ -13,7 +13,6 @@ import MapTooltip from './MapTooltip';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useWeatherStore } from '@/stores/useWeatherStore';
 import { useSunshineStore } from '@/stores/useSunshineStore';
-import { useAppStore } from '@/stores/useAppStore';
 import { DataType } from '@/types/mapTypes';
 import type { ViewMode, WeatherDataUnion } from '@/types/mapTypes';
 import { perfMonitor } from '@/utils/performance/performanceMonitor';

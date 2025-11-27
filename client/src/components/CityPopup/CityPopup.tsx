@@ -149,7 +149,7 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: Cit
   // Create the modal title
   let cityAndCountry = city.city ? toTitleCase(city.city) : 'Unknown City';
   if (city.state) {
-    cityAndCountry += `, ${toTitleCase(city.state)}`;
+    cityAndCountry += `, ${toTitleCase(city.state.substring(0,7)+'.')}`;
   }
   if (city.country) {
     cityAndCountry += `, ${city.country}`;
@@ -157,7 +157,7 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: Cit
 
   return (
     <div
-      className="z-50 fixed bottom-4 left-4 right-4 shadow-lg rounded-xl z-50 flex flex-col"
+      className="fixed bottom-4 left-4 right-4 shadow-lg rounded-xl z-50 flex flex-col"
       style={{
         height: '33.333vh',
         pointerEvents: 'auto',

@@ -8,7 +8,7 @@ import GreaterSection from './GreaterSection';
 import CustomPaper from '../Shared/CustomPaper';
 import { transformSunshineDataForChart } from '@/utils/dataFormatting/transformSunshineDataForChart';
 import { calculateAverageSunshine } from '@/utils/dataFormatting/calculateAverageSunshine';
-import getSunshineHoursIcon from '@/utils/iconMapping/getSunshineIcon';
+
 import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
 
 interface SunshineValuesProps {
@@ -54,10 +54,12 @@ const SunshineValues = ({
     return calculateAverageRainfall(comparisonWeeklyWeatherData);
   }, [comparisonWeeklyWeatherData]);
 
-  // Get the sunshine icon
-  const SunshineIcon = getSunshineHoursIcon(averageSunshine);
-
   const hasComparison = comparisonSunshineData || comparisonWeeklyWeatherData;
+
+  // determine if we have any data to show
+  const hasSunshineData = displaySunshineData && averageSunshine !== null;
+  const hasRainfallData = averageRainfall !== null;
+  const hasAnyData = hasSunshineData || hasRainfallData;
 
   return (
     <CustomPaper>
@@ -73,35 +75,39 @@ const SunshineValues = ({
         </Alert>
       )}
 
-      {displaySunshineData && averageSunshine !== null ? (
+      {hasAnyData ? (
         <>
-          <GreaterSection title="Average Annual Sunshine" icon={SunshineIcon}>
-            <div className="flex flex-col gap-1">
-              <Text size="md" style={{ color: hasComparison ? CITY1_PRIMARY_COLOR : undefined }}>
-                {averageSunshine.toFixed(1)} hours
-              </Text>
-              {hasComparison && comparisonAverageSunshine !== null && (
-                <Text size="md" style={{ color: CITY2_PRIMARY_COLOR }}>
-                  {comparisonAverageSunshine.toFixed(1)} hours
+          {hasSunshineData && (
+            <GreaterSection title="Average Annual Sunshine">
+              <div className="flex flex-col gap-1">
+                <Text size="md" style={{ color: hasComparison ? CITY1_PRIMARY_COLOR : undefined }}>
+                  {averageSunshine.toFixed(1)} hours
                 </Text>
-              )}
-            </div>
-          </GreaterSection>
-          <GreaterSection title="Average Annual Rainfall" icon={SunshineIcon}>
-            <div className="flex flex-col gap-1">
-              <Text size="md" style={{ color: hasComparison ? CITY1_PRIMARY_COLOR : undefined }}>
-                {averageRainfall !== null ? `${averageRainfall.toFixed(1)} mm` : 'No data'}
-              </Text>
-              {hasComparison && comparisonAverageRainfall !== null && (
-                <Text size="md" style={{ color: CITY2_PRIMARY_COLOR }}>
-                  {comparisonAverageRainfall.toFixed(1)} mm
+                {hasComparison && comparisonAverageSunshine !== null && (
+                  <Text size="md" style={{ color: CITY2_PRIMARY_COLOR }}>
+                    {comparisonAverageSunshine.toFixed(1)} hours
+                  </Text>
+                )}
+              </div>
+            </GreaterSection>
+          )}
+          {hasRainfallData && (
+            <GreaterSection title="Average Annual Rainfall">
+              <div className="flex flex-col gap-1">
+                <Text size="md" style={{ color: hasComparison ? CITY1_PRIMARY_COLOR : undefined }}>
+                  {averageRainfall.toFixed(1)} mm
                 </Text>
-              )}
-            </div>
-          </GreaterSection>
+                {hasComparison && comparisonAverageRainfall !== null && (
+                  <Text size="md" style={{ color: CITY2_PRIMARY_COLOR }}>
+                    {comparisonAverageRainfall.toFixed(1)} mm
+                  </Text>
+                )}
+              </div>
+            </GreaterSection>
+          )}
         </>
       ) : (
-        !isLoading && !hasError && <>No sunshine data to show.</>
+        !isLoading && !hasError && <>No data to show.</>
       )}
     </CustomPaper>
   );

@@ -65,9 +65,10 @@ function useMapLayers({
         data: heatmapData,
         getPosition: (d) => d.position,
         getWeight: (d) => d.weight,
-        radiusPixels: 40,
-        intensity: 1,
-        threshold: 0.03,
+        // Use radiusMeters instead of radiusPixels for natural zoom scaling
+        radiusMeters: 80000, // ~80km radius - scales naturally with zoom level
+        intensity: 1.2, // Slightly increased for more vivid colors
+        threshold: 0.15, // Increased from 0.03 to reduce rainbow edge bleeding
         colorRange:
           dataType === DataType.Temperature
             ? COLOR_RANGE
@@ -75,12 +76,8 @@ function useMapLayers({
         aggregation: 'MEAN',
         opacity: 0.6,
         visible: viewMode === 'heatmap',
-        transitions: {
-          getWeight: {
-            duration: 600,
-            easing: (t: number) => t * (2 - t),
-          },
-        },
+        // Remove transitions to prevent interference with zoom operations
+        // Transitions can cause lag and stuttering during rapid zoom changes
       }),
     ];
 
