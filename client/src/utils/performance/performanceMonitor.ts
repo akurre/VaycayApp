@@ -240,7 +240,14 @@ class PerformanceMonitor {
 
 export const perfMonitor = new PerformanceMonitor();
 
+// Extend globalThis type for perfMonitor
+declare global {
+  interface Window {
+    perfMonitor: PerformanceMonitor;
+  }
+}
+
 // expose to globalThis for easy access in dev tools
 if (import.meta.env.DEV) {
-  (globalThis as any).perfMonitor = perfMonitor;
+  (globalThis as typeof globalThis & { perfMonitor: PerformanceMonitor }).perfMonitor = perfMonitor;
 }
