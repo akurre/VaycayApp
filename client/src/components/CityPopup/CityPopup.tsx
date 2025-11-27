@@ -11,6 +11,7 @@ import SunshineValues from './SunshineValues';
 import AdditionalInfo from './AdditionalInfo';
 import DataChartTabs from './DataChartTabs';
 import { extractMonthFromDate } from '@/utils/dateFormatting/extractMonthFromDate';
+import { extractMonthDay } from '@/utils/dateFormatting/extractMonthDay';
 import { isWeatherData } from '@/utils/typeGuards';
 import arePropsEqual from './utils/arePropsEqual';
 import ComparisonCitySelector from './ComparisonCitySelector';
@@ -84,6 +85,23 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: Cit
     skipFetch: !city,
   });
 
+  // Extract month-day only from dateToUse for comparison city
+  // (removes year if present, e.g., "2020-11-26" -> "11-26")
+  const monthDayOnly = useMemo(() => extractMonthDay(dateToUse), [dateToUse]);
+
+  // Fetch weather data for the comparison city
+  const {
+    weatherData: comparisonWeatherData,
+    weatherLoading: comparisonWeatherLoading,
+    weatherError: comparisonWeatherError,
+  } = useWeatherDataForCity({
+    cityName: comparisonCity?.name ?? null,
+    lat: comparisonCity?.lat ?? null,
+    long: comparisonCity?.long ?? null,
+    selectedDate: monthDayOnly,
+    skipFetch: !comparisonCity,
+  });
+
   // Fetch weekly weather data for the comparison city
   const {
     weeklyWeatherData: comparisonWeeklyWeatherData,
@@ -139,7 +157,7 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: Cit
 
   return (
     <div
-      className="fixed bottom-4 left-4 right-4 shadow-lg rounded-xl z-50 flex flex-col"
+      className="z-50 fixed bottom-4 left-4 right-4 shadow-lg rounded-xl z-50 flex flex-col"
       style={{
         height: '33.333vh',
         pointerEvents: 'auto',
@@ -182,6 +200,7 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: Cit
                 displayWeatherData={displayWeatherData}
                 isLoading={weatherLoading}
                 hasError={weatherError}
+                comparisonWeatherData={comparisonWeatherData}
               />
             </div>
             {/* Average annual sunshine */}
@@ -190,6 +209,8 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: Cit
               weeklyWeatherData={weeklyWeatherData?.weeklyData ?? null}
               isLoading={sunshineLoading}
               hasError={sunshineError}
+              comparisonSunshineData={comparisonSunshineData}
+              comparisonWeeklyWeatherData={comparisonWeeklyWeatherData?.weeklyData ?? null}
             />
           </div>
         </div>

@@ -2,11 +2,11 @@ import type { WeekDataPoint } from '@/types/weeklyWeatherDataType';
 
 /**
  * Calculates the average annual rainfall from weekly weather data.
- * 
+ *
  * The backend aggregates multiple years of daily data into weekly totals.
  * Since totalPrecip represents the sum of precipitation across all years for that week,
  * we need to average it by the number of years of data to get a typical annual value.
- * 
+ *
  * We calculate this by: sum of (totalPrecip / daysWithData * 7) for all weeks
  * This gives us the average weekly precipitation, which when summed gives annual rainfall.
  */
@@ -24,6 +24,6 @@ export function calculateAverageRainfall(weeklyData: WeekDataPoint[]): number | 
     const avgWeeklyPrecip = (week.totalPrecip! / week.daysWithData) * 7;
     return acc + avgWeeklyPrecip;
   }, 0);
-  
+
   return annualTotal;
 }

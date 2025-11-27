@@ -133,7 +133,7 @@ const MapPage: FC = () => {
         <MapViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
         <MapDataToggle dataType={dataType} onDataTypeChange={setDataType} />
       </div>
-      <div className="absolute bottom-4 left-4 z-20 flex gap-2">
+      <div className="absolute bottom-4 left-4 z-10 flex gap-2">
         <MapThemeToggle />
       </div>
       <div

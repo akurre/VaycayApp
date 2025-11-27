@@ -10,8 +10,6 @@ export interface PerformanceMetric {
 class PerformanceMonitor {
   private metrics: PerformanceMetric[] = [];
   private marks: Map<string, number> = new Map();
-  
-
 
   constructor() {
     // Load persisted metrics on startup (non-blocking)
@@ -25,7 +23,8 @@ class PerformanceMonitor {
     // Clear corrupted storage if it exists and is causing issues
     try {
       const stored = localStorage.getItem('performance-dashboard-storage');
-      if (stored && stored.length > 500000) { // > 500KB is suspicious
+      if (stored && stored.length > 500000) {
+        // > 500KB is suspicious
         console.warn('Detected large performance storage, clearing...');
         localStorage.removeItem('performance-dashboard-storage');
       }

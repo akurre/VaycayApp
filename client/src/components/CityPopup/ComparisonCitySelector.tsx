@@ -76,9 +76,10 @@ const ComparisonCitySelector = ({
   };
 
   // Display selected city name in input, or search term when typing
-  const displayValue = selectedCity && !opened
-    ? `${selectedCity.name}${selectedCity.state ? `, ${selectedCity.state}` : ''}${selectedCity.country ? `, ${selectedCity.country}` : ''}`
-    : searchTerm;
+  const displayValue =
+    selectedCity && !opened
+      ? `${selectedCity.name}${selectedCity.state ? `, ${selectedCity.state}` : ''}${selectedCity.country ? `, ${selectedCity.country}` : ''}`
+      : searchTerm;
 
   return (
     <Popover opened={opened} onChange={setOpened} position="bottom-end" withArrow shadow="md">
@@ -113,45 +114,45 @@ const ComparisonCitySelector = ({
         />
       </Popover.Target>
 
-        <Popover.Dropdown>
-          <div className="w-80 p-2">
-            {/* Search results */}
-            {isSearchLoading && (
-              <div className="flex justify-center py-4">
-                <Loader size="sm" />
-              </div>
-            )}
+      <Popover.Dropdown>
+        <div className="w-80 p-2">
+          {/* Search results */}
+          {isSearchLoading && (
+            <div className="flex justify-center py-4">
+              <Loader size="sm" />
+            </div>
+          )}
 
-            {!isSearchLoading && searchResults.length > 0 && (
-              <div className="max-h-60 overflow-y-auto">
-                {searchResults.map((city) => (
-                  <button
-                    key={city.id}
-                    onClick={() => handleSelectCity(city)}
-                    className="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded text-sm transition-colors"
-                  >
-                    <div className="font-medium">{city.name}</div>
-                    <div className="text-xs text-gray-600 dark:text-gray-400">
-                      {city.state && `${city.state}, `}
-                      {city.country}
-                      {city.population && ` • ${(city.population / 1000000).toFixed(1)}M`}
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
+          {!isSearchLoading && searchResults.length > 0 && (
+            <div className="max-h-60 overflow-y-auto">
+              {searchResults.map((city) => (
+                <button
+                  key={city.id}
+                  onClick={() => handleSelectCity(city)}
+                  className="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded text-sm transition-colors"
+                >
+                  <div className="font-medium">{city.name}</div>
+                  <div className="text-xs text-gray-600 dark:text-gray-400">
+                    {city.state && `${city.state}, `}
+                    {city.country}
+                    {city.population && ` • ${(city.population / 1000000).toFixed(1)}M`}
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
 
-            {!isSearchLoading && searchTerm.trim().length >= 2 && searchResults.length === 0 && (
-              <div className="text-center py-4 text-sm text-gray-500">No cities found</div>
-            )}
+          {!isSearchLoading && searchTerm.trim().length >= 2 && searchResults.length === 0 && (
+            <div className="text-center py-4 text-sm text-gray-500">No cities found</div>
+          )}
 
-            {searchTerm.trim().length < 2 && (
-              <div className="text-center py-4 text-sm text-gray-500">
-                Type at least 2 characters to search
-              </div>
-            )}
-          </div>
-        </Popover.Dropdown>
+          {searchTerm.trim().length < 2 && (
+            <div className="text-center py-4 text-sm text-gray-500">
+              Type at least 2 characters to search
+            </div>
+          )}
+        </div>
+      </Popover.Dropdown>
     </Popover>
   );
 };

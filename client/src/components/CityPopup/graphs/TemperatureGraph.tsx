@@ -2,6 +2,14 @@ import { useMemo, memo } from 'react';
 
 import RechartsLineGraph, { type LineConfig } from './RechartsLineGraph';
 import { useChartColors } from '@/hooks/useChartColors';
+import {
+  CITY1_PRIMARY_COLOR,
+  CITY1_MAX_COLOR,
+  CITY1_MIN_COLOR,
+  CITY2_PRIMARY_COLOR,
+  CITY2_MAX_COLOR,
+  CITY2_MIN_COLOR,
+} from '@/const';
 
 import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
 
@@ -53,15 +61,17 @@ const TemperatureGraph = ({
 
   // Configure temperature lines
   const lines: LineConfig[] = useMemo(() => {
-    const mainCityName = comparisonWeeklyWeatherData ? weeklyWeatherData.city.substring(0,3) + '.' : weeklyWeatherData.city;
-    const compCityName = comparisonWeeklyWeatherData?.city.substring(0,3) + '.';
+    const mainCityName = comparisonWeeklyWeatherData
+      ? weeklyWeatherData.city.substring(0, 3) + '.'
+      : weeklyWeatherData.city;
+    const compCityName = comparisonWeeklyWeatherData?.city.substring(0, 3) + '.';
 
     // City 1 (main): Blue shades
     const baseLines: LineConfig[] = [
       {
         dataKey: 'maxTemp',
         name: `${mainCityName} Max`,
-        stroke: '#93c5fd', // light blue
+        stroke: CITY1_MAX_COLOR,
         strokeWidth: 2,
         dot: false,
         connectNulls: true,
@@ -69,7 +79,7 @@ const TemperatureGraph = ({
       {
         dataKey: 'avgTemp',
         name: `${mainCityName} Avg`,
-        stroke: '#3b82f6', // medium blue
+        stroke: CITY1_PRIMARY_COLOR,
         strokeWidth: 2.5,
         dot: false,
         connectNulls: true,
@@ -77,7 +87,7 @@ const TemperatureGraph = ({
       {
         dataKey: 'minTemp',
         name: `${mainCityName} Min`,
-        stroke: '#1e40af', // dark blue
+        stroke: CITY1_MIN_COLOR,
         strokeWidth: 2,
         dot: false,
         connectNulls: true,
@@ -90,7 +100,7 @@ const TemperatureGraph = ({
         {
           dataKey: 'compMaxTemp',
           name: `${compCityName} Max`,
-          stroke: '#d8b4fe', // light purple
+          stroke: CITY2_MAX_COLOR,
           strokeWidth: 2,
           strokeDasharray: '5 5',
           dot: false,
@@ -99,7 +109,7 @@ const TemperatureGraph = ({
         {
           dataKey: 'compAvgTemp',
           name: `${compCityName} Avg`,
-          stroke: '#a855f7', // medium purple
+          stroke: CITY2_PRIMARY_COLOR,
           strokeWidth: 2.5,
           strokeDasharray: '5 5',
           dot: false,
@@ -108,7 +118,7 @@ const TemperatureGraph = ({
         {
           dataKey: 'compMinTemp',
           name: `${compCityName} Min`,
-          stroke: '#7e22ce', // dark purple
+          stroke: CITY2_MIN_COLOR,
           strokeWidth: 2,
           strokeDasharray: '5 5',
           dot: false,

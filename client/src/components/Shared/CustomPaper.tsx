@@ -8,7 +8,7 @@ interface CustomPaperProps {
   p?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 }
 
-const CustomPaper = ({ children, className, p="lg" }: CustomPaperProps) => {
+const CustomPaper = ({ children, className, p = 'lg' }: CustomPaperProps) => {
   const { colorScheme } = useMantineColorScheme();
   return (
     <Paper

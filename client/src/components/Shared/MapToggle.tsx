@@ -27,6 +27,7 @@ const MapToggle = <T extends string>({
 
   return (
     <SegmentedControl
+      className='z-40'
       value={value}
       size={size}
       {...props}

@@ -4,9 +4,19 @@ interface FieldProps {
   label: string;
   value: string | number;
   monospace?: boolean;
+  valueColor?: string;
+  secondaryValue?: string | number;
+  secondaryValueColor?: string;
 }
 
-const Field = ({ label, value, monospace }: FieldProps) => {
+const Field = ({
+  label,
+  value,
+  monospace,
+  valueColor,
+  secondaryValue,
+  secondaryValueColor,
+}: FieldProps) => {
   const { colorScheme } = useMantineColorScheme();
   const labelColor = colorScheme === 'dark' ? 'tertiary-purple.4' : 'tertiary-purple.7';
 
@@ -15,9 +25,18 @@ const Field = ({ label, value, monospace }: FieldProps) => {
       <Text size="sm" c={labelColor}>
         {label}
       </Text>
-      <Text size="md" ff={monospace ? 'monospace' : undefined}>
+      <Text size="md" ff={monospace ? 'monospace' : undefined} style={{ color: valueColor }}>
         {value}
       </Text>
+      {secondaryValue !== undefined && (
+        <Text
+          size="md"
+          ff={monospace ? 'monospace' : undefined}
+          style={{ color: secondaryValueColor }}
+        >
+          {secondaryValue}
+        </Text>
+      )}
     </div>
   );
 };

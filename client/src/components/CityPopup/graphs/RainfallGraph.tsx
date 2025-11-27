@@ -11,16 +11,14 @@ import {
 } from 'recharts';
 import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
 import { useChartColors } from '@/hooks/useChartColors';
+import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
 
 interface RainfallGraphProps {
   weeklyWeatherData: CityWeeklyWeather;
   comparisonWeeklyWeatherData?: CityWeeklyWeather | null;
 }
 
-const RainfallGraph = ({
-  weeklyWeatherData,
-  comparisonWeeklyWeatherData,
-}: RainfallGraphProps) => {
+const RainfallGraph = ({ weeklyWeatherData, comparisonWeeklyWeatherData }: RainfallGraphProps) => {
   // Get theme-aware colors
   const chartColors = useChartColors();
 
@@ -140,14 +138,14 @@ const RainfallGraph = ({
                 ? `${weeklyWeatherData.city} Total Precip`
                 : 'Total Precipitation'
             }
-            fill="#3b82f6"
+            fill={CITY1_PRIMARY_COLOR}
             radius={[4, 4, 0, 0]}
           />
           {comparisonWeeklyWeatherData && (
             <Bar
               dataKey="compTotalPrecip"
               name={`${comparisonWeeklyWeatherData.city} Total Precip`}
-              fill="#a855f7"
+              fill={CITY2_PRIMARY_COLOR}
               radius={[4, 4, 0, 0]}
             />
           )}

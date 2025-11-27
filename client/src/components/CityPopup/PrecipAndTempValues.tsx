@@ -3,19 +3,20 @@ import { Alert, Loader } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
 import type { WeatherData } from '@/types/cityWeatherDataType';
 import TemperatureSection from './TemperatureSection';
-import PrecipitationSection from './PrecipitationSection';
 import CustomPaper from '../Shared/CustomPaper';
 
 interface PrecipAndTempValuesProps {
   displayWeatherData: WeatherData | null;
   isLoading: boolean;
   hasError: boolean;
+  comparisonWeatherData?: WeatherData | null;
 }
 
 const PrecipAndTempValues = ({
   displayWeatherData,
   isLoading,
   hasError,
+  comparisonWeatherData,
 }: PrecipAndTempValuesProps) => {
   return (
     <CustomPaper>
@@ -32,19 +33,14 @@ const PrecipAndTempValues = ({
       )}
 
       {displayWeatherData ? (
-        <>
-          <TemperatureSection
-            avgTemperature={displayWeatherData.avgTemperature}
-            maxTemperature={displayWeatherData.maxTemperature}
-            minTemperature={displayWeatherData.minTemperature}
-          />
-          {displayWeatherData.precipitation && (
-            <PrecipitationSection
-              precipitation={displayWeatherData.precipitation}
-              snowDepth={displayWeatherData.snowDepth}
-            />
-          )}
-        </>
+        <TemperatureSection
+          avgTemperature={displayWeatherData.avgTemperature}
+          maxTemperature={displayWeatherData.maxTemperature}
+          minTemperature={displayWeatherData.minTemperature}
+          comparisonAvgTemperature={comparisonWeatherData?.avgTemperature}
+          comparisonMaxTemperature={comparisonWeatherData?.maxTemperature}
+          comparisonMinTemperature={comparisonWeatherData?.minTemperature}
+        />
       ) : (
         <>No weather data to show.</>
       )}

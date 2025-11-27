@@ -9,15 +9,25 @@ import CustomPaper from '../Shared/CustomPaper';
 import { transformSunshineDataForChart } from '@/utils/dataFormatting/transformSunshineDataForChart';
 import { calculateAverageSunshine } from '@/utils/dataFormatting/calculateAverageSunshine';
 import getSunshineHoursIcon from '@/utils/iconMapping/getSunshineIcon';
+import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
 
 interface SunshineValuesProps {
   displaySunshineData: SunshineData | null;
   weeklyWeatherData: WeekDataPoint[] | null;
   isLoading: boolean;
   hasError: boolean;
+  comparisonSunshineData?: SunshineData | null;
+  comparisonWeeklyWeatherData?: WeekDataPoint[] | null;
 }
 
-const SunshineValues = ({ displaySunshineData, weeklyWeatherData, isLoading, hasError }: SunshineValuesProps) => {
+const SunshineValues = ({
+  displaySunshineData,
+  weeklyWeatherData,
+  isLoading,
+  hasError,
+  comparisonSunshineData,
+  comparisonWeeklyWeatherData,
+}: SunshineValuesProps) => {
   // Calculate average sunshine if we have sunshine data
   const averageSunshine = useMemo(() => {
     if (!displaySunshineData) return null;
@@ -25,14 +35,29 @@ const SunshineValues = ({ displaySunshineData, weeklyWeatherData, isLoading, has
     return calculateAverageSunshine(chartData);
   }, [displaySunshineData]);
 
+  // Calculate average sunshine for comparison city
+  const comparisonAverageSunshine = useMemo(() => {
+    if (!comparisonSunshineData) return null;
+    const chartData = transformSunshineDataForChart(comparisonSunshineData);
+    return calculateAverageSunshine(chartData);
+  }, [comparisonSunshineData]);
+
   // Calculate average annual rainfall from weekly weather data
   const averageRainfall = useMemo(() => {
     if (!weeklyWeatherData) return null;
     return calculateAverageRainfall(weeklyWeatherData);
   }, [weeklyWeatherData]);
 
+  // Calculate average annual rainfall for comparison city
+  const comparisonAverageRainfall = useMemo(() => {
+    if (!comparisonWeeklyWeatherData) return null;
+    return calculateAverageRainfall(comparisonWeeklyWeatherData);
+  }, [comparisonWeeklyWeatherData]);
+
   // Get the sunshine icon
   const SunshineIcon = getSunshineHoursIcon(averageSunshine);
+
+  const hasComparison = comparisonSunshineData || comparisonWeeklyWeatherData;
 
   return (
     <CustomPaper>
@@ -50,12 +75,30 @@ const SunshineValues = ({ displaySunshineData, weeklyWeatherData, isLoading, has
 
       {displaySunshineData && averageSunshine !== null ? (
         <>
-        <GreaterSection title="Average Annual Sunshine" icon={SunshineIcon}>
-          <Text size="md">{averageSunshine.toFixed(1)} hours</Text>
-        </GreaterSection>
-        <GreaterSection title="Average Annual Rainfall" icon={SunshineIcon}>
-          <Text size="md">{averageRainfall !== null ? `${averageRainfall.toFixed(1)} mm` : 'No data'}</Text>
-        </GreaterSection>
+          <GreaterSection title="Average Annual Sunshine" icon={SunshineIcon}>
+            <div className="flex flex-col gap-1">
+              <Text size="md" style={{ color: hasComparison ? CITY1_PRIMARY_COLOR : undefined }}>
+                {averageSunshine.toFixed(1)} hours
+              </Text>
+              {hasComparison && comparisonAverageSunshine !== null && (
+                <Text size="md" style={{ color: CITY2_PRIMARY_COLOR }}>
+                  {comparisonAverageSunshine.toFixed(1)} hours
+                </Text>
+              )}
+            </div>
+          </GreaterSection>
+          <GreaterSection title="Average Annual Rainfall" icon={SunshineIcon}>
+            <div className="flex flex-col gap-1">
+              <Text size="md" style={{ color: hasComparison ? CITY1_PRIMARY_COLOR : undefined }}>
+                {averageRainfall !== null ? `${averageRainfall.toFixed(1)} mm` : 'No data'}
+              </Text>
+              {hasComparison && comparisonAverageRainfall !== null && (
+                <Text size="md" style={{ color: CITY2_PRIMARY_COLOR }}>
+                  {comparisonAverageRainfall.toFixed(1)} mm
+                </Text>
+              )}
+            </div>
+          </GreaterSection>
         </>
       ) : (
         !isLoading && !hasError && <>No sunshine data to show.</>

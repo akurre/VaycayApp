@@ -6,6 +6,7 @@ import SunshineGraphTooltip from './SunshineGraphTooltip';
 import SunshineGraphDot from './SunshineGraphDot';
 import RechartsLineGraph, { type LineConfig, type ReferenceLineConfig } from './RechartsLineGraph';
 import { useChartColors } from '@/hooks/useChartColors';
+import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
 
 interface SunshineGraphProps {
   sunshineData: SunshineData;
@@ -82,7 +83,7 @@ const SunshineGraph = ({
     lineConfigs.push({
       dataKey: 'hours',
       name: comparisonSunshineData ? `${mainCityName}` : 'Actual',
-      stroke: '#3b82f6', // medium blue (same as temp avg)
+      stroke: CITY1_PRIMARY_COLOR,
       strokeWidth: 2,
       dot: renderCustomDot,
       connectNulls: true,
@@ -93,7 +94,7 @@ const SunshineGraph = ({
       lineConfigs.push({
         dataKey: 'comparisonHours',
         name: `${compCityName}`,
-        stroke: '#a855f7', // medium purple (same as temp avg)
+        stroke: CITY2_PRIMARY_COLOR,
         strokeWidth: 2,
         strokeDasharray: '5 5',
         dot: false,
@@ -102,13 +103,7 @@ const SunshineGraph = ({
     }
 
     return lineConfigs;
-  }, [
-    theoreticalMaxData,
-    renderCustomDot,
-    chartColors,
-    sunshineData.city,
-    comparisonSunshineData,
-  ]);
+  }, [theoreticalMaxData, renderCustomDot, chartColors, sunshineData.city, comparisonSunshineData]);
 
   // Configure reference line for selected month
   const referenceLines: ReferenceLineConfig[] = useMemo(() => {

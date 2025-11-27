@@ -11,9 +11,9 @@ interface AdditionalInfoProps {
 
 const AdditionalInfo = ({ city }: AdditionalInfoProps) => {
   return (
-    <CustomPaper className='w-3/12'>
+    <CustomPaper className="w-3/12">
       <GreaterSection title="City Info">
-        <div className='flex flex-col'>
+        <div className="flex flex-col">
           <div className="pb-3 flex-col">
             <div className="flex mb-3">
               {city.population && (

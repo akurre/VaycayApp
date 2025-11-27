@@ -255,7 +255,7 @@ export const MONTH_FIELDS: Record<number, keyof SunshineData> = {
 export const SLIDER_THUMB_WIDTH = 32; // 8 * 4 (w-8 in tailwind)
 
 // sunshine graph chart colors
-export const SUNSHINE_CHART_LINE_COLOR = '#20A39E'; // secondary teal 
+export const SUNSHINE_CHART_LINE_COLOR = '#20A39E'; // secondary teal
 export const SUNSHINE_CHART_GRID_COLOR = '#e5e7eb'; // light gray
 export const SUNSHINE_CHART_AXIS_COLOR = '#9ca3af'; // medium gray
 export const SUNSHINE_CHART_MAX_LINE_COLOR = '#E63E55'; // theme red for theoretical max
@@ -301,3 +301,17 @@ export const monthlyMarks = [
   { value: 11, label: 'Nov' },
   { value: 12, label: 'Dec' },
 ] as const;
+
+// ============================================================================
+// GRAPH COLOR CONSTANTS
+// ============================================================================
+
+// City 1 (main city) colors - Blue shades
+export const CITY1_PRIMARY_COLOR = '#3b82f6'; // medium blue
+export const CITY1_MAX_COLOR = '#93c5fd'; // light blue
+export const CITY1_MIN_COLOR = '#1e40af'; // dark blue
+
+// City 2 (comparison city) colors - Purple shades
+export const CITY2_PRIMARY_COLOR = '#a855f7'; // medium purple
+export const CITY2_MAX_COLOR = '#d8b4fe'; // light purple
+export const CITY2_MIN_COLOR = '#7e22ce'; // dark purple

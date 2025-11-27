@@ -42,7 +42,7 @@ const DataChartTabs = ({
   comparisonWeeklyWeatherError,
 }: DataChartTabsProps) => {
   return (
-    <CustomPaper className="h-full" p='sm'>
+    <CustomPaper className="h-full" p="sm">
       <Tabs orientation="vertical" defaultValue={dataType} className="h-full flex">
         <Tabs.List>
           <Tabs.Tab value="temperature" leftSection={<IconTemperature size={12} />}>
