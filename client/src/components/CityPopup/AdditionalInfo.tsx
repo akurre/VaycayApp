@@ -14,8 +14,8 @@ const AdditionalInfo = ({ city, isShowCity }: AdditionalInfoProps) => {
   return (
     <CustomPaper className="w-3/12 flex flex-col">
       {isShowCity && (
-        <div className='pb-2'>
-          <Badge variant='light'>{city.city}</Badge>
+        <div className="pb-2">
+          <Badge variant="light">{city.city}</Badge>
         </div>
       )}
       <GreaterSection title="City Info">

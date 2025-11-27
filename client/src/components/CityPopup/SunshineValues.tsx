@@ -85,9 +85,7 @@ const SunshineValues = ({
             <GreaterSection title="Average Annual Sunshine">
               <div className="flex flex-col gap-1">
                 <div className="flex gap-2 justify-between">
-                  {comparisonCity && (
-                    <Badge variant='light'>{baseCity}</Badge>
-                  )}
+                  {comparisonCity && <Badge variant="light">{baseCity}</Badge>}
                   <Text
                     size="md"
                     style={{ color: hasComparison ? CITY1_PRIMARY_COLOR : undefined }}
@@ -97,7 +95,9 @@ const SunshineValues = ({
                 </div>
                 {hasComparison && comparisonAverageSunshine !== null && (
                   <div className="flex gap-2 justify-between">
-                    <Badge variant='light' style={{ color: CITY2_PRIMARY_COLOR }}>{comparisonCity}</Badge>
+                    <Badge variant="light" style={{ color: CITY2_PRIMARY_COLOR }}>
+                      {comparisonCity}
+                    </Badge>
                     <Text size="md" style={{ color: CITY2_PRIMARY_COLOR }}>
                       {comparisonAverageSunshine.toFixed(1)} hours
                     </Text>
@@ -110,9 +110,7 @@ const SunshineValues = ({
             <GreaterSection title="Average Annual Rainfall">
               <div className="flex flex-col gap-1">
                 <div className="flex gap-2 items-center justify-between">
-                  {comparisonCity && (
-                    <Badge variant='light'>{baseCity}</Badge>
-                  )}
+                  {comparisonCity && <Badge variant="light">{baseCity}</Badge>}
                   <Text
                     size="md"
                     style={{ color: hasComparison ? CITY1_PRIMARY_COLOR : undefined }}
@@ -122,7 +120,9 @@ const SunshineValues = ({
                 </div>
                 {hasComparison && comparisonAverageRainfall !== null && (
                   <div className="flex gap-2 items-center justify-between">
-                    <Badge variant='light' style={{ color: CITY2_PRIMARY_COLOR }}>{comparisonCity}</Badge>
+                    <Badge variant="light" style={{ color: CITY2_PRIMARY_COLOR }}>
+                      {comparisonCity}
+                    </Badge>
                     <Text size="md" style={{ color: CITY2_PRIMARY_COLOR }}>
                       {comparisonAverageRainfall.toFixed(1)} mm
                     </Text>

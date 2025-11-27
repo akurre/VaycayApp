@@ -1,6 +1,6 @@
 import { appColors } from '@/theme';
 import { Paper, useMantineColorScheme } from '@mantine/core';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 interface CustomPaperProps {
   children: ReactNode;

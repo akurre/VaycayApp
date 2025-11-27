@@ -25,7 +25,7 @@ const TemperatureSection = ({
   comparisonMaxTemperature,
   comparisonMinTemperature,
   comparisonCity,
-  baseCity
+  baseCity,
 }: TemperatureSectionProps) => {
   const hasComparison =
     comparisonAvgTemperature !== undefined ||
@@ -33,16 +33,16 @@ const TemperatureSection = ({
     comparisonMinTemperature !== undefined;
 
   return (
-    <GreaterSection className='w-full h-full' title="Temperature">
+    <GreaterSection className="w-full h-full" title="Temperature">
       <div className="flex flex-col gap-2">
         {/* Column headers - only show when comparing */}
         {hasComparison && comparisonCity && baseCity && (
-          <div className={`grid ${hasComparison ? 'grid-cols-3' : 'grid-cols-2'} gap-2 items-center`}>
+          <div
+            className={`grid ${hasComparison ? 'grid-cols-3' : 'grid-cols-2'} gap-2 items-center`}
+          >
             <div></div> {/* Empty space for label column */}
-            <Badge variant='light'>
-              {baseCity}
-            </Badge>
-            <Badge variant='light' style={{ color: CITY2_PRIMARY_COLOR }}>
+            <Badge variant="light">{baseCity}</Badge>
+            <Badge variant="light" style={{ color: CITY2_PRIMARY_COLOR }}>
               {comparisonCity}
             </Badge>
           </div>
@@ -51,7 +51,10 @@ const TemperatureSection = ({
         {/* Data rows */}
         <div className={`grid ${hasComparison ? 'grid-cols-3' : 'grid-cols-2'} gap-2 items-center`}>
           <div className="font-medium text-sm">Average</div>
-          <div className="text-sm" style={{ color: hasComparison ? CITY1_PRIMARY_COLOR : undefined }}>
+          <div
+            className="text-sm"
+            style={{ color: hasComparison ? CITY1_PRIMARY_COLOR : undefined }}
+          >
             {formatTemperature(avgTemperature) ?? 'N/A'}
           </div>
           {hasComparison && (
@@ -63,7 +66,10 @@ const TemperatureSection = ({
 
         <div className={`grid ${hasComparison ? 'grid-cols-3' : 'grid-cols-2'} gap-2 items-center`}>
           <div className="font-medium text-sm">Min</div>
-          <div className="text-sm" style={{ color: hasComparison ? CITY1_PRIMARY_COLOR : undefined }}>
+          <div
+            className="text-sm"
+            style={{ color: hasComparison ? CITY1_PRIMARY_COLOR : undefined }}
+          >
             {formatTemperature(minTemperature) ?? 'N/A'}
           </div>
           {hasComparison && (
@@ -75,7 +81,10 @@ const TemperatureSection = ({
 
         <div className={`grid ${hasComparison ? 'grid-cols-3' : 'grid-cols-2'} gap-2 items-center`}>
           <div className="font-medium text-sm">Max</div>
-          <div className="text-sm" style={{ color: hasComparison ? CITY1_PRIMARY_COLOR : undefined }}>
+          <div
+            className="text-sm"
+            style={{ color: hasComparison ? CITY1_PRIMARY_COLOR : undefined }}
+          >
             {formatTemperature(maxTemperature) ?? 'N/A'}
           </div>
           {hasComparison && (

@@ -5,7 +5,7 @@ import TemperatureDataSection from './TemperatureDataSection';
 import RainfallDataSection from './RainfallDataSection';
 import type { SunshineData } from '@/types/sunshineDataType';
 import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
-import { DataType } from '@/types/mapTypes';
+import type { DataType } from '@/types/mapTypes';
 import CustomPaper from '../Shared/CustomPaper';
 
 interface DataChartTabsProps {

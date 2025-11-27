@@ -75,8 +75,6 @@ export function PerformanceDashboard() {
     return () => clearInterval(interval);
   }, [storedMetrics]);
 
-  if (!import.meta.env.DEV) return null;
-
   // Keyboard shortcut to toggle visibility
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -88,6 +86,8 @@ export function PerformanceDashboard() {
     globalThis.addEventListener('keydown', handleKeyPress);
     return () => globalThis.removeEventListener('keydown', handleKeyPress);
   }, [isVisible, setIsVisible]);
+
+  if (!import.meta.env.DEV) return null;
 
   if (!isVisible) {
     return (

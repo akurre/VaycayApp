@@ -19,7 +19,7 @@ const DailyTempValues = ({
   comparisonWeatherData,
 }: DailyTempValuesProps) => {
   return (
-    <CustomPaper className='h-full'>
+    <CustomPaper className="h-full">
       {isLoading && !displayWeatherData && (
         <div className="flex justify-center py-4">
           <Loader size="sm" />

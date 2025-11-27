@@ -17,30 +17,6 @@ interface QuerySunshineCityIdsParams {
 }
 
 /**
- * Shared query logic for fetching sunshine city ids with spatial distribution.
- * Uses grid-based distribution for bounds queries, population-based for global queries.
- */
-async function querySunshineCityIds({
-  prisma,
-  month,
-  bounds,
-}: QuerySunshineCityIdsParams): Promise<number[]> {
-  const monthIndex = month - 1;
-  const monthField = MONTH_FIELDS[monthIndex];
-
-  if (!monthField) {
-    console.warn(`querySunshineCityIds: invalid month ${month}`);
-    return [];
-  }
-
-  // use grid-based distribution for zoomed views, population-based for global view
-  if (bounds) {
-    return querySunshineCityIdsWithGridDistribution({ prisma, monthField, bounds });
-  }
-  return querySunshineCityIdsWithPopulationSort({ prisma, monthField });
-}
-
-/**
  * Grid-based distribution for zoomed/bounds queries.
  * Divides viewport into grid cells and distributes cities evenly across cells.
  */
@@ -158,6 +134,30 @@ async function querySunshineCityIdsWithGridDistribution({
   `;
 
   return cityIds.map((c) => c.cityId);
+}
+
+/**
+ * Shared query logic for fetching sunshine city ids with spatial distribution.
+ * Uses grid-based distribution for bounds queries, population-based for global queries.
+ */
+async function querySunshineCityIds({
+  prisma,
+  month,
+  bounds,
+}: QuerySunshineCityIdsParams): Promise<number[]> {
+  const monthIndex = month - 1;
+  const monthField = MONTH_FIELDS[monthIndex];
+
+  if (!monthField) {
+    console.warn(`querySunshineCityIds: invalid month ${month}`);
+    return [];
+  }
+
+  // use grid-based distribution for zoomed views, population-based for global view
+  if (bounds) {
+    return querySunshineCityIdsWithGridDistribution({ prisma, monthField, bounds });
+  }
+  return querySunshineCityIdsWithPopulationSort({ prisma, monthField });
 }
 
 /**
