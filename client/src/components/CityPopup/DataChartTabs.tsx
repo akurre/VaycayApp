@@ -29,7 +29,7 @@ const DataChartTabs = ({
   dataType,
 }: DataChartTabsProps) => {
   return (
-    <Tabs orientation="vertical" defaultValue={dataType} className="h-full">
+    <Tabs orientation="vertical" defaultValue={dataType} className="h-full flex">
       <Tabs.List>
         <Tabs.Tab value="temperature" leftSection={<IconTemperature size={12} />}>
           Temp
@@ -42,7 +42,7 @@ const DataChartTabs = ({
         </Tabs.Tab>
       </Tabs.List>
 
-      <Tabs.Panel value="temperature">
+      <Tabs.Panel value="temperature" className="flex-1 min-h-0">
         <TemperatureDataSection
           weeklyWeatherData={weeklyWeatherData}
           isLoading={weeklyWeatherLoading}
@@ -50,7 +50,7 @@ const DataChartTabs = ({
         />
       </Tabs.Panel>
 
-      <Tabs.Panel value="sunshine">
+      <Tabs.Panel value="sunshine" className="flex-1 min-h-0">
         <SunshineDataSection
           displaySunshineData={displaySunshineData}
           isLoading={sunshineLoading}
@@ -59,7 +59,7 @@ const DataChartTabs = ({
         />
       </Tabs.Panel>
 
-      <Tabs.Panel value="precip">
+      <Tabs.Panel value="precip" className="flex-1 min-h-0">
         <RainfallDataSection
           weeklyWeatherData={weeklyWeatherData}
           isLoading={weeklyWeatherLoading}

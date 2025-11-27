@@ -16,7 +16,7 @@ const TemperatureDataSection = ({
   hasError,
 }: TemperatureDataSectionProps) => {
   return (
-    <>
+    <div className="h-full flex flex-col">
       {isLoading && !weeklyWeatherData && (
         <div className="flex justify-center py-4">
           <Loader size="sm" />
@@ -30,11 +30,11 @@ const TemperatureDataSection = ({
       )}
 
       {weeklyWeatherData && (
-        <div className="h-full p-3">
+        <div className="flex-1 min-h-0 p-3">
           <TemperatureGraph weeklyWeatherData={weeklyWeatherData} />
         </div>
       )}
-    </>
+    </div>
   );
 };
 

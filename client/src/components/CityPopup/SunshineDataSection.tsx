@@ -18,7 +18,7 @@ const SunshineDataSection = ({
   selectedMonth,
 }: SunshineDataSectionProps) => {
   return (
-    <>
+    <div className="h-full flex flex-col">
       {isLoading && !displaySunshineData && (
         <div className="flex justify-center py-4">
           <Loader size="sm" />
@@ -32,15 +32,15 @@ const SunshineDataSection = ({
       )}
 
       {displaySunshineData ? (
-        <div className="h-full p-3">
+        <div className="flex-1 min-h-0 p-3">
           <SunshineGraph sunshineData={displaySunshineData} selectedMonth={selectedMonth} />
         </div>
       ) : (
-        <div className="h-full items-center flex justify-center">
+        <div className="flex-1 min-h-0 items-center flex justify-center">
           <Badge size="xl">No sunshine data available</Badge>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
