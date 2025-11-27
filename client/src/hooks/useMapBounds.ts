@@ -104,20 +104,13 @@ export const useMapBounds = (
       // debounce bounds calculation and query trigger
       debounceTimerRef.current = setTimeout(() => {
         const useBounds = newViewState.zoom >= ZOOM_THRESHOLD;
-        console.log('🔍 Zoom check:', {
-          currentZoom: newViewState.zoom.toFixed(2),
-          threshold: ZOOM_THRESHOLD,
-          shouldUseBounds: useBounds,
-        });
         setShouldUseBounds(useBounds);
 
         if (useBounds) {
           const newBounds = calculateBounds(newViewState);
-          console.log('✅ Using bounds query with:', newBounds);
           setBounds(newBounds);
           onBoundsChange?.(newBounds, true);
         } else {
-          console.log('🌍 Using global query (zoom < threshold)');
           setBounds(null);
           onBoundsChange?.(null, false);
         }
