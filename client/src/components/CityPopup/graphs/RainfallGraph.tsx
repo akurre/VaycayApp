@@ -30,13 +30,22 @@ const RainfallGraph = ({
   const chartData = useMemo(() => {
     const mainData = weeklyWeatherData.weeklyData
       .filter((week) => week.totalPrecip !== null || week.avgPrecip !== null)
-      .map((week) => ({
-        week: week.week,
-        totalPrecip: week.totalPrecip,
-        avgPrecip: week.avgPrecip,
-        daysWithRain: week.daysWithRain,
-        daysWithData: week.daysWithData,
-      }));
+      .map((week) => {
+        // Normalize totalPrecip to get average weekly precipitation
+        // This accounts for cities having different amounts of historical data
+        const normalizedTotalPrecip =
+          week.totalPrecip !== null && week.daysWithData > 0
+            ? (week.totalPrecip / week.daysWithData) * 7
+            : null;
+
+        return {
+          week: week.week,
+          totalPrecip: normalizedTotalPrecip,
+          avgPrecip: week.avgPrecip,
+          daysWithRain: week.daysWithRain,
+          daysWithData: week.daysWithData,
+        };
+      });
 
     // If we have comparison data, merge it
     if (comparisonWeeklyWeatherData) {
@@ -44,9 +53,18 @@ const RainfallGraph = ({
         const compWeek = comparisonWeeklyWeatherData.weeklyData.find(
           (w) => w.week === mainWeek.week
         );
+
+        // Normalize comparison city's totalPrecip as well
+        const normalizedCompTotalPrecip =
+          compWeek?.totalPrecip !== null &&
+          compWeek?.daysWithData !== undefined &&
+          compWeek.daysWithData > 0
+            ? (compWeek.totalPrecip / compWeek.daysWithData) * 7
+            : null;
+
         return {
           ...mainWeek,
-          compTotalPrecip: compWeek?.totalPrecip ?? null,
+          compTotalPrecip: normalizedCompTotalPrecip,
           compAvgPrecip: compWeek?.avgPrecip ?? null,
         };
       });

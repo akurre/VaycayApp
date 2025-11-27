@@ -112,6 +112,19 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: Cit
   const displayWeatherData = cityAsWeather ?? weatherData;
   const displaySunshineData = cityAsSunshine ?? sunshineData;
 
+  // Memoize excludeCity to prevent unnecessary re-renders and search queries
+  const excludeCity = useMemo(
+    () =>
+      city
+        ? {
+            name: city.city,
+            state: city.state ?? null,
+            country: city.country ?? null,
+          }
+        : undefined,
+    [city?.city, city?.state, city?.country]
+  );
+
   // early return AFTER all hooks have been called
   if (!city) return null;
 
@@ -156,15 +169,7 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: Cit
                 onCitySelect={setComparisonCity}
                 onCityRemove={() => setComparisonCity(null)}
                 selectedCity={comparisonCity}
-                excludeCity={
-                  city
-                    ? {
-                        name: city.city,
-                        state: city.state ?? null,
-                        country: city.country ?? null,
-                      }
-                    : undefined
-                }
+                excludeCity={excludeCity}
               />
             </div>
           </div>
