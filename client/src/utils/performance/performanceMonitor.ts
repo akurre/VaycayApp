@@ -108,8 +108,13 @@ class PerformanceMonitor {
               usePerformanceStore.getState().addMetric(metric);
             } catch (storageError) {
               // If we hit quota, clear old metrics and try once more
-              if (storageError instanceof Error && storageError.name === 'QuotaExceededError') {
-                console.warn('localStorage quota exceeded, clearing old metrics');
+              if (
+                storageError instanceof Error &&
+                storageError.name === 'QuotaExceededError'
+              ) {
+                console.warn(
+                  'localStorage quota exceeded, clearing old metrics'
+                );
                 usePerformanceStore.getState().clearMetrics();
               } else {
                 throw storageError;
@@ -231,7 +236,8 @@ class PerformanceMonitor {
       const min = Math.min(...durations);
       const max = Math.max(...durations);
 
-      baselines[name] = `~${avg.toFixed(0)}ms (range: ${min.toFixed(0)}-${max.toFixed(0)}ms)`;
+      baselines[name] =
+        `~${avg.toFixed(0)}ms (range: ${min.toFixed(0)}-${max.toFixed(0)}ms)`;
     });
 
     return baselines;
@@ -249,5 +255,7 @@ declare global {
 
 // expose to globalThis for easy access in dev tools
 if (import.meta.env.DEV) {
-  (globalThis as typeof globalThis & { perfMonitor: PerformanceMonitor }).perfMonitor = perfMonitor;
+  (
+    globalThis as typeof globalThis & { perfMonitor: PerformanceMonitor }
+  ).perfMonitor = perfMonitor;
 }

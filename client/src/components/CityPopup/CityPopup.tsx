@@ -17,9 +17,16 @@ import arePropsEqual from './utils/arePropsEqual';
 import ComparisonCitySelector from './ComparisonCitySelector';
 import type { SearchCitiesResult } from '@/types/userLocationType';
 
-const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: CityPopupProps) => {
+const CityPopup = ({
+  city,
+  onClose,
+  selectedMonth,
+  selectedDate,
+  dataType,
+}: CityPopupProps) => {
   // State for comparison city
-  const [comparisonCity, setComparisonCity] = useState<SearchCitiesResult | null>(null);
+  const [comparisonCity, setComparisonCity] =
+    useState<SearchCitiesResult | null>(null);
 
   // Determine what type of data we have
   const hasWeatherData = city && isWeatherData(city);
@@ -31,7 +38,9 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: Cit
   // Determine the month to use with validation
   // Prefer selectedMonth from parent, fall back to extracting from weather data
   const monthToUse =
-    selectedMonth ?? extractMonthFromDate(cityAsWeather?.date) ?? new Date().getMonth() + 1;
+    selectedMonth ??
+    extractMonthFromDate(cityAsWeather?.date) ??
+    new Date().getMonth() + 1;
 
   // Construct the date for weather fetching - clearer logic
   const dateToUse = useMemo(() => {
@@ -64,14 +73,16 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: Cit
 
   // determine if we should fetch sunshine data
   // fetch when: we don't have sunshine data and we have a valid month
-  const shouldFetchSunshine = !hasSunshineData && monthToUse >= 1 && monthToUse <= 12;
+  const shouldFetchSunshine =
+    !hasSunshineData && monthToUse >= 1 && monthToUse <= 12;
 
-  const { sunshineData, sunshineLoading, sunshineError } = useSunshineDataForCity({
-    cityName: city?.city ?? null,
-    lat: city?.lat ?? null,
-    long: city?.long ?? null,
-    skipFetch: !shouldFetchSunshine,
-  });
+  const { sunshineData, sunshineLoading, sunshineError } =
+    useSunshineDataForCity({
+      cityName: city?.city ?? null,
+      lat: city?.lat ?? null,
+      long: city?.long ?? null,
+      skipFetch: !shouldFetchSunshine,
+    });
 
   // Fetch weekly weather data for the city (always fetch when we have a city)
   const {
@@ -149,7 +160,8 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: Cit
   // Create the modal title
   let cityAndCountry = city.city ? toTitleCase(city.city) : 'Unknown City';
   if (city.state) {
-    const state = city.state.length > 8 ? city.state.substring(0, 8) + '.' : city.state;
+    const state =
+      city.state.length > 8 ? city.state.substring(0, 8) + '.' : city.state;
     cityAndCountry += `, ${toTitleCase(state)}`;
   }
   if (city.country) {
@@ -179,9 +191,7 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: Cit
           <div className="flex gap-6">
             <div className="flex items-center">
               <Tooltip label={cityAndCountry}>
-                <Badge size="xl">
-                  {cityAndCountry}
-                </Badge>
+                <Badge size="xl">{cityAndCountry}</Badge>
               </Tooltip>
             </div>
             <div className="flex-1" />
@@ -208,7 +218,9 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: Cit
                 isLoading={sunshineLoading}
                 hasError={sunshineError}
                 comparisonSunshineData={comparisonSunshineData}
-                comparisonWeeklyWeatherData={comparisonWeeklyWeatherData?.weeklyData ?? null}
+                comparisonWeeklyWeatherData={
+                  comparisonWeeklyWeatherData?.weeklyData ?? null
+                }
               />
             </div>
             <div className="flex flex-col w-5/12">

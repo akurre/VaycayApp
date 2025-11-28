@@ -40,16 +40,24 @@ describe('RainfallGraph', () => {
   });
 
   it('renders the rainfall graph component', () => {
-    const { container } = render(<RainfallGraph weeklyWeatherData={mockWeeklyWeather} />);
+    const { container } = render(
+      <RainfallGraph weeklyWeatherData={mockWeeklyWeather} />
+    );
 
-    expect(container.querySelector('.recharts-responsive-container')).toBeInTheDocument();
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
   });
 
   it('filters out weeks with no precipitation data', () => {
-    const { container } = render(<RainfallGraph weeklyWeatherData={mockWeeklyWeather} />);
+    const { container } = render(
+      <RainfallGraph weeklyWeatherData={mockWeeklyWeather} />
+    );
 
     // should render but only include weeks with data
-    expect(container.querySelector('.recharts-responsive-container')).toBeInTheDocument();
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
   });
 
   it('renders with all weeks having precipitation data', () => {
@@ -78,9 +86,13 @@ describe('RainfallGraph', () => {
       ],
     });
 
-    const { container } = render(<RainfallGraph weeklyWeatherData={allDataWeather} />);
+    const { container } = render(
+      <RainfallGraph weeklyWeatherData={allDataWeather} />
+    );
 
-    expect(container.querySelector('.recharts-responsive-container')).toBeInTheDocument();
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
   });
 
   it('renders empty chart when all weeks have null precipitation', () => {
@@ -99,9 +111,13 @@ describe('RainfallGraph', () => {
       ],
     });
 
-    const { container } = render(<RainfallGraph weeklyWeatherData={noDataWeather} />);
+    const { container } = render(
+      <RainfallGraph weeklyWeatherData={noDataWeather} />
+    );
 
-    expect(container.querySelector('.recharts-responsive-container')).toBeInTheDocument();
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
   });
 
   it('handles weeks with only avgPrecip data', () => {
@@ -120,9 +136,13 @@ describe('RainfallGraph', () => {
       ],
     });
 
-    const { container } = render(<RainfallGraph weeklyWeatherData={partialDataWeather} />);
+    const { container } = render(
+      <RainfallGraph weeklyWeatherData={partialDataWeather} />
+    );
 
-    expect(container.querySelector('.recharts-responsive-container')).toBeInTheDocument();
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
   });
 
   it('handles weeks with only totalPrecip data', () => {
@@ -141,13 +161,19 @@ describe('RainfallGraph', () => {
       ],
     });
 
-    const { container } = render(<RainfallGraph weeklyWeatherData={partialDataWeather} />);
+    const { container } = render(
+      <RainfallGraph weeklyWeatherData={partialDataWeather} />
+    );
 
-    expect(container.querySelector('.recharts-responsive-container')).toBeInTheDocument();
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
   });
 
   it('memoizes chart data correctly', () => {
-    const { rerender } = render(<RainfallGraph weeklyWeatherData={mockWeeklyWeather} />);
+    const { rerender } = render(
+      <RainfallGraph weeklyWeatherData={mockWeeklyWeather} />
+    );
 
     // rerender with same data
     rerender(<RainfallGraph weeklyWeatherData={mockWeeklyWeather} />);

@@ -7,7 +7,11 @@ import { useMapInteractions } from '../../hooks/useMapInteractions';
 import { useMapBounds } from '../../hooks/useMapBounds';
 import { useHomeCityData } from '../../hooks/useHomeCityData';
 import { useHomeLocationLayers } from '../../hooks/useHomeLocationLayers';
-import { INITIAL_VIEW_STATE, MAP_STYLES, ZOOM_AMPLIFICATION_FACTOR } from '@/const';
+import {
+  INITIAL_VIEW_STATE,
+  MAP_STYLES,
+  ZOOM_AMPLIFICATION_FACTOR,
+} from '@/const';
 import CityPopup from '../CityPopup/CityPopup';
 import MapTooltip from './MapTooltip';
 import 'maplibre-gl/dist/maplibre-gl.css';
@@ -24,7 +28,12 @@ interface WorldMapProps {
   selectedMonth: number;
   selectedDate?: string;
   onBoundsChange?: (
-    bounds: { minLat: number; maxLat: number; minLong: number; maxLong: number } | null,
+    bounds: {
+      minLat: number;
+      maxLat: number;
+      minLong: number;
+      maxLong: number;
+    } | null,
     shouldUseBounds: boolean
   ) => void;
 }
@@ -42,14 +51,20 @@ const WorldMap = ({
 
   const colorScheme = useComputedColorScheme('dark');
   const isLoadingWeather = useWeatherStore((state) => state.isLoadingWeather);
-  const isLoadingSunshine = useSunshineStore((state) => state.isLoadingSunshine);
-  const { viewState, onViewStateChange } = useMapBounds(INITIAL_VIEW_STATE, onBoundsChange);
+  const isLoadingSunshine = useSunshineStore(
+    (state) => state.isLoadingSunshine
+  );
+  const { viewState, onViewStateChange } = useMapBounds(
+    INITIAL_VIEW_STATE,
+    onBoundsChange
+  );
 
   // Fetch and store home city data
   useHomeCityData(dataType, selectedDate);
 
   // Use the appropriate loading state based on data type
-  const isLoading = dataType === DataType.Temperature ? isLoadingWeather : isLoadingSunshine;
+  const isLoading =
+    dataType === DataType.Temperature ? isLoadingWeather : isLoadingSunshine;
 
   // Get city layers (heatmap + markers) - these are expensive to recreate
   const cityLayers = useMapLayers({
@@ -82,8 +97,13 @@ const WorldMap = ({
     }
   }, [cityLayers]);
 
-  const { selectedCity, hoverInfo, handleHover, handleClick, handleClosePopup } =
-    useMapInteractions(cities, viewMode, dataType, selectedMonth);
+  const {
+    selectedCity,
+    hoverInfo,
+    handleHover,
+    handleClick,
+    handleClosePopup,
+  } = useMapInteractions(cities, viewMode, dataType, selectedMonth);
 
   // Memoize controller config to prevent DeckGL from seeing it as a new object on every render
   const controller = useMemo(
@@ -129,7 +149,13 @@ const WorldMap = ({
         <Map mapStyle={MAP_STYLES[colorScheme]} attributionControl={false} />
       </DeckGL>
 
-      {hoverInfo && <MapTooltip x={hoverInfo.x} y={hoverInfo.y} content={hoverInfo.content} />}
+      {hoverInfo && (
+        <MapTooltip
+          x={hoverInfo.x}
+          y={hoverInfo.y}
+          content={hoverInfo.content}
+        />
+      )}
 
       <Transition
         mounted={!!selectedCity}

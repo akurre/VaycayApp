@@ -150,7 +150,8 @@ describe('parseErrorAndNotify', () => {
 
     expect(notifications.show).toHaveBeenCalledWith({
       title: 'connection error',
-      message: 'unable to connect to server. please check your internet connection.',
+      message:
+        'unable to connect to server. please check your internet connection.',
       color: 'red',
       autoClose: 5000,
     });

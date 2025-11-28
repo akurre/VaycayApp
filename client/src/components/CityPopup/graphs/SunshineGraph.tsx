@@ -4,7 +4,10 @@ import { transformSunshineDataForChart } from '@/utils/dataFormatting/transformS
 import { generateTheoreticalMaxSunshineData } from '@/utils/dataFormatting/generateTheoreticalMaxSunshineData';
 import SunshineGraphTooltip from './SunshineGraphTooltip';
 import SunshineGraphDot from './SunshineGraphDot';
-import RechartsLineGraph, { type LineConfig, type ReferenceLineConfig } from './RechartsLineGraph';
+import RechartsLineGraph, {
+  type LineConfig,
+  type ReferenceLineConfig,
+} from './RechartsLineGraph';
 import { useChartColors } from '@/hooks/useChartColors';
 import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
 
@@ -26,18 +29,25 @@ const SunshineGraph = ({
   const cityKey = `${sunshineData.city}-${sunshineData.lat}-${sunshineData.long}`;
 
   // Transform sunshine data for chart
-  const chartData = useMemo(() => transformSunshineDataForChart(sunshineData), [sunshineData]);
+  const chartData = useMemo(
+    () => transformSunshineDataForChart(sunshineData),
+    [sunshineData]
+  );
 
   // Transform comparison sunshine data if available
   const comparisonChartData = useMemo(
-    () => (comparisonSunshineData ? transformSunshineDataForChart(comparisonSunshineData) : null),
+    () =>
+      comparisonSunshineData
+        ? transformSunshineDataForChart(comparisonSunshineData)
+        : null,
     [comparisonSunshineData]
   );
 
   // Calculate theoretical maximum sunshine based on latitude (memoized per city)
   const latitude = sunshineData.lat;
   const theoreticalMaxData = useMemo(
-    () => (latitude === null ? null : generateTheoreticalMaxSunshineData(latitude)),
+    () =>
+      latitude === null ? null : generateTheoreticalMaxSunshineData(latitude),
     [latitude]
   );
 
@@ -48,7 +58,9 @@ const SunshineGraph = ({
         ...point,
         theoreticalMax: theoreticalMaxData ? theoreticalMaxData[index] : null,
         baseline: 0, // 0% sunshine baseline
-        comparisonHours: comparisonChartData ? comparisonChartData[index]?.hours : null,
+        comparisonHours: comparisonChartData
+          ? comparisonChartData[index]?.hours
+          : null,
       })),
     [chartData, theoreticalMaxData, comparisonChartData]
   );
@@ -103,7 +115,13 @@ const SunshineGraph = ({
     }
 
     return lineConfigs;
-  }, [theoreticalMaxData, renderCustomDot, chartColors, sunshineData.city, comparisonSunshineData]);
+  }, [
+    theoreticalMaxData,
+    renderCustomDot,
+    chartColors,
+    sunshineData.city,
+    comparisonSunshineData,
+  ]);
 
   // Configure reference line for selected month
   const referenceLines: ReferenceLineConfig[] = useMemo(() => {

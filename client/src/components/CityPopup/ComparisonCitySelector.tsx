@@ -82,7 +82,13 @@ const ComparisonCitySelector = ({
       : searchTerm;
 
   return (
-    <Popover opened={opened} onChange={setOpened} position="bottom-end" withArrow shadow="md">
+    <Popover
+      opened={opened}
+      onChange={setOpened}
+      position="bottom-end"
+      withArrow
+      shadow="md"
+    >
       <Popover.Target>
         <TextInput
           placeholder="Add city to compare..."
@@ -135,16 +141,21 @@ const ComparisonCitySelector = ({
                   <div className="text-xs text-gray-600 dark:text-gray-400">
                     {city.state && `${city.state}, `}
                     {city.country}
-                    {city.population && ` • ${(city.population / 1000000).toFixed(1)}M`}
+                    {city.population &&
+                      ` • ${(city.population / 1000000).toFixed(1)}M`}
                   </div>
                 </button>
               ))}
             </div>
           )}
 
-          {!isSearchLoading && searchTerm.trim().length >= 2 && searchResults.length === 0 && (
-            <div className="text-center py-4 text-sm text-gray-500">No cities found</div>
-          )}
+          {!isSearchLoading &&
+            searchTerm.trim().length >= 2 &&
+            searchResults.length === 0 && (
+              <div className="text-center py-4 text-sm text-gray-500">
+                No cities found
+              </div>
+            )}
 
           {searchTerm.trim().length < 2 && (
             <div className="text-center py-4 text-sm text-gray-500">

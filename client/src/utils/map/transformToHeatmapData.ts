@@ -9,9 +9,12 @@ export interface HeatmapDataPoint {
  * transforms weather data into format suitable for deck.gl heatmaplayer
  * uses actual temperature values as weights for relative color mapping
  */
-export const transformToHeatmapData = (cities: WeatherData[]): HeatmapDataPoint[] => {
+export const transformToHeatmapData = (
+  cities: WeatherData[]
+): HeatmapDataPoint[] => {
   const validCities = cities.filter(
-    (city) => city.lat !== null && city.long !== null && city.avgTemperature !== null
+    (city) =>
+      city.lat !== null && city.long !== null && city.avgTemperature !== null
   );
 
   if (validCities.length === 0) {

@@ -4,12 +4,15 @@ import { ErrorCategory, ErrorSeverity } from '@/types/errorTypes';
 /**
  * parses geolocation errors into a standardized format
  */
-export function parseGeolocationError(error: GeolocationErrorLike): ParsedError {
+export function parseGeolocationError(
+  error: GeolocationErrorLike
+): ParsedError {
   let message: string;
 
   switch (error.code) {
     case error.PERMISSION_DENIED:
-      message = 'location permission denied. please enable location access in your browser.';
+      message =
+        'location permission denied. please enable location access in your browser.';
       break;
     case error.POSITION_UNAVAILABLE:
       message = 'location information unavailable. please try again.';

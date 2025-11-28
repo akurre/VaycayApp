@@ -189,5 +189,7 @@ function RechartsLineGraphComponent<T extends ChartDataPoint>({
 }
 
 // Export with memo for performance optimization
-const RechartsLineGraph = memo(RechartsLineGraphComponent) as typeof RechartsLineGraphComponent;
+const RechartsLineGraph = memo(
+  RechartsLineGraphComponent
+) as typeof RechartsLineGraphComponent;
 export default RechartsLineGraph;

@@ -34,7 +34,10 @@ import { perfMonitor } from '@/utils/performance/performanceMonitor';
  * - HOME_RING_OPACITY_MIN/MAX: Ring opacity range (0-255) - fades from MIN to MAX
  * - HOME_RING_COLOR: Ring color RGB
  */
-export function useHomeLocationLayers(dataType: DataType, selectedMonth: number) {
+export function useHomeLocationLayers(
+  dataType: DataType,
+  selectedMonth: number
+) {
   const homeLocation = useAppStore((state) => state.homeLocation);
   const homeCityData = useAppStore((state) => state.homeCityData);
 
@@ -55,7 +58,8 @@ export function useHomeLocationLayers(dataType: DataType, selectedMonth: number)
     const animate = (currentTime: number) => {
       const elapsed = currentTime - startTime;
       // Update ref at 60fps - this doesn't trigger React re-renders
-      animationTimeRef.current = (elapsed % HOME_PULSE_DURATION) / HOME_PULSE_DURATION;
+      animationTimeRef.current =
+        (elapsed % HOME_PULSE_DURATION) / HOME_PULSE_DURATION;
 
       // Trigger React re-render every 4 frames (60fps / 4 = 15fps)
       // This reduces WorldMap re-renders by 75% while maintaining smooth animation
@@ -74,19 +78,34 @@ export function useHomeLocationLayers(dataType: DataType, selectedMonth: number)
 
   // Memoize marker color separately - only recalculate when data changes, not on every frame
   const markerColor = useMemo(() => {
-    if (!homeCityData || homeCityData?.lat === null || homeCityData?.long === null) {
+    if (
+      !homeCityData ||
+      homeCityData?.lat === null ||
+      homeCityData?.long === null
+    ) {
       return HOME_DEFAULT_MARKER_COLOR;
     }
 
     // Type guard: check if data type matches and has required fields
     // Important: verify the data has the correct shape for the current dataType
     if (dataType === DataType.Temperature) {
-      if ('avgTemperature' in homeCityData && homeCityData.avgTemperature !== null) {
-        return getColorForCity(homeCityData as ValidMarkerData, dataType, selectedMonth);
+      if (
+        'avgTemperature' in homeCityData &&
+        homeCityData.avgTemperature !== null
+      ) {
+        return getColorForCity(
+          homeCityData as ValidMarkerData,
+          dataType,
+          selectedMonth
+        );
       }
     } else if (dataType === DataType.Sunshine) {
       if ('jan' in homeCityData) {
-        return getColorForCity(homeCityData as ValidSunshineMarkerData, dataType, selectedMonth);
+        return getColorForCity(
+          homeCityData as ValidSunshineMarkerData,
+          dataType,
+          selectedMonth
+        );
       }
     }
 
@@ -111,9 +130,11 @@ export function useHomeLocationLayers(dataType: DataType, selectedMonth: number)
     // Sonar ping effect: linear expansion from small/opaque to large/transparent
     // animationTime goes from 0 to 1, creating a smooth outward pulse
     const ringRadius =
-      HOME_RING_RADIUS_MIN + animationTime * (HOME_RING_RADIUS_MAX - HOME_RING_RADIUS_MIN);
+      HOME_RING_RADIUS_MIN +
+      animationTime * (HOME_RING_RADIUS_MAX - HOME_RING_RADIUS_MIN);
     const ringOpacity =
-      HOME_RING_OPACITY_MIN + animationTime * (HOME_RING_OPACITY_MAX - HOME_RING_OPACITY_MIN);
+      HOME_RING_OPACITY_MIN +
+      animationTime * (HOME_RING_OPACITY_MAX - HOME_RING_OPACITY_MIN);
 
     return [
       // Pulsing ring (render first so it appears behind the center dot)

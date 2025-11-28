@@ -10,7 +10,9 @@ import type { WeekDataPoint } from '@/types/weeklyWeatherDataType';
  * We calculate this by: sum of (totalPrecip / daysWithData * 7) for all weeks
  * This gives us the average weekly precipitation, which when summed gives annual rainfall.
  */
-export function calculateAverageRainfall(weeklyData: WeekDataPoint[]): number | null {
+export function calculateAverageRainfall(
+  weeklyData: WeekDataPoint[]
+): number | null {
   const validWeeks = weeklyData.filter(
     (point) => point.totalPrecip !== null && point.daysWithData > 0
   );

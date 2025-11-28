@@ -32,7 +32,12 @@ const TemperatureGraph = ({
   // Merge main city data with comparison city data
   const chartData = useMemo(() => {
     const mainData = weeklyWeatherData.weeklyData
-      .filter((week) => week.avgTemp !== null || week.maxTemp !== null || week.minTemp !== null)
+      .filter(
+        (week) =>
+          week.avgTemp !== null ||
+          week.maxTemp !== null ||
+          week.minTemp !== null
+      )
       .map((week) => ({
         week: week.week,
         avgTemp: week.avgTemp,
@@ -64,7 +69,8 @@ const TemperatureGraph = ({
     const mainCityName = comparisonWeeklyWeatherData
       ? weeklyWeatherData.city.substring(0, 3) + '.'
       : weeklyWeatherData.city;
-    const compCityName = comparisonWeeklyWeatherData?.city.substring(0, 3) + '.';
+    const compCityName =
+      comparisonWeeklyWeatherData?.city.substring(0, 3) + '.';
 
     // City 1 (main): Blue shades
     const baseLines: LineConfig[] = [

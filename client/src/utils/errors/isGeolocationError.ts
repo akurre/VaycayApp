@@ -3,7 +3,9 @@ import type { GeolocationErrorLike } from '@/types/errorTypes';
 /**
  * type guard for geolocation errors
  */
-export function isGeolocationError(error: unknown): error is GeolocationErrorLike {
+export function isGeolocationError(
+  error: unknown
+): error is GeolocationErrorLike {
   return (
     typeof error === 'object' &&
     error !== null &&

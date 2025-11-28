@@ -7,7 +7,11 @@ interface GreaterSectionProps {
   className?: string;
 }
 
-const GreaterSection = ({ children, title, className }: GreaterSectionProps) => {
+const GreaterSection = ({
+  children,
+  title,
+  className,
+}: GreaterSectionProps) => {
   const { colorScheme } = useMantineColorScheme();
   const titleColor = colorScheme === 'dark' ? 'primary-red.5' : 'primary-red.7';
   const classNames = `${className} pb-3`;

@@ -88,14 +88,19 @@ const SunshineValues = ({
                   {comparisonCity && <Badge variant="light">{baseCity}</Badge>}
                   <Text
                     size="md"
-                    style={{ color: hasComparison ? CITY1_PRIMARY_COLOR : undefined }}
+                    style={{
+                      color: hasComparison ? CITY1_PRIMARY_COLOR : undefined,
+                    }}
                   >
                     {averageSunshine.toFixed(1)} hours
                   </Text>
                 </div>
                 {hasComparison && comparisonAverageSunshine !== null && (
                   <div className="flex gap-2 justify-between">
-                    <Badge variant="light" style={{ color: CITY2_PRIMARY_COLOR }}>
+                    <Badge
+                      variant="light"
+                      style={{ color: CITY2_PRIMARY_COLOR }}
+                    >
                       {comparisonCity}
                     </Badge>
                     <Text size="md" style={{ color: CITY2_PRIMARY_COLOR }}>
@@ -113,14 +118,19 @@ const SunshineValues = ({
                   {comparisonCity && <Badge variant="light">{baseCity}</Badge>}
                   <Text
                     size="md"
-                    style={{ color: hasComparison ? CITY1_PRIMARY_COLOR : undefined }}
+                    style={{
+                      color: hasComparison ? CITY1_PRIMARY_COLOR : undefined,
+                    }}
                   >
                     {averageRainfall.toFixed(1)} mm
                   </Text>
                 </div>
                 {hasComparison && comparisonAverageRainfall !== null && (
                   <div className="flex gap-2 items-center justify-between">
-                    <Badge variant="light" style={{ color: CITY2_PRIMARY_COLOR }}>
+                    <Badge
+                      variant="light"
+                      style={{ color: CITY2_PRIMARY_COLOR }}
+                    >
                       {comparisonCity}
                     </Badge>
                     <Text size="md" style={{ color: CITY2_PRIMARY_COLOR }}>

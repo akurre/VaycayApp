@@ -34,7 +34,10 @@ export function useTemperatureColorCache(
     const validCities = cities
       .filter(
         (c): c is ValidMarkerData =>
-          isWeatherData(c) && c.lat !== null && c.long !== null && c.avgTemperature !== null
+          isWeatherData(c) &&
+          c.lat !== null &&
+          c.long !== null &&
+          c.avgTemperature !== null
       )
       .slice(0, maxCitiesToShow);
 
@@ -73,7 +76,8 @@ export function useSunshineColorCache(
     // Only process the first maxCitiesToShow cities that have valid data
     const validCities = cities
       .filter((c): c is ValidSunshineMarkerData => {
-        if (!isSunshineData(c) || c.lat === null || c.long === null) return false;
+        if (!isSunshineData(c) || c.lat === null || c.long === null)
+          return false;
         return c[monthField] !== null;
       })
       .slice(0, maxCitiesToShow);

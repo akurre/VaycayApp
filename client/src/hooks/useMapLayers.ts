@@ -2,17 +2,27 @@ import { useMemo } from 'react';
 import { HeatmapLayer } from '@deck.gl/aggregation-layers';
 import { ScatterplotLayer } from '@deck.gl/layers';
 import type { Layer } from '@deck.gl/core';
-import type { WeatherData, ValidMarkerData } from '../types/cityWeatherDataType';
+import type {
+  WeatherData,
+  ValidMarkerData,
+} from '../types/cityWeatherDataType';
 import type { SunshineData } from '@/types/sunshineDataType';
 import { COLOR_RANGE } from '../utils/map/getMarkerColor';
 import { DataType } from '@/types/mapTypes';
 import type { ViewMode, WeatherDataUnion } from '@/types/mapTypes';
-import { SUNSHINE_COLOR_RANGE, SUNSHINE_LOADING_COLOR, TEMPERATURE_LOADING_COLOR } from '@/const';
+import {
+  SUNSHINE_COLOR_RANGE,
+  SUNSHINE_LOADING_COLOR,
+  TEMPERATURE_LOADING_COLOR,
+} from '@/const';
 import { useWeatherStore } from '@/stores/useWeatherStore';
 import { useSunshineStore } from '@/stores/useSunshineStore';
 import type { ValidSunshineMarkerData } from '@/utils/typeGuards';
 import { useHeatmapData } from './useHeatmapData';
-import { useTemperatureColorCache, useSunshineColorCache } from './useColorCache';
+import {
+  useTemperatureColorCache,
+  useSunshineColorCache,
+} from './useColorCache';
 import { perfMonitor } from '@/utils/performance/performanceMonitor';
 
 /**
@@ -39,14 +49,24 @@ function useMapLayers({
   isLoadingWeather,
 }: UseMapLayersProps) {
   // Get max cities to show from appropriate store
-  const maxTemperatureCities = useWeatherStore((state) => state.maxCitiesToShow || 300);
-  const maxSunshineCities = useSunshineStore((state) => state.maxCitiesToShow || 300);
+  const maxTemperatureCities = useWeatherStore(
+    (state) => state.maxCitiesToShow || 300
+  );
+  const maxSunshineCities = useSunshineStore(
+    (state) => state.maxCitiesToShow || 300
+  );
   const maxCitiesToShow =
-    dataType === DataType.Temperature ? maxTemperatureCities : maxSunshineCities;
+    dataType === DataType.Temperature
+      ? maxTemperatureCities
+      : maxSunshineCities;
 
   // Use smaller focused hooks
   const heatmapData = useHeatmapData(cities, dataType, selectedMonth);
-  const temperatureCacheResult = useTemperatureColorCache(cities, dataType, maxCitiesToShow);
+  const temperatureCacheResult = useTemperatureColorCache(
+    cities,
+    dataType,
+    maxCitiesToShow
+  );
   const sunshineCacheResult = useSunshineColorCache(
     cities,
     dataType,
@@ -72,7 +92,9 @@ function useMapLayers({
         colorRange:
           dataType === DataType.Temperature
             ? COLOR_RANGE
-            : SUNSHINE_COLOR_RANGE.map((c) => [...c] as [number, number, number]),
+            : SUNSHINE_COLOR_RANGE.map(
+                (c) => [...c] as [number, number, number]
+              ),
         aggregation: 'MEAN',
         opacity: 0.6,
         visible: viewMode === 'heatmap',
@@ -96,7 +118,9 @@ function useMapLayers({
             const key = `${weatherData.city}_${weatherData.lat}_${weatherData.long}`;
 
             // Use cached color if available, otherwise use loading color
-            return temperatureCacheResult.cache.get(key) || TEMPERATURE_LOADING_COLOR;
+            return (
+              temperatureCacheResult.cache.get(key) || TEMPERATURE_LOADING_COLOR
+            );
           },
           getRadius: 50000,
           radiusMinPixels: 3,

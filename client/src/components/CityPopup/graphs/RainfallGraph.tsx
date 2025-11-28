@@ -18,7 +18,10 @@ interface RainfallGraphProps {
   comparisonWeeklyWeatherData?: CityWeeklyWeather | null;
 }
 
-const RainfallGraph = ({ weeklyWeatherData, comparisonWeeklyWeatherData }: RainfallGraphProps) => {
+const RainfallGraph = ({
+  weeklyWeatherData,
+  comparisonWeeklyWeatherData,
+}: RainfallGraphProps) => {
   // Get theme-aware colors
   const chartColors = useChartColors();
 

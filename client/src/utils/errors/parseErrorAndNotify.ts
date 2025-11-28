@@ -1,7 +1,10 @@
 import { notifications } from '@mantine/notifications';
 import type { ParsedError } from '@/types/errorTypes';
 import { ErrorSeverity } from '@/types/errorTypes';
-import { ERROR_NOTIFICATION_DURATION, WARNING_NOTIFICATION_DURATION } from '@/const';
+import {
+  ERROR_NOTIFICATION_DURATION,
+  WARNING_NOTIFICATION_DURATION,
+} from '@/const';
 import { parseError } from './parseError';
 import { getErrorTitle } from './getErrorTitle';
 import { getSeverityColor } from './getSeverityColor';

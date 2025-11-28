@@ -40,9 +40,7 @@ const WeatherDataSectionInner = <T,>({
       ) : (
         showNoDataBadge && (
           <div className="flex-1 min-h-0 items-center flex justify-center">
-            <Badge size="xl">
-              {noDataMessage}
-            </Badge>
+            <Badge size="xl">{noDataMessage}</Badge>
           </div>
         )
       )}
@@ -50,6 +48,8 @@ const WeatherDataSectionInner = <T,>({
   );
 };
 
-const WeatherDataSection = memo(WeatherDataSectionInner) as typeof WeatherDataSectionInner;
+const WeatherDataSection = memo(
+  WeatherDataSectionInner
+) as typeof WeatherDataSectionInner;
 
 export default WeatherDataSection;

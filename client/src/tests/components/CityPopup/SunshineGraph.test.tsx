@@ -31,7 +31,9 @@ describe('SunshineGraph', () => {
     );
 
     // should render the responsive container
-    expect(container.querySelector('.recharts-responsive-container')).toBeInTheDocument();
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
   });
 
   it('renders with selected month', () => {
@@ -40,7 +42,9 @@ describe('SunshineGraph', () => {
     );
 
     // should render the component
-    expect(container.querySelector('.recharts-responsive-container')).toBeInTheDocument();
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
   });
 
   it('handles null values in sunshine data correctly', () => {
@@ -50,17 +54,25 @@ describe('SunshineGraph', () => {
       feb: null,
     };
 
-    const { container } = render(<SunshineGraph sunshineData={dataWithNulls} selectedMonth={1} />);
+    const { container } = render(
+      <SunshineGraph sunshineData={dataWithNulls} selectedMonth={1} />
+    );
 
     // should still render the graph
-    expect(container.querySelector('.recharts-responsive-container')).toBeInTheDocument();
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
   });
 
   it('renders without selected month', () => {
-    const { container } = render(<SunshineGraph sunshineData={mockSunshineData} />);
+    const { container } = render(
+      <SunshineGraph sunshineData={mockSunshineData} />
+    );
 
     // should still render the graph
-    expect(container.querySelector('.recharts-responsive-container')).toBeInTheDocument();
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
   });
 
   it('renders when latitude is available', () => {
@@ -69,7 +81,9 @@ describe('SunshineGraph', () => {
     );
 
     // should render the component
-    expect(container.querySelector('.recharts-responsive-container')).toBeInTheDocument();
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
   });
 
   it('renders when latitude is null', () => {
@@ -78,16 +92,24 @@ describe('SunshineGraph', () => {
       lat: null,
     };
 
-    const { container } = render(<SunshineGraph sunshineData={dataWithoutLat} />);
+    const { container } = render(
+      <SunshineGraph sunshineData={dataWithoutLat} />
+    );
 
     // should still render the component
-    expect(container.querySelector('.recharts-responsive-container')).toBeInTheDocument();
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
   });
 
   it('renders with all months having data', () => {
-    const { container } = render(<SunshineGraph sunshineData={mockSunshineData} />);
+    const { container } = render(
+      <SunshineGraph sunshineData={mockSunshineData} />
+    );
 
     // should render the component
-    expect(container.querySelector('.recharts-responsive-container')).toBeInTheDocument();
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
   });
 });

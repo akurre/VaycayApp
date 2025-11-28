@@ -21,7 +21,9 @@ export const useMapInteractions = (
   dataType: DataType,
   selectedMonth?: number
 ) => {
-  const [selectedCity, setSelectedCity] = useState<WeatherDataUnion | null>(null);
+  const [selectedCity, setSelectedCity] = useState<WeatherDataUnion | null>(
+    null
+  );
   const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null);
   const homeLocation = useAppStore((state) => state.homeLocation);
   const homeCityData = useAppStore((state) => state.homeCityData);
@@ -70,11 +72,23 @@ export const useMapInteractions = (
         newHoverInfo = {
           x: info.x,
           y: info.y,
-          content: getTooltipContent([city], city.long!, city.lat!, dataType, selectedMonth)!,
+          content: getTooltipContent(
+            [city],
+            city.long!,
+            city.lat!,
+            dataType,
+            selectedMonth
+          )!,
         };
       } else if (viewMode === 'heatmap' && info.coordinate) {
         const [longitude, latitude] = info.coordinate;
-        const content = getTooltipContent(cities, longitude, latitude, dataType, selectedMonth);
+        const content = getTooltipContent(
+          cities,
+          longitude,
+          latitude,
+          dataType,
+          selectedMonth
+        );
         if (content) {
           newHoverInfo = {
             x: info.x,

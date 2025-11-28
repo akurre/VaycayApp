@@ -23,7 +23,10 @@ const SliderLabel: FC<SliderLabelProps> = ({ value, position, isMonthly }) => {
         top: '-35px',
       }}
     >
-      <div className="relative" style={{ transform: 'translateX(calc(-50% - 4px))' }}>
+      <div
+        className="relative"
+        style={{ transform: 'translateX(calc(-50% - 4px))' }}
+      >
         <CustomPopover size="xs">
           <Text size="xs" fw={500}>
             {labelText}

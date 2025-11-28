@@ -4,7 +4,9 @@ import { KM_TO_MILES, MILES_LOCALES } from '@/const';
 
 function shouldUseMiles(): boolean {
   const locale = navigator.language;
-  return MILES_LOCALES.some((milesLocale) => locale.startsWith(milesLocale.split('-')[0]));
+  return MILES_LOCALES.some((milesLocale) =>
+    locale.startsWith(milesLocale.split('-')[0])
+  );
 }
 
 export function formatDistance(distanceKm: number): string {

@@ -6,7 +6,10 @@ import { MantineProvider } from '@mantine/core';
 import { theme } from './theme';
 import type { WeatherData } from './types/cityWeatherDataType';
 import type { SunshineData } from './types/sunshineDataType';
-import type { CityWeeklyWeather, WeekDataPoint } from './types/weeklyWeatherDataType';
+import type {
+  CityWeeklyWeather,
+  WeekDataPoint,
+} from './types/weeklyWeatherDataType';
 import type { NearestCityResult } from './types/userLocationType';
 
 // custom render function that includes all providers
@@ -14,15 +17,19 @@ const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
   return <MantineProvider theme={theme}>{children}</MantineProvider>;
 };
 
-const customRender = (ui: ReactElement, options?: Omit<RenderOptions, 'wrapper'>) =>
-  render(ui, { wrapper: AllTheProviders, ...options });
+const customRender = (
+  ui: ReactElement,
+  options?: Omit<RenderOptions, 'wrapper'>
+) => render(ui, { wrapper: AllTheProviders, ...options });
 
 // re-export everything from testing library
 export { screen, waitFor, within, fireEvent } from '@testing-library/react';
 export { customRender as render };
 
 // mock data factories for common test data
-export const createMockWeatherData = (overrides?: Partial<WeatherData>): WeatherData => ({
+export const createMockWeatherData = (
+  overrides?: Partial<WeatherData>
+): WeatherData => ({
   city: 'Test City',
   country: 'Test Country',
   state: null,
@@ -41,7 +48,9 @@ export const createMockWeatherData = (overrides?: Partial<WeatherData>): Weather
   ...overrides,
 });
 
-export const createMockSunshineData = (overrides?: Partial<SunshineData>): SunshineData => ({
+export const createMockSunshineData = (
+  overrides?: Partial<SunshineData>
+): SunshineData => ({
   city: 'Test City',
   country: 'Test Country',
   lat: 40.7128,
@@ -62,7 +71,9 @@ export const createMockSunshineData = (overrides?: Partial<SunshineData>): Sunsh
   ...overrides,
 });
 
-export const createMockWeekDataPoint = (overrides?: Partial<WeekDataPoint>): WeekDataPoint => ({
+export const createMockWeekDataPoint = (
+  overrides?: Partial<WeekDataPoint>
+): WeekDataPoint => ({
   week: 1,
   avgTemp: 20,
   minTemp: 15,

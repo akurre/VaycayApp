@@ -10,7 +10,9 @@ interface SliderTrackProps {
 const SliderTrack: FC<SliderTrackProps> = ({ trackRef, children }) => {
   const colorScheme = useComputedColorScheme('dark');
   const isLightMode = colorScheme === 'light';
-  const trackColor = isLightMode ? appColors.tertiaryLight : appColors.tertiaryDark;
+  const trackColor = isLightMode
+    ? appColors.tertiaryLight
+    : appColors.tertiaryDark;
 
   return (
     <div className="relative h-2 cursor-pointer" ref={trackRef}>

@@ -78,7 +78,9 @@ export const HOME_CENTER_RADIUS_MAX = 8;
  * Default marker color when no data is available (RGBA)
  * Default: White
  */
-export const HOME_DEFAULT_MARKER_COLOR: [number, number, number, number] = [255, 255, 255, 255];
+export const HOME_DEFAULT_MARKER_COLOR: [number, number, number, number] = [
+  255, 255, 255, 255,
+];
 
 /**
  * Base radius for all home location layers in map units
@@ -111,7 +113,9 @@ export const TEMP_THRESHOLDS = [
 ];
 
 // color range for heatmap layer (extracted from thresholds)
-export const COLOR_RANGE: [number, number, number][] = TEMP_THRESHOLDS.map((t) => t.color);
+export const COLOR_RANGE: [number, number, number][] = TEMP_THRESHOLDS.map(
+  (t) => t.color
+);
 
 // sunshine hours color thresholds for heatmap visualization
 // ranges from low sunshine (dark/cool colors) to high sunshine (bright/warm colors)
@@ -134,8 +138,12 @@ export const SUNSHINE_THRESHOLDS = [
 export const SUNSHINE_COLOR_RANGE = SUNSHINE_THRESHOLDS.map((t) => t.color);
 
 // Default loading state colors
-export const TEMPERATURE_LOADING_COLOR: [number, number, number, number] = [150, 150, 200, 255]; // Blue-gray
-export const SUNSHINE_LOADING_COLOR: [number, number, number, number] = [150, 150, 150, 255]; // Gray
+export const TEMPERATURE_LOADING_COLOR: [number, number, number, number] = [
+  150, 150, 200, 255,
+]; // Blue-gray
+export const SUNSHINE_LOADING_COLOR: [number, number, number, number] = [
+  150, 150, 150, 255,
+]; // Gray
 
 // Type for color cache entries
 export type ColorCacheEntry = [number, number, number, number]; // r, g, b, a
@@ -208,7 +216,9 @@ export const SUNSHINE_CHART_MAX_LINE_COLOR = '#E63E55'; // theme red for theoret
 export const SUNSHINE_CHART_MIN_LINE_COLOR = '#6b7280'; // gray for baseline
 
 // days in each month (using 28.25 for February to account for leap years)
-export const DAYS_IN_MONTH = [31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+export const DAYS_IN_MONTH = [
+  31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31,
+];
 
 // calendar days in each month (non-leap year) - for iteration
 export const CALENDAR_DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];

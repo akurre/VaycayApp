@@ -15,7 +15,9 @@ export function useUserLocation(): UseUserLocationReturn {
   const [isLoading, setIsLoading] = useState(false);
   const setHomeLocation = useAppStore((state) => state.setHomeLocation);
 
-  const [getNearestCity] = useLazyQuery<{ nearestCity: NearestCityResult }>(GET_NEAREST_CITY);
+  const [getNearestCity] = useLazyQuery<{ nearestCity: NearestCityResult }>(
+    GET_NEAREST_CITY
+  );
 
   const requestLocation = useCallback(async () => {
     setIsLoading(true);
@@ -30,13 +32,15 @@ export function useUserLocation(): UseUserLocationReturn {
     }
 
     try {
-      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject, {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 0,
-        });
-      });
+      const position = await new Promise<GeolocationPosition>(
+        (resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0,
+          });
+        }
+      );
 
       const { latitude, longitude } = position.coords;
 

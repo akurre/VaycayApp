@@ -22,7 +22,10 @@ import { calculateDayLength } from './calculateDayLength';
  * @param month - Month number (1-12)
  * @returns Theoretical maximum sunshine hours for a standardized month
  */
-export function calculateTheoreticalMaxSunshine(latitude: number, month: number): number {
+export function calculateTheoreticalMaxSunshine(
+  latitude: number,
+  month: number
+): number {
   // Calculate the starting day of year for this month
   let startDayOfYear = 0;
   for (let i = 0; i < month - 1; i++) {

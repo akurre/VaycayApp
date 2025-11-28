@@ -49,7 +49,9 @@ const TemperatureSection = ({
         )}
 
         {/* Data rows */}
-        <div className={`grid ${hasComparison ? 'grid-cols-3' : 'grid-cols-2'} gap-2 items-center`}>
+        <div
+          className={`grid ${hasComparison ? 'grid-cols-3' : 'grid-cols-2'} gap-2 items-center`}
+        >
           <div className="font-medium text-sm">Average</div>
           <div
             className="text-sm"
@@ -64,7 +66,9 @@ const TemperatureSection = ({
           )}
         </div>
 
-        <div className={`grid ${hasComparison ? 'grid-cols-3' : 'grid-cols-2'} gap-2 items-center`}>
+        <div
+          className={`grid ${hasComparison ? 'grid-cols-3' : 'grid-cols-2'} gap-2 items-center`}
+        >
           <div className="font-medium text-sm">Min</div>
           <div
             className="text-sm"
@@ -79,7 +83,9 @@ const TemperatureSection = ({
           )}
         </div>
 
-        <div className={`grid ${hasComparison ? 'grid-cols-3' : 'grid-cols-2'} gap-2 items-center`}>
+        <div
+          className={`grid ${hasComparison ? 'grid-cols-3' : 'grid-cols-2'} gap-2 items-center`}
+        >
           <div className="font-medium text-sm">Max</div>
           <div
             className="text-sm"

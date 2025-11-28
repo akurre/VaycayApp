@@ -29,11 +29,15 @@ const MapPage: FC = () => {
   const urlDate = searchParams.get('date');
 
   // initialize with today's date or url date
-  const [selectedDate, setSelectedDate] = useState<string>(urlDate || getTodayAsMMDD());
+  const [selectedDate, setSelectedDate] = useState<string>(
+    urlDate || getTodayAsMMDD()
+  );
   const [viewMode, setViewMode] = useState<ViewMode>(ViewMode.Markers);
   const [dataType, setDataType] = useState<DataType>(DataType.Temperature);
   const [bounds, setBounds] = useState<MapBounds | null>(null);
-  const [shouldUseBounds, setShouldUseBounds] = useState(INITIAL_VIEW_STATE.zoom >= ZOOM_THRESHOLD);
+  const [shouldUseBounds, setShouldUseBounds] = useState(
+    INITIAL_VIEW_STATE.zoom >= ZOOM_THRESHOLD
+  );
 
   // debounce the date to avoid excessive api calls while dragging slider
   const [debouncedDate] = useDebouncedValue(selectedDate, 300);
@@ -63,12 +67,18 @@ const MapPage: FC = () => {
   });
 
   // zustand stores for persisting displayed data
-  const { displayedWeatherData, setDisplayedWeatherData, setIsLoadingWeather } = useWeatherStore();
-  const { displayedSunshineData, setDisplayedSunshineData, setIsLoadingSunshine } =
-    useSunshineStore();
+  const { displayedWeatherData, setDisplayedWeatherData, setIsLoadingWeather } =
+    useWeatherStore();
+  const {
+    displayedSunshineData,
+    setDisplayedSunshineData,
+    setIsLoadingSunshine,
+  } = useSunshineStore();
 
   // Get the appropriate data based on the selected data type
-  const displayedData = isSunshineSelected ? displayedSunshineData : displayedWeatherData;
+  const displayedData = isSunshineSelected
+    ? displayedSunshineData
+    : displayedWeatherData;
 
   // update url when date or theme changes (for bookmarking/sharing)
   useEffect(() => {
@@ -118,10 +128,13 @@ const MapPage: FC = () => {
   };
 
   // handle bounds changes from map zoom/pan
-  const handleBoundsChange = useCallback((newBounds: MapBounds | null, useBounds: boolean) => {
-    setBounds(newBounds);
-    setShouldUseBounds(useBounds);
-  }, []);
+  const handleBoundsChange = useCallback(
+    (newBounds: MapBounds | null, useBounds: boolean) => {
+      setBounds(newBounds);
+      setShouldUseBounds(useBounds);
+    },
+    []
+  );
 
   return (
     <div className="relative w-full h-screen">

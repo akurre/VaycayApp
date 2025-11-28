@@ -20,7 +20,8 @@ const Field = ({
   isHorizontal,
 }: FieldProps) => {
   const { colorScheme } = useMantineColorScheme();
-  const labelColor = colorScheme === 'dark' ? 'tertiary-purple.4' : 'tertiary-purple.7';
+  const labelColor =
+    colorScheme === 'dark' ? 'tertiary-purple.4' : 'tertiary-purple.7';
   const classNames = `w-full ${isHorizontal ? 'flex gap-2' : ''}`;
 
   return (
@@ -28,7 +29,11 @@ const Field = ({
       <Text size="sm" c={labelColor}>
         {label}
       </Text>
-      <Text size="md" ff={monospace ? 'monospace' : undefined} style={{ color: valueColor }}>
+      <Text
+        size="md"
+        ff={monospace ? 'monospace' : undefined}
+        style={{ color: valueColor }}
+      >
         {value}
       </Text>
       {secondaryValue !== undefined && (

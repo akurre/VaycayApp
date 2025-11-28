@@ -24,7 +24,8 @@ function useWeeklyWeatherForCity({
   long,
   skipFetch = false,
 }: UseWeeklyWeatherForCityParams) {
-  const { getFromCache, addToCache, markAsRecentlyUsed } = useCityDataCacheStore();
+  const { getFromCache, addToCache, markAsRecentlyUsed } =
+    useCityDataCacheStore();
 
   // Generate cache key
   const cacheKey = useMemo(() => {
@@ -47,7 +48,8 @@ function useWeeklyWeatherForCity({
       lat: lat ?? undefined,
       long: long ?? undefined,
     },
-    skip: skipFetch || !cityName || !cacheKey || !!cachedData?.weeklyWeatherData,
+    skip:
+      skipFetch || !cityName || !cacheKey || !!cachedData?.weeklyWeatherData,
     fetchPolicy: 'network-only',
   });
 
@@ -70,11 +72,15 @@ function useWeeklyWeatherForCity({
   useEffect(() => {
     if (error) {
       const context = cityName ? ` for ${cityName}` : '';
-      parseErrorAndNotify(error, `failed to load weekly weather data${context}`);
+      parseErrorAndNotify(
+        error,
+        `failed to load weekly weather data${context}`
+      );
     }
   }, [error, cityName]);
 
-  const weeklyWeatherData = cachedData?.weeklyWeatherData || data?.weeklyWeatherByCity || null;
+  const weeklyWeatherData =
+    cachedData?.weeklyWeatherData || data?.weeklyWeatherByCity || null;
 
   return {
     weeklyWeatherData,

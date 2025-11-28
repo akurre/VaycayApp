@@ -29,7 +29,8 @@ export const appColors = {
     text: '#2c2c2c',
     textSecondary: '#6b6b6b',
     toggleBackground: '#f0f0f0',
-    textShadow: '0 0 8px rgba(255, 255, 255, 0.8), 0 0 4px rgba(255, 255, 255, 0.6)',
+    textShadow:
+      '0 0 8px rgba(255, 255, 255, 0.8), 0 0 4px rgba(255, 255, 255, 0.6)',
   },
 
   // neutral colors for dark mode

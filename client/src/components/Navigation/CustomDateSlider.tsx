@@ -34,7 +34,9 @@ const CustomDateSlider: FC<CustomDateSliderProps> = ({
   });
 
   // calculate position as percentage
-  const position = isMonthly ? ((value - 1) / 11) * 100 : ((value - min) / (max - min)) * 100;
+  const position = isMonthly
+    ? ((value - 1) / 11) * 100
+    : ((value - min) / (max - min)) * 100;
 
   return (
     <div className="w-full">

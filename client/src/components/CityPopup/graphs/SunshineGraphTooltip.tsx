@@ -27,7 +27,9 @@ function SunshineGraphTooltip({ active, payload }: SunshineGraphTooltipProps) {
       <Text size="sm" fw={600}>
         {data.month}
       </Text>
-      <Text size="sm">{data.hours !== null ? `${data.hours.toFixed(1)} hours` : 'No data'}</Text>
+      <Text size="sm">
+        {data.hours !== null ? `${data.hours.toFixed(1)} hours` : 'No data'}
+      </Text>
     </div>
   );
 }

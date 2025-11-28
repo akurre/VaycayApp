@@ -25,7 +25,9 @@ describe('useMapInteractions', () => {
     ...overrides,
   });
 
-  const createMockPickingInfo = (overrides?: Partial<PickingInfo>): PickingInfo =>
+  const createMockPickingInfo = (
+    overrides?: Partial<PickingInfo>
+  ): PickingInfo =>
     ({
       x: 100,
       y: 200,

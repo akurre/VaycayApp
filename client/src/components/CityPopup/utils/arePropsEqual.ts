@@ -1,7 +1,10 @@
 import type { CityPopupProps } from '@/types/mapTypes';
 
 // custom comparison function to prevent unnecessary re-renders
-function arePropsEqual(prevProps: CityPopupProps, nextProps: CityPopupProps): boolean {
+function arePropsEqual(
+  prevProps: CityPopupProps,
+  nextProps: CityPopupProps
+): boolean {
   // check if city objects are the same by comparing key properties
   const prevCity = prevProps.city;
   const nextCity = nextProps.city;

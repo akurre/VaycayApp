@@ -10,13 +10,13 @@ export function useWeatherByDate(date: string) {
   // Remove any dashes from the date format (e.g., "03-03" -> "0303")
   const formattedDate = date ? date.replaceAll('-', '') : '';
 
-  const { data, loading, error } = useQuery<WeatherByDateResponse, WeatherByDateVars>(
-    GET_WEATHER_BY_DATE,
-    {
-      variables: { monthDay: formattedDate },
-      skip: !formattedDate || formattedDate.length !== 4,
-    }
-  );
+  const { data, loading, error } = useQuery<
+    WeatherByDateResponse,
+    WeatherByDateVars
+  >(GET_WEATHER_BY_DATE, {
+    variables: { monthDay: formattedDate },
+    skip: !formattedDate || formattedDate.length !== 4,
+  });
 
   const weatherData: WeatherData[] | undefined = data?.weatherByDate;
 

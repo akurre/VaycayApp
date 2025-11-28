@@ -22,7 +22,9 @@ vi.mock('@/api/dates/useWeeklyWeatherForCity', () => ({
 
 // mock the ComparisonCitySelector component to avoid Apollo Client dependency
 vi.mock('@/components/CityPopup/ComparisonCitySelector', () => ({
-  default: () => <div data-testid="comparison-city-selector">Comparison City Selector</div>,
+  default: () => (
+    <div data-testid="comparison-city-selector">Comparison City Selector</div>
+  ),
 }));
 
 import useWeatherDataForCity from '@/api/dates/useWeatherDataForCity';
@@ -106,7 +108,9 @@ describe('CityPopup', () => {
       />
     );
 
-    expect(screen.getByText('New York, New York, United States')).toBeInTheDocument();
+    expect(
+      screen.getByText('New York, New York, United States')
+    ).toBeInTheDocument();
   });
 
   it('renders sunshine data correctly when passed as city prop', () => {
@@ -120,7 +124,9 @@ describe('CityPopup', () => {
       />
     );
 
-    expect(screen.getByText('New York, New York, United States')).toBeInTheDocument();
+    expect(
+      screen.getByText('New York, New York, United States')
+    ).toBeInTheDocument();
   });
 
   it('fetches and displays weather data when city is sunshine data', () => {
@@ -142,7 +148,9 @@ describe('CityPopup', () => {
     );
 
     // verify the component rendered
-    expect(screen.getByText('New York, New York, United States')).toBeInTheDocument();
+    expect(
+      screen.getByText('New York, New York, United States')
+    ).toBeInTheDocument();
   });
 
   it('fetches and displays sunshine data when city is weather data', () => {
@@ -164,7 +172,9 @@ describe('CityPopup', () => {
     );
 
     // verify the component rendered
-    expect(screen.getByText('New York, New York, United States')).toBeInTheDocument();
+    expect(
+      screen.getByText('New York, New York, United States')
+    ).toBeInTheDocument();
   });
 
   it('shows loading state when weather data is being fetched', () => {
@@ -224,7 +234,9 @@ describe('CityPopup', () => {
       />
     );
 
-    expect(screen.getByText('Failed to load temperature data for this city.')).toBeInTheDocument();
+    expect(
+      screen.getByText('Failed to load temperature data for this city.')
+    ).toBeInTheDocument();
   });
 
   it('shows error state when sunshine data fetching fails', () => {
@@ -245,7 +257,9 @@ describe('CityPopup', () => {
     );
 
     // use getAllByText since there might be multiple error messages
-    const errorMessages = screen.getAllByText('Failed to load sunshine data for this city.');
+    const errorMessages = screen.getAllByText(
+      'Failed to load sunshine data for this city.'
+    );
     expect(errorMessages.length).toBeGreaterThan(0);
   });
 

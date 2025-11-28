@@ -23,7 +23,10 @@ const AdditionalInfo = ({ city, isShowCity }: AdditionalInfoProps) => {
           <div className="pb-3 flex-col">
             <div className="flex mb-3">
               {city.population && (
-                <Field label="Population" value={city.population.toLocaleString()} />
+                <Field
+                  label="Population"
+                  value={city.population.toLocaleString()}
+                />
               )}
             </div>
             <DistanceSection lat={city.lat} long={city.long} />

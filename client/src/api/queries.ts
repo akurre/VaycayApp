@@ -146,8 +146,18 @@ export const GET_WEATHER_BY_CITY_NAME = gql`
 
 // Query to get weather data for a specific city on a specific date
 export const GET_WEATHER_BY_CITY_AND_DATE = gql`
-  query GetWeatherByCityAndDate($city: String!, $lat: Float, $long: Float, $monthDay: String!) {
-    weatherByCityAndDate(city: $city, lat: $lat, long: $long, monthDay: $monthDay) {
+  query GetWeatherByCityAndDate(
+    $city: String!
+    $lat: Float
+    $long: Float
+    $monthDay: String!
+  ) {
+    weatherByCityAndDate(
+      city: $city
+      lat: $lat
+      long: $long
+      monthDay: $monthDay
+    ) {
       city
       country
       state

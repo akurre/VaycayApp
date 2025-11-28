@@ -50,7 +50,10 @@ const DataChartTabs = ({
         className="h-full flex"
       >
         <Tabs.List grow>
-          <Tabs.Tab value="temperature" leftSection={<IconTemperature size={12} />}>
+          <Tabs.Tab
+            value="temperature"
+            leftSection={<IconTemperature size={12} />}
+          >
             Temp
           </Tabs.Tab>
           <Tabs.Tab value="sunshine" leftSection={<IconSun size={12} />}>
