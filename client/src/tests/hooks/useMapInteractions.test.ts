@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { renderHook, act } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@testing-library/react';
 import { useMapInteractions } from '@/hooks/useMapInteractions';
 import type { WeatherData } from '@/types/cityWeatherDataType';
 import type { PickingInfo } from '@deck.gl/core';
@@ -67,7 +67,7 @@ describe('useMapInteractions', () => {
   });
 
   describe('handleHover - markers mode', () => {
-    it('sets hover info when hovering over marker', () => {
+    it('sets hover info when hovering over marker', async () => {
       const city = createMockCity();
       const { result } = renderHook(() =>
         useMapInteractions([city], ViewMode.Markers, DataType.Temperature)
@@ -79,10 +79,13 @@ describe('useMapInteractions', () => {
         result.current.handleHover(pickingInfo);
       });
 
-      expect(result.current.hoverInfo).toEqual({
-        x: 100,
-        y: 200,
-        content: 'Milan, Italy\n25.5°C',
+      // wait for throttled state update (16ms delay)
+      await waitFor(() => {
+        expect(result.current.hoverInfo).toEqual({
+          x: 100,
+          y: 200,
+          content: 'Milan, Italy\n25.5°C',
+        });
       });
     });
 
@@ -107,7 +110,7 @@ describe('useMapInteractions', () => {
   });
 
   describe('handleHover - heatmap mode', () => {
-    it('sets hover info when hovering over city location', () => {
+    it('sets hover info when hovering over city location', async () => {
       const city = createMockCity();
       const { result } = renderHook(() =>
         useMapInteractions([city], ViewMode.Heatmap, DataType.Temperature)
@@ -121,10 +124,13 @@ describe('useMapInteractions', () => {
         result.current.handleHover(pickingInfo);
       });
 
-      expect(result.current.hoverInfo).toEqual({
-        x: 100,
-        y: 200,
-        content: 'Milan, Italy\n25.5°C',
+      // wait for throttled state update (16ms delay)
+      await waitFor(() => {
+        expect(result.current.hoverInfo).toEqual({
+          x: 100,
+          y: 200,
+          content: 'Milan, Italy\n25.5°C',
+        });
       });
     });
 
@@ -311,7 +317,7 @@ describe('useMapInteractions', () => {
   });
 
   describe('mode switching', () => {
-    it('handles switching from markers to heatmap mode', () => {
+    it('handles switching from markers to heatmap mode', async () => {
       const city = createMockCity();
       const { result, rerender } = renderHook(
         ({
@@ -337,7 +343,10 @@ describe('useMapInteractions', () => {
         result.current.handleHover(createMockPickingInfo({ object: city }));
       });
 
-      expect(result.current.hoverInfo).not.toBeNull();
+      // wait for throttled state update (16ms delay)
+      await waitFor(() => {
+        expect(result.current.hoverInfo).not.toBeNull();
+      });
 
       // switch to heatmap mode
       rerender({
@@ -353,7 +362,10 @@ describe('useMapInteractions', () => {
         );
       });
 
-      expect(result.current.hoverInfo).not.toBeNull();
+      // wait for throttled state update (16ms delay)
+      await waitFor(() => {
+        expect(result.current.hoverInfo).not.toBeNull();
+      });
     });
   });
 

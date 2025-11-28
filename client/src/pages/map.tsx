@@ -126,10 +126,10 @@ const MapPage: FC = () => {
   return (
     <div className="relative w-full h-screen">
       {/* navigation panel */}
-      <div className="absolute top-8 left-4 z-20">
+      <div className="absolute top-4 left-4 z-20">
         <HomeLocationSelector />
       </div>
-      <div className="absolute top-6 right-4 z-20 flex gap-2">
+      <div className="absolute top-4 right-4 z-20 flex gap-2">
         <MapViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
         <MapDataToggle dataType={dataType} onDataTypeChange={setDataType} />
       </div>

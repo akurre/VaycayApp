@@ -6,9 +6,9 @@ Hey, I'm Ashlen, welcome to my little side project (currently being developed).
 
 **Important to note:** I built this originally with Python FastAPI in the very (very) start of my programming career, where I was moreso in the business of just playing with dataframes in pandas. I had not revisited it really until now (late Oct 2025), but I want to play with GraphQL / React in my own way. That being said, it's very primitive! Will be building it out as time goes on.
 
-Why, you might ask, did I use GraphQL? Honestly, I just wanted to practice with a different framework. I am still fresh at GraphQL and need it for a project, so this is my way of getting in touch with it. 
+Why, you might ask, did I use GraphQL? Honestly, I just wanted to practice with a different framework. I am still fresh at GraphQL and need it for a client, so this is my way of getting in touch with it. 
 
-Another note: the data takes like 8000 years to clean/process as I'm working with free APIs with rate limits, so I only have data for Italy included at the moment. More coming later.
+Another note: I'm cheap, so instead of paying for an API, I sourced and cleaned all the data myself from numerous disjointed (but free) datasets online. Therefore, some inaccuracies will occur.
 
 ## 🎯 Project Goal
 

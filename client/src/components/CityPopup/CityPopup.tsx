@@ -1,4 +1,4 @@
-import { ActionIcon, Title, Badge } from '@mantine/core';
+import { ActionIcon, Badge, Tooltip } from '@mantine/core';
 import { useMemo, memo, useState } from 'react';
 import { IconX } from '@tabler/icons-react';
 import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
@@ -178,9 +178,11 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate, dataType }: Cit
         <div className="flex flex-col gap-3 min-w-1/2 grow">
           <div className="flex gap-6">
             <div className="flex items-center">
-              <Badge size="xl">
-                <Title order={4}>{cityAndCountry}</Title>
-              </Badge>
+              <Tooltip label={cityAndCountry}>
+                <Badge size="xl">
+                  {cityAndCountry}
+                </Badge>
+              </Tooltip>
             </div>
             <div className="flex-1" />
             <div className="flex justify-end">
