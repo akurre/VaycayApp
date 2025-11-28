@@ -137,6 +137,28 @@ async function querySunshineCityIdsWithGridDistribution({
 }
 
 /**
+ * Simple population-based sorting for global queries.
+ */
+async function querySunshineCityIdsWithPopulationSort({
+  prisma,
+  monthField,
+}: {
+  prisma: PrismaClient;
+  monthField: string;
+}): Promise<number[]> {
+  const cityIds = await prisma.$queryRaw<Array<{ cityId: number }>>`
+    SELECT ms."cityId"
+    FROM monthly_sunshine ms
+    INNER JOIN cities c ON c.id = ms."cityId"
+    WHERE ms.${Prisma.raw(monthField)} IS NOT NULL
+    ORDER BY c.population DESC NULLS LAST
+    LIMIT ${MAX_CITIES_GLOBAL_VIEW}
+  `;
+
+  return cityIds.map((c) => c.cityId);
+}
+
+/**
  * Shared query logic for fetching sunshine city ids with spatial distribution.
  * Uses grid-based distribution for bounds queries, population-based for global queries.
  */
@@ -158,28 +180,6 @@ async function querySunshineCityIds({
     return querySunshineCityIdsWithGridDistribution({ prisma, monthField, bounds });
   }
   return querySunshineCityIdsWithPopulationSort({ prisma, monthField });
-}
-
-/**
- * Simple population-based sorting for global queries.
- */
-async function querySunshineCityIdsWithPopulationSort({
-  prisma,
-  monthField,
-}: {
-  prisma: PrismaClient;
-  monthField: string;
-}): Promise<number[]> {
-  const cityIds = await prisma.$queryRaw<Array<{ cityId: number }>>`
-    SELECT ms."cityId"
-    FROM monthly_sunshine ms
-    INNER JOIN cities c ON c.id = ms."cityId"
-    WHERE ms.${Prisma.raw(monthField)} IS NOT NULL
-    ORDER BY c.population DESC NULLS LAST
-    LIMIT ${MAX_CITIES_GLOBAL_VIEW}
-  `;
-
-  return cityIds.map((c) => c.cityId);
 }
 
 export default querySunshineCityIds;

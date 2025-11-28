@@ -134,26 +134,6 @@ async function queryCityIdsWithGridDistribution({
 }
 
 /**
- * shared query logic for fetching city ids with area-based distribution.
- * uses window functions to:
- * 1. calculate approximate area for each country in visible region
- * 2. distribute cities proportionally by area (large countries get more cities)
- * 3. rank cities by population within each country
- * 4. ensure every country gets at least 1 city (minimum representation)
- *
- * this algorithm works for both global and zoomed views:
- * - global: area = country's total area → large countries get more cities
- * - zoomed: area = country's visible area → adapts to visible region
- */
-async function queryCityIds({ prisma, dateStr, bounds }: QueryCityIdsParams): Promise<number[]> {
-  // use grid-based distribution for zoomed views, country-based for global view
-  if (bounds) {
-    return queryCityIdsWithGridDistribution({ prisma, dateStr, bounds });
-  }
-  return queryCityIdsWithCountryDistribution({ prisma, dateStr });
-}
-
-/**
  * Country-based distribution for global queries.
  * Uses area-weighted allocation to balance representation across countries.
  */
@@ -256,6 +236,26 @@ async function queryCityIdsWithCountryDistribution({
   `;
 
   return cityIds.map((c) => c.id);
+}
+
+/**
+ * shared query logic for fetching city ids with area-based distribution.
+ * uses window functions to:
+ * 1. calculate approximate area for each country in visible region
+ * 2. distribute cities proportionally by area (large countries get more cities)
+ * 3. rank cities by population within each country
+ * 4. ensure every country gets at least 1 city (minimum representation)
+ *
+ * this algorithm works for both global and zoomed views:
+ * - global: area = country's total area → large countries get more cities
+ * - zoomed: area = country's visible area → adapts to visible region
+ */
+async function queryCityIds({ prisma, dateStr, bounds }: QueryCityIdsParams): Promise<number[]> {
+  // use grid-based distribution for zoomed views, country-based for global view
+  if (bounds) {
+    return queryCityIdsWithGridDistribution({ prisma, dateStr, bounds });
+  }
+  return queryCityIdsWithCountryDistribution({ prisma, dateStr });
 }
 
 export default queryCityIds;
