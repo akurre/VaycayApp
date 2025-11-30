@@ -5,6 +5,7 @@ import GreaterSection from './GreaterSection';
 import CustomPaper from '../Shared/CustomPaper';
 import { Popover, Button, Badge } from '@mantine/core';
 import { appColors } from '@/theme';
+import CityBadge from './graphs/CityBadge';
 
 interface AdditionalInfoProps {
   city: WeatherDataUnion;
@@ -16,7 +17,7 @@ const AdditionalInfo = ({ city, isShowCity }: AdditionalInfoProps) => {
     <CustomPaper className="w-3/12 flex flex-col">
       {isShowCity && (
         <div className="pb-2">
-          <Badge variant="transparent">{city.city}</Badge>
+          <CityBadge cityName={city.city}/>
         </div>
       )}
       <GreaterSection>

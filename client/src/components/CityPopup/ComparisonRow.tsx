@@ -1,5 +1,6 @@
-import { Badge, Text } from '@mantine/core';
+import { Text } from '@mantine/core';
 import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
+import CityBadge from './graphs/CityBadge';
 
 interface ComparisonRowProps {
   cityName: string;
@@ -17,11 +18,9 @@ const ComparisonRow = ({
   const color = isComparison ? CITY2_PRIMARY_COLOR : CITY1_PRIMARY_COLOR;
 
   return (
-    <div className="flex gap-2 justify-between">
+    <div className="flex gap-2 justify-between items-center">
       {showCityBadge && (
-        <Badge variant="light" style={isComparison ? { color } : undefined}>
-          {cityName}
-        </Badge>
+        <CityBadge cityName={cityName} isComparison={isComparison} />
       )}
       <Text size="md" style={showCityBadge ? { color } : undefined}>
         {value}

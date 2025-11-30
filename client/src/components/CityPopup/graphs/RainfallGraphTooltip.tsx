@@ -51,7 +51,7 @@ const RainfallGraphTooltip = ({
       </Text>
 
       {/* Main city precipitation */}
-      {data.totalPrecip !== null && (
+      {data.totalPrecip !== null && data.totalPrecip !== undefined && (
         <div className="flex items-center gap-2 mb-1">
           {cityName && <CityBadge cityName={cityName} />}
           <Text size="sm" c={chartColors.textColor}>

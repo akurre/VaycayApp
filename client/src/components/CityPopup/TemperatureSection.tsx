@@ -1,10 +1,8 @@
 import { memo } from 'react';
-import Field from './Field';
 import { formatTemperature } from '@/utils/tempFormatting/formatTemperature';
 import GreaterSection from './GreaterSection';
-
 import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
-import { Badge } from '@mantine/core';
+import CityBadge from './graphs/CityBadge';
 
 interface TemperatureSectionProps {
   avgTemperature: number | null;
@@ -41,10 +39,8 @@ const TemperatureSection = ({
             className={`grid ${hasComparison ? 'grid-cols-3' : 'grid-cols-2'} gap-2 items-center`}
           >
             <div></div> {/* Empty space for label column */}
-            <Badge variant="light">{baseCity}</Badge>
-            <Badge variant="light" style={{ color: CITY2_PRIMARY_COLOR }}>
-              {comparisonCity}
-            </Badge>
+            <CityBadge cityName={baseCity} />
+            <CityBadge cityName={comparisonCity} isComparison={true} />
           </div>
         )}
 
