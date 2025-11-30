@@ -26,22 +26,22 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
-          railway link ${{ secrets.RAILWAY_PROJECT_ID }} --environment production
-          railway up --service backend --detach
+          cd server
+          railway up --service=backend --detach
 
       - name: Deploy Frontend to Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
-          railway link ${{ secrets.RAILWAY_PROJECT_ID }} --environment production
-          railway up --service frontend --detach
+          cd client
+          railway up --service=frontend --detach
 
       - name: Run Database Migrations
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
-          railway link ${{ secrets.RAILWAY_PROJECT_ID }} --environment production
-          railway run --service backend npx prisma migrate deploy
+          cd server
+          railway run --service=backend npm run prisma:migrate:deploy
 
       - name: Deployment Summary
         run: |
