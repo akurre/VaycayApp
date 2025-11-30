@@ -1,4 +1,4 @@
-.PHONY: help install db-setup dev clean db-start db-stop server-dev client-dev check-prereqs lint lint-fix type-check format format-check build prisma delete-package test
+.PHONY: help install db-setup dev clean db-start db-stop server-dev client-dev check-prereqs lint lint-fix type-check format format-check build prisma delete-package test perf
 
 # Colors for output
 GREEN := \033[0;32m
@@ -33,6 +33,7 @@ help:
 	@echo "$(YELLOW)Utilities:$(NC)"
 	@echo "  make prisma         - Generate Prisma client"
 	@echo "  make delete-package - Delete root node_modules and package-lock.json, then generate Prisma client"
+	@echo "  make perf           - Show performance baseline and monitoring guide"
 	@echo "  make clean          - Stop all services and clean up"
 	@echo "  make help           - Show this help message"
 	@echo ""
@@ -84,7 +85,15 @@ db-setup-v2: check-prereqs
 	@export DATABASE_URL="postgresql://postgres:iwantsun@localhost:5433/postgres_v2" && cd server && npx tsx scripts/import-sunshine-hours.ts
 	@echo "$(YELLOW)Aggregating weekly weather data (this will take 2-5 minutes)...$(NC)"
 	@export DATABASE_URL="postgresql://postgres:iwantsun@localhost:5433/postgres_v2" && cd server && npm run aggregate-weekly-weather
+	@echo "$(YELLOW)Adding custom city sunshine data...$(NC)"
+	@export DATABASE_URL="postgresql://postgres:iwantsun@localhost:5433/postgres_v2" && cd server && npx tsx scripts/add-city-sunshine.ts
 	@echo "$(GREEN)✓ V2 Database setup complete$(NC)"
+
+# Add custom city sunshine data (can be run multiple times safely)
+add-city-sunshine: check-prereqs
+	@echo "$(GREEN)Adding custom city sunshine data...$(NC)"
+	@export DATABASE_URL="postgresql://postgres:iwantsun@localhost:5433/postgres_v2" && cd server && npx tsx scripts/add-city-sunshine.ts
+	@echo "$(GREEN)✓ Done$(NC)"
 
 # Setup database (temporarily redirected to v2)
 db-setup: db-setup-v2
@@ -202,30 +211,84 @@ build: check-prereqs
 	@cd client && npm run build
 	@echo "$(GREEN)✓ Build complete$(NC)"
 
-# Generate Prisma client
+# Run Prisma migrations and generate client
 prisma: check-prereqs
-	@echo "$(GREEN)Generating Prisma client...$(NC)"
-	npm run -w server prisma:generate
-	@echo "$(GREEN)✓ Prisma client generated$(NC)"
-
-# Delete root node_modules and package-lock.json, then generate Prisma client
-delete-package: check-prereqs
-	@echo "$(GREEN)Cleaning up root package files...$(NC)"
-	@echo "$(YELLOW)Deleting root node_modules...$(NC)"
-	@rm -rf node_modules
-	@echo "$(YELLOW)Deleting root package-lock.json...$(NC)"
-	@rm -f package-lock.json
-	@echo "$(YELLOW)Reinstalling...$(NC)"
-	npm i
+	@echo "$(GREEN)Running Prisma migrations and generating client...$(NC)"
+	@echo "$(YELLOW)Running migrations...$(NC)"
+	cd server && npm run prisma:migrate
 	@echo "$(YELLOW)Generating Prisma client...$(NC)"
-	npm run -w server prisma:generate
-	@echo "$(GREEN)✓ Package cleanup and Prisma generation complete$(NC)"
+	cd server && npm run prisma:generate
+	@echo "$(GREEN)✓ Prisma migrations and client generation complete$(NC)"
+
+# Delete node_modules in all locations and reinstall
+delete-package: check-prereqs
+	@echo "$(GREEN)Cleaning up all package files...$(NC)"
+	@echo "$(YELLOW)Deleting root node_modules and package-lock.json...$(NC)"
+	@rm -rf node_modules package-lock.json
+	@echo "$(YELLOW)Deleting client node_modules and package-lock.json...$(NC)"
+	@cd client && rm -rf node_modules package-lock.json
+	@echo "$(YELLOW)Deleting server node_modules and package-lock.json...$(NC)"
+	@cd server && rm -rf node_modules package-lock.json
+	@echo "$(YELLOW)Reinstalling root packages...$(NC)"
+	@npm install
+	@echo "$(YELLOW)Reinstalling server packages...$(NC)"
+	@cd server && npm install
+	@echo "$(YELLOW)Generating Prisma client...$(NC)"
+	@cd server && npm run prisma:generate
+	@echo "$(YELLOW)Reinstalling client packages...$(NC)"
+	@cd client && npm install
+	@echo "$(GREEN)✓ All packages reinstalled and Prisma client generated$(NC)"
 
 # Run tests
 test: check-prereqs
 	@echo "$(GREEN)Running tests with coverage...$(NC)"
 	@cd client && npm run test:coverage
 	@echo "$(GREEN)✓ Tests complete$(NC)"
+
+# Show performance summary
+perf:
+	@echo "$(GREEN)╔════════════════════════════════════════════════════════════════╗$(NC)"
+	@echo "$(GREEN)║           Vaycay v2 - Performance Monitoring Guide            ║$(NC)"
+	@echo "$(GREEN)╚════════════════════════════════════════════════════════════════╝$(NC)"
+	@echo ""
+	@echo "$(YELLOW)📊 Performance Thresholds & Baselines:$(NC)"
+	@echo ""
+	@grep -A 30 "const thresholds" client/src/utils/performance/performanceMonitor.ts | \
+		grep -E "^\s*'[^']+': [0-9]+," | \
+		sed "s/.*'\([^']*\)': \([0-9]*\),.*/  ✓ \1: \2ms/" || \
+		echo "  ⚠ unable to read thresholds"
+	@echo ""
+	@echo "$(GREEN)🎯 Real-Time Monitoring (3 ways):$(NC)"
+	@echo ""
+	@echo "$(YELLOW)1. Visual Dashboard (Recommended):$(NC)"
+	@echo "   • make dev"
+	@echo "   • Click 'Show Perf' button (bottom-right)"
+	@echo "   • Or press Ctrl+Shift+P to toggle"
+	@echo "   • Live metrics update every second"
+	@echo "   • Color-coded: Green=Good, Red=Over Budget"
+	@echo ""
+	@echo "$(YELLOW)2. Browser Console (Dev Tools):$(NC)"
+	@echo "   • Open browser console (F12)"
+	@echo "   • Real-time logs show each operation"
+	@echo "   • ✓ = within budget, ⚠️ = over budget"
+	@echo ""
+	@echo "$(YELLOW)3. Console API (Advanced):$(NC)"
+	@echo "   • perfMonitor.logSummary()    - aggregated stats"
+	@echo "   • perfMonitor.getBaselines()  - export current metrics"
+	@echo "   • perfMonitor.getMetrics()    - raw data array"
+	@echo "   • perfMonitor.clear()         - reset all metrics"
+	@echo ""
+	@echo "$(GREEN)📈 What Gets Tracked:$(NC)"
+	@echo "   • Map initial load time"
+	@echo "   • Layer creation & rebuilds"
+	@echo "   • Color cache computation (temperature & sunshine)"
+	@echo "   • Heatmap data transformations"
+	@echo "   • requestAnimationFrame performance (home ping animation)"
+	@echo "   • All operations logged with ✓ or ⚠️ indicators"
+	@echo ""
+	@echo "$(GREEN)💡 Quick Start:$(NC)"
+	@echo "   make dev → Click 'Show Perf' button → Interact with map"
+	@echo ""
 
 # Clean up - stop all services
 clean:

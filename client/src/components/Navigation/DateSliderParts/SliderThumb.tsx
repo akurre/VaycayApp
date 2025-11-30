@@ -17,7 +17,11 @@ const SliderThumb: FC<SliderThumbProps> = ({ position, isLoading }) => {
         color: 'white',
       }}
     >
-      {isLoading ? <CustomLoader /> : <IconGripVertical size={20} stroke={1.5} />}
+      {isLoading ? (
+        <CustomLoader />
+      ) : (
+        <IconGripVertical size={20} stroke={1.5} />
+      )}
     </div>
   );
 };

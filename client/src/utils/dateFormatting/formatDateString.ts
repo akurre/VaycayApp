@@ -5,7 +5,9 @@ import { MONTH_NAMES } from '@/const';
  * @param dateString - the date string in format "YYYY-MM-DD"
  * @returns formatted date string like "January 1st" or empty string if input is invalid
  */
-export function formatDateString(dateString: string | null | undefined): string {
+export function formatDateString(
+  dateString: string | null | undefined
+): string {
   if (!dateString?.match(/^\d{4}-\d{2}-\d{2}$/)) {
     return '';
   }

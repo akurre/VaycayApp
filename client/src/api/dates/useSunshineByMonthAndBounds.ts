@@ -1,6 +1,9 @@
 import { useEffect } from 'react';
 import { useQuery } from '@apollo/client/react';
-import { GET_SUNSHINE_BY_MONTH, GET_SUNSHINE_BY_MONTH_AND_BOUNDS } from '@/api/queries';
+import {
+  GET_SUNSHINE_BY_MONTH,
+  GET_SUNSHINE_BY_MONTH_AND_BOUNDS,
+} from '@/api/queries';
 import type {
   SunshineByMonthResponse,
   SunshineByMonthVars,
@@ -36,27 +39,27 @@ function useSunshineByMonthAndBounds({
     }
   );
 
-  const boundsQuery = useQuery<SunshineByMonthResponse, SunshineByMonthAndBoundsVars>(
-    GET_SUNSHINE_BY_MONTH_AND_BOUNDS,
-    {
-      variables: bounds
-        ? {
-            month,
-            minLat: bounds.minLat,
-            maxLat: bounds.maxLat,
-            minLong: bounds.minLong,
-            maxLong: bounds.maxLong,
-          }
-        : {
-            month,
-            minLat: 0,
-            maxLat: 0,
-            minLong: 0,
-            maxLong: 0,
-          },
-      skip: !isValidMonth || !shouldUseBounds || !bounds,
-    }
-  );
+  const boundsQuery = useQuery<
+    SunshineByMonthResponse,
+    SunshineByMonthAndBoundsVars
+  >(GET_SUNSHINE_BY_MONTH_AND_BOUNDS, {
+    variables: bounds
+      ? {
+          month,
+          minLat: bounds.minLat,
+          maxLat: bounds.maxLat,
+          minLong: bounds.minLong,
+          maxLong: bounds.maxLong,
+        }
+      : {
+          month,
+          minLat: 0,
+          maxLat: 0,
+          minLong: 0,
+          maxLong: 0,
+        },
+    skip: !isValidMonth || !shouldUseBounds || !bounds,
+  });
 
   const activeQuery = shouldUseBounds ? boundsQuery : globalQuery;
 

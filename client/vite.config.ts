@@ -28,6 +28,12 @@ export default defineConfig({
   build: {
     outDir: 'build',
     sourcemap: true,
+    target: 'esnext',
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      target: 'esnext',
+    },
   },
   envPrefix: 'VITE_', // Vite standard env variable prefix
 });

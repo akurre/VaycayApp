@@ -132,7 +132,9 @@ describe('transformToSunshineHeatmapData', () => {
     const result = transformToSunshineHeatmapData(mockSunshineData, 1);
 
     // Should not include City4 (null January data)
-    const city4Included = result.some((item) => item.position[0] === 60 && item.position[1] === 50);
+    const city4Included = result.some(
+      (item) => item.position[0] === 60 && item.position[1] === 50
+    );
 
     expect(city4Included).toBe(false);
   });

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@/test-utils';
-import SunshineGraphTooltip from '@/components/CityPopup/SunshineGraphTooltip';
+import SunshineGraphTooltip from '@/components/CityPopup/graphs/SunshineGraphTooltip';
 
 describe('SunshineGraphTooltip', () => {
   const mockPayload = [
@@ -16,11 +16,13 @@ describe('SunshineGraphTooltip', () => {
   ];
 
   it('renders tooltip when active with valid payload', () => {
-    const { container } = render(<SunshineGraphTooltip active={true} payload={mockPayload} />);
+    const { container } = render(
+      <SunshineGraphTooltip active={true} payload={mockPayload} />
+    );
 
     expect(screen.getByText('July')).toBeInTheDocument();
     expect(screen.getByText('280.5 hours')).toBeInTheDocument();
-    expect(container.querySelector('.bg-white')).toBeInTheDocument();
+    expect(container.querySelector('.p-2')).toBeInTheDocument();
   });
 
   it('displays "No data" when hours is null', () => {
@@ -36,14 +38,18 @@ describe('SunshineGraphTooltip', () => {
       },
     ];
 
-    render(<SunshineGraphTooltip active={true} payload={payloadWithNullHours} />);
+    render(
+      <SunshineGraphTooltip active={true} payload={payloadWithNullHours} />
+    );
 
     expect(screen.getByText('January')).toBeInTheDocument();
     expect(screen.getByText('No data')).toBeInTheDocument();
   });
 
   it('returns null when not active', () => {
-    const { container } = render(<SunshineGraphTooltip active={false} payload={mockPayload} />);
+    const { container } = render(
+      <SunshineGraphTooltip active={false} payload={mockPayload} />
+    );
 
     expect(container.querySelector('.bg-white')).not.toBeInTheDocument();
     expect(screen.queryByText('July')).not.toBeInTheDocument();
@@ -56,7 +62,9 @@ describe('SunshineGraphTooltip', () => {
   });
 
   it('returns null when payload is empty array', () => {
-    const { container } = render(<SunshineGraphTooltip active={true} payload={[]} />);
+    const { container } = render(
+      <SunshineGraphTooltip active={true} payload={[]} />
+    );
 
     expect(container.querySelector('.bg-white')).not.toBeInTheDocument();
   });
@@ -74,7 +82,9 @@ describe('SunshineGraphTooltip', () => {
       },
     ];
 
-    render(<SunshineGraphTooltip active={true} payload={payloadWithPreciseHours} />);
+    render(
+      <SunshineGraphTooltip active={true} payload={payloadWithPreciseHours} />
+    );
 
     expect(screen.getByText('123.5 hours')).toBeInTheDocument();
   });

@@ -4,11 +4,15 @@ import { ErrorCategory, ErrorSeverity } from '@/types/errorTypes';
 /**
  * parses apollo graphql errors into a standardized format
  */
-export function parseApolloError(error: ApolloErrorLike, context?: string): ParsedError {
+export function parseApolloError(
+  error: ApolloErrorLike,
+  context?: string
+): ParsedError {
   // network errors
   if (error.networkError) {
     return {
-      message: 'unable to connect to server. please check your internet connection.',
+      message:
+        'unable to connect to server. please check your internet connection.',
       category: ErrorCategory.Network,
       severity: ErrorSeverity.Error,
       originalError: error,

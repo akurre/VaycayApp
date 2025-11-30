@@ -5,6 +5,8 @@ import TemperatureDataSection from './TemperatureDataSection';
 import RainfallDataSection from './RainfallDataSection';
 import type { SunshineData } from '@/types/sunshineDataType';
 import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
+import type { DataType } from '@/types/mapTypes';
+import CustomPaper from '../Shared/CustomPaper';
 
 interface DataChartTabsProps {
   displaySunshineData: SunshineData | null;
@@ -14,6 +16,13 @@ interface DataChartTabsProps {
   weeklyWeatherData: CityWeeklyWeather | null;
   weeklyWeatherLoading: boolean;
   weeklyWeatherError: boolean;
+  dataType: DataType;
+  comparisonSunshineData?: SunshineData | null;
+  comparisonSunshineLoading?: boolean;
+  comparisonSunshineError?: boolean;
+  comparisonWeeklyWeatherData?: CityWeeklyWeather | null;
+  comparisonWeeklyWeatherLoading?: boolean;
+  comparisonWeeklyWeatherError?: boolean;
 }
 
 const DataChartTabs = ({
@@ -24,46 +33,68 @@ const DataChartTabs = ({
   weeklyWeatherData,
   weeklyWeatherLoading,
   weeklyWeatherError,
+  dataType,
+  comparisonSunshineData,
+  comparisonSunshineLoading,
+  comparisonSunshineError,
+  comparisonWeeklyWeatherData,
+  comparisonWeeklyWeatherLoading,
+  comparisonWeeklyWeatherError,
 }: DataChartTabsProps) => {
   return (
-    <Tabs orientation="vertical" defaultValue="temp" className="h-full">
-      <Tabs.List>
-        <Tabs.Tab value="temp" leftSection={<IconTemperature size={12} />}>
-          Temp
-        </Tabs.Tab>
-        <Tabs.Tab value="sun" leftSection={<IconSun size={12} />}>
-          Sun
-        </Tabs.Tab>
-        <Tabs.Tab value="precip" leftSection={<IconDroplet size={12} />}>
-          Precip
-        </Tabs.Tab>
-      </Tabs.List>
+    <CustomPaper className="h-full" p="sm">
+      <Tabs
+        orientation="vertical"
+        variant="outline"
+        defaultValue={dataType}
+        className="h-full flex"
+      >
+        <Tabs.List grow>
+          <Tabs.Tab
+            value="temperature"
+            leftSection={<IconTemperature size={12} />}
+          >
+            Temp
+          </Tabs.Tab>
+          <Tabs.Tab value="sunshine" leftSection={<IconSun size={12} />}>
+            Sun
+          </Tabs.Tab>
+          <Tabs.Tab value="precip" leftSection={<IconDroplet size={12} />}>
+            Precip
+          </Tabs.Tab>
+        </Tabs.List>
 
-      <Tabs.Panel value="temp">
-        <TemperatureDataSection
-          weeklyWeatherData={weeklyWeatherData}
-          isLoading={weeklyWeatherLoading}
-          hasError={weeklyWeatherError}
-        />
-      </Tabs.Panel>
+        <Tabs.Panel value="temperature" className="flex-1 min-h-0">
+          <TemperatureDataSection
+            weeklyWeatherData={weeklyWeatherData}
+            isLoading={weeklyWeatherLoading}
+            hasError={weeklyWeatherError}
+            comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
+            comparisonIsLoading={comparisonWeeklyWeatherLoading}
+            comparisonHasError={comparisonWeeklyWeatherError}
+          />
+        </Tabs.Panel>
 
-      <Tabs.Panel value="sun">
-        <SunshineDataSection
-          displaySunshineData={displaySunshineData}
-          isLoading={sunshineLoading}
-          hasError={sunshineError}
-          selectedMonth={selectedMonth}
-        />
-      </Tabs.Panel>
+        <Tabs.Panel value="sunshine" className="flex-1 min-h-0">
+          <SunshineDataSection
+            displaySunshineData={displaySunshineData}
+            isLoading={sunshineLoading}
+            hasError={sunshineError}
+            selectedMonth={selectedMonth}
+            comparisonSunshineData={comparisonSunshineData}
+          />
+        </Tabs.Panel>
 
-      <Tabs.Panel value="precip">
-        <RainfallDataSection
-          weeklyWeatherData={weeklyWeatherData}
-          isLoading={weeklyWeatherLoading}
-          hasError={weeklyWeatherError}
-        />
-      </Tabs.Panel>
-    </Tabs>
+        <Tabs.Panel value="precip" className="flex-1 min-h-0">
+          <RainfallDataSection
+            weeklyWeatherData={weeklyWeatherData}
+            isLoading={weeklyWeatherLoading}
+            hasError={weeklyWeatherError}
+            comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
+          />
+        </Tabs.Panel>
+      </Tabs>
+    </CustomPaper>
   );
 };
 

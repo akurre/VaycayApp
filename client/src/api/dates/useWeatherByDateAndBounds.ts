@@ -1,5 +1,8 @@
 import { useQuery } from '@apollo/client/react';
-import { GET_WEATHER_BY_DATE, GET_WEATHER_BY_DATE_AND_BOUNDS } from '../queries';
+import {
+  GET_WEATHER_BY_DATE,
+  GET_WEATHER_BY_DATE_AND_BOUNDS,
+} from '../queries';
 import type {
   WeatherData,
   WeatherByDateResponse,
@@ -41,25 +44,32 @@ function useWeatherByDateAndBounds({
   const formattedDate = date ? date.replaceAll('-', '') : '';
 
   // global query (zoom levels 1-3)
-  const globalQuery = useQuery<WeatherByDateResponse, WeatherByDateVars>(GET_WEATHER_BY_DATE, {
-    variables: { monthDay: formattedDate },
-    skip: !formattedDate || formattedDate.length !== 4 || shouldUseBounds,
-  });
-
-  // bounds query (zoom levels 4+)
-  const boundsQuery = useQuery<WeatherByDateResponse, WeatherByDateAndBoundsVars>(
-    GET_WEATHER_BY_DATE_AND_BOUNDS,
+  const globalQuery = useQuery<WeatherByDateResponse, WeatherByDateVars>(
+    GET_WEATHER_BY_DATE,
     {
-      variables: {
-        monthDay: formattedDate,
-        minLat: bounds?.minLat ?? 0,
-        maxLat: bounds?.maxLat ?? 0,
-        minLong: bounds?.minLong ?? 0,
-        maxLong: bounds?.maxLong ?? 0,
-      },
-      skip: !formattedDate || formattedDate.length !== 4 || !shouldUseBounds || !bounds,
+      variables: { monthDay: formattedDate },
+      skip: !formattedDate || formattedDate.length !== 4 || shouldUseBounds,
     }
   );
+
+  // bounds query (zoom levels 4+)
+  const boundsQuery = useQuery<
+    WeatherByDateResponse,
+    WeatherByDateAndBoundsVars
+  >(GET_WEATHER_BY_DATE_AND_BOUNDS, {
+    variables: {
+      monthDay: formattedDate,
+      minLat: bounds?.minLat ?? 0,
+      maxLat: bounds?.maxLat ?? 0,
+      minLong: bounds?.minLong ?? 0,
+      maxLong: bounds?.maxLong ?? 0,
+    },
+    skip:
+      !formattedDate ||
+      formattedDate.length !== 4 ||
+      !shouldUseBounds ||
+      !bounds,
+  });
 
   // use the appropriate query based on zoom level
   const activeQuery = shouldUseBounds ? boundsQuery : globalQuery;

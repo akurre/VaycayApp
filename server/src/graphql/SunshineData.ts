@@ -1,7 +1,8 @@
 import { objectType, queryField, nonNull, intArg, list, stringArg, floatArg } from 'nexus';
 import type { City, MonthlySunshine, PrismaClient } from '@prisma/client';
-import { MAX_CITIES_GLOBAL_VIEW, MONTH_FIELDS } from '../const';
+import { MONTH_FIELDS } from '../const';
 import { getCachedWeatherData } from '../utils/cache';
+import querySunshineCityIds from '../utils/sunshineQueries';
 
 // helper type combining monthly sunshine with related city data
 type MonthlySunshineWithRelations = MonthlySunshine & {
@@ -122,22 +123,20 @@ async function fetchSunshineByMonth(
 
   const startTime = Date.now();
 
-  const where: Record<string, unknown> = {
-    [monthField]: { not: null },
-  };
+  // use grid-based city selection for better spatial distribution
+  const selectedCityIds = await querySunshineCityIds({
+    prisma,
+    month,
+    bounds,
+  });
 
-  if (bounds) {
-    where.city = {
-      lat: { gte: bounds.minLat, lte: bounds.maxLat },
-      long: { gte: bounds.minLong, lte: bounds.maxLong },
-    };
-  }
-
+  // fetch sunshine records for selected cities
   const records = await prisma.monthlySunshine.findMany({
-    where,
+    where: {
+      cityId: { in: selectedCityIds },
+      [monthField]: { not: null },
+    },
     include: { city: true },
-    take: MAX_CITIES_GLOBAL_VIEW,
-    orderBy: { city: { population: 'desc' } },
   });
 
   const queryTime = Date.now() - startTime;

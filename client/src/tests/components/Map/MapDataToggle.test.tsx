@@ -7,7 +7,12 @@ import { DataType } from '@/types/mapTypes';
 describe('MapDataToggle', () => {
   it('renders both data type options', () => {
     const mockOnChange = vi.fn();
-    render(<MapDataToggle dataType={DataType.Temperature} onDataTypeChange={mockOnChange} />);
+    render(
+      <MapDataToggle
+        dataType={DataType.Temperature}
+        onDataTypeChange={mockOnChange}
+      />
+    );
 
     const radioInputs = screen.getAllByRole('radio');
 
@@ -18,7 +23,12 @@ describe('MapDataToggle', () => {
 
   it('shows sunshine as selected when dataType is sunshine', () => {
     const mockOnChange = vi.fn();
-    render(<MapDataToggle dataType={DataType.Sunshine} onDataTypeChange={mockOnChange} />);
+    render(
+      <MapDataToggle
+        dataType={DataType.Sunshine}
+        onDataTypeChange={mockOnChange}
+      />
+    );
 
     const radioInputs = screen.getAllByRole('radio');
     const sunshineInput = radioInputs.find(
@@ -32,7 +42,10 @@ describe('MapDataToggle', () => {
     const user = userEvent.setup();
     const mockOnChange = vi.fn();
     const { container } = render(
-      <MapDataToggle dataType={DataType.Temperature} onDataTypeChange={mockOnChange} />
+      <MapDataToggle
+        dataType={DataType.Temperature}
+        onDataTypeChange={mockOnChange}
+      />
     );
 
     const sunshineLabel = container.querySelector('label[for*="sunshine"]');

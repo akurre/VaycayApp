@@ -3,7 +3,7 @@ import { render } from '@/test-utils';
 import RechartsLineGraph, {
   type LineConfig,
   type ReferenceLineConfig,
-} from '@/components/CityPopup/RechartsLineGraph';
+} from '@/components/CityPopup/graphs/RechartsLineGraph';
 
 describe('RechartsLineGraph', () => {
   const mockData = [
@@ -34,7 +34,9 @@ describe('RechartsLineGraph', () => {
     );
 
     // should render the responsive container
-    expect(container.querySelector('.recharts-responsive-container')).toBeInTheDocument();
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
   });
 
   it('renders with custom margins', () => {
@@ -50,7 +52,9 @@ describe('RechartsLineGraph', () => {
     );
 
     // should render the component
-    expect(container.querySelector('.recharts-responsive-container')).toBeInTheDocument();
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
   });
 
   it('renders with x-axis label when provided', () => {
@@ -66,7 +70,9 @@ describe('RechartsLineGraph', () => {
     );
 
     // should render the component
-    expect(container.querySelector('.recharts-responsive-container')).toBeInTheDocument();
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
   });
 
   it('renders with multiple lines', () => {
@@ -94,7 +100,9 @@ describe('RechartsLineGraph', () => {
     );
 
     // should render the component
-    expect(container.querySelector('.recharts-responsive-container')).toBeInTheDocument();
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
   });
 
   it('renders without legend when showLegend is false', () => {
@@ -110,7 +118,9 @@ describe('RechartsLineGraph', () => {
     );
 
     // should render the component
-    expect(container.querySelector('.recharts-responsive-container')).toBeInTheDocument();
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
   });
 
   it('renders with reference lines', () => {
@@ -134,7 +144,9 @@ describe('RechartsLineGraph', () => {
     );
 
     // should render the component
-    expect(container.querySelector('.recharts-responsive-container')).toBeInTheDocument();
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
   });
 
   it('handles empty data array', () => {
@@ -149,7 +161,9 @@ describe('RechartsLineGraph', () => {
     );
 
     // should still render the component
-    expect(container.querySelector('.recharts-responsive-container')).toBeInTheDocument();
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
   });
 
   it('renders with complex line configurations', () => {
@@ -182,6 +196,8 @@ describe('RechartsLineGraph', () => {
     );
 
     // should render the component
-    expect(container.querySelector('.recharts-responsive-container')).toBeInTheDocument();
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
   });
 });

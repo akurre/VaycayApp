@@ -3,7 +3,10 @@ import { renderHook, waitFor, act } from '@testing-library/react';
 import { useUserLocation } from '@/hooks/useUserLocation';
 import { useAppStore } from '@/stores/useAppStore';
 import { LocationSource } from '@/types/userLocationType';
-import { createMockGeolocationPosition, createMockNearestCity } from '@/test-utils';
+import {
+  createMockGeolocationPosition,
+  createMockNearestCity,
+} from '@/test-utils';
 import * as parseErrorModule from '@/utils/errors/parseErrorAndNotify';
 
 // mock the store
@@ -216,9 +219,11 @@ describe('useUserLocation', () => {
 
     beforeEach(() => {
       // mock geolocation error
-      mockGeolocation.getCurrentPosition.mockImplementation((success, error) => {
-        if (error) error(mockGeolocationError);
-      });
+      mockGeolocation.getCurrentPosition.mockImplementation(
+        (success, error) => {
+          if (error) error(mockGeolocationError);
+        }
+      );
     });
 
     it('calls parseErrorAndNotify with geolocation error', async () => {
@@ -228,7 +233,9 @@ describe('useUserLocation', () => {
         await result.current.requestLocation();
       });
 
-      expect(parseErrorModule.parseErrorAndNotify).toHaveBeenCalledWith(mockGeolocationError);
+      expect(parseErrorModule.parseErrorAndNotify).toHaveBeenCalledWith(
+        mockGeolocationError
+      );
     });
 
     it('sets isLoading to false after error', async () => {
@@ -287,7 +294,9 @@ describe('useUserLocation', () => {
         await result.current.requestLocation();
       });
 
-      expect(parseErrorModule.parseErrorAndNotify).toHaveBeenCalledWith(mockError);
+      expect(parseErrorModule.parseErrorAndNotify).toHaveBeenCalledWith(
+        mockError
+      );
     });
 
     it('handles missing data', async () => {
@@ -430,17 +439,19 @@ describe('useUserLocation', () => {
     });
 
     it('handles rejected promise from getCurrentPosition', async () => {
-      mockGeolocation.getCurrentPosition.mockImplementation((success, error) => {
-        if (error) {
-          error({
-            code: 3,
-            message: 'timeout',
-            PERMISSION_DENIED: 1,
-            POSITION_UNAVAILABLE: 2,
-            TIMEOUT: 3,
-          });
+      mockGeolocation.getCurrentPosition.mockImplementation(
+        (success, error) => {
+          if (error) {
+            error({
+              code: 3,
+              message: 'timeout',
+              PERMISSION_DENIED: 1,
+              POSITION_UNAVAILABLE: 2,
+              TIMEOUT: 3,
+            });
+          }
         }
-      });
+      );
 
       const { result } = renderHook(() => useUserLocation());
 
@@ -468,7 +479,9 @@ describe('useUserLocation', () => {
         await result.current.requestLocation();
       });
 
-      expect(parseErrorModule.parseErrorAndNotify).toHaveBeenCalledWith(mockError);
+      expect(parseErrorModule.parseErrorAndNotify).toHaveBeenCalledWith(
+        mockError
+      );
       expect(result.current.isLoading).toBe(false);
     });
   });

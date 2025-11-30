@@ -83,8 +83,18 @@ describe('getTooltipContent', () => {
 
   it('finds first matching city when multiple cities are within tolerance', () => {
     const cities = [
-      createMockCity({ city: 'Milan', lat: 45.4642, long: 9.19, avgTemperature: 25.5 }),
-      createMockCity({ city: 'Nearby City', lat: 45.5, long: 9.2, avgTemperature: 26.0 }),
+      createMockCity({
+        city: 'Milan',
+        lat: 45.4642,
+        long: 9.19,
+        avgTemperature: 25.5,
+      }),
+      createMockCity({
+        city: 'Nearby City',
+        lat: 45.5,
+        long: 9.2,
+        avgTemperature: 26.0,
+      }),
     ];
     const result = getTooltipContent(cities, 9.19, 45.4642);
 
@@ -135,8 +145,12 @@ describe('getTooltipContent', () => {
     const cities = [createMockCity({ lat: 45.4642, long: 9.19 })];
 
     // within tolerance (0.5 degrees)
-    expect(getTooltipContent(cities, 9.6, 45.4642)).toBe('Milan, Italy\n25.5°C');
-    expect(getTooltipContent(cities, 8.7, 45.4642)).toBe('Milan, Italy\n25.5°C');
+    expect(getTooltipContent(cities, 9.6, 45.4642)).toBe(
+      'Milan, Italy\n25.5°C'
+    );
+    expect(getTooltipContent(cities, 8.7, 45.4642)).toBe(
+      'Milan, Italy\n25.5°C'
+    );
 
     // outside tolerance
     expect(getTooltipContent(cities, 9.7, 45.4642)).toBeNull();
@@ -153,7 +167,12 @@ describe('getTooltipContent', () => {
   it('skips cities with invalid coordinates when searching', () => {
     const cities = [
       createMockCity({ city: 'Invalid City', lat: null, long: null }),
-      createMockCity({ city: 'Milan', lat: 45.4642, long: 9.19, avgTemperature: 25.5 }),
+      createMockCity({
+        city: 'Milan',
+        lat: 45.4642,
+        long: 9.19,
+        avgTemperature: 25.5,
+      }),
     ];
     const result = getTooltipContent(cities, 9.19, 45.4642);
 
@@ -172,7 +191,13 @@ describe('getTooltipContent', () => {
         }),
       ];
 
-      const result = getTooltipContent(cities, 2.1734, 41.3851, DataType.Sunshine, 7);
+      const result = getTooltipContent(
+        cities,
+        2.1734,
+        41.3851,
+        DataType.Sunshine,
+        7
+      );
 
       expect(result).toBe('Barcelona, Spain\n310.0 hours');
     });
@@ -187,7 +212,12 @@ describe('getTooltipContent', () => {
         }),
       ];
 
-      const result = getTooltipContent(cities, 2.1734, 41.3851, DataType.Sunshine);
+      const result = getTooltipContent(
+        cities,
+        2.1734,
+        41.3851,
+        DataType.Sunshine
+      );
 
       expect(result).toBeNull();
     });
@@ -202,7 +232,13 @@ describe('getTooltipContent', () => {
         }),
       ];
 
-      const result = getTooltipContent(cities, 2.1734, 41.3851, DataType.Sunshine, 7);
+      const result = getTooltipContent(
+        cities,
+        2.1734,
+        41.3851,
+        DataType.Sunshine,
+        7
+      );
 
       expect(result).toBeNull();
     });
@@ -220,7 +256,13 @@ describe('getTooltipContent', () => {
       ];
 
       // Test January
-      let result = getTooltipContent(cities, 2.1734, 41.3851, DataType.Sunshine, 1);
+      let result = getTooltipContent(
+        cities,
+        2.1734,
+        41.3851,
+        DataType.Sunshine,
+        1
+      );
       expect(result).toBe('Barcelona, Spain\n149.0 hours');
 
       // Test July
@@ -237,8 +279,12 @@ describe('getTooltipContent', () => {
         }),
       ];
 
-      expect(getTooltipContent(cities, 2.1734, 41.3851, DataType.Sunshine, 0)).toBeNull();
-      expect(getTooltipContent(cities, 2.1734, 41.3851, DataType.Sunshine, 13)).toBeNull();
+      expect(
+        getTooltipContent(cities, 2.1734, 41.3851, DataType.Sunshine, 0)
+      ).toBeNull();
+      expect(
+        getTooltipContent(cities, 2.1734, 41.3851, DataType.Sunshine, 13)
+      ).toBeNull();
     });
 
     it('formats sunshine hours with decimal places', () => {
@@ -252,7 +298,13 @@ describe('getTooltipContent', () => {
         }),
       ];
 
-      const result = getTooltipContent(cities, 2.1734, 41.3851, DataType.Sunshine, 7);
+      const result = getTooltipContent(
+        cities,
+        2.1734,
+        41.3851,
+        DataType.Sunshine,
+        7
+      );
 
       expect(result).toBe('Barcelona, Spain\n310.6 hours');
     });

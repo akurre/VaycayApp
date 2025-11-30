@@ -1,0 +1,230 @@
+import { useMemo, memo, useCallback } from 'react';
+import type { SunshineData } from '@/types/sunshineDataType';
+import { transformSunshineDataForChart } from '@/utils/dataFormatting/transformSunshineDataForChart';
+import { generateTheoreticalMaxSunshineData } from '@/utils/dataFormatting/generateTheoreticalMaxSunshineData';
+import SunshineGraphTooltip from './SunshineGraphTooltip';
+import SunshineGraphDot from './SunshineGraphDot';
+import RechartsLineGraph, {
+  type LineConfig,
+  type ReferenceLineConfig,
+} from './RechartsLineGraph';
+import { useChartColors } from '@/hooks/useChartColors';
+import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
+
+interface SunshineGraphProps {
+  sunshineData: SunshineData | null;
+  selectedMonth?: number;
+  comparisonSunshineData?: SunshineData | null;
+}
+
+const SunshineGraph = ({
+  sunshineData,
+  selectedMonth,
+  comparisonSunshineData,
+}: SunshineGraphProps) => {
+  // Get theme-aware colors
+  const chartColors = useChartColors();
+
+  // Create a wrapper component for the tooltip that has access to city names
+  const TooltipWrapper = (props: {
+    active?: boolean;
+    payload?: ReadonlyArray<{
+      payload: {
+        month: string;
+        monthIndex: number;
+        hours: number | null;
+        theoreticalMax?: number | null;
+        baseline?: number;
+        comparisonHours?: number | null;
+        comparisonTheoreticalMax?: number | null;
+      };
+    }>;
+  }) => (
+    <SunshineGraphTooltip
+      {...props}
+      cityName={sunshineData?.city}
+      comparisonCityName={comparisonSunshineData?.city}
+    />
+  );
+
+  // Transform sunshine data for chart
+  const chartData = useMemo(
+    () => (sunshineData ? transformSunshineDataForChart(sunshineData) : null),
+    [sunshineData]
+  );
+
+  // Transform comparison sunshine data if available
+  const comparisonChartData = useMemo(
+    () =>
+      comparisonSunshineData
+        ? transformSunshineDataForChart(comparisonSunshineData)
+        : null,
+    [comparisonSunshineData]
+  );
+
+  // use whichever data is available for the base chart structure
+  const baseData = sunshineData ?? comparisonSunshineData;
+
+  // Calculate theoretical maximum sunshine for both cities (memoized per city)
+  const mainCityLatitude = sunshineData?.lat ?? null;
+  const comparisonCityLatitude = comparisonSunshineData?.lat ?? null;
+
+  const theoreticalMaxData = useMemo(
+    () =>
+      mainCityLatitude === null
+        ? null
+        : generateTheoreticalMaxSunshineData(mainCityLatitude),
+    [mainCityLatitude]
+  );
+
+  const comparisonTheoreticalMaxData = useMemo(
+    () =>
+      comparisonCityLatitude === null
+        ? null
+        : generateTheoreticalMaxSunshineData(comparisonCityLatitude),
+    [comparisonCityLatitude]
+  );
+
+  // use base chart structure from whichever city has data
+  const baseChartStructure = chartData ?? comparisonChartData;
+
+  // Combine actual data with theoretical max and comparison data for chart (memoized)
+  const combinedChartData = useMemo(
+    () =>
+      baseChartStructure
+        ? baseChartStructure.map((point, index) => ({
+            ...point,
+            hours: chartData ? chartData[index]?.hours : null,
+            theoreticalMax: theoreticalMaxData
+              ? theoreticalMaxData[index]
+              : null,
+            comparisonTheoreticalMax: comparisonTheoreticalMaxData
+              ? comparisonTheoreticalMaxData[index]
+              : null,
+            baseline: 0, // 0% sunshine baseline
+            comparisonHours: comparisonChartData
+              ? comparisonChartData[index]?.hours
+              : null,
+          }))
+        : [],
+    [
+      baseChartStructure,
+      chartData,
+      theoreticalMaxData,
+      comparisonTheoreticalMaxData,
+      comparisonChartData,
+    ]
+  );
+
+  // Memoize custom dot render function
+  const renderCustomDot = useCallback(
+    (props: Record<string, unknown>) => (
+      <SunshineGraphDot {...props} selectedMonth={selectedMonth} />
+    ),
+    [selectedMonth]
+  );
+
+  // Configure lines
+  const lines: LineConfig[] = useMemo(() => {
+    const mainCityName = sunshineData?.city;
+    const compCityName = comparisonSunshineData?.city;
+    const lineConfigs: LineConfig[] = [];
+
+    // Add theoretical maximum line for main city if data exists
+    if (theoreticalMaxData) {
+      lineConfigs.push({
+        dataKey: 'theoreticalMax',
+        name: comparisonTheoreticalMaxData
+          ? `${mainCityName} 100% Sun`
+          : '100% Sun',
+        stroke: CITY1_PRIMARY_COLOR,
+        strokeWidth: 1.5,
+        strokeDasharray: '5 5',
+        dot: false,
+      });
+    }
+
+    // Add theoretical maximum line for comparison city if data exists
+    if (comparisonTheoreticalMaxData) {
+      lineConfigs.push({
+        dataKey: 'comparisonTheoreticalMax',
+        name: `${compCityName} 100% Sun`,
+        stroke: sunshineData ? CITY2_PRIMARY_COLOR : CITY1_PRIMARY_COLOR,
+        strokeWidth: 1.5,
+        strokeDasharray: '5 5',
+        dot: false,
+      });
+    }
+
+    // Add actual sunshine line - City 1 (burgundy) - only if base city has data
+    if (sunshineData) {
+      lineConfigs.push({
+        dataKey: 'hours',
+        name: mainCityName ?? '',
+        stroke: CITY1_PRIMARY_COLOR,
+        strokeWidth: 2,
+        dot: renderCustomDot,
+        connectNulls: true,
+      });
+    }
+
+    // Add comparison city sunshine line if data exists - City 2 (purple)
+    if (comparisonSunshineData) {
+      lineConfigs.push({
+        dataKey: 'comparisonHours',
+        name: `${compCityName}`,
+        stroke: sunshineData ? CITY2_PRIMARY_COLOR : CITY1_PRIMARY_COLOR,
+        strokeWidth: 2,
+        dot: sunshineData ? false : renderCustomDot,
+        connectNulls: true,
+      });
+    }
+
+    return lineConfigs;
+  }, [
+    theoreticalMaxData,
+    comparisonTheoreticalMaxData,
+    renderCustomDot,
+    chartColors,
+    sunshineData,
+    comparisonSunshineData,
+  ]);
+
+  // Configure reference line for selected month
+  const referenceLines: ReferenceLineConfig[] = useMemo(() => {
+    if (!selectedMonth) return [];
+
+    return [
+      {
+        x: combinedChartData[selectedMonth - 1]?.month,
+        stroke: chartColors.lineColor,
+        strokeWidth: 2,
+        strokeDasharray: '5 5',
+      },
+    ];
+  }, [selectedMonth, combinedChartData, chartColors]);
+
+  // if neither city has data, return null (shouldn't happen due to WeatherDataSection check)
+  if (!baseData || !baseChartStructure) return null;
+
+  // Generate unique city key for animation control
+  const cityKey = `${baseData.city}-${baseData.lat}-${baseData.long}`;
+
+  return (
+    <RechartsLineGraph
+      data={combinedChartData}
+      cityKey={cityKey}
+      xAxisDataKey="month"
+      yAxisLabel="Hours"
+      lines={lines}
+      legendLayout="horizontal"
+      legendVerticalAlign="top"
+      legendAlign="center"
+      referenceLines={referenceLines}
+      tooltipContent={<TooltipWrapper />}
+      margin={{ left: 0 }}
+    />
+  );
+};
+
+export default memo(SunshineGraph);

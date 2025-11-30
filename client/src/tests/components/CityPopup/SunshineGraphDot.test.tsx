@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@/test-utils';
-import SunshineGraphDot from '@/components/CityPopup/SunshineGraphDot';
+import SunshineGraphDot from '@/components/CityPopup/graphs/SunshineGraphDot';
 
 describe('SunshineGraphDot', () => {
   const mockPayload = {
@@ -11,7 +11,12 @@ describe('SunshineGraphDot', () => {
   it('renders a dot when all required props are provided and month matches', () => {
     const { container } = render(
       <svg>
-        <SunshineGraphDot cx={100} cy={50} payload={mockPayload} selectedMonth={7} />
+        <SunshineGraphDot
+          cx={100}
+          cy={50}
+          payload={mockPayload}
+          selectedMonth={7}
+        />
       </svg>
     );
 
@@ -25,7 +30,12 @@ describe('SunshineGraphDot', () => {
   it('returns null when selectedMonth does not match payload monthIndex', () => {
     const { container } = render(
       <svg>
-        <SunshineGraphDot cx={100} cy={50} payload={mockPayload} selectedMonth={5} />
+        <SunshineGraphDot
+          cx={100}
+          cy={50}
+          payload={mockPayload}
+          selectedMonth={5}
+        />
       </svg>
     );
 

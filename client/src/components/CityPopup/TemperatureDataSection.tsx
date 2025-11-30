@@ -1,40 +1,43 @@
 import { memo } from 'react';
-import { Alert, Loader } from '@mantine/core';
-import { IconAlertCircle } from '@tabler/icons-react';
 import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
-import TemperatureGraph from './TemperatureGraph';
+import TemperatureGraph from './graphs/TemperatureGraph';
+import WeatherDataSection from './WeatherDataSection';
+import ComponentErrorBoundary from '../ErrorBoundary/ComponentErrorBoundary';
 
 interface TemperatureDataSectionProps {
   weeklyWeatherData: CityWeeklyWeather | null;
   isLoading: boolean;
   hasError: boolean;
+  comparisonWeeklyWeatherData?: CityWeeklyWeather | null;
+  comparisonIsLoading?: boolean;
+  comparisonHasError?: boolean;
 }
 
 const TemperatureDataSection = ({
   weeklyWeatherData,
   isLoading,
   hasError,
+  comparisonWeeklyWeatherData,
+  comparisonIsLoading,
+  comparisonHasError,
 }: TemperatureDataSectionProps) => {
   return (
-    <>
-      {isLoading && !weeklyWeatherData && (
-        <div className="flex justify-center py-4">
-          <Loader size="sm" />
-        </div>
+    <WeatherDataSection
+      data={weeklyWeatherData}
+      isLoading={isLoading}
+      hasError={hasError}
+      errorMessage="Failed to load temperature data for this city."
+      showNoDataBadge={false}
+    >
+      {(data) => (
+        <ComponentErrorBoundary componentName="TemperatureGraph">
+          <TemperatureGraph
+            weeklyWeatherData={data}
+            comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
+          />
+        </ComponentErrorBoundary>
       )}
-
-      {hasError && !weeklyWeatherData && (
-        <Alert icon={<IconAlertCircle size="1rem" />} color="red" title="Error">
-          Failed to load temperature data for this city.
-        </Alert>
-      )}
-
-      {weeklyWeatherData && (
-        <div className="h-full p-3">
-          <TemperatureGraph weeklyWeatherData={weeklyWeatherData} />
-        </div>
-      )}
-    </>
+    </WeatherDataSection>
   );
 };
 

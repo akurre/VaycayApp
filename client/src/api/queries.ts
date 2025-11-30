@@ -21,6 +21,25 @@ export const GET_WEATHER_BY_DATE = gql`
   }
 `;
 
+export const SEND_FEEDBACK = gql`
+  mutation SendFeedback(
+    $email: String
+    $name: String!
+    $currentIssues: String
+    $futureIdeas: String
+  ) {
+    sendFeedback(
+      email: $email
+      name: $name
+      currentIssues: $currentIssues
+      futureIdeas: $futureIdeas
+    ) {
+      success
+      message
+    }
+  }
+`;
+
 export const GET_WEATHER_BY_DATE_AND_BOUNDS = gql`
   query GetWeatherByDateAndBounds(
     $monthDay: String!
@@ -146,8 +165,18 @@ export const GET_WEATHER_BY_CITY_NAME = gql`
 
 // Query to get weather data for a specific city on a specific date
 export const GET_WEATHER_BY_CITY_AND_DATE = gql`
-  query GetWeatherByCityAndDate($city: String!, $lat: Float, $long: Float, $monthDay: String!) {
-    weatherByCityAndDate(city: $city, lat: $lat, long: $long, monthDay: $monthDay) {
+  query GetWeatherByCityAndDate(
+    $city: String!
+    $lat: Float
+    $long: Float
+    $monthDay: String!
+  ) {
+    weatherByCityAndDate(
+      city: $city
+      lat: $lat
+      long: $long
+      monthDay: $monthDay
+    ) {
       city
       country
       state

@@ -76,7 +76,8 @@ export const useCityDataCacheStore = create<CityDataCacheStore>()(
           newCache[key] = {
             weatherData: weatherData ?? existing?.weatherData ?? null,
             sunshineData: sunshineData ?? existing?.sunshineData ?? null,
-            weeklyWeatherData: weeklyWeatherData ?? existing?.weeklyWeatherData ?? null,
+            weeklyWeatherData:
+              weeklyWeatherData ?? existing?.weeklyWeatherData ?? null,
             timestamp: Date.now(),
           };
 

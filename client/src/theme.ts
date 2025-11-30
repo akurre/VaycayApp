@@ -29,13 +29,15 @@ export const appColors = {
     text: '#2c2c2c',
     textSecondary: '#6b6b6b',
     toggleBackground: '#f0f0f0',
-    textShadow: '0 0 8px rgba(255, 255, 255, 0.8), 0 0 4px rgba(255, 255, 255, 0.6)',
+    textShadow:
+      '0 0 8px rgba(255, 255, 255, 0.8), 0 0 4px rgba(255, 255, 255, 0.6)',
   },
 
   // neutral colors for dark mode
   dark: {
     background: '#1a1b1e',
     surface: '#25262b',
+    paper: '#282E33',
     border: '#373a40',
     text: '#DBF9F4',
     textSecondary: '#B49FCC',

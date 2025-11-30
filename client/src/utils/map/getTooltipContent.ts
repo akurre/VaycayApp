@@ -22,7 +22,10 @@ const isSunshineData = (data: WeatherDataUnion): data is SunshineData => {
 /**
  * Gets the sunshine hours value for a specific month from SunshineData
  */
-const getSunshineHoursForMonth = (data: SunshineData, month: number): number | null => {
+const getSunshineHoursForMonth = (
+  data: SunshineData,
+  month: number
+): number | null => {
   if (!month || month < 1 || month > 12) return null;
 
   const field = MONTH_FIELDS[month];
@@ -71,7 +74,11 @@ export const getTooltipContent = (
     }
     return `${locationInfo}
 ${formatTemperature(city.avgTemperature)}`;
-  } else if (dataType === DataType.Sunshine && isSunshineData(city) && selectedMonth) {
+  } else if (
+    dataType === DataType.Sunshine &&
+    isSunshineData(city) &&
+    selectedMonth
+  ) {
     const sunshineHours = getSunshineHoursForMonth(city, selectedMonth);
     if (sunshineHours === null) {
       return null;

@@ -41,6 +41,8 @@ describe('DistanceSection', () => {
         setIsLocationLoading: vi.fn(),
         locationError: null,
         setLocationError: vi.fn(),
+        hasSeenWelcomeModal: false,
+        setHasSeenWelcomeModal: vi.fn(),
       })
     );
 
@@ -61,12 +63,16 @@ describe('DistanceSection', () => {
         setIsLocationLoading: vi.fn(),
         locationError: null,
         setLocationError: vi.fn(),
+        hasSeenWelcomeModal: false,
+        setHasSeenWelcomeModal: vi.fn(),
       })
     );
 
     render(<DistanceSection lat={51.5074} long={-0.1278} />);
 
-    expect(screen.getByText('Set home location to see distance')).toBeInTheDocument();
+    expect(
+      screen.getByText('Set home location to see distance')
+    ).toBeInTheDocument();
     expect(screen.queryByText('Distance from home')).not.toBeInTheDocument();
   });
 
@@ -88,6 +94,8 @@ describe('DistanceSection', () => {
         setIsLocationLoading: vi.fn(),
         locationError: null,
         setLocationError: vi.fn(),
+        hasSeenWelcomeModal: false,
+        setHasSeenWelcomeModal: vi.fn(),
       })
     );
 
@@ -114,6 +122,8 @@ describe('DistanceSection', () => {
         setIsLocationLoading: vi.fn(),
         locationError: null,
         setLocationError: vi.fn(),
+        hasSeenWelcomeModal: false,
+        setHasSeenWelcomeModal: vi.fn(),
       })
     );
 
@@ -140,6 +150,8 @@ describe('DistanceSection', () => {
         setIsLocationLoading: vi.fn(),
         locationError: null,
         setLocationError: vi.fn(),
+        hasSeenWelcomeModal: false,
+        setHasSeenWelcomeModal: vi.fn(),
       })
     );
 
@@ -166,6 +178,8 @@ describe('DistanceSection', () => {
         setIsLocationLoading: vi.fn(),
         locationError: null,
         setLocationError: vi.fn(),
+        hasSeenWelcomeModal: false,
+        setHasSeenWelcomeModal: vi.fn(),
       })
     );
 

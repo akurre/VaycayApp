@@ -19,7 +19,8 @@ export const useSunshineStore = create<SunshineStore>()(
       isLoadingSunshine: false,
       maxCitiesToShow: MAX_CITIES_SHOWN,
       setDisplayedSunshineData: (data) => set({ displayedSunshineData: data }),
-      setIsLoadingSunshine: (isLoading) => set({ isLoadingSunshine: isLoading }),
+      setIsLoadingSunshine: (isLoading) =>
+        set({ isLoadingSunshine: isLoading }),
       setMaxCitiesToShow: (count) => set({ maxCitiesToShow: count }),
     }),
     {

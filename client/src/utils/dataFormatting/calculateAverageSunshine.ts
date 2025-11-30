@@ -3,7 +3,9 @@ import type { SunshineChartDataPoint } from './transformSunshineDataForChart';
 /**
  * Calculates the average sunshine hours from chart data points
  */
-export function calculateAverageSunshine(chartData: SunshineChartDataPoint[]): number | null {
+export function calculateAverageSunshine(
+  chartData: SunshineChartDataPoint[]
+): number | null {
   const availableValues = chartData
     .map((point) => point.hours)
     .filter((value): value is number => value !== null);

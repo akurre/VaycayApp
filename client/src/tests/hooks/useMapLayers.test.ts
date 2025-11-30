@@ -147,7 +147,9 @@ describe('useMapLayers', () => {
     );
 
     expect(result.current).toHaveLength(2);
-    expect(result.current.find((layer) => layer.id === 'home-icon')).toBeUndefined();
+    expect(
+      result.current.find((layer) => layer.id === 'home-icon')
+    ).toBeUndefined();
   });
 
   it('heatmap layer is visible in heatmap mode', () => {
@@ -161,7 +163,9 @@ describe('useMapLayers', () => {
       })
     );
 
-    const heatmapLayer = result.current.find((layer) => layer.id === 'data-heatmap');
+    const heatmapLayer = result.current.find(
+      (layer) => layer.id === 'data-heatmap'
+    );
     expect(heatmapLayer?.props.visible).toBe(true);
   });
 
@@ -176,7 +180,9 @@ describe('useMapLayers', () => {
       })
     );
 
-    const markerLayer = result.current.find((layer) => layer.id === 'temperature-markers');
+    const markerLayer = result.current.find(
+      (layer) => layer.id === 'temperature-markers'
+    );
     expect(markerLayer?.props.visible).toBe(true);
   });
 
@@ -191,7 +197,9 @@ describe('useMapLayers', () => {
       })
     );
 
-    const markerLayer = result.current.find((layer) => layer.id === 'sunshine-markers');
+    const markerLayer = result.current.find(
+      (layer) => layer.id === 'sunshine-markers'
+    );
     expect(markerLayer?.props.visible).toBe(true);
   });
 
@@ -207,8 +215,12 @@ describe('useMapLayers', () => {
     );
 
     // With null home location in store, should not have home layers
-    expect(resultMarkers.current.find((layer) => layer.id === 'home-ring')).toBeUndefined();
-    expect(resultMarkers.current.find((layer) => layer.id === 'home-center')).toBeUndefined();
+    expect(
+      resultMarkers.current.find((layer) => layer.id === 'home-ring')
+    ).toBeUndefined();
+    expect(
+      resultMarkers.current.find((layer) => layer.id === 'home-center')
+    ).toBeUndefined();
 
     const { result: resultHeatmap } = renderHook(() =>
       useMapLayers({
@@ -220,8 +232,12 @@ describe('useMapLayers', () => {
       })
     );
 
-    expect(resultHeatmap.current.find((layer) => layer.id === 'home-ring')).toBeUndefined();
-    expect(resultHeatmap.current.find((layer) => layer.id === 'home-center')).toBeUndefined();
+    expect(
+      resultHeatmap.current.find((layer) => layer.id === 'home-ring')
+    ).toBeUndefined();
+    expect(
+      resultHeatmap.current.find((layer) => layer.id === 'home-center')
+    ).toBeUndefined();
   });
 
   it('reduces temperature marker opacity when loading weather', () => {
@@ -235,7 +251,9 @@ describe('useMapLayers', () => {
       })
     );
 
-    const markerLayer = result.current.find((layer) => layer.id === 'temperature-markers');
+    const markerLayer = result.current.find(
+      (layer) => layer.id === 'temperature-markers'
+    );
     expect(markerLayer?.props.opacity).toBe(0.5);
   });
 
@@ -250,7 +268,9 @@ describe('useMapLayers', () => {
       })
     );
 
-    const markerLayer = result.current.find((layer) => layer.id === 'temperature-markers');
+    const markerLayer = result.current.find(
+      (layer) => layer.id === 'temperature-markers'
+    );
     expect(markerLayer?.props.opacity).toBe(0.8);
   });
 
@@ -265,7 +285,9 @@ describe('useMapLayers', () => {
       })
     );
 
-    const markerLayer = result.current.find((layer) => layer.id === 'sunshine-markers');
+    const markerLayer = result.current.find(
+      (layer) => layer.id === 'sunshine-markers'
+    );
     expect(markerLayer?.props.opacity).toBe(0.5);
   });
 
@@ -280,7 +302,9 @@ describe('useMapLayers', () => {
       })
     );
 
-    const markerLayer = result.current.find((layer) => layer.id === 'sunshine-markers');
+    const markerLayer = result.current.find(
+      (layer) => layer.id === 'sunshine-markers'
+    );
     expect(markerLayer?.props.opacity).toBe(0.8);
   });
 
@@ -302,12 +326,15 @@ describe('useMapLayers', () => {
     );
 
     // Get the getFillColor function from the temperature markers layer
-    const markerLayer = result.current.find((layer) => layer.id === 'temperature-markers');
+    const markerLayer = result.current.find(
+      (layer) => layer.id === 'temperature-markers'
+    );
 
     // The function should return the loading color for this invalid city
     if (markerLayer?.props) {
       // Use typed props to access the getFillColor function
-      const getFillColor = (markerLayer.props as LayerPropsWithFillColor).getFillColor;
+      const getFillColor = (markerLayer.props as LayerPropsWithFillColor)
+        .getFillColor;
       if (getFillColor) {
         expect(getFillColor(invalidCity)).toEqual(TEMPERATURE_LOADING_COLOR);
       } else {
@@ -336,12 +363,15 @@ describe('useMapLayers', () => {
     );
 
     // Get the getFillColor function from the sunshine markers layer
-    const markerLayer = result.current.find((layer) => layer.id === 'sunshine-markers');
+    const markerLayer = result.current.find(
+      (layer) => layer.id === 'sunshine-markers'
+    );
 
     // The function should return the loading color for this invalid city
     if (markerLayer?.props) {
       // Use typed props to access the getFillColor function
-      const getFillColor = (markerLayer.props as LayerPropsWithFillColor).getFillColor;
+      const getFillColor = (markerLayer.props as LayerPropsWithFillColor)
+        .getFillColor;
       if (getFillColor) {
         expect(getFillColor(invalidCity)).toEqual(SUNSHINE_LOADING_COLOR);
       } else {

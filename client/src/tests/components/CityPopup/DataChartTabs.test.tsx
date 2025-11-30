@@ -4,6 +4,7 @@ import { userEvent } from '@testing-library/user-event';
 import DataChartTabs from '@/components/CityPopup/DataChartTabs';
 import type { SunshineData } from '@/types/sunshineDataType';
 import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
+import { DataType } from '@/types/mapTypes';
 
 describe('DataChartTabs', () => {
   const mockSunshineData: SunshineData = {
@@ -56,6 +57,7 @@ describe('DataChartTabs', () => {
         weeklyWeatherData={mockWeeklyWeather}
         weeklyWeatherLoading={false}
         weeklyWeatherError={false}
+        dataType={DataType.Temperature}
       />
     );
 
@@ -74,6 +76,7 @@ describe('DataChartTabs', () => {
         weeklyWeatherData={mockWeeklyWeather}
         weeklyWeatherLoading={false}
         weeklyWeatherError={false}
+        dataType={DataType.Temperature}
       />
     );
 
@@ -92,6 +95,7 @@ describe('DataChartTabs', () => {
         weeklyWeatherData={mockWeeklyWeather}
         weeklyWeatherLoading={false}
         weeklyWeatherError={false}
+        dataType={DataType.Temperature}
       />
     );
 
@@ -112,6 +116,7 @@ describe('DataChartTabs', () => {
         weeklyWeatherData={mockWeeklyWeather}
         weeklyWeatherLoading={false}
         weeklyWeatherError={false}
+        dataType={DataType.Temperature}
       />
     );
 
@@ -131,6 +136,7 @@ describe('DataChartTabs', () => {
         weeklyWeatherData={null}
         weeklyWeatherLoading={true}
         weeklyWeatherError={false}
+        dataType={DataType.Temperature}
       />
     );
 
@@ -148,6 +154,7 @@ describe('DataChartTabs', () => {
         weeklyWeatherData={null}
         weeklyWeatherLoading={false}
         weeklyWeatherError={true}
+        dataType={DataType.Temperature}
       />
     );
 
@@ -167,6 +174,7 @@ describe('DataChartTabs', () => {
         weeklyWeatherData={mockWeeklyWeather}
         weeklyWeatherLoading={false}
         weeklyWeatherError={false}
+        dataType={DataType.Temperature}
       />
     );
 
@@ -188,6 +196,7 @@ describe('DataChartTabs', () => {
         weeklyWeatherData={mockWeeklyWeather}
         weeklyWeatherLoading={false}
         weeklyWeatherError={false}
+        dataType={DataType.Temperature}
       />
     );
 
@@ -208,6 +217,7 @@ describe('DataChartTabs', () => {
         weeklyWeatherData={mockWeeklyWeather}
         weeklyWeatherLoading={false}
         weeklyWeatherError={false}
+        dataType={DataType.Temperature}
       />
     );
 
