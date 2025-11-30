@@ -4,7 +4,7 @@ import { IconAlertCircle } from '@tabler/icons-react';
 
 /**
  * Lightweight error boundary for individual components.
-**/
+ **/
 
 interface ComponentErrorBoundaryProps {
   children: ReactNode;

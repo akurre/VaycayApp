@@ -17,7 +17,7 @@ const AdditionalInfo = ({ city, isShowCity }: AdditionalInfoProps) => {
     <CustomPaper className="w-3/12 flex flex-col">
       {isShowCity && (
         <div className="pb-2">
-          <CityBadge cityName={city.city}/>
+          <CityBadge cityName={city.city} />
         </div>
       )}
       <GreaterSection>

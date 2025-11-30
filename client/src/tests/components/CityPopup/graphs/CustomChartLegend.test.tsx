@@ -49,9 +49,7 @@ describe('CustomChartLegend', () => {
   });
 
   it('uses fallback for missing value', () => {
-    const payload = [
-      { color: '#ff0000', id: 'test' },
-    ];
+    const payload = [{ color: '#ff0000', id: 'test' }];
     const { container } = render(<CustomChartLegend payload={payload} />);
     // When value is missing, it defaults to empty string
     const spans = container.querySelectorAll('span');
@@ -60,17 +58,15 @@ describe('CustomChartLegend', () => {
   });
 
   it('generates key using id when available', () => {
-    const payload = [
-      { value: 'Test', color: '#ff0000', id: 'unique-id' },
-    ];
+    const payload = [{ value: 'Test', color: '#ff0000', id: 'unique-id' }];
     const { container } = render(<CustomChartLegend payload={payload} />);
-    expect(container.querySelector('[style*="display: flex"]')).toBeInTheDocument();
+    expect(
+      container.querySelector('[style*="display: flex"]')
+    ).toBeInTheDocument();
   });
 
   it('generates key using value when id is missing', () => {
-    const payload = [
-      { value: 'Test Value', color: '#ff0000' },
-    ];
+    const payload = [{ value: 'Test Value', color: '#ff0000' }];
     const { container } = render(<CustomChartLegend payload={payload} />);
     expect(screen.getByText('Test Value')).toBeInTheDocument();
   });

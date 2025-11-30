@@ -17,6 +17,8 @@ import DateSliderWrapper from '@/components/Navigation/DateSliderWrapper';
 import { DataType, ViewMode } from '@/types/mapTypes';
 import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
 import { INITIAL_VIEW_STATE, ZOOM_THRESHOLD } from '@/const';
+import ComponentErrorBoundary from '../components/ErrorBoundary/ComponentErrorBoundary';
+import MapColorLegend from '../components/Map/MapColorLegend';
 
 interface MapBounds {
   minLat: number;
@@ -140,9 +142,12 @@ const MapPage: FC = () => {
   return (
     <div className="relative w-full h-screen">
       {/* navigation panel */}
-      <div className="absolute top-4 left-4 z-20 flex gap-2">
-        <HomeLocationSelector />
-        <FeedbackButton />
+      <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
+        <div className="flex gap-2">
+          <HomeLocationSelector />
+          <FeedbackButton />
+        </div>
+        <MapColorLegend dataType={dataType} />
       </div>
       <div className="absolute top-4 right-4 z-20 flex gap-2">
         <MapViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
@@ -165,14 +170,16 @@ const MapPage: FC = () => {
       {/* map */}
       <div className="h-full w-full">
         {displayedData && (
-          <WorldMap
-            cities={displayedData}
-            viewMode={viewMode}
-            dataType={dataType}
-            onBoundsChange={handleBoundsChange}
-            selectedMonth={monthFromDate}
-            selectedDate={selectedDate}
-          />
+          <ComponentErrorBoundary componentName="WorldMap">
+            <WorldMap
+              cities={displayedData}
+              viewMode={viewMode}
+              dataType={dataType}
+              onBoundsChange={handleBoundsChange}
+              selectedMonth={monthFromDate}
+              selectedDate={selectedDate}
+            />
+          </ComponentErrorBoundary>
         )}
       </div>
     </div>

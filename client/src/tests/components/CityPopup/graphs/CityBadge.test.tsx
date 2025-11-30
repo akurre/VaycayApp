@@ -9,13 +9,17 @@ describe('CityBadge', () => {
   });
 
   it('uses primary color for non-comparison', () => {
-    const { container } = render(<CityBadge cityName="Paris" isComparison={false} />);
+    const { container } = render(
+      <CityBadge cityName="Paris" isComparison={false} />
+    );
     const badge = container.querySelector('[class*="Badge"]');
     expect(badge).toBeInTheDocument();
   });
 
   it('uses secondary color for comparison city', () => {
-    const { container } = render(<CityBadge cityName="London" isComparison={true} />);
+    const { container } = render(
+      <CityBadge cityName="London" isComparison={true} />
+    );
     const badge = container.querySelector('[class*="Badge"]');
     expect(badge).toBeInTheDocument();
   });
