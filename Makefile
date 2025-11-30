@@ -85,7 +85,15 @@ db-setup-v2: check-prereqs
 	@export DATABASE_URL="postgresql://postgres:iwantsun@localhost:5433/postgres_v2" && cd server && npx tsx scripts/import-sunshine-hours.ts
 	@echo "$(YELLOW)Aggregating weekly weather data (this will take 2-5 minutes)...$(NC)"
 	@export DATABASE_URL="postgresql://postgres:iwantsun@localhost:5433/postgres_v2" && cd server && npm run aggregate-weekly-weather
+	@echo "$(YELLOW)Adding custom city sunshine data...$(NC)"
+	@export DATABASE_URL="postgresql://postgres:iwantsun@localhost:5433/postgres_v2" && cd server && npx tsx scripts/add-city-sunshine.ts
 	@echo "$(GREEN)✓ V2 Database setup complete$(NC)"
+
+# Add custom city sunshine data (can be run multiple times safely)
+add-city-sunshine: check-prereqs
+	@echo "$(GREEN)Adding custom city sunshine data...$(NC)"
+	@export DATABASE_URL="postgresql://postgres:iwantsun@localhost:5433/postgres_v2" && cd server && npx tsx scripts/add-city-sunshine.ts
+	@echo "$(GREEN)✓ Done$(NC)"
 
 # Setup database (temporarily redirected to v2)
 db-setup: db-setup-v2
