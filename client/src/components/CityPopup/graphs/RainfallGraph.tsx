@@ -1,4 +1,4 @@
-import { useMemo, memo, useCallback } from 'react';
+import { useMemo, memo } from 'react';
 import {
   BarChart,
   Bar,
@@ -25,6 +25,17 @@ const RainfallGraph = ({
 }: RainfallGraphProps) => {
   // Get theme-aware colors
   const chartColors = useChartColors();
+
+  // Create a wrapper component for the tooltip that has access to city names
+  const TooltipWrapper = (
+    props: Parameters<typeof RainfallGraphTooltip>[0]
+  ) => (
+    <RainfallGraphTooltip
+      {...props}
+      cityName={weeklyWeatherData?.city}
+      comparisonCityName={comparisonWeeklyWeatherData?.city}
+    />
+  );
 
   // Transform weekly weather data for chart - filter out weeks with no precipitation data
   // to prevent displaying zero values where no measurements exist
@@ -116,36 +127,6 @@ const RainfallGraph = ({
     };
   }, [weeklyWeatherData, comparisonWeeklyWeatherData]);
 
-  // Memoize custom tooltip render function
-  const renderCustomTooltip = useCallback(
-    (props: {
-      active?: boolean;
-      payload?: ReadonlyArray<{
-        payload: Record<string, number | null | undefined>;
-      }>;
-    }) => (
-      <RainfallGraphTooltip
-        active={props.active}
-        payload={
-          props.payload as ReadonlyArray<{
-            payload: {
-              week: number;
-              totalPrecip: number | null;
-              avgPrecip: number | null;
-              compTotalPrecip?: number | null;
-              compAvgPrecip?: number | null;
-              daysWithRain: number | null;
-              daysWithData: number;
-            };
-          }>
-        }
-        cityName={weeklyWeatherData?.city}
-        comparisonCityName={comparisonWeeklyWeatherData?.city}
-      />
-    ),
-    [weeklyWeatherData?.city, comparisonWeeklyWeatherData?.city]
-  );
-
   // use whichever data is available for the base chart structure
   const baseData = weeklyWeatherData ?? comparisonWeeklyWeatherData;
 
@@ -184,7 +165,7 @@ const RainfallGraph = ({
           />
 
           {/* Tooltip */}
-          <Tooltip content={renderCustomTooltip} />
+          <Tooltip content={TooltipWrapper} />
 
           {/* Legend */}
           <Legend
