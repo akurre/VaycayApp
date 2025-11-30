@@ -1,7 +1,7 @@
 import DeckGL from '@deck.gl/react';
-import { useRef, useEffect, useMemo } from 'react';
+import { useRef, useEffect, useMemo, useState } from 'react';
 import Map from 'react-map-gl/maplibre';
-import { Transition, useComputedColorScheme } from '@mantine/core';
+import { Transition, useComputedColorScheme, Loader } from '@mantine/core';
 import useMapLayers from '../../hooks/useMapLayers';
 import { useMapInteractions } from '../../hooks/useMapInteractions';
 import { useMapBounds } from '../../hooks/useMapBounds';
@@ -50,6 +50,9 @@ const WorldMap = ({
   // Track initial map load time
   const hasTrackedInitialLoad = useRef(false);
 
+  // Track basemap loading state
+  const [isBasemapLoaded, setIsBasemapLoaded] = useState(false);
+
   const colorScheme = useComputedColorScheme('dark');
   const isLoadingWeather = useWeatherStore((state) => state.isLoadingWeather);
   const isLoadingSunshine = useSunshineStore(
@@ -80,9 +83,10 @@ const WorldMap = ({
   const homeLocationLayers = useHomeLocationLayers(dataType, selectedMonth);
 
   // Merge layers at component level - when home animates, only this merge reruns, not city layer creation
+  // Only show layers after basemap is loaded to prevent markers appearing before map tiles
   const layers = useMemo(
-    () => [...cityLayers, ...homeLocationLayers],
-    [cityLayers, homeLocationLayers]
+    () => (isBasemapLoaded ? [...cityLayers, ...homeLocationLayers] : []),
+    [cityLayers, homeLocationLayers, isBasemapLoaded]
   );
 
   useEffect(() => {
@@ -151,8 +155,16 @@ const WorldMap = ({
           mapStyle={MAP_STYLES[colorScheme]}
           attributionControl={false}
           reuseMaps
+          onLoad={() => setIsBasemapLoaded(true)}
         />
       </DeckGL>
+
+      {/* Loading indicator while basemap tiles are loading */}
+      {!isBasemapLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center bg-background/50 backdrop-blur-sm z-10">
+          <Loader size="lg" />
+        </div>
+      )}
 
       {hoverInfo && (
         <MapTooltip
