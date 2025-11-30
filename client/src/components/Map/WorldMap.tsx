@@ -146,7 +146,11 @@ const WorldMap = ({
         getTooltip={() => null}
         style={deckGLStyle}
       >
-        <Map mapStyle={MAP_STYLES[colorScheme]} attributionControl={false} />
+        <Map 
+          mapStyle={MAP_STYLES[colorScheme]} 
+          attributionControl={false}
+          reuseMaps
+        />
       </DeckGL>
 
       {hoverInfo && (

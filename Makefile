@@ -203,24 +203,33 @@ build: check-prereqs
 	@cd client && npm run build
 	@echo "$(GREEN)✓ Build complete$(NC)"
 
-# Generate Prisma client
+# Run Prisma migrations and generate client
 prisma: check-prereqs
-	@echo "$(GREEN)Generating Prisma client...$(NC)"
-	npm run -w server prisma:generate
-	@echo "$(GREEN)✓ Prisma client generated$(NC)"
-
-# Delete root node_modules and package-lock.json, then generate Prisma client
-delete-package: check-prereqs
-	@echo "$(GREEN)Cleaning up root package files...$(NC)"
-	@echo "$(YELLOW)Deleting root node_modules...$(NC)"
-	@rm -rf node_modules
-	@echo "$(YELLOW)Deleting root package-lock.json...$(NC)"
-	@rm -f package-lock.json
-	@echo "$(YELLOW)Reinstalling...$(NC)"
-	npm i
+	@echo "$(GREEN)Running Prisma migrations and generating client...$(NC)"
+	@echo "$(YELLOW)Running migrations...$(NC)"
+	cd server && npm run prisma:migrate
 	@echo "$(YELLOW)Generating Prisma client...$(NC)"
-	npm run -w server prisma:generate
-	@echo "$(GREEN)✓ Package cleanup and Prisma generation complete$(NC)"
+	cd server && npm run prisma:generate
+	@echo "$(GREEN)✓ Prisma migrations and client generation complete$(NC)"
+
+# Delete node_modules in all locations and reinstall
+delete-package: check-prereqs
+	@echo "$(GREEN)Cleaning up all package files...$(NC)"
+	@echo "$(YELLOW)Deleting root node_modules and package-lock.json...$(NC)"
+	@rm -rf node_modules package-lock.json
+	@echo "$(YELLOW)Deleting client node_modules and package-lock.json...$(NC)"
+	@cd client && rm -rf node_modules package-lock.json
+	@echo "$(YELLOW)Deleting server node_modules and package-lock.json...$(NC)"
+	@cd server && rm -rf node_modules package-lock.json
+	@echo "$(YELLOW)Reinstalling root packages...$(NC)"
+	@npm install
+	@echo "$(YELLOW)Reinstalling server packages...$(NC)"
+	@cd server && npm install
+	@echo "$(YELLOW)Generating Prisma client...$(NC)"
+	@cd server && npm run prisma:generate
+	@echo "$(YELLOW)Reinstalling client packages...$(NC)"
+	@cd client && npm install
+	@echo "$(GREEN)✓ All packages reinstalled and Prisma client generated$(NC)"
 
 # Run tests
 test: check-prereqs

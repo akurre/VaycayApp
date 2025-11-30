@@ -9,6 +9,7 @@ import MapViewToggle from '../components/Map/MapViewToggle';
 import MapThemeToggle from '../components/Map/MapThemeToggle';
 import MapDataToggle from '../components/Map/MapDataToggle';
 import HomeLocationSelector from '../components/Navigation/HomeLocationSelector';
+import FeedbackButton from '../components/Navigation/FeedbackButton';
 import { getTodayAsMMDD } from '@/utils/dateFormatting/getTodayAsMMDD';
 import { useWeatherStore } from '../stores/useWeatherStore';
 import { useSunshineStore } from '../stores/useSunshineStore';
@@ -139,8 +140,9 @@ const MapPage: FC = () => {
   return (
     <div className="relative w-full h-screen">
       {/* navigation panel */}
-      <div className="absolute top-4 left-4 z-20">
+      <div className="absolute top-4 left-4 z-20 flex gap-2">
         <HomeLocationSelector />
+        <FeedbackButton />
       </div>
       <div className="absolute top-4 right-4 z-20 flex gap-2">
         <MapViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />

@@ -21,6 +21,15 @@ export const GET_WEATHER_BY_DATE = gql`
   }
 `;
 
+export const SEND_FEEDBACK = gql`
+  mutation SendFeedback($email: String, $message: String!) {
+    sendFeedback(email: $email, message: $message) {
+      success
+      message
+    }
+  }
+`;
+
 export const GET_WEATHER_BY_DATE_AND_BOUNDS = gql`
   query GetWeatherByDateAndBounds(
     $monthDay: String!
