@@ -8,8 +8,6 @@ interface RainfallDataSectionProps {
   isLoading: boolean;
   hasError: boolean;
   comparisonWeeklyWeatherData?: CityWeeklyWeather | null;
-  comparisonIsLoading?: boolean;
-  comparisonHasError?: boolean;
 }
 
 const RainfallDataSection = ({
@@ -17,12 +15,11 @@ const RainfallDataSection = ({
   isLoading,
   hasError,
   comparisonWeeklyWeatherData,
-  comparisonIsLoading,
-  comparisonHasError,
 }: RainfallDataSectionProps) => {
   return (
     <WeatherDataSection
       data={weeklyWeatherData}
+      comparisonData={comparisonWeeklyWeatherData}
       isLoading={isLoading}
       hasError={hasError}
       errorMessage="Failed to load precipitation data for this city."

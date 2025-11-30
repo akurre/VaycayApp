@@ -82,8 +82,6 @@ const DataChartTabs = ({
             hasError={sunshineError}
             selectedMonth={selectedMonth}
             comparisonSunshineData={comparisonSunshineData}
-            comparisonIsLoading={comparisonSunshineLoading}
-            comparisonHasError={comparisonSunshineError}
           />
         </Tabs.Panel>
 
@@ -93,8 +91,6 @@ const DataChartTabs = ({
             isLoading={weeklyWeatherLoading}
             hasError={weeklyWeatherError}
             comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
-            comparisonIsLoading={comparisonWeeklyWeatherLoading}
-            comparisonHasError={comparisonWeeklyWeatherError}
           />
         </Tabs.Panel>
       </Tabs>

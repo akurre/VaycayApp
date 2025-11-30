@@ -1,15 +1,12 @@
-import { memo, useMemo } from 'react';
-import { Alert, Badge, Loader, Text } from '@mantine/core';
+import { memo } from 'react';
+import { Alert, Loader } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
 import type { SunshineData } from '@/types/sunshineDataType';
 import type { WeekDataPoint } from '@/types/weeklyWeatherDataType';
-import { calculateAverageRainfall } from '@/utils/dataFormatting/calculateAverageRainfall';
 import GreaterSection from './GreaterSection';
 import CustomPaper from '../Shared/CustomPaper';
-import { transformSunshineDataForChart } from '@/utils/dataFormatting/transformSunshineDataForChart';
-import { calculateAverageSunshine } from '@/utils/dataFormatting/calculateAverageSunshine';
-
-import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
+import ComparisonRow from './ComparisonRow';
+import { useSunshineAndRainfallData } from './hooks/useSunshineAndRainfallData';
 
 interface SunshineValuesProps {
   displaySunshineData: SunshineData | null;
@@ -32,38 +29,39 @@ const SunshineValues = ({
   comparisonCity,
   baseCity,
 }: SunshineValuesProps) => {
-  // Calculate average sunshine if we have sunshine data
-  const averageSunshine = useMemo(() => {
-    if (!displaySunshineData) return null;
-    const chartData = transformSunshineDataForChart(displaySunshineData);
-    return calculateAverageSunshine(chartData);
-  }, [displaySunshineData]);
+  const {
+    averageSunshine,
+    comparisonAverageSunshine,
+    averageRainfall,
+    comparisonAverageRainfall,
+    hasSunshineData,
+    hasComparisonSunshineData,
+    hasAnySunshineData,
+    hasRainfallData,
+    hasComparisonRainfallData,
+    hasAnyRainfallData,
+    hasAnyData,
+    hasComparison,
+  } = useSunshineAndRainfallData({
+    displaySunshineData,
+    weeklyWeatherData,
+    comparisonSunshineData,
+    comparisonWeeklyWeatherData,
+  });
 
-  // Calculate average sunshine for comparison city
-  const comparisonAverageSunshine = useMemo(() => {
-    if (!comparisonSunshineData) return null;
-    const chartData = transformSunshineDataForChart(comparisonSunshineData);
-    return calculateAverageSunshine(chartData);
-  }, [comparisonSunshineData]);
-
-  // Calculate average annual rainfall from weekly weather data
-  const averageRainfall = useMemo(() => {
-    if (!weeklyWeatherData) return null;
-    return calculateAverageRainfall(weeklyWeatherData);
-  }, [weeklyWeatherData]);
-
-  // Calculate average annual rainfall for comparison city
-  const comparisonAverageRainfall = useMemo(() => {
-    if (!comparisonWeeklyWeatherData) return null;
-    return calculateAverageRainfall(comparisonWeeklyWeatherData);
-  }, [comparisonWeeklyWeatherData]);
-
-  const hasComparison = comparisonSunshineData || comparisonWeeklyWeatherData;
-
-  // determine if we have any data to show
-  const hasSunshineData = displaySunshineData && averageSunshine !== null;
-  const hasRainfallData = averageRainfall !== null;
-  const hasAnyData = hasSunshineData || hasRainfallData;
+  // format values with units or "N/A"
+  const sunshineValue = hasSunshineData
+    ? `${averageSunshine!.toFixed(1)} hours`
+    : 'N/A';
+  const comparisonSunshineValue = hasComparisonSunshineData
+    ? `${comparisonAverageSunshine!.toFixed(1)} hours`
+    : 'N/A';
+  const rainfallValue = hasRainfallData
+    ? `${averageRainfall!.toFixed(1)} mm`
+    : 'N/A';
+  const comparisonRainfallValue = hasComparisonRainfallData
+    ? `${comparisonAverageRainfall!.toFixed(1)} mm`
+    : 'N/A';
 
   return (
     <CustomPaper className="h-full">
@@ -81,62 +79,40 @@ const SunshineValues = ({
 
       {hasAnyData ? (
         <>
-          {hasSunshineData && (
+          {hasAnySunshineData && (
             <GreaterSection title="Average Annual Sunshine">
               <div className="flex flex-col gap-1">
-                <div className="flex gap-2 justify-between">
-                  {comparisonCity && <Badge variant="light">{baseCity}</Badge>}
-                  <Text
-                    size="md"
-                    style={{
-                      color: hasComparison ? CITY1_PRIMARY_COLOR : undefined,
-                    }}
-                  >
-                    {averageSunshine.toFixed(1)} hours
-                  </Text>
-                </div>
-                {hasComparison && comparisonAverageSunshine !== null && (
-                  <div className="flex gap-2 justify-between">
-                    <Badge
-                      variant="light"
-                      style={{ color: CITY2_PRIMARY_COLOR }}
-                    >
-                      {comparisonCity}
-                    </Badge>
-                    <Text size="md" style={{ color: CITY2_PRIMARY_COLOR }}>
-                      {comparisonAverageSunshine.toFixed(1)} hours
-                    </Text>
-                  </div>
+                <ComparisonRow
+                  cityName={baseCity}
+                  value={sunshineValue}
+                  showCityBadge={!!comparisonCity}
+                />
+                {hasComparison && (
+                  <ComparisonRow
+                    cityName={comparisonCity!}
+                    value={comparisonSunshineValue}
+                    isComparison
+                    showCityBadge
+                  />
                 )}
               </div>
             </GreaterSection>
           )}
-          {hasRainfallData && (
+          {hasAnyRainfallData && (
             <GreaterSection title="Average Annual Rainfall">
               <div className="flex flex-col gap-1">
-                <div className="flex gap-2 items-center justify-between">
-                  {comparisonCity && <Badge variant="light">{baseCity}</Badge>}
-                  <Text
-                    size="md"
-                    style={{
-                      color: hasComparison ? CITY1_PRIMARY_COLOR : undefined,
-                    }}
-                  >
-                    {averageRainfall.toFixed(1)} mm
-                  </Text>
-                </div>
-                {hasComparison && comparisonAverageRainfall !== null && (
-                  <div className="flex gap-2 items-center justify-between">
-                    <Badge
-                      variant="light"
-                      style={{ color: CITY2_PRIMARY_COLOR }}
-                    >
-                      {comparisonCity}
-                    </Badge>
-                    <Text size="md" style={{ color: CITY2_PRIMARY_COLOR }}>
-                      {comparisonAverageRainfall.toFixed(1)} mm
-                    </Text>
-                  </div>
+                <ComparisonRow
+                  cityName={baseCity}
+                  value={rainfallValue}
+                  showCityBadge={!!comparisonCity}
+                />
+                {hasComparison && (
+                  <ComparisonRow
+                    cityName={comparisonCity!}
+                    value={comparisonRainfallValue}
+                    isComparison
+                    showCityBadge
+                  />
                 )}
               </div>
             </GreaterSection>

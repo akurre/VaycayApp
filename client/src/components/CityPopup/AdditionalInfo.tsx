@@ -4,6 +4,7 @@ import DistanceSection from './DistanceSection';
 import GreaterSection from './GreaterSection';
 import CustomPaper from '../Shared/CustomPaper';
 import { Popover, Button, Badge } from '@mantine/core';
+import { appColors } from '@/theme';
 
 interface AdditionalInfoProps {
   city: WeatherDataUnion;
@@ -15,7 +16,7 @@ const AdditionalInfo = ({ city, isShowCity }: AdditionalInfoProps) => {
     <CustomPaper className="w-3/12 flex flex-col">
       {isShowCity && (
         <div className="pb-2">
-          <Badge variant="light">{city.city}</Badge>
+          <Badge variant='transparent'>{city.city}</Badge>
         </div>
       )}
       <GreaterSection>
@@ -34,16 +35,11 @@ const AdditionalInfo = ({ city, isShowCity }: AdditionalInfoProps) => {
           <div className="flex justify-center">
             <Popover position="top" withArrow shadow="md">
               <Popover.Target>
-                <Button variant="subtle" size="compact-xs">
+                <Button color={appColors.tertiary} variant="subtle" size="compact-xs">
                   More Info
                 </Button>
               </Popover.Target>
               <Popover.Dropdown>
-                {city.stationName && (
-                  <div>
-                    <Field label="Weather Station" value={city.stationName} />
-                  </div>
-                )}
                 {city.lat && city.long && (
                   <Field
                     label="Coordinates"

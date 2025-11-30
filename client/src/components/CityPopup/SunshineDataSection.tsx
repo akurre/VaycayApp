@@ -9,8 +9,6 @@ interface SunshineDataSectionProps {
   hasError: boolean;
   selectedMonth: number;
   comparisonSunshineData?: SunshineData | null;
-  comparisonIsLoading?: boolean;
-  comparisonHasError?: boolean;
 }
 
 const SunshineDataSection = ({
@@ -19,12 +17,11 @@ const SunshineDataSection = ({
   hasError,
   selectedMonth,
   comparisonSunshineData,
-  comparisonIsLoading,
-  comparisonHasError,
 }: SunshineDataSectionProps) => {
   return (
     <WeatherDataSection
       data={displaySunshineData}
+      comparisonData={comparisonSunshineData}
       isLoading={isLoading}
       hasError={hasError}
       errorMessage="Failed to load sunshine data for this city."

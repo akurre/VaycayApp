@@ -4,6 +4,7 @@ import { IconAlertCircle } from '@tabler/icons-react';
 
 interface WeatherDataSectionProps<T> {
   data: T | null;
+  comparisonData?: T | null;
   isLoading: boolean;
   hasError: boolean;
   errorMessage: string;
@@ -14,6 +15,7 @@ interface WeatherDataSectionProps<T> {
 
 const WeatherDataSectionInner = <T,>({
   data,
+  comparisonData,
   isLoading,
   hasError,
   errorMessage,
@@ -21,6 +23,9 @@ const WeatherDataSectionInner = <T,>({
   noDataMessage = 'No data available',
   children,
 }: WeatherDataSectionProps<T>) => {
+  // show graph if either base data or comparison data exists
+  const hasAnyData = data ?? comparisonData;
+
   return (
     <div className="h-full flex flex-col">
       {isLoading && !data && (
@@ -35,8 +40,8 @@ const WeatherDataSectionInner = <T,>({
         </Alert>
       )}
 
-      {data ? (
-        <div className="flex-1 min-h-0 h-full px-3">{children(data)}</div>
+      {hasAnyData ? (
+        <div className="flex-1 min-h-0 h-full px-3">{children(data!)}</div>
       ) : (
         showNoDataBadge && (
           <div className="flex-1 min-h-0 items-center flex justify-center">
