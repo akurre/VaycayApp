@@ -17,7 +17,9 @@ export const sendFeedbackMutation = mutationType({
       type: Feedback,
       args: {
         email: stringArg(),
-        message: nonNull(stringArg()),
+        name: nonNull(stringArg()),
+        currentIssues: stringArg(),
+        futureIdeas: stringArg(),
       },
       async resolve(_parent, args) {
         try {
@@ -36,18 +38,18 @@ export const sendFeedbackMutation = mutationType({
             to: 'feedbackforash@gmail.com',
             subject: 'Vaycay App Feedback',
             text: `
-Feedback received from: ${args.email || 'Anonymous'}
+Feedback received from: ${args.name}${args.email ? ` (${args.email})` : ''}
 
-Message:
-${args.message}
+${args.currentIssues ? `Current Issues/Feedback:\n${args.currentIssues}\n` : ''}
+${args.futureIdeas ? `Future Ideas:\n${args.futureIdeas}` : ''}
             `.trim(),
             html: `
               <div style="font-family: Arial, sans-serif; padding: 20px;">
                 <h2>Vaycay App Feedback</h2>
-                <p><strong>From:</strong> ${args.email || 'Anonymous'}</p>
+                <p><strong>From:</strong> ${args.name}${args.email ? ` (${args.email})` : ''}</p>
                 <hr />
-                <p><strong>Message:</strong></p>
-                <p>${args.message.replace(/\n/g, '<br>')}</p>
+                ${args.currentIssues ? `<p><strong>Current Issues/Feedback:</strong></p><p>${args.currentIssues.replace(/\n/g, '<br>')}</p>` : ''}
+                ${args.futureIdeas ? `<p><strong>Future Ideas:</strong></p><p>${args.futureIdeas.replace(/\n/g, '<br>')}</p>` : ''}
               </div>
             `,
           };

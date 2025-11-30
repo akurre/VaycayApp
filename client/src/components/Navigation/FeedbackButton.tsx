@@ -16,14 +16,16 @@ interface SendFeedbackResponse {
 interface SendFeedbackVars {
   email?: string;
   name: string;
-  message: string;
+  currentIssues?: string;
+  futureIdeas?: string;
 }
 
 const FeedbackButton = () => {
   const [opened, setOpened] = useState(false);
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
-  const [message, setMessage] = useState('');
+  const [currentIssues, setCurrentIssues] = useState('');
+  const [futureIdeas, setFutureIdeas] = useState('');
 
   const [sendFeedbackMutation, { loading }] = useMutation<
     SendFeedbackResponse,
@@ -31,10 +33,19 @@ const FeedbackButton = () => {
   >(SEND_FEEDBACK);
 
   const handleSubmit = async () => {
-    if (!message.trim()) {
+    if (!name.trim()) {
       notifications.show({
-        title: 'Message Required',
-        message: 'Please enter your feedback message',
+        title: 'Name Required',
+        message: 'Please enter your name',
+        color: 'yellow',
+      });
+      return;
+    }
+
+    if (!currentIssues.trim() && !futureIdeas.trim()) {
+      notifications.show({
+        title: 'Feedback Required',
+        message: 'Please enter at least one type of feedback',
         color: 'yellow',
       });
       return;
@@ -45,7 +56,8 @@ const FeedbackButton = () => {
         variables: {
           email: email.trim() || undefined,
           name: name.trim(),
-          message: message.trim(),
+          currentIssues: currentIssues.trim() || undefined,
+          futureIdeas: futureIdeas.trim() || undefined,
         },
       });
 
@@ -58,7 +70,8 @@ const FeedbackButton = () => {
 
         setEmail('');
         setName('');
-        setMessage('');
+        setCurrentIssues('');
+        setFutureIdeas('');
         setOpened(false);
       } else {
         throw new Error(result.data?.sendFeedback.message || 'Failed to send');
@@ -96,7 +109,8 @@ const FeedbackButton = () => {
             placeholder="name"
             value={name}
             onChange={(e) => setName(e.currentTarget.value)}
-            type="name"
+            required
+            withAsterisk
           />
 
           <TextInput
@@ -108,13 +122,21 @@ const FeedbackButton = () => {
           />
 
           <Textarea
-            label="Your Feedback"
-            placeholder="Tell us what you think..."
-            value={message}
-            onChange={(e) => setMessage(e.currentTarget.value)}
-            minRows={4}
-            maxRows={8}
-            required
+            label="Current Issues / Feedback"
+            placeholder="Any bugs, issues, or general feedback about the current app..."
+            value={currentIssues}
+            onChange={(e) => setCurrentIssues(e.currentTarget.value)}
+            minRows={3}
+            maxRows={6}
+          />
+
+          <Textarea
+            label="Future Ideas"
+            placeholder="Any features or improvements you'd like to see..."
+            value={futureIdeas}
+            onChange={(e) => setFutureIdeas(e.currentTarget.value)}
+            minRows={3}
+            maxRows={6}
           />
 
           <div className="flex gap-2 justify-end">
