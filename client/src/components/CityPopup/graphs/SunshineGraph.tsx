@@ -73,7 +73,9 @@ const SunshineGraph = ({
         ? baseChartStructure.map((point, index) => ({
             ...point,
             hours: chartData ? chartData[index]?.hours : null,
-            theoreticalMax: theoreticalMaxData ? theoreticalMaxData[index] : null,
+            theoreticalMax: theoreticalMaxData
+              ? theoreticalMaxData[index]
+              : null,
             comparisonTheoreticalMax: comparisonTheoreticalMaxData
               ? comparisonTheoreticalMaxData[index]
               : null,

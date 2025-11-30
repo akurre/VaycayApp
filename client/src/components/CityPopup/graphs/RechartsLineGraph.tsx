@@ -23,7 +23,7 @@ import type {
 // Re-export types for backward compatibility
 export type { ChartDataPoint, LineConfig, ReferenceLineConfig };
 
-function RechartsLineGraphComponent<T extends ChartDataPoint>({
+const RechartsLineGraphComponent = <T extends ChartDataPoint>({
   data,
   cityKey,
   xAxisDataKey,
@@ -39,7 +39,7 @@ function RechartsLineGraphComponent<T extends ChartDataPoint>({
   legendLayout = 'vertical',
   legendVerticalAlign = 'middle',
   legendAlign = 'right',
-}: RechartsLineGraphProps<T>) {
+}: RechartsLineGraphProps<T>) => {
   // Get theme-aware colors
   const chartColors = useChartColors();
 
@@ -149,7 +149,7 @@ function RechartsLineGraphComponent<T extends ChartDataPoint>({
       </ResponsiveContainer>
     </div>
   );
-}
+};
 
 // Export with memo for performance optimization
 const RechartsLineGraph = memo(

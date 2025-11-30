@@ -1,4 +1,4 @@
-import { useMemo, memo } from 'react';
+import { useMemo, memo, useCallback } from 'react';
 import {
   BarChart,
   Bar,
@@ -12,6 +12,7 @@ import {
 import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
 import { useChartColors } from '@/hooks/useChartColors';
 import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
+import RainfallGraphTooltip from './RainfallGraphTooltip';
 
 interface RainfallGraphProps {
   weeklyWeatherData: CityWeeklyWeather | null;
@@ -32,7 +33,9 @@ const RainfallGraph = ({
     // process main city data if it exists
     const mainData = weeklyWeatherData
       ? weeklyWeatherData.weeklyData
-          .filter((week) => week.totalPrecip !== null || week.avgPrecip !== null)
+          .filter(
+            (week) => week.totalPrecip !== null || week.avgPrecip !== null
+          )
           .map((week) => {
             // normalize totalPrecip to get average weekly precipitation
             const normalizedTotalPrecip =
@@ -53,7 +56,9 @@ const RainfallGraph = ({
     // process comparison city data if it exists
     const compData = comparisonWeeklyWeatherData
       ? comparisonWeeklyWeatherData.weeklyData
-          .filter((week) => week.totalPrecip !== null || week.avgPrecip !== null)
+          .filter(
+            (week) => week.totalPrecip !== null || week.avgPrecip !== null
+          )
           .map((week) => {
             const normalizedTotalPrecip =
               week.totalPrecip !== null && week.daysWithData > 0
@@ -75,7 +80,7 @@ const RainfallGraph = ({
 
     // determine final chart data based on what data exists
     let finalChartData;
-    
+
     // if we have both datasets with actual data, merge them
     if (mainData.length > 0 && compData.length > 0) {
       finalChartData = baseStructure.map((baseWeek) => {
@@ -111,9 +116,39 @@ const RainfallGraph = ({
     };
   }, [weeklyWeatherData, comparisonWeeklyWeatherData]);
 
+  // Memoize custom tooltip render function
+  const renderCustomTooltip = useCallback(
+    (props: {
+      active?: boolean;
+      payload?: ReadonlyArray<{
+        payload: Record<string, number | null | undefined>;
+      }>;
+    }) => (
+      <RainfallGraphTooltip
+        active={props.active}
+        payload={
+          props.payload as ReadonlyArray<{
+            payload: {
+              week: number;
+              totalPrecip: number | null;
+              avgPrecip: number | null;
+              compTotalPrecip?: number | null;
+              compAvgPrecip?: number | null;
+              daysWithRain: number | null;
+              daysWithData: number;
+            };
+          }>
+        }
+        cityName={weeklyWeatherData?.city}
+        comparisonCityName={comparisonWeeklyWeatherData?.city}
+      />
+    ),
+    [weeklyWeatherData?.city, comparisonWeeklyWeatherData?.city]
+  );
+
   // use whichever data is available for the base chart structure
   const baseData = weeklyWeatherData ?? comparisonWeeklyWeatherData;
-  
+
   // if neither exists, return null (shouldn't happen due to WeatherDataSection check)
   if (!baseData) return null;
 
@@ -149,23 +184,7 @@ const RainfallGraph = ({
           />
 
           {/* Tooltip */}
-          <Tooltip
-            contentStyle={{
-              fontSize: 12,
-              backgroundColor: chartColors.gridColor,
-              borderColor: chartColors.axisColor,
-            }}
-            formatter={(value: string | number | (string | number)[]) => {
-              // handle null/undefined values
-              if (value === null || value === undefined) return 'N/A';
-              // handle array values (shouldn't happen in this chart but type-safe)
-              if (Array.isArray(value)) return 'N/A';
-              // handle string values
-              if (typeof value === 'string') return value;
-              // handle number values
-              return `${value.toFixed(2)} mm`;
-            }}
-          />
+          <Tooltip content={renderCustomTooltip} />
 
           {/* Legend */}
           <Legend

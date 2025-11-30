@@ -16,7 +16,7 @@ const AdditionalInfo = ({ city, isShowCity }: AdditionalInfoProps) => {
     <CustomPaper className="w-3/12 flex flex-col">
       {isShowCity && (
         <div className="pb-2">
-          <Badge variant='transparent'>{city.city}</Badge>
+          <Badge variant="transparent">{city.city}</Badge>
         </div>
       )}
       <GreaterSection>
@@ -35,7 +35,11 @@ const AdditionalInfo = ({ city, isShowCity }: AdditionalInfoProps) => {
           <div className="flex justify-center">
             <Popover position="top" withArrow shadow="md">
               <Popover.Target>
-                <Button color={appColors.tertiary} variant="subtle" size="compact-xs">
+                <Button
+                  color={appColors.tertiary}
+                  variant="subtle"
+                  size="compact-xs"
+                >
                   More Info
                 </Button>
               </Popover.Target>

@@ -1,12 +1,10 @@
 // Custom legend renderer that properly shows dashed lines for chart components
 interface CustomLegendPayload {
-  value: string;
-  type: string;
+  value?: string;
+  type?: string;
   id?: string;
   color?: string;
-  payload?: {
-    strokeDasharray?: string;
-  };
+  payload?: Record<string, string | number | boolean | null | undefined>;
 }
 
 interface CustomLegendProps {
@@ -30,9 +28,10 @@ export const CustomChartLegend = (props: CustomLegendProps) => {
     >
       {payload.map((entry) => {
         const isDashed = entry.payload?.strokeDasharray;
+        const displayValue = entry.value ?? '';
         return (
           <div
-            key={`legend-${entry.id ?? entry.value}`}
+            key={`legend-${entry.id ?? displayValue}`}
             style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
           >
             <svg width="20" height="2" style={{ overflow: 'visible' }}>
@@ -46,7 +45,7 @@ export const CustomChartLegend = (props: CustomLegendProps) => {
                 strokeDasharray={isDashed ? '3 3' : undefined}
               />
             </svg>
-            <span style={{ color: entry.color }}>{entry.value}</span>
+            <span style={{ color: entry.color }}>{displayValue}</span>
           </div>
         );
       })}

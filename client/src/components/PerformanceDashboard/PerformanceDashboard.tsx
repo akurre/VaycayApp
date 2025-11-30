@@ -1,5 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Card, Stack, Group, Text, Progress, Badge, Button, ActionIcon } from '@mantine/core';
+import {
+  Card,
+  Stack,
+  Group,
+  Text,
+  Progress,
+  Badge,
+  Button,
+  ActionIcon,
+} from '@mantine/core';
 import { perfMonitor } from '@/utils/performance/performanceMonitor';
 import { usePerformanceStore } from '@/stores/usePerformanceStore';
 import { IconBolt } from '@tabler/icons-react';
@@ -15,12 +24,19 @@ interface MetricSummary {
 }
 
 export function PerformanceDashboard() {
+  const isDevelopment = import.meta.env.DEV;
+
   const [metrics, setMetrics] = useState<MetricSummary[]>([]);
-  const { isVisible, setIsVisible, metrics: storedMetrics, clearMetrics } = usePerformanceStore();
+  const {
+    isVisible,
+    setIsVisible,
+    metrics: storedMetrics,
+    clearMetrics,
+  } = usePerformanceStore();
 
   // Calculate metrics whenever storedMetrics changes
   useEffect(() => {
-    if (!import.meta.env.DEV) return;
+    if (!isDevelopment) return;
 
     const calculateMetrics = () => {
       // Use metrics from the store
@@ -43,22 +59,24 @@ export function PerformanceDashboard() {
         {} as Record<string, number[]>
       );
 
-      const summaries: MetricSummary[] = Object.entries(grouped).map(([name, durations]) => {
-        const avg = durations.reduce((a, b) => a + b, 0) / durations.length;
-        const min = Math.min(...durations);
-        const max = Math.max(...durations);
-        const threshold = getThresholdForMetric(name);
+      const summaries: MetricSummary[] = Object.entries(grouped).map(
+        ([name, durations]) => {
+          const avg = durations.reduce((a, b) => a + b, 0) / durations.length;
+          const min = Math.min(...durations);
+          const max = Math.max(...durations);
+          const threshold = getThresholdForMetric(name);
 
-        return {
-          name,
-          avg,
-          min,
-          max,
-          count: durations.length,
-          threshold,
-          isOverBudget: avg > threshold,
-        };
-      });
+          return {
+            name,
+            avg,
+            min,
+            max,
+            count: durations.length,
+            threshold,
+            isOverBudget: avg > threshold,
+          };
+        }
+      );
 
       // Sort by name for consistency
       summaries.sort((a, b) => a.name.localeCompare(b.name));
@@ -73,12 +91,12 @@ export function PerformanceDashboard() {
     const interval = setInterval(calculateMetrics, 1000);
 
     return () => clearInterval(interval);
-  }, [storedMetrics]);
-
-  if (!import.meta.env.DEV) return null;
+  }, [storedMetrics, isDevelopment]);
 
   // Keyboard shortcut to toggle visibility
   useEffect(() => {
+    if (!isDevelopment) return;
+
     const handleKeyPress = (e: KeyboardEvent) => {
       if (e.key === 'p' && e.ctrlKey && e.shiftKey) {
         setIsVisible(!isVisible);
@@ -87,7 +105,9 @@ export function PerformanceDashboard() {
 
     globalThis.addEventListener('keydown', handleKeyPress);
     return () => globalThis.removeEventListener('keydown', handleKeyPress);
-  }, [isVisible, setIsVisible]);
+  }, [isVisible, setIsVisible, isDevelopment]);
+
+  if (!isDevelopment) return null;
 
   if (!isVisible) {
     return (
@@ -143,7 +163,12 @@ export function PerformanceDashboard() {
             >
               Clear
             </Button>
-            <Button size="xs" variant="subtle" onClick={() => setIsVisible(false)} color="gray">
+            <Button
+              size="xs"
+              variant="subtle"
+              onClick={() => setIsVisible(false)}
+              color="gray"
+            >
               Hide
             </Button>
           </Group>
@@ -151,12 +176,19 @@ export function PerformanceDashboard() {
 
         {metrics.length === 0 && (
           <Text size="sm" c="dimmed">
-            No metrics recorded yet. Interact with the app to see performance data.
+            No metrics recorded yet. Interact with the app to see performance
+            data.
           </Text>
         )}
 
         {metrics.map((metric) => (
-          <Card key={metric.name} padding="sm" radius="sm" withBorder bg="dark.8">
+          <Card
+            key={metric.name}
+            padding="sm"
+            radius="sm"
+            withBorder
+            bg="dark.8"
+          >
             <Stack gap="xs">
               <Group justify="space-between">
                 <Text size="sm" fw={500} c="white">

@@ -146,8 +146,8 @@ const WorldMap = ({
         getTooltip={() => null}
         style={deckGLStyle}
       >
-        <Map 
-          mapStyle={MAP_STYLES[colorScheme]} 
+        <Map
+          mapStyle={MAP_STYLES[colorScheme]}
           attributionControl={false}
           reuseMaps
         />
