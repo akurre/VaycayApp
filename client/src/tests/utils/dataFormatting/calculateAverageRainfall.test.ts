@@ -6,22 +6,24 @@ describe('calculateAverageRainfall', () => {
   it('should calculate average rainfall for valid data', () => {
     const weeklyData: WeekDataPoint[] = [
       {
-        isoWeek: 1,
+        week: 1,
         totalPrecip: 70,
         daysWithData: 7,
-        avgMinTemp: 0,
-        avgMaxTemp: 10,
-        avgAvgTemp: 5,
-        totalSunshine: 100,
+        avgTemp: 5,
+        minTemp: 0,
+        maxTemp: 10,
+        avgPrecip: 10,
+        daysWithRain: 3,
       },
       {
-        isoWeek: 2,
+        week: 2,
         totalPrecip: 140,
         daysWithData: 14,
-        avgMinTemp: 0,
-        avgMaxTemp: 10,
-        avgAvgTemp: 5,
-        totalSunshine: 100,
+        avgTemp: 5,
+        minTemp: 0,
+        maxTemp: 10,
+        avgPrecip: 10,
+        daysWithRain: 3,
       },
     ];
 
@@ -35,22 +37,24 @@ describe('calculateAverageRainfall', () => {
   it('should filter out null totalPrecip values', () => {
     const weeklyData: WeekDataPoint[] = [
       {
-        isoWeek: 1,
+        week: 1,
         totalPrecip: 70,
         daysWithData: 7,
-        avgMinTemp: 0,
-        avgMaxTemp: 10,
-        avgAvgTemp: 5,
-        totalSunshine: 100,
+        avgTemp: 5,
+        minTemp: 0,
+        maxTemp: 10,
+        avgPrecip: 10,
+        daysWithRain: 3,
       },
       {
-        isoWeek: 2,
+        week: 2,
         totalPrecip: null,
         daysWithData: 7,
-        avgMinTemp: 0,
-        avgMaxTemp: 10,
-        avgAvgTemp: 5,
-        totalSunshine: 100,
+        avgTemp: 5,
+        minTemp: 0,
+        maxTemp: 10,
+        avgPrecip: 10,
+        daysWithRain: 3,
       },
     ];
 
@@ -61,22 +65,24 @@ describe('calculateAverageRainfall', () => {
   it('should filter out weeks with zero daysWithData', () => {
     const weeklyData: WeekDataPoint[] = [
       {
-        isoWeek: 1,
+        week: 1,
         totalPrecip: 70,
         daysWithData: 7,
-        avgMinTemp: 0,
-        avgMaxTemp: 10,
-        avgAvgTemp: 5,
-        totalSunshine: 100,
+        avgTemp: 5,
+        minTemp: 0,
+        maxTemp: 10,
+        avgPrecip: 10,
+        daysWithRain: 3,
       },
       {
-        isoWeek: 2,
+        week: 2,
         totalPrecip: 100,
         daysWithData: 0,
-        avgMinTemp: 0,
-        avgMaxTemp: 10,
-        avgAvgTemp: 5,
-        totalSunshine: 100,
+        avgTemp: 5,
+        minTemp: 0,
+        maxTemp: 10,
+        avgPrecip: 10,
+        daysWithRain: 3,
       },
     ];
 
@@ -92,22 +98,24 @@ describe('calculateAverageRainfall', () => {
   it('should return null when all data is invalid', () => {
     const weeklyData: WeekDataPoint[] = [
       {
-        isoWeek: 1,
+        week: 1,
         totalPrecip: null,
         daysWithData: 7,
-        avgMinTemp: 0,
-        avgMaxTemp: 10,
-        avgAvgTemp: 5,
-        totalSunshine: 100,
+        avgTemp: 5,
+        minTemp: 0,
+        maxTemp: 10,
+        avgPrecip: 10,
+        daysWithRain: 3,
       },
       {
-        isoWeek: 2,
+        week: 2,
         totalPrecip: 100,
         daysWithData: 0,
-        avgMinTemp: 0,
-        avgMaxTemp: 10,
-        avgAvgTemp: 5,
-        totalSunshine: 100,
+        avgTemp: 5,
+        minTemp: 0,
+        maxTemp: 10,
+        avgPrecip: 10,
+        daysWithRain: 3,
       },
     ];
 
@@ -118,22 +126,24 @@ describe('calculateAverageRainfall', () => {
   it('should correctly normalize data with varying daysWithData', () => {
     const weeklyData: WeekDataPoint[] = [
       {
-        isoWeek: 1,
+        week: 1,
         totalPrecip: 35,
         daysWithData: 7,
-        avgMinTemp: 0,
-        avgMaxTemp: 10,
-        avgAvgTemp: 5,
-        totalSunshine: 100,
+        avgTemp: 5,
+        minTemp: 0,
+        maxTemp: 10,
+        avgPrecip: 5,
+        daysWithRain: 3,
       },
       {
-        isoWeek: 2,
+        week: 2,
         totalPrecip: 30,
         daysWithData: 3,
-        avgMinTemp: 0,
-        avgMaxTemp: 10,
-        avgAvgTemp: 5,
-        totalSunshine: 100,
+        avgTemp: 5,
+        minTemp: 0,
+        maxTemp: 10,
+        avgPrecip: 10,
+        daysWithRain: 3,
       },
     ];
 

@@ -41,6 +41,8 @@ describe('DistanceSection', () => {
         setIsLocationLoading: vi.fn(),
         locationError: null,
         setLocationError: vi.fn(),
+        hasSeenWelcomeModal: false,
+        setHasSeenWelcomeModal: vi.fn(),
       })
     );
 
@@ -61,6 +63,8 @@ describe('DistanceSection', () => {
         setIsLocationLoading: vi.fn(),
         locationError: null,
         setLocationError: vi.fn(),
+        hasSeenWelcomeModal: false,
+        setHasSeenWelcomeModal: vi.fn(),
       })
     );
 
@@ -90,6 +94,8 @@ describe('DistanceSection', () => {
         setIsLocationLoading: vi.fn(),
         locationError: null,
         setLocationError: vi.fn(),
+        hasSeenWelcomeModal: false,
+        setHasSeenWelcomeModal: vi.fn(),
       })
     );
 
@@ -116,6 +122,8 @@ describe('DistanceSection', () => {
         setIsLocationLoading: vi.fn(),
         locationError: null,
         setLocationError: vi.fn(),
+        hasSeenWelcomeModal: false,
+        setHasSeenWelcomeModal: vi.fn(),
       })
     );
 
@@ -142,6 +150,8 @@ describe('DistanceSection', () => {
         setIsLocationLoading: vi.fn(),
         locationError: null,
         setLocationError: vi.fn(),
+        hasSeenWelcomeModal: false,
+        setHasSeenWelcomeModal: vi.fn(),
       })
     );
 
@@ -168,6 +178,8 @@ describe('DistanceSection', () => {
         setIsLocationLoading: vi.fn(),
         locationError: null,
         setLocationError: vi.fn(),
+        hasSeenWelcomeModal: false,
+        setHasSeenWelcomeModal: vi.fn(),
       })
     );
 
