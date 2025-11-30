@@ -1,5 +1,6 @@
 import { Modal, Text, Title } from '@mantine/core';
 import { useAppStore } from '@/stores/useAppStore';
+import { appColors } from '@/theme';
 
 export const WelcomeModal = () => {
   const hasSeenWelcomeModal = useAppStore((state) => state.hasSeenWelcomeModal);
@@ -24,7 +25,7 @@ export const WelcomeModal = () => {
           ta="center" 
           variant="gradient"
           size="xl" 
-          gradient={{ from: 'blue', to: 'red', deg: 165 }}
+          gradient={{ from: appColors.primary, to: appColors.secondary, deg: 165 }}
         >
           Welcome to BetterThere!
         </Text>
