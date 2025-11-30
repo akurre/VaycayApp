@@ -108,7 +108,6 @@ const TemperatureGraph = ({
           name: `${compCityName} Max`,
           stroke: CITY2_MAX_COLOR,
           strokeWidth: 2,
-          strokeDasharray: '5 5',
           dot: false,
           connectNulls: true,
         },
@@ -117,7 +116,6 @@ const TemperatureGraph = ({
           name: `${compCityName} Avg`,
           stroke: CITY2_PRIMARY_COLOR,
           strokeWidth: 2.5,
-          strokeDasharray: '5 5',
           dot: false,
           connectNulls: true,
         },
@@ -126,7 +124,6 @@ const TemperatureGraph = ({
           name: `${compCityName} Min`,
           stroke: CITY2_MIN_COLOR,
           strokeWidth: 2,
-          strokeDasharray: '5 5',
           dot: false,
           connectNulls: true,
         }

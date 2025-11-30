@@ -43,12 +43,24 @@ const SunshineGraph = ({
   // use whichever data is available for the base chart structure
   const baseData = sunshineData ?? comparisonSunshineData;
 
-  // Calculate theoretical maximum sunshine based on latitude (memoized per city)
-  const latitude = baseData?.lat ?? null;
+  // Calculate theoretical maximum sunshine for both cities (memoized per city)
+  const mainCityLatitude = sunshineData?.lat ?? null;
+  const comparisonCityLatitude = comparisonSunshineData?.lat ?? null;
+
   const theoreticalMaxData = useMemo(
     () =>
-      latitude === null ? null : generateTheoreticalMaxSunshineData(latitude),
-    [latitude]
+      mainCityLatitude === null
+        ? null
+        : generateTheoreticalMaxSunshineData(mainCityLatitude),
+    [mainCityLatitude]
+  );
+
+  const comparisonTheoreticalMaxData = useMemo(
+    () =>
+      comparisonCityLatitude === null
+        ? null
+        : generateTheoreticalMaxSunshineData(comparisonCityLatitude),
+    [comparisonCityLatitude]
   );
 
   // use base chart structure from whichever city has data
@@ -62,13 +74,22 @@ const SunshineGraph = ({
             ...point,
             hours: chartData ? chartData[index]?.hours : null,
             theoreticalMax: theoreticalMaxData ? theoreticalMaxData[index] : null,
+            comparisonTheoreticalMax: comparisonTheoreticalMaxData
+              ? comparisonTheoreticalMaxData[index]
+              : null,
             baseline: 0, // 0% sunshine baseline
             comparisonHours: comparisonChartData
               ? comparisonChartData[index]?.hours
               : null,
           }))
         : [],
-    [baseChartStructure, chartData, theoreticalMaxData, comparisonChartData]
+    [
+      baseChartStructure,
+      chartData,
+      theoreticalMaxData,
+      comparisonTheoreticalMaxData,
+      comparisonChartData,
+    ]
   );
 
   // Memoize custom dot render function
@@ -85,19 +106,33 @@ const SunshineGraph = ({
     const compCityName = comparisonSunshineData?.city;
     const lineConfigs: LineConfig[] = [];
 
-    // Add theoretical maximum line if data exists
+    // Add theoretical maximum line for main city if data exists
     if (theoreticalMaxData) {
       lineConfigs.push({
         dataKey: 'theoreticalMax',
-        name: '100% Sun',
-        stroke: chartColors.maxLineColor,
+        name: comparisonTheoreticalMaxData
+          ? `${mainCityName} 100% Sun`
+          : '100% Sun',
+        stroke: CITY1_PRIMARY_COLOR,
         strokeWidth: 1.5,
         strokeDasharray: '5 5',
         dot: false,
       });
     }
 
-    // Add actual sunshine line - City 1 (blue) - only if base city has data
+    // Add theoretical maximum line for comparison city if data exists
+    if (comparisonTheoreticalMaxData) {
+      lineConfigs.push({
+        dataKey: 'comparisonTheoreticalMax',
+        name: `${compCityName} 100% Sun`,
+        stroke: sunshineData ? CITY2_PRIMARY_COLOR : CITY1_PRIMARY_COLOR,
+        strokeWidth: 1.5,
+        strokeDasharray: '5 5',
+        dot: false,
+      });
+    }
+
+    // Add actual sunshine line - City 1 (burgundy) - only if base city has data
     if (sunshineData) {
       lineConfigs.push({
         dataKey: 'hours',
@@ -116,7 +151,6 @@ const SunshineGraph = ({
         name: `${compCityName}`,
         stroke: sunshineData ? CITY2_PRIMARY_COLOR : CITY1_PRIMARY_COLOR,
         strokeWidth: 2,
-        strokeDasharray: sunshineData ? '5 5' : undefined,
         dot: sunshineData ? false : renderCustomDot,
         connectNulls: true,
       });
@@ -125,6 +159,7 @@ const SunshineGraph = ({
     return lineConfigs;
   }, [
     theoreticalMaxData,
+    comparisonTheoreticalMaxData,
     renderCustomDot,
     chartColors,
     sunshineData,

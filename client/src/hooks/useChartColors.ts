@@ -24,6 +24,9 @@ export const useChartColors = () => {
 
       // Text colors for labels
       textColor: isDark ? '#d1d5db' : '#374151', // light text in dark mode, dark text in light mode
+
+      // Background color for tooltips and other overlays
+      backgroundColor: isDark ? '#1f2937' : '#ffffff', // dark gray in dark mode, white in light mode
     };
   }, [colorScheme, theme]);
 };

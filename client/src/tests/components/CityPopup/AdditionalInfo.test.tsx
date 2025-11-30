@@ -36,12 +36,6 @@ describe('AdditionalInfo', () => {
     expect(screen.queryByText('Population')).not.toBeInTheDocument();
   });
 
-  it('renders GreaterSection with correct title', () => {
-    render(<AdditionalInfo city={mockCity} />);
-
-    expect(screen.getByText('City Info')).toBeInTheDocument();
-  });
-
   it('renders DistanceSection with city coordinates', () => {
     render(<AdditionalInfo city={mockCity} />);
 

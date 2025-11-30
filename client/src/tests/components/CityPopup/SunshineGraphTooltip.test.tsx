@@ -22,7 +22,7 @@ describe('SunshineGraphTooltip', () => {
 
     expect(screen.getByText('July')).toBeInTheDocument();
     expect(screen.getByText('280.5 hours')).toBeInTheDocument();
-    expect(container.querySelector('.bg-white')).toBeInTheDocument();
+    expect(container.querySelector('.p-2')).toBeInTheDocument();
   });
 
   it('displays "No data" when hours is null', () => {

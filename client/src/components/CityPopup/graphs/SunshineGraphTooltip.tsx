@@ -1,4 +1,5 @@
 import { Text } from '@mantine/core';
+import { useChartColors } from '@/hooks/useChartColors';
 
 interface TooltipPayload {
   payload: {
@@ -16,6 +17,8 @@ interface SunshineGraphTooltipProps {
 }
 
 function SunshineGraphTooltip({ active, payload }: SunshineGraphTooltipProps) {
+  const chartColors = useChartColors();
+
   if (!active || !payload || payload.length === 0) {
     return null;
   }
@@ -23,11 +26,18 @@ function SunshineGraphTooltip({ active, payload }: SunshineGraphTooltipProps) {
   const data = payload[0].payload;
 
   return (
-    <div className="bg-white p-2 border border-gray-300 rounded shadow-md">
-      <Text size="sm" fw={600}>
+    <div
+      style={{
+        backgroundColor: chartColors.backgroundColor,
+        border: `1px solid ${chartColors.gridColor}`,
+        color: chartColors.textColor,
+      }}
+      className="p-2 rounded shadow-md"
+    >
+      <Text size="sm" fw={600} c={chartColors.textColor}>
         {data.month}
       </Text>
-      <Text size="sm">
+      <Text size="sm" c={chartColors.textColor}>
         {data.hours !== null ? `${data.hours.toFixed(1)} hours` : 'No data'}
       </Text>
     </div>
