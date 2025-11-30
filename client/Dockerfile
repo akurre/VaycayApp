@@ -22,14 +22,17 @@ FROM nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
 
 # Copy nginx configuration template
-COPY nginx/nginx.conf /etc/nginx/templates/default.conf.template
+COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf.template
 
-# Railway provides PORT environment variable
-ENV PORT=80
+# Create entrypoint script to substitute PORT at runtime
+RUN echo '#!/bin/sh' > /docker-entrypoint.sh && \
+    echo 'PORT=${PORT:-80}' >> /docker-entrypoint.sh && \
+    echo 'sed "s/__PORT__/$PORT/g" /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf' >> /docker-entrypoint.sh && \
+    echo 'exec nginx -g "daemon off;"' >> /docker-entrypoint.sh && \
+    chmod +x /docker-entrypoint.sh
 
-# Nginx will automatically use envsubst on templates
-# and output to /etc/nginx/conf.d/default.conf
-EXPOSE $PORT
+# Expose port (Railway will use $PORT env var)
+EXPOSE ${PORT:-80}
 
-# Start nginx (it will process templates automatically)
-CMD ["nginx", "-g", "daemon off;"]
+# Use entrypoint script
+ENTRYPOINT ["/docker-entrypoint.sh"]
