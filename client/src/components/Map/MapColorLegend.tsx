@@ -55,7 +55,7 @@ const MapColorLegend: FC<MapColorLegendProps> = ({ dataType }) => {
 
   return (
     <div>
-      <div className='flex gap-4 pb-2'>
+      <div className="flex gap-4 pb-2">
         <Button
           variant="subtle"
           size="compact-xs"

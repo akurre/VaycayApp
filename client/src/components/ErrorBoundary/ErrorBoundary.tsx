@@ -1,4 +1,5 @@
-import { Component, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import { Component } from 'react';
 import { Text, Button, Container } from '@mantine/core';
 import { IconAlertTriangle } from '@tabler/icons-react';
 import { appColors } from '@/theme';
