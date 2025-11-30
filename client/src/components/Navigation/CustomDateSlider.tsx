@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { clamp, useMove } from '@mantine/hooks';
 import SliderTrack from './DateSliderParts/SliderTrack';
 import SliderThumb from './DateSliderParts/SliderThumb';
@@ -27,23 +28,54 @@ const CustomDateSlider: FC<CustomDateSliderProps> = ({
   const effectiveMin = isMonthly ? 1 : min;
   const effectiveMax = isMonthly ? 12 : max;
 
-  const { ref } = useMove(({ x }) => {
-    const rawValue = x * (effectiveMax - effectiveMin) + effectiveMin;
-    const nextValue = Math.round(rawValue);
-    onChange(clamp(nextValue, effectiveMin, effectiveMax));
-  });
+  // Local state for immediate UI feedback while dragging
+  const [displayValue, setDisplayValue] = useState(value);
+  const pendingValueRef = useRef<number | null>(null);
 
-  // calculate position as percentage
+  // Sync display value when prop value changes (from parent's debounced state)
+  useEffect(() => {
+    setDisplayValue(value);
+  }, [value]);
+
+  const handleMove = useCallback(
+    ({ x }: { x: number }) => {
+      const rawValue = x * (effectiveMax - effectiveMin) + effectiveMin;
+      const nextValue = Math.round(rawValue);
+      const clampedValue = clamp(nextValue, effectiveMin, effectiveMax);
+
+      // Update display immediately for smooth UI
+      setDisplayValue(clampedValue);
+      // Store the value but don't trigger onChange yet
+      pendingValueRef.current = clampedValue;
+    },
+    [effectiveMin, effectiveMax]
+  );
+
+  const handleMoveEnd = useCallback(() => {
+    // Only trigger onChange when dragging ends
+    if (pendingValueRef.current !== null && pendingValueRef.current !== value) {
+      onChange(pendingValueRef.current);
+      pendingValueRef.current = null;
+    }
+  }, [onChange, value]);
+
+  const { ref } = useMove(handleMove, { onScrubEnd: handleMoveEnd });
+
+  // calculate position as percentage using display value for smooth animation
   const position = isMonthly
-    ? ((value - 1) / 11) * 100
-    : ((value - min) / (max - min)) * 100;
+    ? ((displayValue - 1) / 11) * 100
+    : ((displayValue - min) / (max - min)) * 100;
 
   return (
-    <div className="w-full">
+    <div className="w-full px-8">
       {/* track container with draggable elements */}
       <SliderTrack trackRef={ref}>
         <SliderThumb position={position} isLoading={isLoading} />
-        <SliderLabel value={value} position={position} isMonthly={isMonthly} />
+        <SliderLabel
+          value={displayValue}
+          position={position}
+          isMonthly={isMonthly}
+        />
       </SliderTrack>
 
       {/* month marks below track */}

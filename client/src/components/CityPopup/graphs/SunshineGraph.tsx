@@ -2,7 +2,7 @@ import { useMemo, memo, useCallback } from 'react';
 import type { SunshineData } from '@/types/sunshineDataType';
 import { transformSunshineDataForChart } from '@/utils/dataFormatting/transformSunshineDataForChart';
 import { generateTheoreticalMaxSunshineData } from '@/utils/dataFormatting/generateTheoreticalMaxSunshineData';
-import SunshineGraphTooltip from './SunshineGraphTooltip';
+import SunshineGraphTooltipWrapper from './SunshineGraphTooltipWrapper';
 import SunshineGraphDot from './SunshineGraphDot';
 import RechartsLineGraph, {
   type LineConfig,
@@ -24,28 +24,6 @@ const SunshineGraph = ({
 }: SunshineGraphProps) => {
   // Get theme-aware colors
   const chartColors = useChartColors();
-
-  // Create a wrapper component for the tooltip that has access to city names
-  const TooltipWrapper = (props: {
-    active?: boolean;
-    payload?: ReadonlyArray<{
-      payload: {
-        month: string;
-        monthIndex: number;
-        hours: number | null;
-        theoreticalMax?: number | null;
-        baseline?: number;
-        comparisonHours?: number | null;
-        comparisonTheoreticalMax?: number | null;
-      };
-    }>;
-  }) => (
-    <SunshineGraphTooltip
-      {...props}
-      cityName={sunshineData?.city}
-      comparisonCityName={comparisonSunshineData?.city}
-    />
-  );
 
   // Transform sunshine data for chart
   const chartData = useMemo(
@@ -221,7 +199,12 @@ const SunshineGraph = ({
       legendVerticalAlign="top"
       legendAlign="center"
       referenceLines={referenceLines}
-      tooltipContent={<TooltipWrapper />}
+      tooltipContent={
+        <SunshineGraphTooltipWrapper
+          cityName={sunshineData?.city}
+          comparisonCityName={comparisonSunshineData?.city}
+        />
+      }
       margin={{ left: 0 }}
     />
   );

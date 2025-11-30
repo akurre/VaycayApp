@@ -158,7 +158,7 @@ const MapPage: FC = () => {
       </div>
       <div
         className="absolute top-12 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30"
-        style={{ width: 'calc(100% - 16rem)', maxWidth: '52rem' }}
+        style={{ width: 'calc(100% - 16rem)', maxWidth: '44rem' }}
       >
         <DateSliderWrapper
           currentDate={selectedDate}

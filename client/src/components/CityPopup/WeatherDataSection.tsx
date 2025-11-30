@@ -41,7 +41,9 @@ const WeatherDataSectionInner = <T,>({
       )}
 
       {hasAnyData ? (
-        <div className="flex-1 min-h-0 h-full px-3">{children(data!)}</div>
+        <div className="flex-1 min-h-0 h-full px-3 w-full">
+          {children(data!)}
+        </div>
       ) : (
         showNoDataBadge && (
           <div className="flex-1 min-h-0 items-center flex justify-center">

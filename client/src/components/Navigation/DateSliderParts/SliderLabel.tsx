@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import { useMemo } from 'react';
 import formatSliderLabel from '@/utils/dateFormatting/formatSliderLabel';
 import { Text } from '@mantine/core';
 import CustomPopover from '@/components/Shared/CustomPopover';
@@ -11,9 +12,12 @@ interface SliderLabelProps {
 }
 
 const SliderLabel: FC<SliderLabelProps> = ({ value, position, isMonthly }) => {
-  const labelText = isMonthly
-    ? (monthlyMarks.find((mark) => mark.value === value)?.label ?? '')
-    : formatSliderLabel(value);
+  const labelText = useMemo(() => {
+    if (isMonthly) {
+      return monthlyMarks.find((mark) => mark.value === value)?.label ?? '';
+    }
+    return formatSliderLabel(value);
+  }, [value, isMonthly]);
 
   return (
     <div
@@ -28,7 +32,7 @@ const SliderLabel: FC<SliderLabelProps> = ({ value, position, isMonthly }) => {
         style={{ transform: 'translateX(calc(-50% - 4px))' }}
       >
         <CustomPopover size="xs">
-          <Text size="xs" fw={500}>
+          <Text size="xs" fw={500} className="whitespace-nowrap">
             {labelText}
           </Text>
         </CustomPopover>

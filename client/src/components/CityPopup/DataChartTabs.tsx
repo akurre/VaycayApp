@@ -48,6 +48,7 @@ const DataChartTabs = ({
         variant="outline"
         defaultValue={dataType}
         className="h-full flex"
+        keepMounted
       >
         <Tabs.List grow>
           <Tabs.Tab
@@ -64,7 +65,10 @@ const DataChartTabs = ({
           </Tabs.Tab>
         </Tabs.List>
 
-        <Tabs.Panel value="temperature" className="flex-1 min-h-0">
+        <Tabs.Panel
+          value="temperature"
+          className="flex-1 min-h-0 w-full h-full"
+        >
           <TemperatureDataSection
             weeklyWeatherData={weeklyWeatherData}
             isLoading={weeklyWeatherLoading}
@@ -75,7 +79,7 @@ const DataChartTabs = ({
           />
         </Tabs.Panel>
 
-        <Tabs.Panel value="sunshine" className="flex-1 min-h-0">
+        <Tabs.Panel value="sunshine" className="flex-1 min-h-0 w-full h-full">
           <SunshineDataSection
             displaySunshineData={displaySunshineData}
             isLoading={sunshineLoading}
@@ -85,7 +89,7 @@ const DataChartTabs = ({
           />
         </Tabs.Panel>
 
-        <Tabs.Panel value="precip" className="flex-1 min-h-0">
+        <Tabs.Panel value="precip" className="flex-1 min-h-0 w-full h-full">
           <RainfallDataSection
             weeklyWeatherData={weeklyWeatherData}
             isLoading={weeklyWeatherLoading}
