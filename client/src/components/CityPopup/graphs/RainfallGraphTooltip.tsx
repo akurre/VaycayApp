@@ -1,6 +1,7 @@
 import { Text } from '@mantine/core';
 import { useChartColors } from '@/hooks/useChartColors';
 import { getWeekDateRange } from '@/utils/dateFormatting/getWeekDateRange';
+import CityBadge from './CityBadge';
 
 interface TooltipPayload {
   payload: {
@@ -51,18 +52,24 @@ const RainfallGraphTooltip = ({
 
       {/* Main city precipitation */}
       {data.totalPrecip !== null && (
-        <Text size="sm" c={chartColors.textColor}>
-          {cityName ? `${cityName}: ` : ''}
-          {data.totalPrecip.toFixed(2)} mm
-        </Text>
+        <div className="flex items-center gap-2 mb-1">
+          {cityName && <CityBadge cityName={cityName} />}
+          <Text size="sm" c={chartColors.textColor}>
+            {data.totalPrecip.toFixed(2)} mm
+          </Text>
+        </div>
       )}
 
       {/* Comparison city precipitation */}
       {data.compTotalPrecip !== null && data.compTotalPrecip !== undefined && (
-        <Text size="sm" c={chartColors.textColor}>
-          {comparisonCityName ? `${comparisonCityName}: ` : ''}
-          {data.compTotalPrecip.toFixed(2)} mm
-        </Text>
+        <div className="flex items-center gap-2">
+          {comparisonCityName && (
+            <CityBadge cityName={comparisonCityName} isComparison />
+          )}
+          <Text size="sm" c={chartColors.textColor}>
+            {data.compTotalPrecip.toFixed(2)} mm
+          </Text>
+        </div>
       )}
 
       {/* Show N/A if no data */}

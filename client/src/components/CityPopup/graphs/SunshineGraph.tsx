@@ -25,6 +25,28 @@ const SunshineGraph = ({
   // Get theme-aware colors
   const chartColors = useChartColors();
 
+  // Create a wrapper component for the tooltip that has access to city names
+  const TooltipWrapper = (props: {
+    active?: boolean;
+    payload?: ReadonlyArray<{
+      payload: {
+        month: string;
+        monthIndex: number;
+        hours: number | null;
+        theoreticalMax?: number | null;
+        baseline?: number;
+        comparisonHours?: number | null;
+        comparisonTheoreticalMax?: number | null;
+      };
+    }>;
+  }) => (
+    <SunshineGraphTooltip
+      {...props}
+      cityName={sunshineData?.city}
+      comparisonCityName={comparisonSunshineData?.city}
+    />
+  );
+
   // Transform sunshine data for chart
   const chartData = useMemo(
     () => (sunshineData ? transformSunshineDataForChart(sunshineData) : null),
@@ -138,7 +160,7 @@ const SunshineGraph = ({
     if (sunshineData) {
       lineConfigs.push({
         dataKey: 'hours',
-        name: comparisonSunshineData ? `${mainCityName}` : 'Actual',
+        name: mainCityName ?? '',
         stroke: CITY1_PRIMARY_COLOR,
         strokeWidth: 2,
         dot: renderCustomDot,
@@ -199,7 +221,7 @@ const SunshineGraph = ({
       legendVerticalAlign="top"
       legendAlign="center"
       referenceLines={referenceLines}
-      tooltipContent={<SunshineGraphTooltip />}
+      tooltipContent={<TooltipWrapper />}
       margin={{ left: 0 }}
     />
   );

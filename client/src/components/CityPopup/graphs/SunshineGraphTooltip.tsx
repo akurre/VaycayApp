@@ -1,5 +1,6 @@
 import { Text } from '@mantine/core';
 import { useChartColors } from '@/hooks/useChartColors';
+import CityBadge from './CityBadge';
 
 interface TooltipPayload {
   payload: {
@@ -8,15 +9,24 @@ interface TooltipPayload {
     hours: number | null;
     theoreticalMax?: number | null;
     baseline?: number;
+    comparisonHours?: number | null;
+    comparisonTheoreticalMax?: number | null;
   };
 }
 
 interface SunshineGraphTooltipProps {
   active?: boolean;
-  payload?: TooltipPayload[];
+  payload?: ReadonlyArray<TooltipPayload>;
+  cityName?: string;
+  comparisonCityName?: string;
 }
 
-function SunshineGraphTooltip({ active, payload }: SunshineGraphTooltipProps) {
+const SunshineGraphTooltip = ({
+  active,
+  payload,
+  cityName,
+  comparisonCityName,
+}: SunshineGraphTooltipProps) => {
   const chartColors = useChartColors();
 
   if (!active || !payload || payload.length === 0) {
@@ -34,12 +44,40 @@ function SunshineGraphTooltip({ active, payload }: SunshineGraphTooltipProps) {
       }}
       className="p-2 rounded shadow-md"
     >
-      <Text size="sm" fw={600} c={chartColors.textColor}>
+      <Text size="sm" fw={600} c={chartColors.textColor} mb={4}>
         {data.month}
       </Text>
-      <Text size="sm" c={chartColors.textColor}>
-        {data.hours !== null ? `${data.hours.toFixed(1)} hours` : 'No data'}
-      </Text>
+
+      {/* Main city sunshine hours */}
+      {data.hours !== null && (
+        <div className="flex items-center gap-2 mb-1">
+          {cityName && <CityBadge cityName={cityName} />}
+          <Text size="sm" c={chartColors.textColor}>
+            {data.hours.toFixed(1)} hours
+          </Text>
+        </div>
+      )}
+
+      {/* Comparison city sunshine hours */}
+      {data.comparisonHours !== null && data.comparisonHours !== undefined && (
+        <div className="flex items-center gap-2">
+          {comparisonCityName && (
+            <CityBadge cityName={comparisonCityName} isComparison />
+          )}
+          <Text size="sm" c={chartColors.textColor}>
+            {data.comparisonHours.toFixed(1)} hours
+          </Text>
+        </div>
+      )}
+
+      {/* Show N/A if no data */}
+      {data.hours === null &&
+        (data.comparisonHours === null ||
+          data.comparisonHours === undefined) && (
+          <Text size="sm" c={chartColors.textColor}>
+            No data
+          </Text>
+        )}
     </div>
   );
 }

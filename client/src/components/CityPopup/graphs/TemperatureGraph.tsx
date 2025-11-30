@@ -1,6 +1,7 @@
 import { useMemo, memo } from 'react';
 
 import RechartsLineGraph, { type LineConfig } from './RechartsLineGraph';
+import TemperatureGraphTooltip from './TemperatureGraphTooltip';
 import { useChartColors } from '@/hooks/useChartColors';
 import {
   CITY1_PRIMARY_COLOR,
@@ -24,6 +25,29 @@ const TemperatureGraph = ({
 }: TemperatureGraphProps) => {
   // Get theme-aware colors
   const chartColors = useChartColors();
+
+  // Create a wrapper component for the tooltip that has access to city names
+  const TooltipWrapper = (props: {
+    active?: boolean;
+    payload?: ReadonlyArray<{
+      payload: {
+        week: number;
+        avgTemp: number | null;
+        maxTemp: number | null;
+        minTemp: number | null;
+        compAvgTemp?: number | null;
+        compMaxTemp?: number | null;
+        compMinTemp?: number | null;
+        daysWithData: number;
+      };
+    }>;
+  }) => (
+    <TemperatureGraphTooltip
+      {...props}
+      cityName={weeklyWeatherData.city}
+      comparisonCityName={comparisonWeeklyWeatherData?.city}
+    />
+  );
 
   // Generate unique city key for animation control
   const cityKey = `${weeklyWeatherData.city}-${weeklyWeatherData.lat}-${weeklyWeatherData.long}`;
@@ -146,6 +170,7 @@ const TemperatureGraph = ({
       legendLayout="horizontal"
       legendVerticalAlign="top"
       legendAlign="center"
+      tooltipContent={<TooltipWrapper />}
       margin={{ left: 0, bottom: 5 }}
     />
   );
