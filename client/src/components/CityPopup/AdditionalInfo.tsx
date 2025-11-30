@@ -18,7 +18,7 @@ const AdditionalInfo = ({ city, isShowCity }: AdditionalInfoProps) => {
           <Badge variant="light">{city.city}</Badge>
         </div>
       )}
-      <GreaterSection title="City Info">
+      <GreaterSection>
         <div className="flex flex-col">
           <div className="pb-3 flex-col">
             <div className="flex mb-3">
@@ -31,7 +31,7 @@ const AdditionalInfo = ({ city, isShowCity }: AdditionalInfoProps) => {
             </div>
             <DistanceSection lat={city.lat} long={city.long} />
           </div>
-          <div className="pt-3 flex justify-center">
+          <div className="flex justify-center">
             <Popover position="top" withArrow shadow="md">
               <Popover.Target>
                 <Button variant="subtle" size="compact-xs">
