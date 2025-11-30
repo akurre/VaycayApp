@@ -19,8 +19,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+
       - name: Install Railway CLI
         run: npm install -g @railway/cli
+
+      - name: Install Server Dependencies
+        run: |
+          cd server
+          npm ci
 
       - name: Deploy Backend to Railway
         env:
