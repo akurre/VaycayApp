@@ -30,11 +30,18 @@ const RainfallGraphTooltip = ({
 }: RainfallGraphTooltipProps) => {
   const chartColors = useChartColors();
 
+  // Defensive check: ensure we have valid payload data
   if (!active || !payload || payload.length === 0) {
     return null;
   }
 
-  const data = payload[0].payload;
+  const data = payload[0]?.payload;
+
+  // Additional safety check: ensure data object exists
+  if (!data) {
+    return null;
+  }
+
   const dateRange = getWeekDateRange(data.week);
 
   return (
@@ -51,7 +58,7 @@ const RainfallGraphTooltip = ({
       </Text>
 
       {/* Main city precipitation */}
-      {data.totalPrecip !== null && data.totalPrecip !== undefined && (
+      {typeof data.totalPrecip === 'number' && (
         <div className="flex items-center gap-2 mb-1">
           {cityName && <CityBadge cityName={cityName} />}
           <Text size="sm" c={chartColors.textColor}>
@@ -61,7 +68,7 @@ const RainfallGraphTooltip = ({
       )}
 
       {/* Comparison city precipitation */}
-      {data.compTotalPrecip !== null && data.compTotalPrecip !== undefined && (
+      {typeof data.compTotalPrecip === 'number' && (
         <div className="flex items-center gap-2">
           {comparisonCityName && (
             <CityBadge cityName={comparisonCityName} isComparison />
@@ -73,9 +80,8 @@ const RainfallGraphTooltip = ({
       )}
 
       {/* Show N/A if no data */}
-      {data.totalPrecip === null &&
-        (data.compTotalPrecip === null ||
-          data.compTotalPrecip === undefined) && (
+      {typeof data.totalPrecip !== 'number' &&
+        typeof data.compTotalPrecip !== 'number' && (
           <Text size="sm" c={chartColors.textColor}>
             No data
           </Text>

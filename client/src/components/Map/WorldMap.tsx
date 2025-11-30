@@ -20,6 +20,7 @@ import { useSunshineStore } from '@/stores/useSunshineStore';
 import { DataType } from '@/types/mapTypes';
 import type { ViewMode, WeatherDataUnion } from '@/types/mapTypes';
 import { perfMonitor } from '@/utils/performance/performanceMonitor';
+import ComponentErrorBoundary from '../ErrorBoundary/ComponentErrorBoundary';
 
 interface WorldMapProps {
   cities: WeatherDataUnion[];
@@ -178,13 +179,15 @@ const WorldMap = ({
             }}
           >
             {cityToRender && (
-              <CityPopup
-                city={cityToRender}
-                onClose={handleClosePopup}
-                selectedMonth={selectedMonth}
-                selectedDate={selectedDate}
-                dataType={dataType}
-              />
+              <ComponentErrorBoundary componentName="CityPopup">
+                <CityPopup
+                  city={cityToRender}
+                  onClose={handleClosePopup}
+                  selectedMonth={selectedMonth}
+                  selectedDate={selectedDate}
+                  dataType={dataType}
+                />
+              </ComponentErrorBoundary>
             )}
           </div>
         )}

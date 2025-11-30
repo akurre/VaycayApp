@@ -31,19 +31,28 @@ const TemperatureGraphTooltip = ({
 }: TemperatureGraphTooltipProps) => {
   const chartColors = useChartColors();
 
+  // Defensive check: ensure we have valid payload data
   if (!active || !payload || payload.length === 0) {
     return null;
   }
 
-  const data = payload[0].payload;
+  const data = payload[0]?.payload;
+
+  // Additional safety check: ensure data object exists
+  if (!data) {
+    return null;
+  }
+
   const dateRange = getWeekDateRange(data.week);
 
   const hasMainData =
-    data.avgTemp !== null || data.maxTemp !== null || data.minTemp !== null;
+    typeof data.avgTemp === 'number' ||
+    typeof data.maxTemp === 'number' ||
+    typeof data.minTemp === 'number';
   const hasCompData =
-    (data.compAvgTemp !== null && data.compAvgTemp !== undefined) ||
-    (data.compMaxTemp !== null && data.compMaxTemp !== undefined) ||
-    (data.compMinTemp !== null && data.compMinTemp !== undefined);
+    typeof data.compAvgTemp === 'number' ||
+    typeof data.compMaxTemp === 'number' ||
+    typeof data.compMinTemp === 'number';
 
   return (
     <div
@@ -65,17 +74,17 @@ const TemperatureGraphTooltip = ({
           {hasMainData && (
             <div className="flex-1">
               {cityName && <CityBadge cityName={cityName} mb={2} />}
-              {data.maxTemp !== null && (
+              {typeof data.maxTemp === 'number' && (
                 <Text size="sm" c={chartColors.textColor}>
                   Max: {data.maxTemp.toFixed(1)}°C
                 </Text>
               )}
-              {data.avgTemp !== null && (
+              {typeof data.avgTemp === 'number' && (
                 <Text size="sm" c={chartColors.textColor}>
                   Avg: {data.avgTemp.toFixed(1)}°C
                 </Text>
               )}
-              {data.minTemp !== null && (
+              {typeof data.minTemp === 'number' && (
                 <Text size="sm" c={chartColors.textColor}>
                   Min: {data.minTemp.toFixed(1)}°C
                 </Text>
@@ -89,17 +98,17 @@ const TemperatureGraphTooltip = ({
               {comparisonCityName && (
                 <CityBadge cityName={comparisonCityName} isComparison mb={2} />
               )}
-              {data.compMaxTemp !== null && data.compMaxTemp !== undefined && (
+              {typeof data.compMaxTemp === 'number' && (
                 <Text size="sm" c={chartColors.textColor}>
                   Max: {data.compMaxTemp.toFixed(1)}°C
                 </Text>
               )}
-              {data.compAvgTemp !== null && data.compAvgTemp !== undefined && (
+              {typeof data.compAvgTemp === 'number' && (
                 <Text size="sm" c={chartColors.textColor}>
                   Avg: {data.compAvgTemp.toFixed(1)}°C
                 </Text>
               )}
-              {data.compMinTemp !== null && data.compMinTemp !== undefined && (
+              {typeof data.compMinTemp === 'number' && (
                 <Text size="sm" c={chartColors.textColor}>
                   Min: {data.compMinTemp.toFixed(1)}°C
                 </Text>

@@ -29,11 +29,17 @@ const SunshineGraphTooltip = ({
 }: SunshineGraphTooltipProps) => {
   const chartColors = useChartColors();
 
+  // Defensive check: ensure we have valid payload data
   if (!active || !payload || payload.length === 0) {
     return null;
   }
 
-  const data = payload[0].payload;
+  const data = payload[0]?.payload;
+
+  // Additional safety check: ensure data object exists
+  if (!data) {
+    return null;
+  }
 
   return (
     <div
@@ -49,7 +55,7 @@ const SunshineGraphTooltip = ({
       </Text>
 
       {/* Main city sunshine hours */}
-      {data.hours !== null && (
+      {typeof data.hours === 'number' && (
         <div className="flex items-center gap-2 mb-1">
           {cityName && <CityBadge cityName={cityName} />}
           <Text size="sm" c={chartColors.textColor}>
@@ -59,7 +65,7 @@ const SunshineGraphTooltip = ({
       )}
 
       {/* Comparison city sunshine hours */}
-      {data.comparisonHours !== null && data.comparisonHours !== undefined && (
+      {typeof data.comparisonHours === 'number' && (
         <div className="flex items-center gap-2">
           {comparisonCityName && (
             <CityBadge cityName={comparisonCityName} isComparison />
@@ -71,9 +77,8 @@ const SunshineGraphTooltip = ({
       )}
 
       {/* Show N/A if no data */}
-      {data.hours === null &&
-        (data.comparisonHours === null ||
-          data.comparisonHours === undefined) && (
+      {typeof data.hours !== 'number' &&
+        typeof data.comparisonHours !== 'number' && (
           <Text size="sm" c={chartColors.textColor}>
             No data
           </Text>

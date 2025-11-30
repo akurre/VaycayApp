@@ -2,6 +2,7 @@ import { memo } from 'react';
 import type { SunshineData } from '@/types/sunshineDataType';
 import SunshineGraph from './graphs/SunshineGraph';
 import WeatherDataSection from './WeatherDataSection';
+import ComponentErrorBoundary from '../ErrorBoundary/ComponentErrorBoundary';
 
 interface SunshineDataSectionProps {
   displaySunshineData: SunshineData | null;
@@ -29,11 +30,13 @@ const SunshineDataSection = ({
       noDataMessage="No sunshine data available"
     >
       {(data) => (
-        <SunshineGraph
-          sunshineData={data}
-          selectedMonth={selectedMonth}
-          comparisonSunshineData={comparisonSunshineData}
-        />
+        <ComponentErrorBoundary componentName="SunshineGraph">
+          <SunshineGraph
+            sunshineData={data}
+            selectedMonth={selectedMonth}
+            comparisonSunshineData={comparisonSunshineData}
+          />
+        </ComponentErrorBoundary>
       )}
     </WeatherDataSection>
   );

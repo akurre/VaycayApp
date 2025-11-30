@@ -2,6 +2,7 @@ import { memo } from 'react';
 import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
 import TemperatureGraph from './graphs/TemperatureGraph';
 import WeatherDataSection from './WeatherDataSection';
+import ComponentErrorBoundary from '../ErrorBoundary/ComponentErrorBoundary';
 
 interface TemperatureDataSectionProps {
   weeklyWeatherData: CityWeeklyWeather | null;
@@ -29,10 +30,12 @@ const TemperatureDataSection = ({
       showNoDataBadge={false}
     >
       {(data) => (
-        <TemperatureGraph
-          weeklyWeatherData={data}
-          comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
-        />
+        <ComponentErrorBoundary componentName="TemperatureGraph">
+          <TemperatureGraph
+            weeklyWeatherData={data}
+            comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
+          />
+        </ComponentErrorBoundary>
       )}
     </WeatherDataSection>
   );

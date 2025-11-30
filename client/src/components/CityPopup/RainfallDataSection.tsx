@@ -2,6 +2,7 @@ import { memo } from 'react';
 import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
 import RainfallGraph from './graphs/RainfallGraph';
 import WeatherDataSection from './WeatherDataSection';
+import ComponentErrorBoundary from '../ErrorBoundary/ComponentErrorBoundary';
 
 interface RainfallDataSectionProps {
   weeklyWeatherData: CityWeeklyWeather | null;
@@ -26,10 +27,12 @@ const RainfallDataSection = ({
       showNoDataBadge={false}
     >
       {(data) => (
-        <RainfallGraph
-          weeklyWeatherData={data}
-          comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
-        />
+        <ComponentErrorBoundary componentName="RainfallGraph">
+          <RainfallGraph
+            weeklyWeatherData={data}
+            comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
+          />
+        </ComponentErrorBoundary>
       )}
     </WeatherDataSection>
   );
