@@ -1,0 +1,48 @@
+name: Deploy to Railway Staging
+
+on:
+  push:
+    branches: [develop, staging]
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy Backend to Railway Staging
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          railway link ${{ secrets.RAILWAY_PROJECT_ID }} --environment staging
+          railway up --service backend --detach
+
+      - name: Deploy Frontend to Railway Staging
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          railway link ${{ secrets.RAILWAY_PROJECT_ID }} --environment staging
+          railway up --service frontend --detach
+
+      - name: Run Database Migrations
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          railway link ${{ secrets.RAILWAY_PROJECT_ID }} --environment staging
+          railway run --service backend npx prisma migrate deploy
+
+      - name: Deployment Summary
+        run: |
+          echo "✅ Backend and Frontend deployed to staging"
+          echo "✅ Database migrations completed"
+          echo "🚀 Staging deployment successful!"
