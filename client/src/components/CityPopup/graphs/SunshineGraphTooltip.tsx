@@ -80,6 +80,6 @@ const SunshineGraphTooltip = ({
         )}
     </div>
   );
-}
+};
 
 export default SunshineGraphTooltip;

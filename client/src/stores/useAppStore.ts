@@ -12,6 +12,8 @@ interface AppState {
   setIsLocationLoading: (loading: boolean) => void;
   locationError: string | null;
   setLocationError: (error: string | null) => void;
+  hasSeenWelcomeModal: boolean;
+  setHasSeenWelcomeModal: (seen: boolean) => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -25,11 +27,17 @@ export const useAppStore = create<AppState>()(
       setIsLocationLoading: (isLocationLoading) => set({ isLocationLoading }),
       locationError: null,
       setLocationError: (locationError) => set({ locationError }),
+      hasSeenWelcomeModal: false,
+      setHasSeenWelcomeModal: (hasSeenWelcomeModal) =>
+        set({ hasSeenWelcomeModal }),
     }),
     {
       name: 'app-storage',
-      // only persist homeLocation, not loading/error states or weather data
-      partialize: (state) => ({ homeLocation: state.homeLocation }),
+      // only persist homeLocation and welcome modal state, not loading/error states or weather data
+      partialize: (state) => ({
+        homeLocation: state.homeLocation,
+        hasSeenWelcomeModal: state.hasSeenWelcomeModal,
+      }),
     }
   )
 );

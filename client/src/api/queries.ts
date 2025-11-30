@@ -22,8 +22,18 @@ export const GET_WEATHER_BY_DATE = gql`
 `;
 
 export const SEND_FEEDBACK = gql`
-  mutation SendFeedback($email: String, $name: String!, $currentIssues: String, $futureIdeas: String) {
-    sendFeedback(email: $email, name: $name, currentIssues: $currentIssues, futureIdeas: $futureIdeas) {
+  mutation SendFeedback(
+    $email: String
+    $name: String!
+    $currentIssues: String
+    $futureIdeas: String
+  ) {
+    sendFeedback(
+      email: $email
+      name: $name
+      currentIssues: $currentIssues
+      futureIdeas: $futureIdeas
+    ) {
       success
       message
     }

@@ -95,13 +95,17 @@ async function addManuallySunshineData(
     dec: number;
   }
 ) {
-  console.log(`☀️  Adding Sunshine Data for ${cityName}${stateName ? `, ${stateName}` : ''}, ${countryName}`);
+  console.log(
+    `☀️  Adding Sunshine Data for ${cityName}${stateName ? `, ${stateName}` : ''}, ${countryName}`
+  );
   console.log('='.repeat(80));
 
   try {
     // Step 1: Find the city in the database
-    console.log(`\n🔍 Looking for ${cityName}${stateName ? `, ${stateName}` : ''}, ${countryName} in database...`);
-    
+    console.log(
+      `\n🔍 Looking for ${cityName}${stateName ? `, ${stateName}` : ''}, ${countryName} in database...`
+    );
+
     const whereClause: {
       name: string;
       country: string;
@@ -120,21 +124,20 @@ async function addManuallySunshineData(
     });
 
     if (!city) {
-      console.error(`❌ City not found: ${cityName}${stateName ? `, ${stateName}` : ''}, ${countryName}`);
+      console.error(
+        `❌ City not found: ${cityName}${stateName ? `, ${stateName}` : ''}, ${countryName}`
+      );
       console.log('\n💡 Tips:');
       console.log('   - Check if the city exists in the database');
       console.log('   - Verify the exact name, state, and country format');
       console.log('   - Try searching for similar cities:\n');
-      
+
       // Try to find similar cities
       const searchConditions = [{ name: { contains: cityName } }];
-      
+
       if (stateName) {
         searchConditions.push({
-          AND: [
-            { state: stateName },
-            { country: countryName }
-          ]
+          AND: [{ state: stateName }, { country: countryName }],
         } as any);
       } else {
         searchConditions.push({ country: countryName } as any);
@@ -150,14 +153,18 @@ async function addManuallySunshineData(
       if (similarCities.length > 0) {
         console.log('   Found these similar cities:');
         for (const c of similarCities) {
-          console.log(`     - ${c.name}${c.state ? `, ${c.state}` : ''}, ${c.country} (ID: ${c.id})`);
+          console.log(
+            `     - ${c.name}${c.state ? `, ${c.state}` : ''}, ${c.country} (ID: ${c.id})`
+          );
         }
       }
-      
+
       return;
     }
 
-    console.log(`✅ Found city: ${city.name}${city.state ? `, ${city.state}` : ''}, ${city.country} (ID: ${city.id})`);
+    console.log(
+      `✅ Found city: ${city.name}${city.state ? `, ${city.state}` : ''}, ${city.country} (ID: ${city.id})`
+    );
     console.log(`   Coordinates: (${city.lat}, ${city.long})`);
 
     // Step 2: Check if sunshine data already exists
@@ -174,11 +181,19 @@ async function addManuallySunshineData(
     }
 
     // Step 3: Calculate annual total
-    const annual = 
-      monthlyHours.jan + monthlyHours.feb + monthlyHours.mar + 
-      monthlyHours.apr + monthlyHours.may + monthlyHours.jun + 
-      monthlyHours.jul + monthlyHours.aug + monthlyHours.sep + 
-      monthlyHours.oct + monthlyHours.nov + monthlyHours.dec;
+    const annual =
+      monthlyHours.jan +
+      monthlyHours.feb +
+      monthlyHours.mar +
+      monthlyHours.apr +
+      monthlyHours.may +
+      monthlyHours.jun +
+      monthlyHours.jul +
+      monthlyHours.aug +
+      monthlyHours.sep +
+      monthlyHours.oct +
+      monthlyHours.nov +
+      monthlyHours.dec;
 
     const sunshineData = {
       ...monthlyHours,
@@ -221,10 +236,12 @@ async function addManuallySunshineData(
 
     if (verification) {
       console.log('\n✅ Verification successful!');
-      console.log(`   Data for ${verification.city.name}${verification.city.state ? `, ${verification.city.state}` : ''} is in the database`);
+      console.log(
+        `   Data for ${verification.city.name}${verification.city.state ? `, ${verification.city.state}` : ''} is in the database`
+      );
     }
 
-    console.log('\n' + '='.repeat(80));
+    console.log(`\n${'='.repeat(80)}`);
     console.log('✨ Script completed successfully!');
     console.log('='.repeat(80));
   } catch (error) {
@@ -237,19 +254,18 @@ async function addManuallySunshineData(
 
 // Main execution
 async function main() {
-  console.log(`\n🌍 Processing ${CITIES_TO_ADD.length} ${CITIES_TO_ADD.length === 1 ? 'city' : 'cities'}...\n`);
+  console.log(
+    `\n🌍 Processing ${CITIES_TO_ADD.length} ${CITIES_TO_ADD.length === 1 ? 'city' : 'cities'}...\n`
+  );
 
   for (const city of CITIES_TO_ADD) {
-    await addManuallySunshineData(
-      city.name,
-      city.state,
-      city.country,
-      city.sunshineHours
-    );
+    await addManuallySunshineData(city.name, city.state, city.country, city.sunshineHours);
     console.log('\n'); // Add spacing between cities
   }
 
-  console.log(`\n✅ All ${CITIES_TO_ADD.length} ${CITIES_TO_ADD.length === 1 ? 'city has' : 'cities have'} been processed!\n`);
+  console.log(
+    `\n✅ All ${CITIES_TO_ADD.length} ${CITIES_TO_ADD.length === 1 ? 'city has' : 'cities have'} been processed!\n`
+  );
 }
 
 main().catch((error) => {
