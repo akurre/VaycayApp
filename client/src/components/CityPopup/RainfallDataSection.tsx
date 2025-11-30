@@ -3,6 +3,7 @@ import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
 import RainfallGraph from './graphs/RainfallGraph';
 import WeatherDataSection from './WeatherDataSection';
 import ComponentErrorBoundary from '../ErrorBoundary/ComponentErrorBoundary';
+import { hasPrecipitationData } from '@/utils/precipitation/hasPrecipitationData';
 
 interface RainfallDataSectionProps {
   weeklyWeatherData: CityWeeklyWeather | null;
@@ -17,14 +18,23 @@ const RainfallDataSection = ({
   hasError,
   comparisonWeeklyWeatherData,
 }: RainfallDataSectionProps) => {
+  // check if there's actual precipitation data (not just empty objects)
+  const hasMainPrecipData = hasPrecipitationData(weeklyWeatherData);
+  const hasCompPrecipData = hasPrecipitationData(comparisonWeeklyWeatherData);
+
+  // pass null if no precipitation data exists to trigger the no-data badge
+  const dataToPass = hasMainPrecipData ? weeklyWeatherData : null;
+  const compDataToPass = hasCompPrecipData ? comparisonWeeklyWeatherData : null;
+
   return (
     <WeatherDataSection
-      data={weeklyWeatherData}
-      comparisonData={comparisonWeeklyWeatherData}
+      data={dataToPass}
+      comparisonData={compDataToPass}
       isLoading={isLoading}
       hasError={hasError}
       errorMessage="Failed to load precipitation data for this city."
-      showNoDataBadge={false}
+      showNoDataBadge={true}
+      noDataMessage="No precipitation data available"
     >
       {(data) => (
         <ComponentErrorBoundary componentName="RainfallGraph">

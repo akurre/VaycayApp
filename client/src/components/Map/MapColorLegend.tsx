@@ -5,8 +5,7 @@ import {
   ColorSwatch,
   Group,
   Text,
-  ActionIcon,
-  Button,
+  UnstyledButton,
 } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import { TEMP_THRESHOLDS, SUNSHINE_THRESHOLDS } from '@/const';
@@ -56,27 +55,24 @@ const MapColorLegend: FC<MapColorLegendProps> = ({ dataType }) => {
   return (
     <div>
       <div className="flex gap-4 pb-2">
-        <Button
-          variant="subtle"
-          size="compact-xs"
+        <UnstyledButton
           onClick={() => setOpened((o) => !o)}
+          className="flex items-center gap-1"
         >
           <Text size="xs" className="font-mono">
             Legend
           </Text>
-          <ActionIcon
-            variant="subtle"
-            size="compact-xs"
+          <div
             style={{
-              padding: 0,
-              minWidth: 'auto',
               transition: 'transform 0.2s',
               transform: opened ? 'rotate(180deg)' : 'rotate(0deg)',
+              display: 'flex',
+              alignItems: 'center',
             }}
           >
             <IconChevronDown size={12} style={{ opacity: 0.6 }} />
-          </ActionIcon>
-        </Button>
+          </div>
+        </UnstyledButton>
       </div>
       <Collapse in={opened}>
         <div className="flex flex-col gap-2">
