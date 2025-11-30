@@ -1,0 +1,8 @@
+[build]
+builder = "dockerfile"
+dockerfilePath = "Dockerfile"
+
+[build.buildArgs]
+VITE_GRAPHQL_URL = "${{VITE_GRAPHQL_URL}}"
+VITE_API_URL = "${{VITE_API_URL}}"
+NODE_ENV = "${{NODE_ENV}}"

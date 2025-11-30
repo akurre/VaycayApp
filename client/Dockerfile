@@ -12,7 +12,17 @@ RUN npm ci
 # Copy source code
 COPY . .
 
-# Build the app
+# Accept build arguments for Vite environment variables
+ARG VITE_GRAPHQL_URL
+ARG VITE_API_URL
+ARG NODE_ENV=production
+
+# Make them available as environment variables during build
+ENV VITE_GRAPHQL_URL=$VITE_GRAPHQL_URL
+ENV VITE_API_URL=$VITE_API_URL
+ENV NODE_ENV=$NODE_ENV
+
+# Build the app (Vite will use the ENV vars above)
 RUN npm run build
 
 # Production stage
