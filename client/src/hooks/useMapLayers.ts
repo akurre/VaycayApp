@@ -2,17 +2,28 @@ import { useMemo } from 'react';
 import { HeatmapLayer } from '@deck.gl/aggregation-layers';
 import { ScatterplotLayer } from '@deck.gl/layers';
 import type { Layer } from '@deck.gl/core';
-import type { WeatherData, ValidMarkerData } from '../types/cityWeatherDataType';
+import type {
+  WeatherData,
+  ValidMarkerData,
+} from '../types/cityWeatherDataType';
 import type { SunshineData } from '@/types/sunshineDataType';
 import { COLOR_RANGE } from '../utils/map/getMarkerColor';
 import { DataType } from '@/types/mapTypes';
 import type { ViewMode, WeatherDataUnion } from '@/types/mapTypes';
-import { SUNSHINE_COLOR_RANGE, SUNSHINE_LOADING_COLOR, TEMPERATURE_LOADING_COLOR } from '@/const';
+import {
+  SUNSHINE_COLOR_RANGE,
+  SUNSHINE_LOADING_COLOR,
+  TEMPERATURE_LOADING_COLOR,
+} from '@/const';
 import { useWeatherStore } from '@/stores/useWeatherStore';
 import { useSunshineStore } from '@/stores/useSunshineStore';
 import type { ValidSunshineMarkerData } from '@/utils/typeGuards';
 import { useHeatmapData } from './useHeatmapData';
-import { useTemperatureColorCache, useSunshineColorCache } from './useColorCache';
+import {
+  useTemperatureColorCache,
+  useSunshineColorCache,
+} from './useColorCache';
+import { perfMonitor } from '@/utils/performance/performanceMonitor';
 
 /**
  * hook to create and manage deck.gl map layers for both heatmap and marker views.
@@ -38,14 +49,24 @@ function useMapLayers({
   isLoadingWeather,
 }: UseMapLayersProps) {
   // Get max cities to show from appropriate store
-  const maxTemperatureCities = useWeatherStore((state) => state.maxCitiesToShow || 300);
-  const maxSunshineCities = useSunshineStore((state) => state.maxCitiesToShow || 300);
+  const maxTemperatureCities = useWeatherStore(
+    (state) => state.maxCitiesToShow || 300
+  );
+  const maxSunshineCities = useSunshineStore(
+    (state) => state.maxCitiesToShow || 300
+  );
   const maxCitiesToShow =
-    dataType === DataType.Temperature ? maxTemperatureCities : maxSunshineCities;
+    dataType === DataType.Temperature
+      ? maxTemperatureCities
+      : maxSunshineCities;
 
   // Use smaller focused hooks
   const heatmapData = useHeatmapData(cities, dataType, selectedMonth);
-  const temperatureCacheResult = useTemperatureColorCache(cities, dataType, maxCitiesToShow);
+  const temperatureCacheResult = useTemperatureColorCache(
+    cities,
+    dataType,
+    maxCitiesToShow
+  );
   const sunshineCacheResult = useSunshineColorCache(
     cities,
     dataType,
@@ -54,6 +75,8 @@ function useMapLayers({
   );
 
   return useMemo(() => {
+    perfMonitor.start('map-layer-creation');
+
     // pre-create all layers and toggle visibility instead of creating/destroying
     // this prevents expensive layer creation from blocking the segmentedcontrol transition
     const layers: Layer[] = [
@@ -62,22 +85,21 @@ function useMapLayers({
         data: heatmapData,
         getPosition: (d) => d.position,
         getWeight: (d) => d.weight,
-        radiusPixels: 40,
-        intensity: 1,
-        threshold: 0.03,
+        // Use radiusMeters instead of radiusPixels for natural zoom scaling
+        radiusMeters: 80000, // ~80km radius - scales naturally with zoom level
+        intensity: 1, // Higher intensity = more vivid colors at center
+        threshold: 0.5, // Higher threshold = smoother boundaries, fades edges to transparent
         colorRange:
           dataType === DataType.Temperature
             ? COLOR_RANGE
-            : SUNSHINE_COLOR_RANGE.map((c) => [...c] as [number, number, number]),
+            : SUNSHINE_COLOR_RANGE.map(
+                (c) => [...c] as [number, number, number]
+              ),
         aggregation: 'MEAN',
         opacity: 0.6,
         visible: viewMode === 'heatmap',
-        transitions: {
-          getWeight: {
-            duration: 600,
-            easing: (t: number) => t * (2 - t),
-          },
-        },
+        // Remove transitions to prevent interference with zoom operations
+        // Transitions can cause lag and stuttering during rapid zoom changes
       }),
     ];
 
@@ -96,7 +118,9 @@ function useMapLayers({
             const key = `${weatherData.city}_${weatherData.lat}_${weatherData.long}`;
 
             // Use cached color if available, otherwise use loading color
-            return temperatureCacheResult.cache.get(key) || TEMPERATURE_LOADING_COLOR;
+            return (
+              temperatureCacheResult.cache.get(key) || TEMPERATURE_LOADING_COLOR
+            );
           },
           getRadius: 50000,
           radiusMinPixels: 3,
@@ -161,6 +185,8 @@ function useMapLayers({
         })
       );
     }
+
+    perfMonitor.end('map-layer-creation');
 
     return layers;
   }, [

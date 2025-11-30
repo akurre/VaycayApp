@@ -12,7 +12,9 @@ export const isWeatherData = (data: WeatherDataUnion): data is WeatherData => {
 /**
  * Type guard to check if data is SunshineData
  */
-export const isSunshineData = (data: WeatherDataUnion): data is SunshineData => {
+export const isSunshineData = (
+  data: WeatherDataUnion
+): data is SunshineData => {
   return 'jan' in data;
 };
 
@@ -29,7 +31,10 @@ export const isValidWeatherMarkerData = (
   data: WeatherDataUnion
 ): data is ValidWeatherMarkerData => {
   return (
-    isWeatherData(data) && data.lat !== null && data.long !== null && data.avgTemperature !== null
+    isWeatherData(data) &&
+    data.lat !== null &&
+    data.long !== null &&
+    data.avgTemperature !== null
   );
 };
 

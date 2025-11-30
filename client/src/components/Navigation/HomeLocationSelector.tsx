@@ -8,7 +8,7 @@ import useCitySearch from '@/hooks/useCitySearch';
 import type { SearchCitiesResult } from '@/types/userLocationType';
 import { TOGGLE_ICON_SIZE } from '@/const';
 
-function HomeLocationSelector() {
+const HomeLocationSelector = () => {
   const [opened, setOpened] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<SearchCitiesResult[]>([]);
@@ -16,7 +16,11 @@ function HomeLocationSelector() {
 
   const homeLocation = useAppStore((state) => state.homeLocation);
   const { requestLocation, isLoading: isGeoLoading } = useUserLocation();
-  const { searchCities, selectCity, isLoading: isSearchLoading } = useCitySearch();
+  const {
+    searchCities,
+    selectCity,
+    isLoading: isSearchLoading,
+  } = useCitySearch();
 
   // perform search when debounced term changes
   useEffect(() => {
@@ -40,14 +44,22 @@ function HomeLocationSelector() {
   };
 
   return (
-    <Popover opened={opened} onChange={setOpened} position="bottom" withArrow shadow="md">
+    <Popover
+      opened={opened}
+      onChange={setOpened}
+      position="bottom"
+      withArrow
+      shadow="md"
+    >
       <Popover.Target>
         <Button
           onClick={() => setOpened((o) => !o)}
           leftSection={<IconHome size={TOGGLE_ICON_SIZE} />}
           size="xs"
         >
-          {homeLocation ? `${homeLocation.cityName}, ${homeLocation.country}` : 'Set Home Location'}
+          {homeLocation
+            ? `${homeLocation.cityName}, ${homeLocation.country}`
+            : 'Set Home Location'}
         </Button>
       </Popover.Target>
 
@@ -105,20 +117,25 @@ function HomeLocationSelector() {
                   <div className="text-xs text-gray-600">
                     {city.state && `${city.state}, `}
                     {city.country}
-                    {city.population && ` • ${(city.population / 1000000).toFixed(1)}M`}
+                    {city.population &&
+                      ` • ${(city.population / 1000000).toFixed(1)}M`}
                   </div>
                 </button>
               ))}
             </div>
           )}
 
-          {!isSearchLoading && searchTerm.trim().length >= 2 && searchResults.length === 0 && (
-            <div className="text-center py-4 text-sm text-gray-500">No cities found</div>
-          )}
+          {!isSearchLoading &&
+            searchTerm.trim().length >= 2 &&
+            searchResults.length === 0 && (
+              <div className="text-center py-4 text-sm text-gray-500">
+                No cities found
+              </div>
+            )}
         </div>
       </Popover.Dropdown>
     </Popover>
   );
-}
+};
 
 export default HomeLocationSelector;

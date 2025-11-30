@@ -10,7 +10,12 @@ interface SunshineGraphDotProps {
   selectedMonth?: number;
 }
 
-function SunshineGraphDot({ cx, cy, payload, selectedMonth }: SunshineGraphDotProps) {
+function SunshineGraphDot({
+  cx,
+  cy,
+  payload,
+  selectedMonth,
+}: SunshineGraphDotProps) {
   const chartColors = useChartColors();
 
   if (!cx || !cy || !payload || !selectedMonth) {
@@ -19,7 +24,14 @@ function SunshineGraphDot({ cx, cy, payload, selectedMonth }: SunshineGraphDotPr
 
   if (payload.monthIndex === selectedMonth) {
     return (
-      <circle cx={cx} cy={cy} r={6} fill={chartColors.lineColor} stroke="#fff" strokeWidth={2} />
+      <circle
+        cx={cx}
+        cy={cy}
+        r={6}
+        fill={chartColors.lineColor}
+        stroke="#fff"
+        strokeWidth={2}
+      />
     );
   }
 

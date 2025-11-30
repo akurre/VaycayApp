@@ -33,7 +33,8 @@ function useSunshineDataForCity({
   skipFetch = false,
 }: UseSunshineDataForCityParams) {
   // Get cache functions from the store
-  const { getFromCache, addToCache, markAsRecentlyUsed } = useCityDataCacheStore();
+  const { getFromCache, addToCache, markAsRecentlyUsed } =
+    useCityDataCacheStore();
 
   // Generate a unique cache key for this city (sunshine data includes all months)
   // Only create key if we have valid coordinates to avoid collisions
@@ -52,22 +53,25 @@ function useSunshineDataForCity({
     data: sunshineResponse,
     loading: sunshineLoading,
     error: sunshineError,
-  } = useQuery<SunshineByCityResponse, SunshineByCityVars>(GET_SUNSHINE_BY_CITY, {
-    variables: {
-      city: cityName || '',
-      lat: lat,
-      long: long,
-    },
-    skip: skipFetch || !cityName || !cacheKey || !!cachedData?.sunshineData,
-    fetchPolicy: 'network-only', // Use custom cache, bypass Apollo cache
-  });
+  } = useQuery<SunshineByCityResponse, SunshineByCityVars>(
+    GET_SUNSHINE_BY_CITY,
+    {
+      variables: {
+        city: cityName || '',
+        lat: lat,
+        long: long,
+      },
+      skip: skipFetch || !cityName || !cacheKey || !!cachedData?.sunshineData,
+      fetchPolicy: 'network-only', // Use custom cache, bypass Apollo cache
+    }
+  );
 
   // Update cache when new data is fetched
   useEffect(() => {
-    if (sunshineResponse?.sunshineByCity && cacheKey) {
+    if (sunshineResponse?.sunshineByCity && cacheKey && !cachedData) {
       addToCache(cacheKey, null, sunshineResponse.sunshineByCity);
     }
-  }, [sunshineResponse, cacheKey, addToCache]);
+  }, [sunshineResponse, cacheKey, addToCache, cachedData]);
 
   // Mark cache as recently used when accessed
   useEffect(() => {
@@ -80,12 +84,16 @@ function useSunshineDataForCity({
   useEffect(() => {
     if (sunshineError) {
       const context = cityName ? ` for ${cityName}` : '';
-      parseErrorAndNotify(sunshineError, `failed to load sunshine data${context}`);
+      parseErrorAndNotify(
+        sunshineError,
+        `failed to load sunshine data${context}`
+      );
     }
   }, [sunshineError, cityName]);
 
   // Derive data from cache or query response
-  const sunshineData = cachedData?.sunshineData || sunshineResponse?.sunshineByCity || null;
+  const sunshineData =
+    cachedData?.sunshineData || sunshineResponse?.sunshineByCity || null;
 
   return {
     sunshineData,

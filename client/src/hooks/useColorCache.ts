@@ -7,6 +7,7 @@ import type { ColorCacheEntry } from '@/const';
 import { isWeatherData, isSunshineData } from '@/utils/typeGuards';
 import type { ValidSunshineMarkerData } from '@/utils/typeGuards';
 import { getColorForCity } from '../utils/map/getColorForCity';
+import { perfMonitor } from '@/utils/performance/performanceMonitor';
 
 interface ColorCacheResult<T> {
   cache: Map<string, ColorCacheEntry>;
@@ -25,13 +26,18 @@ export function useTemperatureColorCache(
   return useMemo(() => {
     if (dataType !== DataType.Temperature) return null;
 
+    perfMonitor.start('temperature-color-cache');
+
     const cache = new Map<string, ColorCacheEntry>();
 
     // Only process the first maxCitiesToShow cities that have valid data
     const validCities = cities
       .filter(
         (c): c is ValidMarkerData =>
-          isWeatherData(c) && c.lat !== null && c.long !== null && c.avgTemperature !== null
+          isWeatherData(c) &&
+          c.lat !== null &&
+          c.long !== null &&
+          c.avgTemperature !== null
       )
       .slice(0, maxCitiesToShow);
 
@@ -42,6 +48,8 @@ export function useTemperatureColorCache(
       const key = `${city.city}_${city.lat}_${city.long}`;
       cache.set(key, color);
     }
+
+    perfMonitor.end('temperature-color-cache');
 
     return { cache, validCities };
   }, [cities, dataType, maxCitiesToShow]);
@@ -60,13 +68,16 @@ export function useSunshineColorCache(
   return useMemo(() => {
     if (dataType !== DataType.Sunshine) return null;
 
+    perfMonitor.start('sunshine-color-cache');
+
     const cache = new Map<string, ColorCacheEntry>();
     const monthField = MONTH_FIELDS[selectedMonth];
 
     // Only process the first maxCitiesToShow cities that have valid data
     const validCities = cities
       .filter((c): c is ValidSunshineMarkerData => {
-        if (!isSunshineData(c) || c.lat === null || c.long === null) return false;
+        if (!isSunshineData(c) || c.lat === null || c.long === null)
+          return false;
         return c[monthField] !== null;
       })
       .slice(0, maxCitiesToShow);
@@ -78,6 +89,8 @@ export function useSunshineColorCache(
       const key = `${city.city}_${city.lat}_${city.long}`;
       cache.set(key, color);
     }
+
+    perfMonitor.end('sunshine-color-cache');
 
     return { cache, validCities };
   }, [cities, dataType, selectedMonth, maxCitiesToShow]);

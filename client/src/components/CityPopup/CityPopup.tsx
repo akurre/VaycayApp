@@ -1,24 +1,33 @@
-import { ActionIcon, Button, Popover, Title, Text } from '@mantine/core';
-import { useMemo, memo } from 'react';
+import { ActionIcon, Badge, Tooltip } from '@mantine/core';
+import { useMemo, memo, useState } from 'react';
 import { IconX } from '@tabler/icons-react';
 import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
 import type { CityPopupProps } from '@/types/mapTypes';
 import useWeatherDataForCity from '@/api/dates/useWeatherDataForCity';
 import useSunshineDataForCity from '@/api/dates/useSunshineDataForCity';
 import useWeeklyWeatherForCity from '@/api/dates/useWeeklyWeatherForCity';
-import WeatherDataSection from './WeatherDataSection';
+import DailyTempValues from './DailyTempValues';
+import SunshineValues from './SunshineValues';
 import AdditionalInfo from './AdditionalInfo';
 import DataChartTabs from './DataChartTabs';
-import Field from './Field';
-import GreaterSection from './GreaterSection';
 import { extractMonthFromDate } from '@/utils/dateFormatting/extractMonthFromDate';
+import { extractMonthDay } from '@/utils/dateFormatting/extractMonthDay';
 import { isWeatherData } from '@/utils/typeGuards';
-import { transformSunshineDataForChart } from '@/utils/dataFormatting/transformSunshineDataForChart';
-import { calculateAverageSunshine } from '@/utils/dataFormatting/calculateAverageSunshine';
-import getSunshineHoursIcon from '@/utils/iconMapping/getSunshineIcon';
 import arePropsEqual from './utils/arePropsEqual';
+import ComparisonCitySelector from './ComparisonCitySelector';
+import type { SearchCitiesResult } from '@/types/userLocationType';
 
-const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProps) => {
+const CityPopup = ({
+  city,
+  onClose,
+  selectedMonth,
+  selectedDate,
+  dataType,
+}: CityPopupProps) => {
+  // State for comparison city
+  const [comparisonCity, setComparisonCity] =
+    useState<SearchCitiesResult | null>(null);
+
   // Determine what type of data we have
   const hasWeatherData = city && isWeatherData(city);
   const hasSunshineData = city && !isWeatherData(city);
@@ -29,7 +38,9 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
   // Determine the month to use with validation
   // Prefer selectedMonth from parent, fall back to extracting from weather data
   const monthToUse =
-    selectedMonth ?? extractMonthFromDate(cityAsWeather?.date) ?? new Date().getMonth() + 1;
+    selectedMonth ??
+    extractMonthFromDate(cityAsWeather?.date) ??
+    new Date().getMonth() + 1;
 
   // Construct the date for weather fetching - clearer logic
   const dateToUse = useMemo(() => {
@@ -62,14 +73,16 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
 
   // determine if we should fetch sunshine data
   // fetch when: we don't have sunshine data and we have a valid month
-  const shouldFetchSunshine = !hasSunshineData && monthToUse >= 1 && monthToUse <= 12;
+  const shouldFetchSunshine =
+    !hasSunshineData && monthToUse >= 1 && monthToUse <= 12;
 
-  const { sunshineData, sunshineLoading, sunshineError } = useSunshineDataForCity({
-    cityName: city?.city ?? null,
-    lat: city?.lat ?? null,
-    long: city?.long ?? null,
-    skipFetch: !shouldFetchSunshine,
-  });
+  const { sunshineData, sunshineLoading, sunshineError } =
+    useSunshineDataForCity({
+      cityName: city?.city ?? null,
+      lat: city?.lat ?? null,
+      long: city?.long ?? null,
+      skipFetch: !shouldFetchSunshine,
+    });
 
   // Fetch weekly weather data for the city (always fetch when we have a city)
   const {
@@ -83,33 +96,81 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
     skipFetch: !city,
   });
 
+  // Extract month-day only from dateToUse for comparison city
+  // (removes year if present, e.g., "2020-11-26" -> "11-26")
+  const monthDayOnly = useMemo(() => extractMonthDay(dateToUse), [dateToUse]);
+
+  // Fetch weather data for the comparison city
+  const {
+    weatherData: comparisonWeatherData,
+    weatherLoading: comparisonWeatherLoading,
+    weatherError: comparisonWeatherError,
+  } = useWeatherDataForCity({
+    cityName: comparisonCity?.name ?? null,
+    lat: comparisonCity?.lat ?? null,
+    long: comparisonCity?.long ?? null,
+    selectedDate: monthDayOnly,
+    skipFetch: !comparisonCity,
+  });
+
+  // Fetch weekly weather data for the comparison city
+  const {
+    weeklyWeatherData: comparisonWeeklyWeatherData,
+    loading: comparisonWeeklyWeatherLoading,
+    error: comparisonWeeklyWeatherError,
+  } = useWeeklyWeatherForCity({
+    cityName: comparisonCity?.name ?? null,
+    lat: comparisonCity?.lat ?? null,
+    long: comparisonCity?.long ?? null,
+    skipFetch: !comparisonCity,
+  });
+
+  // Fetch sunshine data for the comparison city
+  const {
+    sunshineData: comparisonSunshineData,
+    sunshineLoading: comparisonSunshineLoading,
+    sunshineError: comparisonSunshineError,
+  } = useSunshineDataForCity({
+    cityName: comparisonCity?.name ?? null,
+    lat: comparisonCity?.lat ?? null,
+    long: comparisonCity?.long ?? null,
+    skipFetch: !comparisonCity,
+  });
+
   // use what we already have, or fall back to fetched data
   const displayWeatherData = cityAsWeather ?? weatherData;
   const displaySunshineData = cityAsSunshine ?? sunshineData;
 
-  // Calculate average sunshine if we have sunshine data
-  const averageSunshine = useMemo(() => {
-    if (!displaySunshineData) return null;
-    const chartData = transformSunshineDataForChart(displaySunshineData);
-    return calculateAverageSunshine(chartData);
-  }, [displaySunshineData]);
+  // Memoize excludeCity to prevent unnecessary re-renders and search queries
+  const excludeCity = useMemo(
+    () =>
+      city
+        ? {
+            name: city.city,
+            state: city.state ?? null,
+            country: city.country ?? null,
+          }
+        : undefined,
+    [city?.city, city?.state, city?.country]
+  );
 
   // early return AFTER all hooks have been called
   if (!city) return null;
 
-  // Get the sunshine icon
-  const SunshineIcon = getSunshineHoursIcon(averageSunshine);
-
   // Create the modal title
-  let cityAndCountry = toTitleCase(city.city);
+  let cityAndCountry = city.city ? toTitleCase(city.city) : 'Unknown City';
   if (city.state) {
-    cityAndCountry += `, ${toTitleCase(city.state)}`;
+    const state =
+      city.state.length > 8 ? city.state.substring(0, 8) + '.' : city.state;
+    cityAndCountry += `, ${toTitleCase(state)}`;
   }
-  cityAndCountry += `, ${city.country}`;
+  if (city.country) {
+    cityAndCountry += `, ${city.country}`;
+  }
 
   return (
     <div
-      className="fixed bottom-5 left-5 right-5 shadow-lg rounded-xl z-50 flex flex-col"
+      className="fixed bottom-4 left-4 right-4 shadow-lg rounded-xl z-50 flex flex-col"
       style={{
         height: '33.333vh',
         pointerEvents: 'auto',
@@ -124,59 +185,59 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
         </ActionIcon>
       </div>
       {/* Content area with horizontal layout */}
-      <div className="flex h-full overflow-hidden">
+      <div className="flex h-full py-3 px-6 gap-6">
         {/* Left section - City info and metadata */}
-        <div className="flex flex-col gap-3 px-6 py-4 h-full min-w-1/2 overflow-y-auto">
-          <div className="flex w-full">
-            <div className="flex gap-4 items-center">
-              <Title order={4}>{cityAndCountry}</Title>
-              <Popover position="top" withArrow shadow="md">
-                <Popover.Target>
-                  <Button variant="subtle" size="compact-xs">
-                    More Info
-                  </Button>
-                </Popover.Target>
-                <Popover.Dropdown>
-                  {city.stationName && (
-                    <div>
-                      <Field label="Weather Station" value={city.stationName} />
-                    </div>
-                  )}
-                  {city.lat && city.long && (
-                    <Field
-                      label="Coordinates"
-                      value={`${city.lat.toFixed(4)}°, ${city.long.toFixed(4)}°`}
-                      monospace
-                    />
-                  )}
-                </Popover.Dropdown>
-              </Popover>
+        <div className="flex flex-col gap-3 min-w-1/2 grow">
+          <div className="flex gap-6">
+            <div className="flex items-center">
+              <Tooltip label={cityAndCountry}>
+                <Badge size="xl">{cityAndCountry}</Badge>
+              </Tooltip>
+            </div>
+            <div className="flex-1" />
+            <div className="flex justify-end">
+              <ComparisonCitySelector
+                onCitySelect={setComparisonCity}
+                onCityRemove={() => setComparisonCity(null)}
+                selectedCity={comparisonCity}
+                excludeCity={excludeCity}
+              />
             </div>
           </div>
-          <div className="flex gap-10">
-            <AdditionalInfo city={city} />
+          <div className="flex gap-6 w-full flex-1 min-h-0 justify-end">
+            {/* city info */}
+            <AdditionalInfo city={city} isShowCity={!!comparisonSunshineData} />
 
-            {/* Middle section - Weather data */}
-            <div className="flex flex-col">
-              <WeatherDataSection
+            {/* Average annual sunshine */}
+            <div className="flex flex-col w-5/12">
+              <SunshineValues
+                baseCity={city?.city}
+                comparisonCity={comparisonCity?.name}
+                displaySunshineData={displaySunshineData}
+                weeklyWeatherData={weeklyWeatherData?.weeklyData ?? null}
+                isLoading={sunshineLoading}
+                hasError={sunshineError}
+                comparisonSunshineData={comparisonSunshineData}
+                comparisonWeeklyWeatherData={
+                  comparisonWeeklyWeatherData?.weeklyData ?? null
+                }
+              />
+            </div>
+            <div className="flex flex-col w-5/12">
+              {/* Middle section - Weather data */}
+              <DailyTempValues
                 displayWeatherData={displayWeatherData}
                 isLoading={weatherLoading}
                 hasError={weatherError}
+                comparisonWeatherData={comparisonWeatherData}
               />
-            </div>
-            <div>
-              {/* Average annual sunshine */}
-              {averageSunshine !== null && (
-                <GreaterSection title="Average Annual Sunshine" icon={SunshineIcon}>
-                  <Text size="md">{averageSunshine.toFixed(1)} hours</Text>
-                </GreaterSection>
-              )}
             </div>
           </div>
         </div>
         {/* Right section - Data Charts */}
-        <div className="w-full p-3 h-full">
+        <div className="w-full h-full">
           <DataChartTabs
+            dataType={dataType}
             displaySunshineData={displaySunshineData}
             sunshineLoading={sunshineLoading}
             sunshineError={sunshineError}
@@ -184,6 +245,12 @@ const CityPopup = ({ city, onClose, selectedMonth, selectedDate }: CityPopupProp
             weeklyWeatherData={weeklyWeatherData}
             weeklyWeatherLoading={weeklyWeatherLoading}
             weeklyWeatherError={weeklyWeatherError}
+            comparisonSunshineData={comparisonSunshineData}
+            comparisonSunshineLoading={comparisonSunshineLoading}
+            comparisonSunshineError={comparisonSunshineError}
+            comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
+            comparisonWeeklyWeatherLoading={comparisonWeeklyWeatherLoading}
+            comparisonWeeklyWeatherError={comparisonWeeklyWeatherError}
           />
         </div>
       </div>

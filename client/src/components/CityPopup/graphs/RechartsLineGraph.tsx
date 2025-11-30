@@ -1,4 +1,4 @@
-import { memo, useRef, useEffect, type ReactElement } from 'react';
+import { memo } from 'react';
 import {
   LineChart,
   Line,
@@ -12,69 +12,18 @@ import {
 } from 'recharts';
 
 import { useChartColors } from '@/hooks/useChartColors';
+import { CustomChartLegend } from './CustomChartLegend';
+import type {
+  ChartDataPoint,
+  LineConfig,
+  ReferenceLineConfig,
+  RechartsLineGraphProps,
+} from '@/types/chartTypes';
 
-// Generic data point type - charts can add extra fields
-export interface ChartDataPoint {
-  [key: string]: string | number | null | undefined;
-}
+// Re-export types for backward compatibility
+export type { ChartDataPoint, LineConfig, ReferenceLineConfig };
 
-// Line configuration for a single line on the chart
-export interface LineConfig {
-  dataKey: string;
-  name: string;
-  stroke: string;
-  strokeWidth?: number;
-  strokeDasharray?: string;
-  dot?: boolean | ((props: Record<string, unknown>) => ReactElement);
-  connectNulls?: boolean;
-}
-
-// Reference line configuration
-export interface ReferenceLineConfig {
-  x?: string | number;
-  y?: number;
-  stroke?: string;
-  strokeWidth?: number;
-  strokeDasharray?: string;
-  label?: string;
-}
-
-export interface RechartsLineGraphProps<T extends ChartDataPoint> {
-  // Data
-  data: T[];
-
-  // City identification for animation control
-  cityKey: string;
-
-  // Axis configuration
-  xAxisDataKey: string;
-  xAxisLabel?: string;
-  yAxisLabel: string;
-
-  // Line configurations
-  lines: LineConfig[];
-
-  // Optional reference lines
-  referenceLines?: ReferenceLineConfig[];
-
-  // Custom tooltip component
-  tooltipContent?: ReactElement;
-
-  // Animation settings
-  animationDuration?: number;
-  animationEasing?: 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'linear';
-
-  // Chart margins
-  margin?: { top?: number; right?: number; bottom?: number; left?: number };
-
-  // Legend configuration
-  showLegend?: boolean;
-  legendLayout?: 'horizontal' | 'vertical';
-  legendVerticalAlign?: 'top' | 'middle' | 'bottom';
-  legendAlign?: 'left' | 'center' | 'right';
-}
-
-function RechartsLineGraphComponent<T extends ChartDataPoint>({
+const RechartsLineGraphComponent = <T extends ChartDataPoint>({
   data,
   cityKey,
   xAxisDataKey,
@@ -90,17 +39,12 @@ function RechartsLineGraphComponent<T extends ChartDataPoint>({
   legendLayout = 'vertical',
   legendVerticalAlign = 'middle',
   legendAlign = 'right',
-}: RechartsLineGraphProps<T>) {
+}: RechartsLineGraphProps<T>) => {
   // Get theme-aware colors
   const chartColors = useChartColors();
 
-  // Track previous city for animation control
-  const previousCityRef = useRef<string | null>(null);
-  const shouldAnimate = previousCityRef.current !== cityKey;
-
-  useEffect(() => {
-    previousCityRef.current = cityKey;
-  }, [cityKey]);
+  // Use smooth morphing transition for all city changes
+  const effectiveAnimationDuration = 300;
 
   return (
     <div className="w-full h-full">
@@ -139,21 +83,35 @@ function RechartsLineGraphComponent<T extends ChartDataPoint>({
 
           {/* Tooltip */}
           {tooltipContent ? (
-            <Tooltip content={tooltipContent} />
+            <Tooltip
+              content={tooltipContent}
+              contentStyle={{
+                backgroundColor: chartColors.backgroundColor,
+                border: `1px solid ${chartColors.gridColor}`,
+                borderRadius: '4px',
+              }}
+            />
           ) : (
-            <Tooltip contentStyle={{ fontSize: 12 }} />
+            <Tooltip
+              contentStyle={{
+                fontSize: 12,
+                backgroundColor: chartColors.backgroundColor,
+                border: `1px solid ${chartColors.gridColor}`,
+                borderRadius: '4px',
+                color: chartColors.textColor,
+              }}
+            />
           )}
 
           {/* Legend */}
           {showLegend && (
             <Legend
+              content={CustomChartLegend}
               wrapperStyle={{ fontSize: '12px', paddingLeft: '13px' }}
               layout={legendLayout}
               verticalAlign={legendVerticalAlign}
               align={legendAlign}
-              iconType="line"
               height={legendLayout === 'vertical' ? 24 : undefined}
-              spacing={3}
             />
           )}
 
@@ -182,8 +140,8 @@ function RechartsLineGraphComponent<T extends ChartDataPoint>({
               strokeDasharray={lineConfig.strokeDasharray}
               dot={lineConfig.dot ?? false}
               connectNulls={lineConfig.connectNulls ?? true}
-              isAnimationActive={shouldAnimate}
-              animationDuration={animationDuration}
+              isAnimationActive={true}
+              animationDuration={effectiveAnimationDuration}
               animationEasing={animationEasing}
             />
           ))}
@@ -191,8 +149,10 @@ function RechartsLineGraphComponent<T extends ChartDataPoint>({
       </ResponsiveContainer>
     </div>
   );
-}
+};
 
 // Export with memo for performance optimization
-const RechartsLineGraph = memo(RechartsLineGraphComponent) as typeof RechartsLineGraphComponent;
+const RechartsLineGraph = memo(
+  RechartsLineGraphComponent
+) as typeof RechartsLineGraphComponent;
 export default RechartsLineGraph;

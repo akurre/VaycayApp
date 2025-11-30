@@ -31,10 +31,12 @@ describe('useHomeLocationLayers', () => {
     rafId = 0;
 
     // mock requestAnimationFrame to capture callbacks
-    vi.spyOn(globalThis, 'requestAnimationFrame').mockImplementation((callback) => {
-      rafCallbacks.push(callback);
-      return ++rafId;
-    });
+    vi.spyOn(globalThis, 'requestAnimationFrame').mockImplementation(
+      (callback) => {
+        rafCallbacks.push(callback);
+        return ++rafId;
+      }
+    );
 
     // mock cancelAnimationFrame
     vi.spyOn(globalThis, 'cancelAnimationFrame').mockImplementation((id) => {
@@ -64,7 +66,9 @@ describe('useHomeLocationLayers', () => {
     });
 
     it('returns empty array', () => {
-      const { result } = renderHook(() => useHomeLocationLayers(DataType.Temperature, 1));
+      const { result } = renderHook(() =>
+        useHomeLocationLayers(DataType.Temperature, 1)
+      );
 
       expect(result.current).toEqual([]);
     });
@@ -94,7 +98,9 @@ describe('useHomeLocationLayers', () => {
     });
 
     it('returns two layers: ring and center', () => {
-      const { result } = renderHook(() => useHomeLocationLayers(DataType.Temperature, 1));
+      const { result } = renderHook(() =>
+        useHomeLocationLayers(DataType.Temperature, 1)
+      );
 
       expect(result.current).toHaveLength(2);
       expect(result.current[0].id).toBe('home-ring');
@@ -108,7 +114,9 @@ describe('useHomeLocationLayers', () => {
     });
 
     it('cleans up animation on unmount', () => {
-      const { unmount } = renderHook(() => useHomeLocationLayers(DataType.Temperature, 1));
+      const { unmount } = renderHook(() =>
+        useHomeLocationLayers(DataType.Temperature, 1)
+      );
 
       const cancelSpy = vi.spyOn(globalThis, 'cancelAnimationFrame');
       unmount();
@@ -117,7 +125,9 @@ describe('useHomeLocationLayers', () => {
     });
 
     it('ring layer has correct base properties', () => {
-      const { result } = renderHook(() => useHomeLocationLayers(DataType.Temperature, 1));
+      const { result } = renderHook(() =>
+        useHomeLocationLayers(DataType.Temperature, 1)
+      );
 
       const ringLayer = result.current[0];
       expect(ringLayer.id).toBe('home-ring');
@@ -131,14 +141,18 @@ describe('useHomeLocationLayers', () => {
     });
 
     it('ring layer has transparent fill color', () => {
-      const { result } = renderHook(() => useHomeLocationLayers(DataType.Temperature, 1));
+      const { result } = renderHook(() =>
+        useHomeLocationLayers(DataType.Temperature, 1)
+      );
 
       const ringLayer = result.current[0];
       expect(ringLayer.props.getFillColor).toEqual([0, 0, 0, 0]);
     });
 
     it('ring layer line color uses HOME_RING_COLOR', () => {
-      const { result } = renderHook(() => useHomeLocationLayers(DataType.Temperature, 1));
+      const { result } = renderHook(() =>
+        useHomeLocationLayers(DataType.Temperature, 1)
+      );
 
       const ringLayer = result.current[0];
       const lineColor = ringLayer.props.getLineColor;
@@ -152,7 +166,9 @@ describe('useHomeLocationLayers', () => {
     });
 
     it('center layer has correct base properties', () => {
-      const { result } = renderHook(() => useHomeLocationLayers(DataType.Temperature, 1));
+      const { result } = renderHook(() =>
+        useHomeLocationLayers(DataType.Temperature, 1)
+      );
 
       const centerLayer = result.current[1];
       expect(centerLayer.id).toBe('home-center');
@@ -165,14 +181,18 @@ describe('useHomeLocationLayers', () => {
     });
 
     it('center layer uses default color when no city data', () => {
-      const { result } = renderHook(() => useHomeLocationLayers(DataType.Temperature, 1));
+      const { result } = renderHook(() =>
+        useHomeLocationLayers(DataType.Temperature, 1)
+      );
 
       const centerLayer = result.current[1];
       expect(centerLayer.props.getFillColor).toEqual(HOME_DEFAULT_MARKER_COLOR);
     });
 
     it('getPosition extracts coordinates correctly', () => {
-      const { result } = renderHook(() => useHomeLocationLayers(DataType.Temperature, 1));
+      const { result } = renderHook(() =>
+        useHomeLocationLayers(DataType.Temperature, 1)
+      );
 
       const ringLayer = result.current[0];
       const position = ringLayer.props.getPosition(mockHomeLocation);
@@ -208,7 +228,9 @@ describe('useHomeLocationLayers', () => {
     });
 
     it('uses color from getColorForCity for temperature data', () => {
-      const { result } = renderHook(() => useHomeLocationLayers(DataType.Temperature, 1));
+      const { result } = renderHook(() =>
+        useHomeLocationLayers(DataType.Temperature, 1)
+      );
 
       const centerLayer = result.current[1];
       // mocked getColorForCity returns [255, 0, 0, 255]
@@ -229,7 +251,9 @@ describe('useHomeLocationLayers', () => {
         } as ReturnType<typeof useAppStore.getState>)
       );
 
-      const { result } = renderHook(() => useHomeLocationLayers(DataType.Temperature, 1));
+      const { result } = renderHook(() =>
+        useHomeLocationLayers(DataType.Temperature, 1)
+      );
 
       const centerLayer = result.current[1];
       expect(centerLayer.props.getFillColor).toEqual(HOME_DEFAULT_MARKER_COLOR);
@@ -249,7 +273,9 @@ describe('useHomeLocationLayers', () => {
         } as ReturnType<typeof useAppStore.getState>)
       );
 
-      const { result } = renderHook(() => useHomeLocationLayers(DataType.Temperature, 1));
+      const { result } = renderHook(() =>
+        useHomeLocationLayers(DataType.Temperature, 1)
+      );
 
       const centerLayer = result.current[1];
       expect(centerLayer.props.getFillColor).toEqual(HOME_DEFAULT_MARKER_COLOR);
@@ -280,7 +306,9 @@ describe('useHomeLocationLayers', () => {
     });
 
     it('uses color from getColorForCity for sunshine data', () => {
-      const { result } = renderHook(() => useHomeLocationLayers(DataType.Sunshine, 1));
+      const { result } = renderHook(() =>
+        useHomeLocationLayers(DataType.Sunshine, 1)
+      );
 
       const centerLayer = result.current[1];
       // mocked getColorForCity returns [255, 0, 0, 255]
@@ -301,7 +329,9 @@ describe('useHomeLocationLayers', () => {
         } as ReturnType<typeof useAppStore.getState>)
       );
 
-      const { result } = renderHook(() => useHomeLocationLayers(DataType.Sunshine, 1));
+      const { result } = renderHook(() =>
+        useHomeLocationLayers(DataType.Sunshine, 1)
+      );
 
       const centerLayer = result.current[1];
       expect(centerLayer.props.getFillColor).toEqual(HOME_DEFAULT_MARKER_COLOR);
@@ -326,7 +356,9 @@ describe('useHomeLocationLayers', () => {
     });
 
     it('updates layers when animation progresses', async () => {
-      const { result } = renderHook(() => useHomeLocationLayers(DataType.Temperature, 1));
+      const { result } = renderHook(() =>
+        useHomeLocationLayers(DataType.Temperature, 1)
+      );
 
       // simulate animation frame progression
       vi.spyOn(performance, 'now').mockReturnValue(500); // 500ms elapsed
@@ -345,10 +377,13 @@ describe('useHomeLocationLayers', () => {
     });
 
     it('restarts animation when home location changes', () => {
-      const { rerender } = renderHook(() => useHomeLocationLayers(DataType.Temperature, 1));
+      const { rerender } = renderHook(() =>
+        useHomeLocationLayers(DataType.Temperature, 1)
+      );
 
-      const initialCallCount = (globalThis.requestAnimationFrame as ReturnType<typeof vi.fn>).mock
-        .calls.length;
+      const initialCallCount = (
+        globalThis.requestAnimationFrame as ReturnType<typeof vi.fn>
+      ).mock.calls.length;
 
       // change home location
       const newHomeLocation = {
@@ -369,7 +404,8 @@ describe('useHomeLocationLayers', () => {
 
       // should have called requestAnimationFrame again
       expect(
-        (globalThis.requestAnimationFrame as ReturnType<typeof vi.fn>).mock.calls.length
+        (globalThis.requestAnimationFrame as ReturnType<typeof vi.fn>).mock
+          .calls.length
       ).toBeGreaterThan(initialCallCount);
     });
   });
@@ -392,7 +428,9 @@ describe('useHomeLocationLayers', () => {
     });
 
     it('ring layer is rendered before center layer', () => {
-      const { result } = renderHook(() => useHomeLocationLayers(DataType.Temperature, 1));
+      const { result } = renderHook(() =>
+        useHomeLocationLayers(DataType.Temperature, 1)
+      );
 
       expect(result.current[0].id).toBe('home-ring');
       expect(result.current[1].id).toBe('home-center');

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useAppStore } from '@/stores/useAppStore';
 import { DataType } from '@/types/mapTypes';
 import useWeatherDataForCity from '@/api/dates/useWeatherDataForCity';
@@ -30,6 +30,11 @@ export function useHomeCityData(dataType: DataType, selectedDate?: string) {
     skipFetch: dataType !== DataType.Sunshine || !homeLocation,
   });
 
+  // Track previous data to prevent infinite loops - initialize with undefined, not current values
+  const prevWeatherDataRef = useRef<typeof weatherData>(undefined);
+  const prevSunshineDataRef = useRef<typeof sunshineData>(undefined);
+  const prevDataTypeRef = useRef<DataType | undefined>(undefined);
+
   // Update store when data changes
   // setHomeCityData is stable (Zustand action) and doesn't need to be in deps
   useEffect(() => {
@@ -38,10 +43,39 @@ export function useHomeCityData(dataType: DataType, selectedDate?: string) {
       return;
     }
 
-    if (dataType === DataType.Temperature && weatherData) {
-      setHomeCityData(weatherData);
-    } else if (dataType === DataType.Sunshine && sunshineData) {
-      setHomeCityData(sunshineData);
+    // Only update when:
+    // 1. First time setting data (refs are undefined)
+    // 2. Data type changed (user toggled)
+    // 3. Actual data content changed (compare by city name to avoid object reference issues)
+    const isFirstRender = prevDataTypeRef.current === undefined;
+
+    if (dataType === DataType.Temperature) {
+      // Check if the actual data content is different (not just object reference)
+      const dataContentChanged =
+        weatherData?.city !== prevWeatherDataRef.current?.city ||
+        weatherData?.date !== prevWeatherDataRef.current?.date;
+
+      if (weatherData && (isFirstRender || dataContentChanged)) {
+        setHomeCityData(weatherData);
+      } else if (isFirstRender && !weatherData) {
+        setHomeCityData(null);
+      }
+    } else if (dataType === DataType.Sunshine) {
+      // Check if the actual data content is different
+      const dataContentChanged =
+        sunshineData?.city !== prevSunshineDataRef.current?.city ||
+        sunshineData?.jan !== prevSunshineDataRef.current?.jan;
+
+      if (sunshineData && (isFirstRender || dataContentChanged)) {
+        setHomeCityData(sunshineData);
+      } else if (isFirstRender && !sunshineData) {
+        setHomeCityData(null);
+      }
     }
+
+    // Always update refs after checking
+    prevWeatherDataRef.current = weatherData;
+    prevSunshineDataRef.current = sunshineData;
+    prevDataTypeRef.current = dataType;
   }, [dataType, weatherData, sunshineData, homeLocation, setHomeCityData]);
 }

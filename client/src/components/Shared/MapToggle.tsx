@@ -9,8 +9,10 @@ interface MapToggleOption<T extends string> {
   icon: ComponentType<{ size?: number; color?: string }>;
 }
 
-interface MapToggleProps<T extends string>
-  extends Omit<SegmentedControlProps, 'value' | 'onChange' | 'data'> {
+interface MapToggleProps<T extends string> extends Omit<
+  SegmentedControlProps,
+  'value' | 'onChange' | 'data'
+> {
   value: T;
   onChange: (value: T) => void;
   options: MapToggleOption<T>[];
@@ -27,6 +29,7 @@ const MapToggle = <T extends string>({
 
   return (
     <SegmentedControl
+      className="z-40"
       value={value}
       size={size}
       {...props}

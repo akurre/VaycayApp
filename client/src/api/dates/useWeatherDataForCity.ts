@@ -36,7 +36,8 @@ function useWeatherDataForCity({
   skipFetch = false,
 }: UseWeatherDataForCityParams) {
   // Get cache functions from the store
-  const { getFromCache, addToCache, markAsRecentlyUsed } = useCityDataCacheStore();
+  const { getFromCache, addToCache, markAsRecentlyUsed } =
+    useCityDataCacheStore();
 
   // Format the date for the query (remove any dashes)
   const formattedDate = useMemo(() => {
@@ -98,12 +99,16 @@ function useWeatherDataForCity({
   useEffect(() => {
     if (weatherError) {
       const context = cityName ? ` for ${cityName}` : '';
-      parseErrorAndNotify(weatherError, `failed to load weather data${context}`);
+      parseErrorAndNotify(
+        weatherError,
+        `failed to load weather data${context}`
+      );
     }
   }, [weatherError, cityName]);
 
   // Derive data from cache or query response
-  const weatherData = cachedData?.weatherData || weatherResponse?.weatherByCityAndDate || null;
+  const weatherData =
+    cachedData?.weatherData || weatherResponse?.weatherByCityAndDate || null;
 
   return {
     weatherData,

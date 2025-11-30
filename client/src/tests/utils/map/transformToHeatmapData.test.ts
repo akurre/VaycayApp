@@ -35,9 +35,24 @@ describe('transformToHeatmapData', () => {
 
   it('transforms multiple cities correctly', () => {
     const cities = [
-      createMockCity({ city: 'Milan', lat: 45.4642, long: 9.19, avgTemperature: 25.5 }),
-      createMockCity({ city: 'Rome', lat: 41.9028, long: 12.4964, avgTemperature: 28.0 }),
-      createMockCity({ city: 'Venice', lat: 45.4408, long: 12.3155, avgTemperature: 24.0 }),
+      createMockCity({
+        city: 'Milan',
+        lat: 45.4642,
+        long: 9.19,
+        avgTemperature: 25.5,
+      }),
+      createMockCity({
+        city: 'Rome',
+        lat: 41.9028,
+        long: 12.4964,
+        avgTemperature: 28.0,
+      }),
+      createMockCity({
+        city: 'Venice',
+        lat: 45.4408,
+        long: 12.3155,
+        avgTemperature: 24.0,
+      }),
     ];
     const result = transformToHeatmapData(cities);
 
@@ -51,7 +66,10 @@ describe('transformToHeatmapData', () => {
   });
 
   it('filters out cities with null latitude', () => {
-    const cities = [createMockCity({ lat: null }), createMockCity({ lat: 45.4642 })];
+    const cities = [
+      createMockCity({ lat: null }),
+      createMockCity({ lat: 45.4642 }),
+    ];
     const result = transformToHeatmapData(cities);
 
     expect(result).toHaveLength(1);
@@ -59,7 +77,10 @@ describe('transformToHeatmapData', () => {
   });
 
   it('filters out cities with null longitude', () => {
-    const cities = [createMockCity({ long: null }), createMockCity({ long: 9.19 })];
+    const cities = [
+      createMockCity({ long: null }),
+      createMockCity({ long: 9.19 }),
+    ];
     const result = transformToHeatmapData(cities);
 
     expect(result).toHaveLength(1);

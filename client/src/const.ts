@@ -3,26 +3,6 @@
 // ============================================================================
 
 import type { SunshineData } from './types/sunshineDataType';
-import {
-  IconCloudStorm,
-  IconCloudFilled,
-  IconCloudFog,
-  IconSunElectricity,
-  IconSunFilled,
-  IconSunglasses,
-  IconSnowman,
-  IconSnowflake,
-  IconTemperatureMinus,
-  IconJacket,
-  IconWind,
-  IconMoodSmile,
-  IconTemperatureSun,
-  IconFlame,
-  IconDropletOff,
-  IconDroplet,
-  IconDropletHalf2Filled,
-  IconDropletFilled,
-} from '@tabler/icons-react';
 
 export const KM_TO_MILES = 0.621371;
 
@@ -38,7 +18,7 @@ export const MILES_LOCALES = ['en-US', 'en-GB', 'en-LR', 'en-MM'];
 export const ZOOM_THRESHOLD = 2; // switch to bounds query at zoom level 2+ (continental view)
 export const DEBOUNCE_DELAY = 200; // ms - debounce delay for zoom/pan events (reduced for more responsive feel)
 export const BOUNDS_BUFFER_PERCENT = 0.5; // add 50% buffer to viewport bounds to include nearby cities outside visible area
-export const ZOOM_AMPLIFICATION_FACTOR = 3; // amplify zoom changes for more sensitive pinch/scroll zoom
+export const ZOOM_AMPLIFICATION_FACTOR = 1.5; // amplify zoom changes for more sensitive pinch/scroll zoom
 
 // initial map view state
 export const INITIAL_VIEW_STATE = {
@@ -98,7 +78,9 @@ export const HOME_CENTER_RADIUS_MAX = 8;
  * Default marker color when no data is available (RGBA)
  * Default: White
  */
-export const HOME_DEFAULT_MARKER_COLOR: [number, number, number, number] = [255, 255, 255, 255];
+export const HOME_DEFAULT_MARKER_COLOR: [number, number, number, number] = [
+  255, 255, 255, 255,
+];
 
 /**
  * Base radius for all home location layers in map units
@@ -131,7 +113,9 @@ export const TEMP_THRESHOLDS = [
 ];
 
 // color range for heatmap layer (extracted from thresholds)
-export const COLOR_RANGE: [number, number, number][] = TEMP_THRESHOLDS.map((t) => t.color);
+export const COLOR_RANGE: [number, number, number][] = TEMP_THRESHOLDS.map(
+  (t) => t.color
+);
 
 // sunshine hours color thresholds for heatmap visualization
 // ranges from low sunshine (dark/cool colors) to high sunshine (bright/warm colors)
@@ -154,45 +138,15 @@ export const SUNSHINE_THRESHOLDS = [
 export const SUNSHINE_COLOR_RANGE = SUNSHINE_THRESHOLDS.map((t) => t.color);
 
 // Default loading state colors
-export const TEMPERATURE_LOADING_COLOR: [number, number, number, number] = [150, 150, 200, 255]; // Blue-gray
-export const SUNSHINE_LOADING_COLOR: [number, number, number, number] = [150, 150, 150, 255]; // Gray
+export const TEMPERATURE_LOADING_COLOR: [number, number, number, number] = [
+  150, 150, 200, 255,
+]; // Blue-gray
+export const SUNSHINE_LOADING_COLOR: [number, number, number, number] = [
+  150, 150, 150, 255,
+]; // Gray
 
 // Type for color cache entries
 export type ColorCacheEntry = [number, number, number, number]; // r, g, b, a
-
-// ============================================================================
-// WEATHER ICON THRESHOLDS
-// ============================================================================
-
-// sunshine hours thresholds for icon selection
-export const SUNSHINE_ICON_THRESHOLDS = [
-  { hours: 0, icon: IconCloudStorm }, // very cloudy (0-45 hours)
-  { hours: 45, icon: IconCloudFilled }, // pretty cloudy (45-70 hours)
-  { hours: 70, icon: IconCloudFog }, // moderately cloudy (70-110 hours)
-  { hours: 110, icon: IconSunElectricity }, // partly cloudy (110-180 hours)
-  { hours: 180, icon: IconSunFilled }, // mostly sunny (180-260 hours)
-  { hours: 240, icon: IconSunglasses }, // very sunny (240+ hours)
-];
-
-// temperature thresholds for icon selection
-export const TEMPERATURE_ICON_THRESHOLDS = [
-  { temp: -15, icon: IconSnowman }, // very cold (-15°C or below)
-  { temp: -7, icon: IconSnowflake }, // a little below 0 (-7°C to 0°C)
-  { temp: 0, icon: IconTemperatureMinus }, // cold above 0 (0°C to 8°C)
-  { temp: 8, icon: IconJacket }, // chilly (8°C to 13°C)
-  { temp: 13, icon: IconWind }, // in between (13°C to 20°C)
-  { temp: 20, icon: IconMoodSmile }, // comfortably warm (20°C to 26°C)
-  { temp: 26, icon: IconTemperatureSun }, // hot (26°C to 33°C)
-  { temp: 33, icon: IconFlame }, // very hot (33°C+)
-];
-
-// precipitation thresholds for icon selection (in mm)
-export const PRECIPITATION_ICON_THRESHOLDS = [
-  { precip: 0, icon: IconDropletOff }, // no rain (0-20mm)
-  { precip: 7, icon: IconDroplet }, // little rain (20-60mm)
-  { precip: 15, icon: IconDropletHalf2Filled }, // moderate rain (60-120mm)
-  { precip: 30, icon: IconDropletFilled }, // lots of rain (120mm+)
-];
 
 // ============================================================================
 // ERROR NOTIFICATION CONSTANTS
@@ -262,7 +216,9 @@ export const SUNSHINE_CHART_MAX_LINE_COLOR = '#E63E55'; // theme red for theoret
 export const SUNSHINE_CHART_MIN_LINE_COLOR = '#6b7280'; // gray for baseline
 
 // days in each month (using 28.25 for February to account for leap years)
-export const DAYS_IN_MONTH = [31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+export const DAYS_IN_MONTH = [
+  31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31,
+];
 
 // calendar days in each month (non-leap year) - for iteration
 export const CALENDAR_DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -301,3 +257,17 @@ export const monthlyMarks = [
   { value: 11, label: 'Nov' },
   { value: 12, label: 'Dec' },
 ] as const;
+
+// ============================================================================
+// GRAPH COLOR CONSTANTS
+// ============================================================================
+
+// City 1 (main city) colors - Blue shades
+export const CITY1_PRIMARY_COLOR = '#BB4A52'; // medium burgundy
+export const CITY1_MAX_COLOR = '#eb3845'; // light burgundy
+export const CITY1_MIN_COLOR = '#9F2042'; // dark burgundy
+
+// City 2 (comparison city) colors - Purple shades
+export const CITY2_PRIMARY_COLOR = '#b47ad6'; // medium purple
+export const CITY2_MAX_COLOR = '#C9B8DC'; // light purple
+export const CITY2_MIN_COLOR = '#9c74c2'; // dark purple

@@ -7,7 +7,12 @@ import { ViewMode } from '@/types/mapTypes';
 describe('MapViewToggle', () => {
   it('renders both view mode options', () => {
     const mockOnChange = vi.fn();
-    render(<MapViewToggle viewMode={ViewMode.Heatmap} onViewModeChange={mockOnChange} />);
+    render(
+      <MapViewToggle
+        viewMode={ViewMode.Heatmap}
+        onViewModeChange={mockOnChange}
+      />
+    );
 
     // component now uses icons, so we check for radio inputs by value
     const radioInputs = screen.getAllByRole('radio');
@@ -19,7 +24,12 @@ describe('MapViewToggle', () => {
 
   it('shows heatmap as selected when viewMode is heatmap', () => {
     const mockOnChange = vi.fn();
-    render(<MapViewToggle viewMode={ViewMode.Heatmap} onViewModeChange={mockOnChange} />);
+    render(
+      <MapViewToggle
+        viewMode={ViewMode.Heatmap}
+        onViewModeChange={mockOnChange}
+      />
+    );
 
     // find the checked radio input
     const radioInputs = screen.getAllByRole('radio');
@@ -32,7 +42,12 @@ describe('MapViewToggle', () => {
 
   it('shows markers as selected when viewMode is markers', () => {
     const mockOnChange = vi.fn();
-    render(<MapViewToggle viewMode={ViewMode.Markers} onViewModeChange={mockOnChange} />);
+    render(
+      <MapViewToggle
+        viewMode={ViewMode.Markers}
+        onViewModeChange={mockOnChange}
+      />
+    );
 
     // find the checked radio input
     const radioInputs = screen.getAllByRole('radio');
@@ -47,7 +62,10 @@ describe('MapViewToggle', () => {
     const user = userEvent.setup();
     const mockOnChange = vi.fn();
     const { container } = render(
-      <MapViewToggle viewMode={ViewMode.Heatmap} onViewModeChange={mockOnChange} />
+      <MapViewToggle
+        viewMode={ViewMode.Heatmap}
+        onViewModeChange={mockOnChange}
+      />
     );
 
     // find the label for markers input and click it
@@ -65,7 +83,10 @@ describe('MapViewToggle', () => {
     const user = userEvent.setup();
     const mockOnChange = vi.fn();
     const { container } = render(
-      <MapViewToggle viewMode={ViewMode.Markers} onViewModeChange={mockOnChange} />
+      <MapViewToggle
+        viewMode={ViewMode.Markers}
+        onViewModeChange={mockOnChange}
+      />
     );
 
     // find the label for heatmap input and click it

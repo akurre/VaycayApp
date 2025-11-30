@@ -9,6 +9,7 @@ import MapViewToggle from '../components/Map/MapViewToggle';
 import MapThemeToggle from '../components/Map/MapThemeToggle';
 import MapDataToggle from '../components/Map/MapDataToggle';
 import HomeLocationSelector from '../components/Navigation/HomeLocationSelector';
+import FeedbackButton from '../components/Navigation/FeedbackButton';
 import { getTodayAsMMDD } from '@/utils/dateFormatting/getTodayAsMMDD';
 import { useWeatherStore } from '../stores/useWeatherStore';
 import { useSunshineStore } from '../stores/useSunshineStore';
@@ -16,6 +17,8 @@ import DateSliderWrapper from '@/components/Navigation/DateSliderWrapper';
 import { DataType, ViewMode } from '@/types/mapTypes';
 import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
 import { INITIAL_VIEW_STATE, ZOOM_THRESHOLD } from '@/const';
+import ComponentErrorBoundary from '../components/ErrorBoundary/ComponentErrorBoundary';
+import MapColorLegend from '../components/Map/MapColorLegend';
 
 interface MapBounds {
   minLat: number;
@@ -29,11 +32,15 @@ const MapPage: FC = () => {
   const urlDate = searchParams.get('date');
 
   // initialize with today's date or url date
-  const [selectedDate, setSelectedDate] = useState<string>(urlDate || getTodayAsMMDD());
+  const [selectedDate, setSelectedDate] = useState<string>(
+    urlDate || getTodayAsMMDD()
+  );
   const [viewMode, setViewMode] = useState<ViewMode>(ViewMode.Markers);
   const [dataType, setDataType] = useState<DataType>(DataType.Temperature);
   const [bounds, setBounds] = useState<MapBounds | null>(null);
-  const [shouldUseBounds, setShouldUseBounds] = useState(INITIAL_VIEW_STATE.zoom >= ZOOM_THRESHOLD);
+  const [shouldUseBounds, setShouldUseBounds] = useState(
+    INITIAL_VIEW_STATE.zoom >= ZOOM_THRESHOLD
+  );
 
   // debounce the date to avoid excessive api calls while dragging slider
   const [debouncedDate] = useDebouncedValue(selectedDate, 300);
@@ -63,12 +70,18 @@ const MapPage: FC = () => {
   });
 
   // zustand stores for persisting displayed data
-  const { displayedWeatherData, setDisplayedWeatherData, setIsLoadingWeather } = useWeatherStore();
-  const { displayedSunshineData, setDisplayedSunshineData, setIsLoadingSunshine } =
-    useSunshineStore();
+  const { displayedWeatherData, setDisplayedWeatherData, setIsLoadingWeather } =
+    useWeatherStore();
+  const {
+    displayedSunshineData,
+    setDisplayedSunshineData,
+    setIsLoadingSunshine,
+  } = useSunshineStore();
 
   // Get the appropriate data based on the selected data type
-  const displayedData = isSunshineSelected ? displayedSunshineData : displayedWeatherData;
+  const displayedData = isSunshineSelected
+    ? displayedSunshineData
+    : displayedWeatherData;
 
   // update url when date or theme changes (for bookmarking/sharing)
   useEffect(() => {
@@ -118,22 +131,29 @@ const MapPage: FC = () => {
   };
 
   // handle bounds changes from map zoom/pan
-  const handleBoundsChange = useCallback((newBounds: MapBounds | null, useBounds: boolean) => {
-    setBounds(newBounds);
-    setShouldUseBounds(useBounds);
-  }, []);
+  const handleBoundsChange = useCallback(
+    (newBounds: MapBounds | null, useBounds: boolean) => {
+      setBounds(newBounds);
+      setShouldUseBounds(useBounds);
+    },
+    []
+  );
 
   return (
     <div className="relative w-full h-screen">
       {/* navigation panel */}
-      <div className="absolute top-8 left-4 z-20">
-        <HomeLocationSelector />
+      <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
+        <div className="flex gap-2">
+          <HomeLocationSelector />
+          <FeedbackButton />
+        </div>
+        <MapColorLegend dataType={dataType} />
       </div>
-      <div className="absolute top-6 right-4 z-20 flex gap-2">
+      <div className="absolute top-4 right-4 z-20 flex gap-2">
         <MapViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
         <MapDataToggle dataType={dataType} onDataTypeChange={setDataType} />
       </div>
-      <div className="absolute bottom-4 left-4 z-20 flex gap-2">
+      <div className="absolute bottom-4 left-4 z-10 flex gap-2">
         <MapThemeToggle />
       </div>
       <div
@@ -150,14 +170,16 @@ const MapPage: FC = () => {
       {/* map */}
       <div className="h-full w-full">
         {displayedData && (
-          <WorldMap
-            cities={displayedData}
-            viewMode={viewMode}
-            dataType={dataType}
-            onBoundsChange={handleBoundsChange}
-            selectedMonth={monthFromDate}
-            selectedDate={selectedDate}
-          />
+          <ComponentErrorBoundary componentName="WorldMap">
+            <WorldMap
+              cities={displayedData}
+              viewMode={viewMode}
+              dataType={dataType}
+              onBoundsChange={handleBoundsChange}
+              selectedMonth={monthFromDate}
+              selectedDate={selectedDate}
+            />
+          </ComponentErrorBoundary>
         )}
       </div>
     </div>

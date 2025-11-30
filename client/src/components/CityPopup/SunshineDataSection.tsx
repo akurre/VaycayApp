@@ -1,14 +1,15 @@
 import { memo } from 'react';
-import { Alert, Badge, Loader } from '@mantine/core';
-import { IconAlertCircle } from '@tabler/icons-react';
 import type { SunshineData } from '@/types/sunshineDataType';
-import SunshineGraph from './SunshineGraph';
+import SunshineGraph from './graphs/SunshineGraph';
+import WeatherDataSection from './WeatherDataSection';
+import ComponentErrorBoundary from '../ErrorBoundary/ComponentErrorBoundary';
 
 interface SunshineDataSectionProps {
   displaySunshineData: SunshineData | null;
   isLoading: boolean;
   hasError: boolean;
   selectedMonth: number;
+  comparisonSunshineData?: SunshineData | null;
 }
 
 const SunshineDataSection = ({
@@ -16,31 +17,28 @@ const SunshineDataSection = ({
   isLoading,
   hasError,
   selectedMonth,
+  comparisonSunshineData,
 }: SunshineDataSectionProps) => {
   return (
-    <>
-      {isLoading && !displaySunshineData && (
-        <div className="flex justify-center py-4">
-          <Loader size="sm" />
-        </div>
+    <WeatherDataSection
+      data={displaySunshineData}
+      comparisonData={comparisonSunshineData}
+      isLoading={isLoading}
+      hasError={hasError}
+      errorMessage="Failed to load sunshine data for this city."
+      showNoDataBadge={true}
+      noDataMessage="No sunshine data available"
+    >
+      {(data) => (
+        <ComponentErrorBoundary componentName="SunshineGraph">
+          <SunshineGraph
+            sunshineData={data}
+            selectedMonth={selectedMonth}
+            comparisonSunshineData={comparisonSunshineData}
+          />
+        </ComponentErrorBoundary>
       )}
-
-      {hasError && !displaySunshineData && (
-        <Alert icon={<IconAlertCircle size="1rem" />} color="red" title="Error">
-          Failed to load sunshine data for this city.
-        </Alert>
-      )}
-
-      {displaySunshineData ? (
-        <div className="h-full p-3">
-          <SunshineGraph sunshineData={displaySunshineData} selectedMonth={selectedMonth} />
-        </div>
-      ) : (
-        <div className="h-full items-center flex justify-center">
-          <Badge size="xl">No sunshine data available</Badge>
-        </div>
-      )}
-    </>
+    </WeatherDataSection>
   );
 };
 

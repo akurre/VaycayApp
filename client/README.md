@@ -28,3 +28,47 @@ The equal distribution algorithm that fixes global balance creates smaller viewp
 ### Client-Side Limiting
 - `useMapLayers` applies `maxCitiesToShow` (300) to prevent performance issues
 - Color caching pre-calculates markers to improve render performance
+
+## Rainfall Data Normalization
+
+### Background
+The backend aggregates multiple years of daily weather data into weekly statistics. Different cities have varying amounts of historical data:
+- Berlin, Germany: 2 years (732 days)
+- Hamburg, Germany: 1 year (366 days)
+- Some cities: 50+ years of data
+
+### The Problem
+Without normalization, `totalPrecip` for each week represents the **sum of precipitation across all available years** for that week. This causes:
+- Cities with more historical data to show artificially inflated precipitation values
+- Inaccurate comparisons between cities (e.g., Berlin showing 2x Hamburg's rainfall)
+- Incorrect annual totals (Berlin showing 1038mm instead of ~518mm)
+
+### The Solution: Normalization Formula
+To get accurate average weekly precipitation regardless of years of data:
+
+```typescript
+normalizedWeeklyPrecip = (totalPrecip / daysWithData) * 7
+```
+
+**How it works:**
+1. `totalPrecip / daysWithData` = average daily precipitation for that week
+2. Multiply by 7 = average weekly precipitation
+3. Sum all 52 weeks = accurate annual rainfall
+
+### Implementation Locations
+1. **Annual Rainfall Display** ([SunshineValues.tsx](src/components/CityPopup/SunshineValues.tsx))
+   - Uses `calculateAverageRainfall()` utility
+   - Shows total annual rainfall in mm
+
+2. **Weekly Rainfall Graph** ([RainfallGraph.tsx](src/components/CityPopup/graphs/RainfallGraph.tsx))
+   - Normalizes both main city and comparison city data
+   - Displays average weekly precipitation per week
+   - Enables accurate side-by-side city comparisons
+
+### Validation
+Database verification for Berlin:
+- Raw sum of `totalPrecip`: 1038mm (inflated by 2 years of data)
+- Normalized calculation: 517.7mm ✅
+- Ground truth from daily data: 518mm ✅
+
+The normalization ensures all cities display accurate, comparable precipitation values regardless of their historical data availability.

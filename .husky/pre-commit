@@ -2,8 +2,8 @@
 set -e
 
 # Optional: full-project type checks (fast and deterministic). Comment out if you prefer speed.
-npm run -w client -s type-check
-npm run -w server -s type-check
+cd client && npm run type-check && cd ..
+cd server && npm run type-check && cd ..
 
 # Lint/format staged files and run per-workspace type checks for changed files
 npx lint-staged
