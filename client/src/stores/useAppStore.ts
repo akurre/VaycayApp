@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { HomeLocation } from '@/types/userLocationType';
-import type { WeatherDataUnion } from '@/types/mapTypes';
+import type { MapViewport, WeatherDataUnion } from '@/types/mapTypes';
 import { TemperatureUnit } from '@/types/mapTypes';
 
 interface AppState {
@@ -17,6 +17,8 @@ interface AppState {
   setHasSeenWelcomeModal: (seen: boolean) => void;
   temperatureUnit: TemperatureUnit;
   setTemperatureUnit: (unit: TemperatureUnit) => void;
+  mapViewport: MapViewport | null;
+  setMapViewport: (viewport: MapViewport) => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -35,6 +37,8 @@ export const useAppStore = create<AppState>()(
         set({ hasSeenWelcomeModal }),
       temperatureUnit: TemperatureUnit.Celsius,
       setTemperatureUnit: (temperatureUnit) => set({ temperatureUnit }),
+      mapViewport: null,
+      setMapViewport: (mapViewport) => set({ mapViewport }),
     }),
     {
       name: 'app-storage',
