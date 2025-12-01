@@ -47,7 +47,9 @@ const SunshineTooltipCityData = ({
   // comparison mode: badge inline with data
   return (
     <div className="flex items-start gap-2 mb-2 mt-2">
-      {cityName && <CityBadge cityName={cityName} isComparison={isComparison} />}
+      {cityName && (
+        <CityBadge cityName={cityName} isComparison={isComparison} />
+      )}
       <div className="flex flex-col">
         <Text size="sm" c={textColor}>
           {hours.toFixed(1)} hours

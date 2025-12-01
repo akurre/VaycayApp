@@ -3,7 +3,7 @@ import type { MapViewState, ViewStateChangeParameters } from '@deck.gl/core';
 import { WebMercatorViewport } from '@deck.gl/core';
 import { ZOOM_THRESHOLD, DEBOUNCE_DELAY, BOUNDS_BUFFER_PERCENT } from '@/const';
 import { useAppStore } from '@/stores/useAppStore';
-import { MapBounds } from '@/types/mapTypes';
+import type { MapBounds } from '@/types/mapTypes';
 
 /**
  * hook to track map viewport bounds and zoom level for intelligent query switching.
@@ -61,7 +61,7 @@ export const useMapBounds = (
 ): UseMapBoundsReturn => {
   const mapViewport = useAppStore((state) => state.mapViewport);
   const setMapViewport = useAppStore((state) => state.setMapViewport);
-  
+
   // use stored viewport if available, otherwise use initial view state
   const [viewState, setViewState] = useState<MapViewState>(
     mapViewport
