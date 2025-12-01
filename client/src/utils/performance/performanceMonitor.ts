@@ -187,35 +187,6 @@ class PerformanceMonitor {
     }
   }
 
-  logSummary(): void {
-    if (!import.meta.env.DEV) return;
-
-    console.group('📊 performance summary');
-
-    const grouped = this.metrics.reduce(
-      (acc, metric) => {
-        if (!acc[metric.name]) {
-          acc[metric.name] = [];
-        }
-        acc[metric.name].push(metric.duration);
-        return acc;
-      },
-      {} as Record<string, number[]>
-    );
-
-    Object.entries(grouped).forEach(([name, durations]) => {
-      const avg = durations.reduce((a, b) => a + b, 0) / durations.length;
-      const min = Math.min(...durations);
-      const max = Math.max(...durations);
-
-      console.log(
-        `${name}: avg ${avg.toFixed(2)}ms, min ${min.toFixed(2)}ms, max ${max.toFixed(2)}ms (${durations.length} samples)`
-      );
-    });
-
-    console.groupEnd();
-  }
-
   // get current performance baselines for documentation
   getBaselines(): Record<string, string> {
     const grouped = this.metrics.reduce(

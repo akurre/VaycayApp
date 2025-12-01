@@ -1,6 +1,19 @@
 import type { WeatherData } from './cityWeatherDataType';
 import type { SunshineData } from './sunshineDataType';
 
+export interface MapBounds {
+  minLat: number;
+  maxLat: number;
+  minLong: number;
+  maxLong: number;
+}
+
+export interface MapViewport {
+  latitude: number;
+  longitude: number;
+  zoom: number;
+}
+
 export enum MapTheme {
   Light = 'light',
   Dark = 'dark',

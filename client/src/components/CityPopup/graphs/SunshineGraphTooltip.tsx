@@ -1,6 +1,6 @@
 import { Text } from '@mantine/core';
 import { useChartColors } from '@/hooks/useChartColors';
-import CityBadge from './CityBadge';
+import SunshineTooltipCityData from './SunshineTooltipCityData';
 
 interface TooltipPayload {
   payload: {
@@ -50,30 +50,31 @@ const SunshineGraphTooltip = ({
       }}
       className="p-2 rounded shadow-md"
     >
-      <Text size="sm" fw={600} c={chartColors.textColor} mb={4}>
+      <Text size="sm" fw={600} c={chartColors.textColor} mb={1}>
         {data.month}
       </Text>
 
-      {/* Main city sunshine hours */}
+      {/* Main city sunshine hours with percentage */}
       {typeof data.hours === 'number' && (
-        <div className="flex items-center gap-2 mb-1">
-          {cityName && <CityBadge cityName={cityName} />}
-          <Text size="sm" c={chartColors.textColor}>
-            {data.hours.toFixed(1)} hours
-          </Text>
-        </div>
+        <SunshineTooltipCityData
+          cityName={cityName}
+          hours={data.hours}
+          theoreticalMax={data.theoreticalMax}
+          textColor={chartColors.textColor}
+          hasComparisonData={typeof data.comparisonHours === 'number'}
+        />
       )}
 
-      {/* Comparison city sunshine hours */}
+      {/* Comparison city sunshine hours with percentage */}
       {typeof data.comparisonHours === 'number' && (
-        <div className="flex items-center gap-2">
-          {comparisonCityName && (
-            <CityBadge cityName={comparisonCityName} isComparison />
-          )}
-          <Text size="sm" c={chartColors.textColor}>
-            {data.comparisonHours.toFixed(1)} hours
-          </Text>
-        </div>
+        <SunshineTooltipCityData
+          cityName={comparisonCityName}
+          hours={data.comparisonHours}
+          theoreticalMax={data.comparisonTheoreticalMax}
+          textColor={chartColors.textColor}
+          isComparison
+          hasComparisonData
+        />
       )}
 
       {/* Show N/A if no data */}

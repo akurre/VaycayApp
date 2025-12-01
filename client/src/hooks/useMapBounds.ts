@@ -2,19 +2,14 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import type { MapViewState, ViewStateChangeParameters } from '@deck.gl/core';
 import { WebMercatorViewport } from '@deck.gl/core';
 import { ZOOM_THRESHOLD, DEBOUNCE_DELAY, BOUNDS_BUFFER_PERCENT } from '@/const';
+import { useAppStore } from '@/stores/useAppStore';
+import { MapBounds } from '@/types/mapTypes';
 
 /**
  * hook to track map viewport bounds and zoom level for intelligent query switching.
  * automatically switches between global and bounds-based queries at zoom threshold.
  * debounces zoom/pan events to prevent excessive api calls.
  */
-
-interface MapBounds {
-  minLat: number;
-  maxLat: number;
-  minLong: number;
-  maxLong: number;
-}
 
 interface UseMapBoundsReturn {
   viewState: MapViewState;
@@ -46,17 +41,6 @@ function calculateBounds(viewState: MapViewState): MapBounds {
   // getBounds() returns [minLong, minLat, maxLong, maxLat]
   const [minLong, minLat, maxLong, maxLat] = viewport.getBounds();
 
-  console.log('📍 calculateBounds:', {
-    zoom,
-    viewport: { width, height },
-    center: { lat: latitude, long: longitude },
-    bounds: { minLat, maxLat, minLong, maxLong },
-    coverage: {
-      latRange: (maxLat - minLat).toFixed(1),
-      longRange: (maxLong - minLong).toFixed(1),
-    },
-  });
-
   // add buffer to include nearby cities outside visible area
   const latRange = maxLat - minLat;
   const longRange = maxLong - minLong;
@@ -75,7 +59,20 @@ export const useMapBounds = (
   initialViewState: MapViewState,
   onBoundsChange?: (bounds: MapBounds | null, shouldUseBounds: boolean) => void
 ): UseMapBoundsReturn => {
-  const [viewState, setViewState] = useState<MapViewState>(initialViewState);
+  const mapViewport = useAppStore((state) => state.mapViewport);
+  const setMapViewport = useAppStore((state) => state.setMapViewport);
+  
+  // use stored viewport if available, otherwise use initial view state
+  const [viewState, setViewState] = useState<MapViewState>(
+    mapViewport
+      ? {
+          ...initialViewState,
+          latitude: mapViewport.latitude,
+          longitude: mapViewport.longitude,
+          zoom: mapViewport.zoom,
+        }
+      : initialViewState
+  );
   const [bounds, setBounds] = useState<MapBounds | null>(null);
   const [shouldUseBounds, setShouldUseBounds] = useState(false);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -94,6 +91,13 @@ export const useMapBounds = (
           return prev; // No change, return previous state to prevent re-render
         }
         return newViewState;
+      });
+
+      // store viewport for persistence across view mode changes
+      setMapViewport({
+        latitude: newViewState.latitude,
+        longitude: newViewState.longitude,
+        zoom: newViewState.zoom,
       });
 
       // clear existing debounce timer
@@ -116,7 +120,7 @@ export const useMapBounds = (
         }
       }, DEBOUNCE_DELAY);
     },
-    [onBoundsChange]
+    [onBoundsChange, setMapViewport]
   );
 
   // cleanup debounce timer on unmount
