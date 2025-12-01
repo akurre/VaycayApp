@@ -11,7 +11,6 @@ const MapDataToggle = ({ dataType, onDataTypeChange }: MapDataToggleProps) => {
   return (
     <MapToggle
       value={dataType}
-      size="lg"
       onChange={onDataTypeChange}
       options={[
         {

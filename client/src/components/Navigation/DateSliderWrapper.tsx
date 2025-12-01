@@ -1,7 +1,6 @@
 import type { FC } from 'react';
 import { dateToDayOfYear } from '@/utils/dateFormatting/dateToDayOfYear';
 import { dayOfYearToDate } from '@/utils/dateFormatting/dayOfYearToDate';
-import { useWeatherStore } from '@/stores/useWeatherStore';
 import CustomDateSlider from './CustomDateSlider';
 import { monthMarks, monthlyMarks } from '@/const';
 
@@ -16,38 +15,30 @@ const DateSliderWrapper: FC<DateSliderWrapperProps> = ({
   onDateChange,
   isMonthly = false,
 }) => {
-  const { isLoadingWeather } = useWeatherStore();
-
-  // For monthly mode, use month number (1-12)
-  // For daily mode, use day of year (1-365)
+  // For monthly mode: use month number (1-12), for daily: use day of year (1-365)
   const sliderValue = isMonthly
     ? Number.parseInt(currentDate.substring(0, 2), 10)
     : dateToDayOfYear(currentDate);
 
+  // Convert slider value back to date string format
   const handleSliderChange = (value: number) => {
-    if (isMonthly) {
-      // Convert month number to MM-15 format (middle of month)
-      const monthStr = value.toString().padStart(2, '0');
-      const newDate = `${monthStr}-15`;
-      onDateChange(newDate);
-    } else {
-      // Convert day of year to MM-DD format
-      const newDate = dayOfYearToDate(value);
-      onDateChange(newDate);
-    }
+    const newDate = isMonthly
+      ? `${value.toString().padStart(2, '0')}-15` // Convert month number to MM-15 format
+      : dayOfYearToDate(value); // Convert day of year to MM-DD format
+    onDateChange(newDate);
   };
 
-  // Convert readonly array to mutable array to fix TypeScript error
-  const marks = isMonthly ? [...monthlyMarks] : monthMarks;
+  // Spread to convert readonly arrays to mutable for component compatibility
+  const marks = isMonthly ? [...monthlyMarks] : [...monthMarks];
+  const maxValue = isMonthly ? 12 : 365;
 
   return (
     <div className="w-full">
       <CustomDateSlider
         value={sliderValue}
-        isLoading={isLoadingWeather}
         onChange={handleSliderChange}
         min={1}
-        max={isMonthly ? 12 : 365}
+        max={maxValue}
         marks={marks}
         isMonthly={isMonthly}
       />
