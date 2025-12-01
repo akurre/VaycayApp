@@ -139,6 +139,24 @@ const WorldMap = ({
   // Memoize DeckGL style to prevent new object reference on every render
   const deckGLStyle = useMemo(() => ({ pointerEvents: 'auto' as const }), []);
 
+  // Custom cursor handler - show pointer when hovering over markers in marker view
+  const getCursor = useMemo(
+    () =>
+      ({ isHovering, isDragging }: { isHovering: boolean; isDragging: boolean }) => {
+        // In marker view, show pointer cursor when hovering over a marker
+        if (viewMode === 'markers' && isHovering) {
+          return 'pointer';
+        }
+        // Show grabbing cursor while actively dragging
+        if (isDragging) {
+          return 'grabbing';
+        }
+        // Default grab cursor for map dragging
+        return 'grab';
+      },
+    [viewMode]
+  );
+
   // Keep track of the last selected city for exit animation
   const lastSelectedCityRef = useRef<WeatherDataUnion | null>(null);
 
@@ -185,6 +203,7 @@ const WorldMap = ({
           onHover={handleHover}
           onClick={handleClick}
           getTooltip={() => null}
+          getCursor={getCursor}
           style={deckGLStyle}
         >
           <Map
