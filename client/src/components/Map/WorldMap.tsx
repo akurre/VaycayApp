@@ -63,6 +63,11 @@ const WorldMap = ({
   // Track map content opacity for smooth transitions
   const [mapOpacity, setMapOpacity] = useState(1);
 
+  // Track previous date/month to detect data changes (not just bounds changes)
+  const prevDateRef = useRef(selectedDate);
+  const prevMonthRef = useRef(selectedMonth);
+  const prevDataTypeRef = useRef(dataType);
+
   const colorScheme = useComputedColorScheme('dark');
   const isLoadingWeather = useWeatherStore((state) => state.isLoadingWeather);
   const isLoadingSunshine = useSunshineStore(
@@ -170,9 +175,18 @@ const WorldMap = ({
     }
   }, [selectedCity]);
 
-  // Delayed loader effect - only show after delay to avoid flash for quick loads
+  // Delayed loader effect - only show when basemap loads or when date/month changes (not for zoom/pan)
   useEffect(() => {
-    const isLoading = !isBasemapLoaded || isLoadingWeather || isLoadingSunshine;
+    // Check if date/month/dataType has changed (new data loading)
+    const dateChanged = prevDateRef.current !== selectedDate;
+    const monthChanged = prevMonthRef.current !== selectedMonth;
+    const dataTypeChanged = prevDataTypeRef.current !== dataType;
+    const dataHasChanged = dateChanged || monthChanged || dataTypeChanged;
+
+    // Only show loading for basemap or when actual date/month/dataType changes
+    const isLoading =
+      !isBasemapLoaded ||
+      (dataHasChanged && (isLoadingWeather || isLoadingSunshine));
 
     if (isLoading) {
       // Fade out map content when loading starts
@@ -180,6 +194,11 @@ const WorldMap = ({
       const timer = setTimeout(() => setShowLoader(true), LOADER_DELAY_MS);
       return () => clearTimeout(timer);
     } else {
+      // Update refs when loading completes
+      prevDateRef.current = selectedDate;
+      prevMonthRef.current = selectedMonth;
+      prevDataTypeRef.current = dataType;
+
       // Fade in map content when loading completes
       setShowLoader(false);
       // Small delay to ensure loader fades out before map fades in
@@ -192,6 +211,10 @@ const WorldMap = ({
   }, [
     isBasemapLoaded,
     isLoadingWeather,
+    isLoadingSunshine,
+    selectedDate,
+    selectedMonth,
+    dataType,
     LOADER_DELAY_MS,
     MAP_FADE_IN_DELAY_MS,
     MAP_LOADING_OPACITY,

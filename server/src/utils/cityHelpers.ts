@@ -1,10 +1,14 @@
 import type { City, PrismaClient } from '@prisma/client';
 
 /**
- * Title cases a city name (first letter uppercase, rest lowercase)
+ * Title cases a city name (capitalizes first letter of each word)
+ * e.g., "san francisco" -> "San Francisco", "new york" -> "New York"
  */
 export function titleCaseCityName(cityName: string): string {
-  return cityName.charAt(0).toUpperCase() + cityName.slice(1).toLowerCase();
+  return cityName
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
 }
 
 /**
