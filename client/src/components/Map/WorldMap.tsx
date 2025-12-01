@@ -9,6 +9,10 @@ import { useHomeCityData } from '../../hooks/useHomeCityData';
 import { useHomeLocationLayers } from '../../hooks/useHomeLocationLayers';
 import {
   INITIAL_VIEW_STATE,
+  LOADER_DELAY_MS,
+  MAP_FADE_IN_DELAY_MS,
+  MAP_LOADED_OPACITY,
+  MAP_LOADING_OPACITY,
   MAP_STYLES,
   ZOOM_AMPLIFICATION_FACTOR,
 } from '@/const';
@@ -52,6 +56,12 @@ const WorldMap = ({
 
   // Track basemap loading state
   const [isBasemapLoaded, setIsBasemapLoaded] = useState(false);
+
+  // Track whether to show loader (delayed to avoid flash for quick loads)
+  const [showLoader, setShowLoader] = useState(false);
+
+  // Track map content opacity for smooth transitions
+  const [mapOpacity, setMapOpacity] = useState(1);
 
   const colorScheme = useComputedColorScheme('dark');
   const isLoadingWeather = useWeatherStore((state) => state.isLoadingWeather);
@@ -127,6 +137,30 @@ const WorldMap = ({
   // Memoize DeckGL style to prevent new object reference on every render
   const deckGLStyle = useMemo(() => ({ pointerEvents: 'auto' as const }), []);
 
+  // Custom cursor handler - show pointer when hovering over markers in marker view
+  const getCursor = useMemo(
+    () =>
+      ({
+        isHovering,
+        isDragging,
+      }: {
+        isHovering: boolean;
+        isDragging: boolean;
+      }) => {
+        // In marker view, show pointer cursor when hovering over a marker
+        if (viewMode === 'markers' && isHovering) {
+          return 'pointer';
+        }
+        // Show grabbing cursor while actively dragging
+        if (isDragging) {
+          return 'grabbing';
+        }
+        // Default grab cursor for map dragging
+        return 'grab';
+      },
+    [viewMode]
+  );
+
   // Keep track of the last selected city for exit animation
   const lastSelectedCityRef = useRef<WeatherDataUnion | null>(null);
 
@@ -136,35 +170,81 @@ const WorldMap = ({
     }
   }, [selectedCity]);
 
+  // Delayed loader effect - only show after delay to avoid flash for quick loads
+  useEffect(() => {
+    const isLoading = !isBasemapLoaded || isLoadingWeather || isLoadingSunshine;
+
+    if (isLoading) {
+      // Fade out map content when loading starts
+      setMapOpacity(MAP_LOADING_OPACITY);
+      const timer = setTimeout(() => setShowLoader(true), LOADER_DELAY_MS);
+      return () => clearTimeout(timer);
+    } else {
+      // Fade in map content when loading completes
+      setShowLoader(false);
+      // Small delay to ensure loader fades out before map fades in
+      const fadeTimer = setTimeout(
+        () => setMapOpacity(MAP_LOADED_OPACITY),
+        MAP_FADE_IN_DELAY_MS
+      );
+      return () => clearTimeout(fadeTimer);
+    }
+  }, [
+    isBasemapLoaded,
+    isLoadingWeather,
+    LOADER_DELAY_MS,
+    MAP_FADE_IN_DELAY_MS,
+    MAP_LOADING_OPACITY,
+    MAP_LOADED_OPACITY,
+  ]);
+
   // Use the current or last selected city for rendering during transition
   const cityToRender = selectedCity || lastSelectedCityRef.current;
 
   return (
     <div className="relative h-full w-full">
-      <DeckGL
-        viewState={viewState}
-        onViewStateChange={onViewStateChange}
-        controller={controller}
-        layers={layers}
-        onHover={handleHover}
-        onClick={handleClick}
-        getTooltip={() => null}
-        style={deckGLStyle}
+      <div
+        style={{
+          opacity: mapOpacity,
+          transition: 'opacity 500ms ease-in-out',
+        }}
       >
-        <Map
-          mapStyle={MAP_STYLES[colorScheme]}
-          attributionControl={false}
-          reuseMaps
-          onLoad={() => setIsBasemapLoaded(true)}
-        />
-      </DeckGL>
+        <DeckGL
+          viewState={viewState}
+          onViewStateChange={onViewStateChange}
+          controller={controller}
+          layers={layers}
+          onHover={handleHover}
+          onClick={handleClick}
+          getTooltip={() => null}
+          getCursor={getCursor}
+          style={deckGLStyle}
+        >
+          <Map
+            mapStyle={MAP_STYLES[colorScheme]}
+            attributionControl={false}
+            reuseMaps
+            onLoad={() => setIsBasemapLoaded(true)}
+          />
+        </DeckGL>
+      </div>
 
-      {/* Loading indicator while basemap tiles are loading */}
-      {!isBasemapLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-background/50 backdrop-blur-sm z-10">
-          <Loader size="lg" />
-        </div>
-      )}
+      {/* Loading indicator with smooth transitions */}
+      <Transition
+        mounted={showLoader}
+        transition="fade"
+        duration={400}
+        timingFunction="ease"
+      >
+        {(transitionStyle) => (
+          <div
+            style={transitionStyle}
+            className="absolute inset-0 flex items-center justify-center bg-background/70 backdrop-blur-sm z-10"
+          >
+            <Loader size="lg" />
+          </div>
+        )}
+      </Transition>
 
       {hoverInfo && (
         <MapTooltip

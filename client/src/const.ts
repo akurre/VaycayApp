@@ -271,3 +271,12 @@ export const CITY1_MIN_COLOR = '#9F2042'; // dark burgundy
 export const CITY2_PRIMARY_COLOR = '#b47ad6'; // medium purple
 export const CITY2_MAX_COLOR = '#C9B8DC'; // light purple
 export const CITY2_MIN_COLOR = '#9c74c2'; // dark purple
+
+// ============================================================================
+// WORLD MAP BIG LOADER CONSTANTS
+// ============================================================================
+// Constants for World Map loading state transition timing
+export const LOADER_DELAY_MS = 300;
+export const MAP_FADE_IN_DELAY_MS = 100;
+export const MAP_LOADING_OPACITY = 0.3;
+export const MAP_LOADED_OPACITY = 1;

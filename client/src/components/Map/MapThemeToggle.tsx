@@ -8,6 +8,7 @@ const MapThemeToggle = () => {
 
   return (
     <MapToggle
+      size="md"
       value={computedColorScheme}
       onChange={(value) => setColorScheme(value as 'light' | 'dark')}
       options={[

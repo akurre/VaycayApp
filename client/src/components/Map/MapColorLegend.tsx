@@ -21,7 +21,7 @@ interface MapColorLegendProps {
 }
 
 const MapColorLegend: FC<MapColorLegendProps> = ({ dataType }) => {
-  const [opened, setOpened] = useState(true);
+  const [opened, setOpened] = useState(false);
   const isSunshine = dataType === DataType.Sunshine;
   const temperatureUnit = useAppStore((state) => state.temperatureUnit);
   const unitSymbol = getTemperatureUnitSymbol(temperatureUnit);

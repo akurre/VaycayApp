@@ -17,7 +17,6 @@ const TemperatureUnitToggle = ({
   return (
     <MapToggle
       value={temperatureUnit}
-      size="lg"
       onChange={onTemperatureUnitChange}
       options={[
         {

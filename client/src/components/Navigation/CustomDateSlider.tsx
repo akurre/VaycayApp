@@ -8,7 +8,6 @@ import SliderMarks from './DateSliderParts/SliderMarks';
 
 interface CustomDateSliderProps {
   value: number;
-  isLoading?: boolean;
   onChange: (value: number) => void;
   min: number;
   max: number;
@@ -18,7 +17,6 @@ interface CustomDateSliderProps {
 
 const CustomDateSlider: FC<CustomDateSliderProps> = ({
   value,
-  isLoading,
   onChange,
   min,
   max,
@@ -70,7 +68,7 @@ const CustomDateSlider: FC<CustomDateSliderProps> = ({
     <div className="w-full px-8">
       {/* track container with draggable elements */}
       <SliderTrack trackRef={ref}>
-        <SliderThumb position={position} isLoading={isLoading} />
+        <SliderThumb position={position} />
         <SliderLabel
           value={displayValue}
           position={position}
