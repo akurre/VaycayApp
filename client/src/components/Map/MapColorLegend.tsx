@@ -45,11 +45,11 @@ const MapColorLegend: FC<MapColorLegendProps> = ({ dataType }) => {
     } else {
       const threshold = TEMP_THRESHOLDS[index];
       const nextThreshold = TEMP_THRESHOLDS[index + 1];
-      
+
       const convertedTemp = Math.round(
         convertTemperature(threshold.temp, temperatureUnit)
       );
-      
+
       if (nextThreshold) {
         const convertedNextTemp = Math.round(
           convertTemperature(nextThreshold.temp, temperatureUnit)

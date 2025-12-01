@@ -59,8 +59,10 @@ const TemperatureSection = ({
           </div>
           {hasComparison && (
             <div className="text-sm" style={{ color: CITY2_PRIMARY_COLOR }}>
-              {formatTemperature(comparisonAvgTemperature ?? null, temperatureUnit) ??
-                'N/A'}
+              {formatTemperature(
+                comparisonAvgTemperature ?? null,
+                temperatureUnit
+              ) ?? 'N/A'}
             </div>
           )}
         </div>
@@ -77,8 +79,10 @@ const TemperatureSection = ({
           </div>
           {hasComparison && (
             <div className="text-sm" style={{ color: CITY2_PRIMARY_COLOR }}>
-              {formatTemperature(comparisonMinTemperature ?? null, temperatureUnit) ??
-                'N/A'}
+              {formatTemperature(
+                comparisonMinTemperature ?? null,
+                temperatureUnit
+              ) ?? 'N/A'}
             </div>
           )}
         </div>
@@ -95,8 +99,10 @@ const TemperatureSection = ({
           </div>
           {hasComparison && (
             <div className="text-sm" style={{ color: CITY2_PRIMARY_COLOR }}>
-              {formatTemperature(comparisonMaxTemperature ?? null, temperatureUnit) ??
-                'N/A'}
+              {formatTemperature(
+                comparisonMaxTemperature ?? null,
+                temperatureUnit
+              ) ?? 'N/A'}
             </div>
           )}
         </div>

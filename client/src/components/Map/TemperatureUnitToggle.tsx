@@ -1,4 +1,7 @@
-import { IconTemperatureCelsius, IconTemperatureFahrenheit } from '@tabler/icons-react';
+import {
+  IconTemperatureCelsius,
+  IconTemperatureFahrenheit,
+} from '@tabler/icons-react';
 import MapToggle from '@/components/Shared/MapToggle';
 import { TemperatureUnit } from '@/types/mapTypes';
 
