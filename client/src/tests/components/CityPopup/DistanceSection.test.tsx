@@ -46,6 +46,8 @@ describe('DistanceSection', () => {
         setHasSeenWelcomeModal: vi.fn(),
         temperatureUnit: TemperatureUnit.Celsius,
         setTemperatureUnit: vi.fn(),
+        mapViewport: null,
+        setMapViewport: vi.fn(),
       })
     );
 
@@ -70,6 +72,8 @@ describe('DistanceSection', () => {
         setHasSeenWelcomeModal: vi.fn(),
         temperatureUnit: TemperatureUnit.Celsius,
         setTemperatureUnit: vi.fn(),
+        mapViewport: null,
+        setMapViewport: vi.fn(),
       })
     );
 
@@ -103,6 +107,8 @@ describe('DistanceSection', () => {
         setHasSeenWelcomeModal: vi.fn(),
         temperatureUnit: TemperatureUnit.Celsius,
         setTemperatureUnit: vi.fn(),
+        mapViewport: null,
+        setMapViewport: vi.fn(),
       })
     );
 
@@ -133,6 +139,8 @@ describe('DistanceSection', () => {
         setHasSeenWelcomeModal: vi.fn(),
         temperatureUnit: TemperatureUnit.Celsius,
         setTemperatureUnit: vi.fn(),
+        mapViewport: null,
+        setMapViewport: vi.fn(),
       })
     );
 
@@ -163,6 +171,8 @@ describe('DistanceSection', () => {
         setHasSeenWelcomeModal: vi.fn(),
         temperatureUnit: TemperatureUnit.Celsius,
         setTemperatureUnit: vi.fn(),
+        mapViewport: null,
+        setMapViewport: vi.fn(),
       })
     );
 
@@ -193,6 +203,8 @@ describe('DistanceSection', () => {
         setHasSeenWelcomeModal: vi.fn(),
         temperatureUnit: TemperatureUnit.Celsius,
         setTemperatureUnit: vi.fn(),
+        mapViewport: null,
+        setMapViewport: vi.fn(),
       })
     );
 
