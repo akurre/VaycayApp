@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen } from '@/test-utils';
 import DistanceSection from '@/components/CityPopup/DistanceSection';
 import { useAppStore } from '@/stores/useAppStore';
+import { TemperatureUnit } from '@/types/mapTypes';
 
 // mock the store
 vi.mock('@/stores/useAppStore');
@@ -43,6 +44,8 @@ describe('DistanceSection', () => {
         setLocationError: vi.fn(),
         hasSeenWelcomeModal: false,
         setHasSeenWelcomeModal: vi.fn(),
+        temperatureUnit: TemperatureUnit.Celsius,
+        setTemperatureUnit: vi.fn(),
       })
     );
 
@@ -65,6 +68,8 @@ describe('DistanceSection', () => {
         setLocationError: vi.fn(),
         hasSeenWelcomeModal: false,
         setHasSeenWelcomeModal: vi.fn(),
+        temperatureUnit: TemperatureUnit.Celsius,
+        setTemperatureUnit: vi.fn(),
       })
     );
 
@@ -96,6 +101,8 @@ describe('DistanceSection', () => {
         setLocationError: vi.fn(),
         hasSeenWelcomeModal: false,
         setHasSeenWelcomeModal: vi.fn(),
+        temperatureUnit: TemperatureUnit.Celsius,
+        setTemperatureUnit: vi.fn(),
       })
     );
 
@@ -124,6 +131,8 @@ describe('DistanceSection', () => {
         setLocationError: vi.fn(),
         hasSeenWelcomeModal: false,
         setHasSeenWelcomeModal: vi.fn(),
+        temperatureUnit: TemperatureUnit.Celsius,
+        setTemperatureUnit: vi.fn(),
       })
     );
 
@@ -152,6 +161,8 @@ describe('DistanceSection', () => {
         setLocationError: vi.fn(),
         hasSeenWelcomeModal: false,
         setHasSeenWelcomeModal: vi.fn(),
+        temperatureUnit: TemperatureUnit.Celsius,
+        setTemperatureUnit: vi.fn(),
       })
     );
 
@@ -180,6 +191,8 @@ describe('DistanceSection', () => {
         setLocationError: vi.fn(),
         hasSeenWelcomeModal: false,
         setHasSeenWelcomeModal: vi.fn(),
+        temperatureUnit: TemperatureUnit.Celsius,
+        setTemperatureUnit: vi.fn(),
       })
     );
 

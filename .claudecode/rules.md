@@ -41,6 +41,17 @@
   const fullName = `${firstName} ${lastName}`;
   ```
 
+- **Use individual Zustand selectors** instead of object destructuring for better performance
+  ```typescript
+  // ❌ Bad - object destructuring causes unnecessary re-renders
+  const { temperatureUnit, viewMode, mapTheme } = useAppStore();
+
+  // ✅ Good - individual selectors only re-render when their specific value changes
+  const temperatureUnit = useAppStore((state) => state.temperatureUnit);
+  const viewMode = useAppStore((state) => state.viewMode);
+  const mapTheme = useAppStore((state) => state.mapTheme);
+  ```
+
 - **Don't wrap already-memoized functions** - Zustand selectors are already memoized
   ```typescript
   // ❌ Bad

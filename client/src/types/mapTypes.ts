@@ -16,6 +16,11 @@ export enum DataType {
   Sunshine = 'sunshine',
 }
 
+export enum TemperatureUnit {
+  Celsius = 'celsius',
+  Fahrenheit = 'fahrenheit',
+}
+
 export type WeatherDataUnion = WeatherData | SunshineData;
 
 export interface CityPopupProps {

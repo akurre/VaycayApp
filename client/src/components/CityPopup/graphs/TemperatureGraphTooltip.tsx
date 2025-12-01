@@ -2,6 +2,11 @@ import { Text } from '@mantine/core';
 import { useChartColors } from '@/hooks/useChartColors';
 import { getWeekDateRange } from '@/utils/dateFormatting/getWeekDateRange';
 import CityBadge from './CityBadge';
+import { useAppStore } from '@/stores/useAppStore';
+import {
+  convertTemperature,
+  getTemperatureUnitSymbol,
+} from '@/utils/tempFormatting/convertTemperature';
 
 interface TooltipPayload {
   payload: {
@@ -30,6 +35,8 @@ const TemperatureGraphTooltip = ({
   comparisonCityName,
 }: TemperatureGraphTooltipProps) => {
   const chartColors = useChartColors();
+  const temperatureUnit = useAppStore((state) => state.temperatureUnit);
+  const unitSymbol = getTemperatureUnitSymbol(temperatureUnit);
 
   // Defensive check: ensure we have valid payload data
   if (!active || !payload || payload.length === 0) {
@@ -76,17 +83,23 @@ const TemperatureGraphTooltip = ({
               {cityName && <CityBadge cityName={cityName} mb={2} />}
               {typeof data.maxTemp === 'number' && (
                 <Text size="sm" c={chartColors.textColor}>
-                  Max: {data.maxTemp.toFixed(1)}°C
+                  Max:{' '}
+                  {convertTemperature(data.maxTemp, temperatureUnit).toFixed(1)}
+                  {unitSymbol}
                 </Text>
               )}
               {typeof data.avgTemp === 'number' && (
                 <Text size="sm" c={chartColors.textColor}>
-                  Avg: {data.avgTemp.toFixed(1)}°C
+                  Avg:{' '}
+                  {convertTemperature(data.avgTemp, temperatureUnit).toFixed(1)}
+                  {unitSymbol}
                 </Text>
               )}
               {typeof data.minTemp === 'number' && (
                 <Text size="sm" c={chartColors.textColor}>
-                  Min: {data.minTemp.toFixed(1)}°C
+                  Min:{' '}
+                  {convertTemperature(data.minTemp, temperatureUnit).toFixed(1)}
+                  {unitSymbol}
                 </Text>
               )}
             </div>
@@ -100,17 +113,32 @@ const TemperatureGraphTooltip = ({
               )}
               {typeof data.compMaxTemp === 'number' && (
                 <Text size="sm" c={chartColors.textColor}>
-                  Max: {data.compMaxTemp.toFixed(1)}°C
+                  Max:{' '}
+                  {convertTemperature(
+                    data.compMaxTemp,
+                    temperatureUnit
+                  ).toFixed(1)}
+                  {unitSymbol}
                 </Text>
               )}
               {typeof data.compAvgTemp === 'number' && (
                 <Text size="sm" c={chartColors.textColor}>
-                  Avg: {data.compAvgTemp.toFixed(1)}°C
+                  Avg:{' '}
+                  {convertTemperature(
+                    data.compAvgTemp,
+                    temperatureUnit
+                  ).toFixed(1)}
+                  {unitSymbol}
                 </Text>
               )}
               {typeof data.compMinTemp === 'number' && (
                 <Text size="sm" c={chartColors.textColor}>
-                  Min: {data.compMinTemp.toFixed(1)}°C
+                  Min:{' '}
+                  {convertTemperature(
+                    data.compMinTemp,
+                    temperatureUnit
+                  ).toFixed(1)}
+                  {unitSymbol}
                 </Text>
               )}
             </div>

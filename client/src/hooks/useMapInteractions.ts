@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import type { PickingInfo } from '@deck.gl/core';
-import { getTooltipContent } from '../utils/map/getTooltipContent';
 import type { DataType, ViewMode, WeatherDataUnion } from '@/types/mapTypes';
+import { getTooltipContent } from '../utils/map/getTooltipContent';
 import { useAppStore } from '@/stores/useAppStore';
 
 /**
@@ -27,6 +27,7 @@ export const useMapInteractions = (
   const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null);
   const homeLocation = useAppStore((state) => state.homeLocation);
   const homeCityData = useAppStore((state) => state.homeCityData);
+  const temperatureUnit = useAppStore((state) => state.temperatureUnit);
 
   // Throttle hover updates to reduce re-renders from mouse movement
   const pendingHoverRef = useRef<HoverInfo | null>(null);
@@ -56,7 +57,8 @@ export const useMapInteractions = (
               homeCityData.long!,
               homeCityData.lat!,
               dataType,
-              selectedMonth
+              selectedMonth,
+              temperatureUnit
             )!,
           };
         } else if (homeLocation) {
@@ -77,7 +79,8 @@ export const useMapInteractions = (
             city.long!,
             city.lat!,
             dataType,
-            selectedMonth
+            selectedMonth,
+            temperatureUnit
           )!,
         };
       } else if (viewMode === 'heatmap' && info.coordinate) {
@@ -87,7 +90,8 @@ export const useMapInteractions = (
           longitude,
           latitude,
           dataType,
-          selectedMonth
+          selectedMonth,
+          temperatureUnit
         );
         if (content) {
           newHoverInfo = {
@@ -109,7 +113,15 @@ export const useMapInteractions = (
         }, 16);
       }
     },
-    [cities, viewMode, dataType, selectedMonth, homeCityData, homeLocation]
+    [
+      cities,
+      viewMode,
+      dataType,
+      selectedMonth,
+      homeCityData,
+      homeLocation,
+      temperatureUnit,
+    ]
   );
 
   const handleClick = useCallback(

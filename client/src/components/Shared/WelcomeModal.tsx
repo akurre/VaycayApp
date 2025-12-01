@@ -37,8 +37,9 @@ export const WelcomeModal = () => {
           Hello from Ashlen!
         </Title>
         <Text ta="center">
-          I sourced, cleaned, and processed this data myself, and it comes from
-          averaging only 5 years together. Therefore, inaccuracies might occur!
+          I sourced, cleaned, and processed all 2.7 million weather records
+          myself, and it comes from averaging only 5 years together. Therefore,
+          inaccuracies might occur!
         </Text>
         <Text ta="center">
           Furthermore, I'm still developing this app, so aesthetics and

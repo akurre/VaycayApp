@@ -10,6 +10,11 @@ import {
 import { IconChevronDown } from '@tabler/icons-react';
 import { TEMP_THRESHOLDS, SUNSHINE_THRESHOLDS } from '@/const';
 import { DataType } from '@/types/mapTypes';
+import { useAppStore } from '@/stores/useAppStore';
+import {
+  convertTemperature,
+  getTemperatureUnitSymbol,
+} from '@/utils/tempFormatting/convertTemperature';
 
 interface MapColorLegendProps {
   dataType: DataType;
@@ -18,6 +23,8 @@ interface MapColorLegendProps {
 const MapColorLegend: FC<MapColorLegendProps> = ({ dataType }) => {
   const [opened, setOpened] = useState(true);
   const isSunshine = dataType === DataType.Sunshine;
+  const temperatureUnit = useAppStore((state) => state.temperatureUnit);
+  const unitSymbol = getTemperatureUnitSymbol(temperatureUnit);
 
   // Convert RGB array to CSS rgb() string
   const rgbToString = (
@@ -38,10 +45,18 @@ const MapColorLegend: FC<MapColorLegendProps> = ({ dataType }) => {
     } else {
       const threshold = TEMP_THRESHOLDS[index];
       const nextThreshold = TEMP_THRESHOLDS[index + 1];
+
+      const convertedTemp = Math.round(
+        convertTemperature(threshold.temp, temperatureUnit)
+      );
+
       if (nextThreshold) {
-        return `${threshold.temp}-${nextThreshold.temp}°C`;
+        const convertedNextTemp = Math.round(
+          convertTemperature(nextThreshold.temp, temperatureUnit)
+        );
+        return `${convertedTemp}-${convertedNextTemp}${unitSymbol}`;
       }
-      return `${threshold.temp}°C+`;
+      return `${convertedTemp}${unitSymbol}+`;
     }
   };
 

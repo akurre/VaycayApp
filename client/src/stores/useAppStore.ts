@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { HomeLocation } from '@/types/userLocationType';
 import type { WeatherDataUnion } from '@/types/mapTypes';
+import { TemperatureUnit } from '@/types/mapTypes';
 
 interface AppState {
   homeLocation: HomeLocation | null;
@@ -14,6 +15,8 @@ interface AppState {
   setLocationError: (error: string | null) => void;
   hasSeenWelcomeModal: boolean;
   setHasSeenWelcomeModal: (seen: boolean) => void;
+  temperatureUnit: TemperatureUnit;
+  setTemperatureUnit: (unit: TemperatureUnit) => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -30,13 +33,16 @@ export const useAppStore = create<AppState>()(
       hasSeenWelcomeModal: false,
       setHasSeenWelcomeModal: (hasSeenWelcomeModal) =>
         set({ hasSeenWelcomeModal }),
+      temperatureUnit: TemperatureUnit.Celsius,
+      setTemperatureUnit: (temperatureUnit) => set({ temperatureUnit }),
     }),
     {
       name: 'app-storage',
-      // only persist homeLocation and welcome modal state, not loading/error states or weather data
+      // only persist homeLocation, temperature unit, and welcome modal state, not loading/error states or weather data
       partialize: (state) => ({
         homeLocation: state.homeLocation,
         hasSeenWelcomeModal: state.hasSeenWelcomeModal,
+        temperatureUnit: state.temperatureUnit,
       }),
     }
   )
