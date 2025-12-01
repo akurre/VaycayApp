@@ -25,7 +25,6 @@ const TemperatureGraph = ({
   comparisonWeeklyWeatherData,
 }: TemperatureGraphProps) => {
   // Get theme-aware colors
-  const chartColors = useChartColors();
   const temperatureUnit = useAppStore((state) => state.temperatureUnit);
   const unitSymbol = getTemperatureUnitSymbol(temperatureUnit);
 

@@ -3,6 +3,7 @@ import type { City, MonthlySunshine, PrismaClient } from '@prisma/client';
 import { MONTH_FIELDS } from '../const';
 import { getCachedWeatherData } from '../utils/cache';
 import querySunshineCityIds from '../utils/sunshineQueries';
+import { titleCaseCityName, findClosestCity } from '../utils/cityHelpers';
 
 // helper type combining monthly sunshine with related city data
 type MonthlySunshineWithRelations = MonthlySunshine & {
@@ -196,8 +197,8 @@ export const sunshineByCityQuery = queryField('sunshineByCity', {
     long: floatArg({ description: 'City longitude for precise matching' }),
   },
   async resolve(_parent, args, context) {
-    // title case the city name
-    const cityName = args.city.charAt(0).toUpperCase() + args.city.slice(1).toLowerCase();
+    // title case the city name using shared helper
+    const cityName = titleCaseCityName(args.city);
 
     // find the city - use coordinates for precise matching if provided
     if (
@@ -213,19 +214,8 @@ export const sunshineByCityQuery = queryField('sunshineByCity', {
         },
       });
 
-      // find the city with closest coordinates
-      let closestCity = null;
-      let minDistance = Infinity;
-
-      for (const city of cities) {
-        const distance = Math.sqrt(
-          Math.pow(city.lat - args.lat, 2) + Math.pow(city.long - args.long, 2)
-        );
-        if (distance < minDistance) {
-          minDistance = distance;
-          closestCity = city;
-        }
-      }
+      // find the city with closest coordinates using shared helper
+      const closestCity = findClosestCity(cities, args.lat, args.long);
 
       if (!closestCity) {
         return null;
