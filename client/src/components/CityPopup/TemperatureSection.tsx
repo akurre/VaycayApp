@@ -3,6 +3,7 @@ import { formatTemperature } from '@/utils/tempFormatting/formatTemperature';
 import GreaterSection from './GreaterSection';
 import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
 import CityBadge from './graphs/CityBadge';
+import { useAppStore } from '@/stores/useAppStore';
 
 interface TemperatureSectionProps {
   avgTemperature: number | null;
@@ -25,6 +26,7 @@ const TemperatureSection = ({
   comparisonCity,
   baseCity,
 }: TemperatureSectionProps) => {
+  const temperatureUnit = useAppStore((state) => state.temperatureUnit);
   const hasComparison =
     comparisonAvgTemperature !== undefined ||
     comparisonMaxTemperature !== undefined ||
@@ -53,11 +55,12 @@ const TemperatureSection = ({
             className="text-sm"
             style={{ color: hasComparison ? CITY1_PRIMARY_COLOR : undefined }}
           >
-            {formatTemperature(avgTemperature) ?? 'N/A'}
+            {formatTemperature(avgTemperature, temperatureUnit) ?? 'N/A'}
           </div>
           {hasComparison && (
             <div className="text-sm" style={{ color: CITY2_PRIMARY_COLOR }}>
-              {formatTemperature(comparisonAvgTemperature ?? null) ?? 'N/A'}
+              {formatTemperature(comparisonAvgTemperature ?? null, temperatureUnit) ??
+                'N/A'}
             </div>
           )}
         </div>
@@ -70,11 +73,12 @@ const TemperatureSection = ({
             className="text-sm"
             style={{ color: hasComparison ? CITY1_PRIMARY_COLOR : undefined }}
           >
-            {formatTemperature(minTemperature) ?? 'N/A'}
+            {formatTemperature(minTemperature, temperatureUnit) ?? 'N/A'}
           </div>
           {hasComparison && (
             <div className="text-sm" style={{ color: CITY2_PRIMARY_COLOR }}>
-              {formatTemperature(comparisonMinTemperature ?? null) ?? 'N/A'}
+              {formatTemperature(comparisonMinTemperature ?? null, temperatureUnit) ??
+                'N/A'}
             </div>
           )}
         </div>
@@ -87,11 +91,12 @@ const TemperatureSection = ({
             className="text-sm"
             style={{ color: hasComparison ? CITY1_PRIMARY_COLOR : undefined }}
           >
-            {formatTemperature(maxTemperature) ?? 'N/A'}
+            {formatTemperature(maxTemperature, temperatureUnit) ?? 'N/A'}
           </div>
           {hasComparison && (
             <div className="text-sm" style={{ color: CITY2_PRIMARY_COLOR }}>
-              {formatTemperature(comparisonMaxTemperature ?? null) ?? 'N/A'}
+              {formatTemperature(comparisonMaxTemperature ?? null, temperatureUnit) ??
+                'N/A'}
             </div>
           )}
         </div>

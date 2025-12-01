@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
 import type { FC } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useDebouncedValue } from '@mantine/hooks';
 import useWeatherByDateAndBounds from '../api/dates/useWeatherByDateAndBounds';
@@ -8,11 +8,13 @@ import WorldMap from '../components/Map/WorldMap';
 import MapViewToggle from '../components/Map/MapViewToggle';
 import MapThemeToggle from '../components/Map/MapThemeToggle';
 import MapDataToggle from '../components/Map/MapDataToggle';
+import TemperatureUnitToggle from '../components/Map/TemperatureUnitToggle';
 import HomeLocationSelector from '../components/Navigation/HomeLocationSelector';
 import FeedbackButton from '../components/Navigation/FeedbackButton';
 import { getTodayAsMMDD } from '@/utils/dateFormatting/getTodayAsMMDD';
 import { useWeatherStore } from '../stores/useWeatherStore';
 import { useSunshineStore } from '../stores/useSunshineStore';
+import { useAppStore } from '../stores/useAppStore';
 import DateSliderWrapper from '@/components/Navigation/DateSliderWrapper';
 import { DataType, ViewMode } from '@/types/mapTypes';
 import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
@@ -70,13 +72,26 @@ const MapPage: FC = () => {
   });
 
   // zustand stores for persisting displayed data
-  const { displayedWeatherData, setDisplayedWeatherData, setIsLoadingWeather } =
-    useWeatherStore();
-  const {
-    displayedSunshineData,
-    setDisplayedSunshineData,
-    setIsLoadingSunshine,
-  } = useSunshineStore();
+  const displayedWeatherData = useWeatherStore(
+    (state) => state.displayedWeatherData
+  );
+  const setDisplayedWeatherData = useWeatherStore(
+    (state) => state.setDisplayedWeatherData
+  );
+  const setIsLoadingWeather = useWeatherStore(
+    (state) => state.setIsLoadingWeather
+  );
+  const displayedSunshineData = useSunshineStore(
+    (state) => state.displayedSunshineData
+  );
+  const setDisplayedSunshineData = useSunshineStore(
+    (state) => state.setDisplayedSunshineData
+  );
+  const setIsLoadingSunshine = useSunshineStore(
+    (state) => state.setIsLoadingSunshine
+  );
+  const temperatureUnit = useAppStore((state) => state.temperatureUnit);
+  const setTemperatureUnit = useAppStore((state) => state.setTemperatureUnit);
 
   // Get the appropriate data based on the selected data type
   const displayedData = isSunshineSelected
@@ -152,6 +167,10 @@ const MapPage: FC = () => {
       <div className="absolute top-4 right-4 z-20 flex gap-2">
         <MapViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
         <MapDataToggle dataType={dataType} onDataTypeChange={setDataType} />
+        <TemperatureUnitToggle
+          temperatureUnit={temperatureUnit}
+          onTemperatureUnitChange={setTemperatureUnit}
+        />
       </div>
       <div className="absolute bottom-4 left-4 z-10 flex gap-2">
         <MapThemeToggle />

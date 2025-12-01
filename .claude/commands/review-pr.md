@@ -17,6 +17,9 @@ Review the current git changes (or specified files) for common code quality issu
 - Are already-memoized functions (like zustand selectors) being wrapped in `useMemo`?
 - Could any local state be replaced with derived values?
 - Are `useEffect` calls updating state that could be computed directly?
+- Are Zustand store imports using individual selectors instead of object destructuring?
+  - ✅ Good: `const value = useStore((state) => state.value);`
+  - ❌ Bad: `const { value } = useStore();`
 
 ### 3. Import Optimization
 - Are type-only imports using `import type`?

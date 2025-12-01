@@ -1,8 +1,11 @@
 import { useMemo, memo } from 'react';
+import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
 
 import RechartsLineGraph, { type LineConfig } from './RechartsLineGraph';
 import TemperatureGraphTooltip from './TemperatureGraphTooltip';
 import { useChartColors } from '@/hooks/useChartColors';
+import { useAppStore } from '@/stores/useAppStore';
+import { getTemperatureUnitSymbol } from '@/utils/tempFormatting/convertTemperature';
 import {
   CITY1_PRIMARY_COLOR,
   CITY1_MAX_COLOR,
@@ -11,8 +14,6 @@ import {
   CITY2_MAX_COLOR,
   CITY2_MIN_COLOR,
 } from '@/const';
-
-import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
 
 interface TemperatureGraphProps {
   weeklyWeatherData: CityWeeklyWeather;
@@ -25,6 +26,8 @@ const TemperatureGraph = ({
 }: TemperatureGraphProps) => {
   // Get theme-aware colors
   const chartColors = useChartColors();
+  const temperatureUnit = useAppStore((state) => state.temperatureUnit);
+  const unitSymbol = getTemperatureUnitSymbol(temperatureUnit);
 
   // Create a wrapper component for the tooltip that has access to city names
   const TooltipWrapper = (props: {
@@ -90,6 +93,7 @@ const TemperatureGraph = ({
 
   // Configure temperature lines
   const lines: LineConfig[] = useMemo(() => {
+    // Truncate city names to 3 chars when comparing to save legend space
     const mainCityName = comparisonWeeklyWeatherData
       ? weeklyWeatherData.city.substring(0, 3) + '.'
       : weeklyWeatherData.city;
@@ -155,7 +159,7 @@ const TemperatureGraph = ({
     }
 
     return baseLines;
-  }, [chartColors, weeklyWeatherData.city, comparisonWeeklyWeatherData]);
+  }, [weeklyWeatherData.city, comparisonWeeklyWeatherData]);
 
   return (
     <RechartsLineGraph
@@ -163,7 +167,7 @@ const TemperatureGraph = ({
       cityKey={cityKey}
       xAxisDataKey="week"
       xAxisLabel="Week of Year"
-      yAxisLabel="Temperature (°C)"
+      yAxisLabel={`Temperature (${unitSymbol})`}
       lines={lines}
       referenceLines={[]}
       showLegend={true}

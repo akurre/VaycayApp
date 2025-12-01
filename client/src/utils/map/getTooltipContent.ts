@@ -1,23 +1,9 @@
-import type { WeatherData } from '../../types/cityWeatherDataType';
 import type { SunshineData } from '@/types/sunshineDataType';
 import { formatTemperature } from '../tempFormatting/formatTemperature';
 import type { WeatherDataUnion } from '@/types/mapTypes';
-import { DataType } from '@/types/mapTypes';
+import { DataType, TemperatureUnit } from '@/types/mapTypes';
 import { MONTH_FIELDS } from '@/const';
-
-/**
- * Determines if a data object is a WeatherData object
- */
-const isWeatherData = (data: WeatherDataUnion): data is WeatherData => {
-  return 'avgTemperature' in data;
-};
-
-/**
- * Determines if a data object is a SunshineData object
- */
-const isSunshineData = (data: WeatherDataUnion): data is SunshineData => {
-  return 'jan' in data;
-};
+import { isWeatherData, isSunshineData } from '@/utils/typeGuards';
 
 /**
  * Gets the sunshine hours value for a specific month from SunshineData
@@ -49,7 +35,8 @@ export const getTooltipContent = (
   longitude: number,
   latitude: number,
   dataType: DataType = DataType.Temperature,
-  selectedMonth?: number
+  selectedMonth?: number,
+  temperatureUnit: TemperatureUnit = TemperatureUnit.Celsius
 ): string | null => {
   // Find city within a small radius (approximately 50km at equator)
   const TOLERANCE = 0.5;
@@ -73,7 +60,7 @@ export const getTooltipContent = (
       return null;
     }
     return `${locationInfo}
-${formatTemperature(city.avgTemperature)}`;
+${formatTemperature(city.avgTemperature, temperatureUnit)}`;
   } else if (
     dataType === DataType.Sunshine &&
     isSunshineData(city) &&
