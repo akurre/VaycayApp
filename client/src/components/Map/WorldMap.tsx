@@ -9,6 +9,10 @@ import { useHomeCityData } from '../../hooks/useHomeCityData';
 import { useHomeLocationLayers } from '../../hooks/useHomeLocationLayers';
 import {
   INITIAL_VIEW_STATE,
+  LOADER_DELAY_MS,
+  MAP_FADE_IN_DELAY_MS,
+  MAP_LOADED_OPACITY,
+  MAP_LOADING_OPACITY,
   MAP_STYLES,
   ZOOM_AMPLIFICATION_FACTOR,
 } from '@/const';
@@ -58,12 +62,6 @@ const WorldMap = ({
 
   // Track map content opacity for smooth transitions
   const [mapOpacity, setMapOpacity] = useState(1);
-
-  // Constants for loading transition timing
-  const LOADER_DELAY_MS = 300;
-  const MAP_FADE_IN_DELAY_MS = 100;
-  const MAP_LOADING_OPACITY = 0.3;
-  const MAP_LOADED_OPACITY = 1;
 
   const colorScheme = useComputedColorScheme('dark');
   const isLoadingWeather = useWeatherStore((state) => state.isLoadingWeather);
@@ -142,7 +140,13 @@ const WorldMap = ({
   // Custom cursor handler - show pointer when hovering over markers in marker view
   const getCursor = useMemo(
     () =>
-      ({ isHovering, isDragging }: { isHovering: boolean; isDragging: boolean }) => {
+      ({
+        isHovering,
+        isDragging,
+      }: {
+        isHovering: boolean;
+        isDragging: boolean;
+      }) => {
         // In marker view, show pointer cursor when hovering over a marker
         if (viewMode === 'markers' && isHovering) {
           return 'pointer';
@@ -179,10 +183,20 @@ const WorldMap = ({
       // Fade in map content when loading completes
       setShowLoader(false);
       // Small delay to ensure loader fades out before map fades in
-      const fadeTimer = setTimeout(() => setMapOpacity(MAP_LOADED_OPACITY), MAP_FADE_IN_DELAY_MS);
+      const fadeTimer = setTimeout(
+        () => setMapOpacity(MAP_LOADED_OPACITY),
+        MAP_FADE_IN_DELAY_MS
+      );
       return () => clearTimeout(fadeTimer);
     }
-  }, [isBasemapLoaded, isLoadingWeather, LOADER_DELAY_MS, MAP_FADE_IN_DELAY_MS, MAP_LOADING_OPACITY, MAP_LOADED_OPACITY]);
+  }, [
+    isBasemapLoaded,
+    isLoadingWeather,
+    LOADER_DELAY_MS,
+    MAP_FADE_IN_DELAY_MS,
+    MAP_LOADING_OPACITY,
+    MAP_LOADED_OPACITY,
+  ]);
 
   // Use the current or last selected city for rendering during transition
   const cityToRender = selectedCity || lastSelectedCityRef.current;
