@@ -11,7 +11,7 @@
   "devDependencies": {
     "husky": "^9.0.11",
     "knip": "^5.67.1",
-    "lint-staged": "^15.2.10"
+    "lint-staged": "^16.2.7"
   },
   "dependencies": {}
 }
