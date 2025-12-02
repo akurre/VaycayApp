@@ -19,6 +19,7 @@ interface AppState {
   setTemperatureUnit: (unit: TemperatureUnit) => void;
   mapViewport: MapViewport | null;
   setMapViewport: (viewport: MapViewport) => void;
+  resetHomeLocation: () => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -39,6 +40,13 @@ export const useAppStore = create<AppState>()(
       setTemperatureUnit: (temperatureUnit) => set({ temperatureUnit }),
       mapViewport: null,
       setMapViewport: (mapViewport) => set({ mapViewport }),
+      resetHomeLocation: () =>
+        set({
+          homeLocation: null,
+          homeCityData: null,
+          locationError: null,
+          isLocationLoading: false,
+        }),
     }),
     {
       name: 'app-storage',

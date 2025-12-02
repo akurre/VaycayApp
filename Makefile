@@ -242,8 +242,12 @@ delete-package: check-prereqs
 # Run tests
 test: check-prereqs
 	@echo "$(GREEN)Running tests with coverage...$(NC)"
+	@echo "$(YELLOW)Running server tests...$(NC)"
+	@cd server && npm run test:coverage
+	@echo ""
+	@echo "$(YELLOW)Running client tests...$(NC)"
 	@cd client && npm run test:coverage
-	@echo "$(GREEN)✓ Tests complete$(NC)"
+	@echo "$(GREEN)✓ All tests complete$(NC)"
 
 # Show performance summary
 perf:

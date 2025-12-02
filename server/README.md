@@ -148,43 +148,113 @@ After:  4,382 records (2 synthetic stations + 1 Open-Meteo with 3,650 real days)
 
 The application uses a normalized schema with separate tables for cities, stations, and weather records:
 
-### WeatherData Model
+### Database Models
 
+The application uses a **normalized 3-table schema** optimized for read performance:
+
+#### City Model
 ```prisma
-model WeatherData {
-  // Composite primary key
-  city   String
-  date   String
-  name   String  // Weather station name
-  
-  // Location information
-  country    String?
-  state      String?
-  suburb     String?
-  lat        String?
-  long       String?
-  population Float?
-  
-  // Weather metrics
-  PRCP    Float?  // Precipitation (mm)
-  SNWD    Float?  // Snow depth (mm)
-  TAVG    Float?  // Average temperature (°C)
-  TMAX    Float?  // Maximum temperature (°C)
-  TMIN    Float?  // Minimum temperature (°C)
-  
-  // Metadata
-  submitter_id String?
-  
-  @@id([city, date, name])
+model City {
+  id             Int              @id @default(autoincrement())
+  name           String
+  country        String
+  state          String?
+  suburb         String?
+  lat            Float
+  long           Float
+  cityAscii      String?
+  iso2           String?
+  iso3           String?
+  capital        String?
+  worldcitiesId  Float?
+  population     Float?
+  dataSource     String?
+
+  // Relations
+  weatherStations WeatherStation[]
+  weatherRecords  WeatherRecord[]
+  monthlySunshine MonthlySunshine?
+  weeklyWeather   WeeklyWeather?
+
+  @@unique([name, country, lat, long])
+  @@index([name])
+  @@index([country])
+  @@index([lat, long])
+  @@index([country, lat, long])
+  @@index([country, population])
+
+  @@map("cities")
+}
+```
+
+#### WeatherStation Model
+```prisma
+model WeatherStation {
+  id       Int             @id @default(autoincrement())
+  name     String
+  cityId   Int
+
+  // Relations
+  city            City            @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  weatherRecords  WeatherRecord[]
+
+  @@unique([name, cityId])
+  @@index([cityId])
+
+  @@map("weather_stations")
+}
+```
+
+#### WeatherRecord Model
+```prisma
+model WeatherRecord {
+  id        Int      @id @default(autoincrement())
+  cityId    Int
+  stationId Int
+  date      String   // Format: YYYY-MM-DD
+
+  // Core weather metrics
+  PRCP      Float?   // Precipitation (mm)
+  SNWD      Float?   // Snow depth (mm)
+  TAVG      Float?   // Average temperature (°C)
+  TMAX      Float?   // Maximum temperature (°C)
+  TMIN      Float?   // Minimum temperature (°C)
+
+  // Additional weather metrics
+  AWND      Float?   // Average wind speed
+  DAPR      Float?   // Number of days included in multiday precipitation
+  DATN      Float?   // Number of days included in multiday minimum temperature
+  DATX      Float?   // Number of days included in multiday maximum temperature
+  DWPR      Float?   // Number of days with non-zero precipitation
+  MDPR      Float?   // Multiday precipitation total
+  MDTN      Float?   // Multiday minimum temperature
+  MDTX      Float?   // Multiday maximum temperature
+  WDF2      Float?   // Direction of fastest 2-minute wind
+  WDF5      Float?   // Direction of fastest 5-second wind
+  WSF2      Float?   // Fastest 2-minute wind speed
+  WSF5      Float?   // Fastest 5-second wind speed
+
+  // Relations
+  city    City           @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  station WeatherStation @relation(fields: [stationId], references: [id], onDelete: Cascade)
+
+  @@unique([cityId, stationId, date])
   @@index([date])
-  @@index([city])
+  @@index([cityId, date])
+  @@index([cityId])
+  @@index([date, TAVG])
+
+  @@map("weather_records")
 }
 ```
 
 **Key Points:**
-- Composite primary key: `(city, date, name)`
-- Indexed fields: `date`, `city` for query performance
-- Nullable fields: Most fields are optional to handle incomplete data
+- Each city can have **multiple weather stations** (e.g., Berlin has 2 stations)
+- Each station stores **366 days** of synthetic year data (2020-01-01 to 2020-12-31)
+- Synthetic year represents **5-year average** (2016-2020) for existing data
+- Unique constraint ensures no duplicate records per `(cityId, stationId, date)`
+- Indexes optimized for common query patterns (by date, by city, by city+date)
+- All weather metrics are nullable to handle incomplete data
 - Date format: `YYYY-MM-DD` (e.g., `2020-03-15`)
 
 ## 🔌 GraphQL API
