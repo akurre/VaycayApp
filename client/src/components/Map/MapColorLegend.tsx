@@ -60,12 +60,28 @@ const MapColorLegend: FC<MapColorLegendProps> = ({ dataType }) => {
     }
   };
 
-  // Select representative thresholds to avoid overcrowding
-  // Show every other threshold for a cleaner look
+  // get the color that represents the midpoint of a temperature range
+  // this ensures the displayed color matches what users see on the map
+  const getRepresentativeColor = (index: number) => {
+    const thresholds = isSunshine ? SUNSHINE_THRESHOLDS : TEMP_THRESHOLDS;
+    const threshold = thresholds[index];
+    const nextThreshold = thresholds[index + 1];
+
+    if (!nextThreshold) {
+      // for the last range (e.g., 34°C+), use the final threshold color
+      return thresholds[thresholds.length - 1].color;
+    }
+
+    // for ranges, use the color of the next threshold since that's what
+    // the interpolation produces for temperatures in that range
+    return nextThreshold.color;
+  };
+
+  // show all thresholds except the last one (which is used for the final range)
   const thresholds = isSunshine ? SUNSHINE_THRESHOLDS : TEMP_THRESHOLDS;
   const displayedIndices = thresholds
     .map((_, index) => index)
-    .filter((index) => index % 2 === 0);
+    .filter((index) => index < thresholds.length - 1);
 
   return (
     <div>
@@ -92,12 +108,10 @@ const MapColorLegend: FC<MapColorLegendProps> = ({ dataType }) => {
       <Collapse in={opened}>
         <div className="flex flex-col gap-2">
           {displayedIndices.map((index) => {
-            const threshold = thresholds[index];
-
             return (
               <Group key={index} gap="xs" wrap="nowrap">
                 <ColorSwatch
-                  color={rgbToString(threshold.color)}
+                  color={rgbToString(getRepresentativeColor(index))}
                   size={16}
                   style={{ minWidth: 16 }}
                 />

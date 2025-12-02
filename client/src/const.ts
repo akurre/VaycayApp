@@ -108,8 +108,8 @@ export const TEMP_THRESHOLDS = [
   { temp: 19, color: [255, 255, 0] as [number, number, number] }, // mostly yellow (13 to 19)
   { temp: 24, color: [255, 180, 0] as [number, number, number] }, // yellow-y orange (19 to 24)
   { temp: 29, color: [255, 100, 0] as [number, number, number] }, // orange (24 to 29)
-  { temp: 34, color: [255, 69, 0] as [number, number, number] }, // orange-red (29 to 34)
-  { temp: 45, color: [255, 0, 0] as [number, number, number] }, // red (34+)
+  { temp: 34, color: [255, 20, 0] as [number, number, number] }, // more red (29 to 34)
+  { temp: 50, color: [180, 0, 0] as [number, number, number] }, // deeper red (34+)
 ];
 
 // color range for heatmap layer (extracted from thresholds)
