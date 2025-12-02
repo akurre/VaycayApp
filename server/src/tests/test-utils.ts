@@ -39,9 +39,7 @@ export function createMockStation(overrides?: Partial<WeatherStation>): WeatherS
 /**
  * creates a mock weather record object for testing
  */
-export function createMockWeatherRecord(
-  overrides?: Partial<WeatherRecord>
-): WeatherRecord {
+export function createMockWeatherRecord(overrides?: Partial<WeatherRecord>): WeatherRecord {
   return {
     id: 1,
     cityId: 123,
@@ -71,13 +69,11 @@ export function createMockWeatherRecord(
 /**
  * creates a complete mock weather record with relations for testing
  */
-export function createMockWeatherRecordWithRelations(
-  overrides?: {
-    record?: Partial<WeatherRecord>;
-    city?: Partial<City>;
-    station?: Partial<WeatherStation>;
-  }
-): WeatherRecordWithRelations {
+export function createMockWeatherRecordWithRelations(overrides?: {
+  record?: Partial<WeatherRecord>;
+  city?: Partial<City>;
+  station?: Partial<WeatherStation>;
+}): WeatherRecordWithRelations {
   const city = createMockCity(overrides?.city);
   const station = createMockStation({ cityId: city.id, ...overrides?.station });
   const record = createMockWeatherRecord({
