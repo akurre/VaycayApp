@@ -4,6 +4,7 @@ import type { WeatherData } from '@/types/cityWeatherDataType';
 
 describe('transformToHeatmapData', () => {
   const createMockCity = (overrides?: Partial<WeatherData>): WeatherData => ({
+    cityId: 213,
     city: 'Milan',
     country: 'Italy',
     state: null,

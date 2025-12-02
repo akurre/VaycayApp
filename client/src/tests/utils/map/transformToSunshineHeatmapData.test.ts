@@ -5,6 +5,7 @@ import type { SunshineData } from '@/types/sunshineDataType';
 describe('transformToSunshineHeatmapData', () => {
   const mockSunshineData: SunshineData[] = [
     {
+      cityId: 213,
       city: 'City1',
       country: 'Country1',
       lat: 10,
@@ -25,6 +26,7 @@ describe('transformToSunshineHeatmapData', () => {
       dec: 110,
     },
     {
+      cityId: 2123,
       city: 'City2',
       country: 'Country2',
       lat: 30,
@@ -45,6 +47,7 @@ describe('transformToSunshineHeatmapData', () => {
       dec: 60,
     },
     {
+      cityId: 2113,
       city: 'City3',
       country: 'Country3',
       lat: null, // Invalid lat
@@ -65,6 +68,7 @@ describe('transformToSunshineHeatmapData', () => {
       dec: 210,
     },
     {
+      cityId: 21213,
       city: 'City4',
       country: 'Country4',
       lat: 50,

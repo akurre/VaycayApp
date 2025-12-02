@@ -8,6 +8,7 @@ import { DataType } from '@/types/mapTypes';
 
 describe('DataChartTabs', () => {
   const mockSunshineData: SunshineData = {
+    cityId: 213,
     city: 'Test City',
     country: 'Test Country',
     lat: 40.7128,

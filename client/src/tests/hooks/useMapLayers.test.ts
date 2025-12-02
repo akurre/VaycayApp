@@ -43,6 +43,7 @@ vi.mock('@/stores/useAppStore', () => ({
 describe('useMapLayers', () => {
   const mockWeatherCities: WeatherData[] = [
     {
+      cityId: 213,
       city: 'New York',
       country: 'USA',
       state: 'NY',
@@ -63,6 +64,7 @@ describe('useMapLayers', () => {
 
   const mockSunshineCities: SunshineData[] = [
     {
+      cityId: 213,
       city: 'New York',
       country: 'USA',
       state: 'NY',
