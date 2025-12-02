@@ -21,6 +21,8 @@ import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
 import { INITIAL_VIEW_STATE, ZOOM_THRESHOLD } from '@/const';
 import ComponentErrorBoundary from '../components/ErrorBoundary/ComponentErrorBoundary';
 import MapColorLegend from '../components/Map/MapColorLegend';
+import { consolidateWeatherByCity } from '@/utils/data/consolidateWeatherByCity';
+import { consolidateSunshineByCity } from '@/utils/data/consolidateSunshineByCity';
 
 interface MapBounds {
   minLat: number;
@@ -104,18 +106,21 @@ const MapPage: FC = () => {
   }, [selectedDate, setSearchParams]);
 
   // update store when data changes based on selected data type
+  // consolidate multi-station cities to prevent duplicate markers
   useEffect(() => {
     if (isSunshineSelected) {
       setIsLoadingSunshine(isSunshineLoading);
 
       if (sunshineData && !isSunshineLoading) {
-        setDisplayedSunshineData(sunshineData);
+        const consolidated = consolidateSunshineByCity(sunshineData);
+        setDisplayedSunshineData(consolidated);
       }
     } else {
       setIsLoadingWeather(isLoading);
 
       if (weatherData && !isLoading) {
-        setDisplayedWeatherData(weatherData);
+        const consolidated = consolidateWeatherByCity(weatherData);
+        setDisplayedWeatherData(consolidated);
       }
     }
   }, [
