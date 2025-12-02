@@ -145,20 +145,31 @@ def pivot_and_clean_data(df: pd.DataFrame) -> pd.DataFrame:
             if len(cities_list) > 10:
                 logger.info(f"  ... and {len(cities_list) - 10} more")
     
-    # save population column separately to add back after pivot (to avoid overflow)
-    population_map = None
-    if 'population' in df.columns:
-        # create a mapping of city -> population (use first non-null value per city)
-        population_map = df.groupby('city')['population'].first()
-    
     # Build index columns - EXCLUDE 'name' (station name) and 'lat'/'long' (station coords)
     # This causes multiple stations in the same city to be aggregated together
     base_index = ['city', 'country', 'state', 'suburb', 'date']
-    additional_index = ['city_ascii', 'iso2', 'iso3', 'capital', 
+    additional_index = ['city_ascii', 'iso2', 'iso3', 'capital',
                        'worldcities_id', 'data_source']
-    
+
     # only include columns that exist in the dataframe
     index_cols = [col for col in base_index + additional_index if col in df.columns]
+
+    # save population column separately to add back after pivot (to avoid overflow)
+    # FIX: Group by geographic identifiers (city, country, state, suburb) to avoid
+    # incorrectly assigning same population to cities with same name in different locations
+    # (e.g., Houston TX vs Houston MS vs Houston MO)
+    population_map = None
+    if 'population' in df.columns:
+        # Get geographic grouping columns (exclude 'date' and metadata fields)
+        geo_group_cols = [col for col in ['city', 'country', 'state', 'suburb']
+                         if col in df.columns]
+
+        # Create a mapping of (city, country, state, suburb) -> population
+        # This ensures cities with same name but different locations get correct populations
+        # For cities without states (e.g., Amsterdam), grouping by (city, country, suburb)
+        # will still correctly group all Amsterdam stations together
+        population_map = df.groupby(geo_group_cols)['population'].first()
+        logger.info(f"✓ Created population map grouped by: {geo_group_cols}")
     
     # Check for NaN in index columns before pivot
     logger.info(f"Index columns (excluding station name/coords for aggregation): {index_cols}")
@@ -197,8 +208,13 @@ def pivot_and_clean_data(df: pd.DataFrame) -> pd.DataFrame:
     
     # add population back after pivot
     if population_map is not None and 'city' in df_pivot.columns:
-        df_pivot['population'] = df_pivot['city'].map(population_map)
-        logger.info("✓ Added population data back")
+        # Map population using the same geographic columns used to create the map
+        geo_group_cols = [col for col in ['city', 'country', 'state', 'suburb']
+                         if col in df_pivot.columns]
+
+        # Create a temporary multi-index from the geographic columns
+        df_pivot['population'] = df_pivot.set_index(geo_group_cols).index.map(population_map).values
+        logger.info(f"✓ Added population data back (mapped by {geo_group_cols})")
     
     logger.info("\nProcessing weather values...")
     
