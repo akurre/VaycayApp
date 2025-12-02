@@ -90,7 +90,23 @@ model WeatherRecord {
   WDF5      Float?   // Direction of fastest 5-second wind
   WSF2      Float?   // Fastest 2-minute wind speed
   WSF5      Float?   // Fastest 5-second wind speed
-  
+
+  // NEW: Open-Meteo fields (Phase 1 migration)
+  apparentTempMean         Float?  // Apparent temperature mean (°C) - how temperature feels
+  apparentTempMax          Float?  // Apparent temperature maximum (°C)
+  apparentTempMin          Float?  // Apparent temperature minimum (°C)
+  windSpeed10mMax          Float?  // Maximum wind speed at 10m (km/h)
+  sunshineDuration         Float?  // Sunshine duration (seconds)
+  cloudCoverMean           Float?  // Mean cloud cover (%)
+  dewPoint2mMean           Float?  // Mean dew point at 2m (°C)
+  relativeHumidity2mMean   Float?  // Mean relative humidity at 2m (%)
+  snowfallWaterEquivSum    Float?  // Snowfall water equivalent sum (mm)
+  soilMoisture0to100cmMean Float?  // Mean soil moisture 0-100cm depth (m³/m³)
+  daylightDuration         Float?  // Daylight duration (seconds)
+  rainSum                  Float?  // Rain sum (mm)
+  snowfallSum              Float?  // Snowfall sum (cm)
+  precipitationHours       Float?  // Precipitation hours (hours)
+
   // Relations
   city    City           @relation(fields: [cityId], references: [id], onDelete: Cascade)
   station WeatherStation @relation(fields: [stationId], references: [id], onDelete: Cascade)
