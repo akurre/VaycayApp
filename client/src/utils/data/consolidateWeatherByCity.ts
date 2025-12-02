@@ -23,16 +23,16 @@ import type { WeatherData } from '@/types/cityWeatherDataType';
 export function consolidateWeatherByCity(
   weatherData: WeatherData[]
 ): WeatherData[] {
-  // Group by city+country (city names can repeat across countries)
-  const grouped = new Map<string, WeatherData[]>();
+  // Group by cityId (most reliable way to identify same city location)
+  // Multiple weather stations can share the same cityId
+  const grouped = new Map<number, WeatherData[]>();
 
   for (const record of weatherData) {
-    const key = `${record.city}|${record.country || 'unknown'}`;
-    const existing = grouped.get(key);
+    const existing = grouped.get(record.cityId);
     if (existing) {
       existing.push(record);
     } else {
-      grouped.set(key, [record]);
+      grouped.set(record.cityId, [record]);
     }
   }
 
@@ -58,6 +58,7 @@ export function consolidateWeatherByCity(
 
     const consolidated_record: WeatherData = {
       // Preserve metadata from first record
+      cityId: base.cityId,
       city: base.city,
       country: base.country,
       state: base.state,

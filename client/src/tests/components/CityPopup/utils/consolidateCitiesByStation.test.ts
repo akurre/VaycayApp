@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { consolidateWeatherByCity } from './consolidateWeatherByCity';
-import { consolidateSunshineByCity } from './consolidateSunshineByCity';
+import { consolidateWeatherByCity } from '../../../../utils/data/consolidateWeatherByCity';
+import { consolidateSunshineByCity } from '../../../../utils/data/consolidateSunshineByCity';
 import type { WeatherData } from '@/types/cityWeatherDataType';
 import type { SunshineData } from '@/types/sunshineDataType';
 
@@ -8,6 +8,7 @@ describe('consolidateWeatherByCity', () => {
   it('should return single station data unchanged', () => {
     const input: WeatherData[] = [
       {
+        cityId: 1,
         city: 'Paris',
         country: 'France',
         state: null,
@@ -19,8 +20,8 @@ describe('consolidateWeatherByCity', () => {
         precipitation: 5.2,
         snowDepth: 0,
         avgTemperature: 12.5,
-        maxTemperature: 15.0,
-        minTemperature: 10.0,
+        maxTemperature: 15,
+        minTemperature: 10,
         stationName: 'Paris Station',
         submitterId: null,
       },
@@ -32,9 +33,10 @@ describe('consolidateWeatherByCity', () => {
     expect(result[0]).toEqual(input[0]);
   });
 
-  it('should consolidate multiple stations for the same city', () => {
+  it('should consolidate multiple stations for the same city (same cityId)', () => {
     const input: WeatherData[] = [
       {
+        cityId: 1223,
         city: 'Berlin',
         country: 'Germany',
         state: null,
@@ -43,15 +45,16 @@ describe('consolidateWeatherByCity', () => {
         lat: 52.5167,
         long: 13.3833,
         population: 3500000,
-        precipitation: 2.0,
+        precipitation: 2,
         snowDepth: 0,
         avgTemperature: 15.2,
-        maxTemperature: 18.0,
-        minTemperature: 12.0,
-        stationName: 'Station 1',
+        maxTemperature: 18,
+        minTemperature: 12,
+        stationName: 'Berlin Weather Station',
         submitterId: null,
       },
       {
+        cityId: 1223,
         city: 'Berlin',
         country: 'Germany',
         state: null,
@@ -60,12 +63,12 @@ describe('consolidateWeatherByCity', () => {
         lat: 52.5167,
         long: 13.3833,
         population: 3500000,
-        precipitation: 3.0,
+        precipitation: 3,
         snowDepth: 0,
         avgTemperature: 14.8,
-        maxTemperature: 17.0,
-        minTemperature: 13.0,
-        stationName: 'Station 2',
+        maxTemperature: 17,
+        minTemperature: 13,
+        stationName: 'Potsdam Weather Station',
         submitterId: null,
       },
     ];
@@ -73,17 +76,19 @@ describe('consolidateWeatherByCity', () => {
     const result = consolidateWeatherByCity(input);
 
     expect(result).toHaveLength(1);
+    expect(result[0].cityId).toBe(1223);
     expect(result[0].city).toBe('Berlin');
-    expect(result[0].avgTemperature).toBeCloseTo(15.0, 5); // (15.2 + 14.8) / 2
-    expect(result[0].maxTemperature).toBeCloseTo(17.5, 5); // (18.0 + 17.0) / 2
-    expect(result[0].minTemperature).toBeCloseTo(12.5, 5); // (12.0 + 13.0) / 2
-    expect(result[0].precipitation).toBeCloseTo(2.5, 5); // (2.0 + 3.0) / 2
+    expect(result[0].avgTemperature).toBeCloseTo(15, 5); // (15.2 + 14.8) / 2
+    expect(result[0].maxTemperature).toBeCloseTo(17.5, 5); // (18 + 17) / 2
+    expect(result[0].minTemperature).toBeCloseTo(12.5, 5); // (12 + 13) / 2
+    expect(result[0].precipitation).toBeCloseTo(2.5, 5); // (2 + 3) / 2
     expect(result[0].stationName).toBe('Berlin (2 stations avg)');
   });
 
   it('should handle null values correctly', () => {
     const input: WeatherData[] = [
       {
+        cityId: 2,
         city: 'Tokyo',
         country: 'Japan',
         state: null,
@@ -92,15 +97,16 @@ describe('consolidateWeatherByCity', () => {
         lat: 35.6762,
         long: 139.6503,
         population: 13960000,
-        precipitation: 10.0,
+        precipitation: 10,
         snowDepth: null,
-        avgTemperature: 12.0,
-        maxTemperature: 16.0,
-        minTemperature: 8.0,
+        avgTemperature: 12,
+        maxTemperature: 16,
+        minTemperature: 8,
         stationName: 'Station 1',
         submitterId: null,
       },
       {
+        cityId: 2,
         city: 'Tokyo',
         country: 'Japan',
         state: null,
@@ -111,9 +117,9 @@ describe('consolidateWeatherByCity', () => {
         population: 13960000,
         precipitation: null,
         snowDepth: null,
-        avgTemperature: 14.0,
+        avgTemperature: 14,
         maxTemperature: null,
-        minTemperature: 10.0,
+        minTemperature: 10,
         stationName: 'Station 2',
         submitterId: null,
       },
@@ -122,16 +128,17 @@ describe('consolidateWeatherByCity', () => {
     const result = consolidateWeatherByCity(input);
 
     expect(result).toHaveLength(1);
-    expect(result[0].avgTemperature).toBeCloseTo(13.0, 5); // (12.0 + 14.0) / 2
-    expect(result[0].maxTemperature).toBe(16.0); // Only one non-null value
-    expect(result[0].minTemperature).toBeCloseTo(9.0, 5); // (8.0 + 10.0) / 2
-    expect(result[0].precipitation).toBe(10.0); // Only one non-null value
+    expect(result[0].avgTemperature).toBeCloseTo(13, 5); // (12 + 14) / 2
+    expect(result[0].maxTemperature).toBe(16); // Only one non-null value
+    expect(result[0].minTemperature).toBeCloseTo(9, 5); // (8 + 10) / 2
+    expect(result[0].precipitation).toBe(10); // Only one non-null value
     expect(result[0].snowDepth).toBe(null); // All null values
   });
 
-  it('should handle cities with the same name in different countries', () => {
+  it('should handle cities with the same name in different countries (different cityIds)', () => {
     const input: WeatherData[] = [
       {
+        cityId: 3,
         city: 'London',
         country: 'United Kingdom',
         state: null,
@@ -140,15 +147,16 @@ describe('consolidateWeatherByCity', () => {
         lat: 51.5074,
         long: -0.1278,
         population: 8982000,
-        precipitation: 5.0,
+        precipitation: 5,
         snowDepth: 0,
-        avgTemperature: 10.0,
-        maxTemperature: 13.0,
-        minTemperature: 7.0,
+        avgTemperature: 10,
+        maxTemperature: 13,
+        minTemperature: 7,
         stationName: 'UK Station',
         submitterId: null,
       },
       {
+        cityId: 4,
         city: 'London',
         country: 'Canada',
         state: 'Ontario',
@@ -157,11 +165,11 @@ describe('consolidateWeatherByCity', () => {
         lat: 42.9834,
         long: -81.2497,
         population: 383822,
-        precipitation: 3.0,
-        snowDepth: 2.0,
-        avgTemperature: -2.0,
-        maxTemperature: 2.0,
-        minTemperature: -6.0,
+        precipitation: 3,
+        snowDepth: 2,
+        avgTemperature: -2,
+        maxTemperature: 2,
+        minTemperature: -6,
         stationName: 'Canada Station',
         submitterId: null,
       },
@@ -169,10 +177,10 @@ describe('consolidateWeatherByCity', () => {
 
     const result = consolidateWeatherByCity(input);
 
-    // Should keep both cities separate
+    // Should keep both cities separate (different cityIds)
     expect(result).toHaveLength(2);
-    expect(result.find((r) => r.country === 'United Kingdom')).toBeDefined();
-    expect(result.find((r) => r.country === 'Canada')).toBeDefined();
+    expect(result.find((r) => r.cityId === 3)).toBeDefined();
+    expect(result.find((r) => r.cityId === 4)).toBeDefined();
   });
 });
 
@@ -180,6 +188,7 @@ describe('consolidateSunshineByCity', () => {
   it('should return single station data unchanged', () => {
     const input: SunshineData[] = [
       {
+        cityId: 1,
         city: 'Barcelona',
         country: 'Spain',
         state: 'Catalonia',
@@ -209,9 +218,10 @@ describe('consolidateSunshineByCity', () => {
     expect(result[0]).toEqual(input[0]);
   });
 
-  it('should consolidate multiple stations for the same city', () => {
+  it('should consolidate multiple stations for the same city (same cityId)', () => {
     const input: SunshineData[] = [
       {
+        cityId: 2,
         city: 'Rome',
         country: 'Italy',
         lat: 41.9028,
@@ -232,6 +242,7 @@ describe('consolidateSunshineByCity', () => {
         stationName: 'Station 1',
       },
       {
+        cityId: 2,
         city: 'Rome',
         country: 'Italy',
         lat: 41.9028,
@@ -256,6 +267,7 @@ describe('consolidateSunshineByCity', () => {
     const result = consolidateSunshineByCity(input);
 
     expect(result).toHaveLength(1);
+    expect(result[0].cityId).toBe(2);
     expect(result[0].city).toBe('Rome');
     expect(result[0].jan).toBeCloseTo(125, 5); // (120 + 130) / 2
     expect(result[0].feb).toBeCloseTo(136, 5); // (132 + 140) / 2
@@ -266,6 +278,7 @@ describe('consolidateSunshineByCity', () => {
   it('should handle null values correctly', () => {
     const input: SunshineData[] = [
       {
+        cityId: 3,
         city: 'Oslo',
         country: 'Norway',
         lat: 59.9139,
@@ -286,6 +299,7 @@ describe('consolidateSunshineByCity', () => {
         stationName: 'Station 1',
       },
       {
+        cityId: 3,
         city: 'Oslo',
         country: 'Norway',
         lat: 59.9139,

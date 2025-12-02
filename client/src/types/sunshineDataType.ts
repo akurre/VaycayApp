@@ -1,6 +1,7 @@
 // sunshine data type definitions for monthly sunshine hours visualization
 
 export interface SunshineData {
+  cityId: number;
   city: string;
   country: string;
   state?: string;

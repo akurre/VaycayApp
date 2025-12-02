@@ -23,16 +23,16 @@ import type { SunshineData } from '@/types/sunshineDataType';
 export function consolidateSunshineByCity(
   sunshineData: SunshineData[]
 ): SunshineData[] {
-  // Group by city+country (city names can repeat across countries)
-  const grouped = new Map<string, SunshineData[]>();
+  // Group by cityId (most reliable way to identify same city location)
+  // Multiple weather stations can share the same cityId
+  const grouped = new Map<number, SunshineData[]>();
 
   for (const record of sunshineData) {
-    const key = `${record.city}|${record.country || 'unknown'}`;
-    const existing = grouped.get(key);
+    const existing = grouped.get(record.cityId);
     if (existing) {
       existing.push(record);
     } else {
-      grouped.set(key, [record]);
+      grouped.set(record.cityId, [record]);
     }
   }
 
@@ -58,6 +58,7 @@ export function consolidateSunshineByCity(
 
     const consolidated_record: SunshineData = {
       // Preserve metadata from first record
+      cityId: base.cityId,
       city: base.city,
       country: base.country,
       state: base.state,

@@ -3,7 +3,7 @@ import Field from './Field';
 import DistanceSection from './DistanceSection';
 import GreaterSection from './GreaterSection';
 import CustomPaper from '../Shared/CustomPaper';
-import { Popover, Button, Badge } from '@mantine/core';
+import { Popover, Button } from '@mantine/core';
 import { appColors } from '@/theme';
 import CityBadge from './graphs/CityBadge';
 
@@ -45,6 +45,7 @@ const AdditionalInfo = ({ city, isShowCity }: AdditionalInfoProps) => {
                 </Button>
               </Popover.Target>
               <Popover.Dropdown>
+                {city.stationName}
                 {city.lat && city.long && (
                   <Field
                     label="Coordinates"

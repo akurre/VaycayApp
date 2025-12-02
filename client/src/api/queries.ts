@@ -3,6 +3,7 @@ import { gql } from '@apollo/client';
 export const GET_WEATHER_BY_DATE = gql`
   query GetWeatherByDate($monthDay: String!) {
     weatherByDate(monthDay: $monthDay) {
+      cityId
       city
       country
       state
@@ -55,6 +56,7 @@ export const GET_WEATHER_BY_DATE_AND_BOUNDS = gql`
       minLong: $minLong
       maxLong: $maxLong
     ) {
+      cityId
       city
       country
       state
@@ -88,6 +90,7 @@ export const GET_SUNSHINE_BY_MONTH_AND_BOUNDS = gql`
       minLong: $minLong
       maxLong: $maxLong
     ) {
+      cityId
       city
       country
       state
@@ -177,6 +180,7 @@ export const GET_WEATHER_BY_CITY_AND_DATE = gql`
       long: $long
       monthDay: $monthDay
     ) {
+      cityId
       city
       country
       state
@@ -199,6 +203,7 @@ export const GET_WEATHER_BY_CITY_AND_DATE = gql`
 export const GET_SUNSHINE_BY_CITY = gql`
   query GetSunshineByCity($city: String!, $lat: Float, $long: Float) {
     sunshineByCity(city: $city, lat: $lat, long: $long) {
+      cityId
       city
       country
       state
@@ -227,6 +232,7 @@ export const GET_SUNSHINE_BY_CITY = gql`
 export const GET_SUNSHINE_BY_MONTH = gql`
   query GetSunshineByMonth($month: Int!) {
     sunshineByMonth(month: $month) {
+      cityId
       city
       country
       state
