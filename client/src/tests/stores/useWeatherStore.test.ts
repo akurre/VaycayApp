@@ -25,6 +25,7 @@ describe('useWeatherStore', () => {
 
     const mockData: WeatherData[] = [
       {
+        cityId: 213,
         city: 'Milan',
         country: 'Italy',
         state: null,
@@ -79,6 +80,7 @@ describe('useWeatherStore', () => {
 
     const mockData: WeatherData[] = [
       {
+        cityId: 223,
         city: 'Rome',
         country: 'Italy',
         state: null,
@@ -113,6 +115,7 @@ describe('useWeatherStore', () => {
 
     const mockData: WeatherData[] = [
       {
+        cityId: 213,
         city: 'Milan',
         country: 'Italy',
         state: null,
@@ -130,6 +133,7 @@ describe('useWeatherStore', () => {
         submitterId: 'test-1',
       },
       {
+        cityId: 2132,
         city: 'Rome',
         country: 'Italy',
         state: null,

@@ -1,4 +1,5 @@
 export interface WeatherData {
+  cityId: number;
   city: string;
   country: string | null;
   state: string | null;

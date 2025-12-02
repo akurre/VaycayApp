@@ -30,6 +30,7 @@ export { customRender as render };
 export const createMockWeatherData = (
   overrides?: Partial<WeatherData>
 ): WeatherData => ({
+  cityId: 234,
   city: 'Test City',
   country: 'Test Country',
   state: null,
@@ -51,6 +52,7 @@ export const createMockWeatherData = (
 export const createMockSunshineData = (
   overrides?: Partial<SunshineData>
 ): SunshineData => ({
+  cityId: 234,
   city: 'Test City',
   country: 'Test Country',
   lat: 40.7128,

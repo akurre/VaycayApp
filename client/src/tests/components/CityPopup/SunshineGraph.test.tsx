@@ -5,6 +5,7 @@ import type { SunshineData } from '@/types/sunshineDataType';
 
 describe('SunshineGraph', () => {
   const mockSunshineData: SunshineData = {
+    cityId: 315,
     city: 'Barcelona',
     country: 'Spain',
     lat: 41.3851,

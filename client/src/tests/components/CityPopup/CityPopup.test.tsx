@@ -36,6 +36,7 @@ describe('CityPopup', () => {
 
   // sample weather data
   const weatherData: WeatherData = {
+    cityId: 235,
     city: 'New York',
     country: 'United States',
     state: 'New York',
@@ -55,6 +56,7 @@ describe('CityPopup', () => {
 
   // sample sunshine data
   const sunshineData: SunshineData = {
+    cityId: 235,
     city: 'New York',
     country: 'United States',
     state: 'New York',

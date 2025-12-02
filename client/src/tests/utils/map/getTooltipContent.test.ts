@@ -6,6 +6,7 @@ import { createMockSunshineData } from '@/test-utils';
 
 describe('getTooltipContent', () => {
   const createMockCity = (overrides?: Partial<WeatherData>): WeatherData => ({
+    cityId: 213,
     city: 'Milan',
     country: 'Italy',
     state: null,

@@ -38,7 +38,7 @@ jobs:
               - "README.md"
 
   client:
-    name: Client - lint, type-check, format, build
+    name: Client - lint, type-check, format, test, build
     runs-on: ubuntu-latest
     needs: changes
     if: >
@@ -51,15 +51,17 @@ jobs:
         with:
           node-version: "20.x"
           cache: "npm"
-      - name: Install dependencies
+      - name: Install dependencies FE
         run: cd client && npm ci
-      - name: Prettier check
+      - name: Prettier check FE
         run: cd client && npm run format:check
-      - name: ESLint
+      - name: ESLint FE
         run: cd client && npm run lint
-      - name: Type Check
+      - name: Type Check FE
         run: cd client && npm run type-check
-      - name: Build
+      - name: Run FE tests
+        run: cd client && npm test
+      - name: Build FE
         run: cd client && npm run build
       - name: Upload client build artifact
         if: github.event_name == 'pull_request'
@@ -70,7 +72,7 @@ jobs:
           if-no-files-found: warn
 
   server:
-    name: Server - lint, type-check, format, build
+    name: Server - lint, type-check, format, test, build
     runs-on: ubuntu-latest
     needs: changes
     if: >
@@ -83,34 +85,17 @@ jobs:
         with:
           node-version: "20.x"
           cache: "npm"
-      - name: Install dependencies
+      - name: Install dependencies BE
         run: cd server && npm ci
       - name: Prisma generate (ensure client/types)
         run: cd server && npm run prisma:generate
-      - name: Prettier check
+      - name: Prettier check BE
         run: cd server && npm run format:check
-      - name: ESLint
+      - name: ESLint BE
         run: cd server && npm run lint
-      - name: Type Check
+      - name: Type Check BE
         run: cd server && npm run type-check
-      - name: Build
+      - name: Run BE tests
+        run: cd server && npm test
+      - name: Build BE
         run: cd server && npm run build
-
-  gate:
-    name: Required checks
-    runs-on: ubuntu-latest
-    needs: [client, server]
-    if: always()
-    steps:
-      - name: Fail if client failed
-        if: ${{ needs.client.result == 'failure' || needs.client.result == 'cancelled' }}
-        run: |
-          echo "client job status: ${{ needs.client.result }}"
-          exit 1
-      - name: Fail if server failed
-        if: ${{ needs.server.result == 'failure' || needs.server.result == 'cancelled' }}
-        run: |
-          echo "server job status: ${{ needs.server.result }}"
-          exit 1
-      - name: All good
-        run: echo "Checks passed or were skipped."

@@ -15,6 +15,7 @@ export const SunshineData = objectType({
   name: 'SunshineData',
   description: 'monthly sunshine hours for a specific location',
   definition(t) {
+    t.nonNull.int('cityId', { description: 'unique city identifier' });
     t.nonNull.string('city', { description: 'city name' });
     t.string('country', { description: 'country name' });
     t.string('state', { description: 'state or region' });
@@ -45,6 +46,7 @@ export const SunshineData = objectType({
 // Helper function to map sunshine records to GraphQL response format
 function mapSunshineRecords(records: MonthlySunshineWithRelations[]) {
   return records.map((record) => ({
+    cityId: record.city.id,
     city: record.city.name,
     country: record.city.country,
     state: record.city.state,
@@ -236,6 +238,7 @@ export const sunshineByCityQuery = queryField('sunshineByCity', {
       }
 
       return {
+        cityId: record.city.id,
         city: record.city.name,
         country: record.city.country,
         state: record.city.state,
@@ -284,6 +287,7 @@ export const sunshineByCityQuery = queryField('sunshineByCity', {
     }
 
     return {
+      cityId: record.city.id,
       city: record.city.name,
       country: record.city.country,
       state: record.city.state,

@@ -103,47 +103,158 @@ The GraphQL API will be available at:
 | `npm run prisma:pull` | Pull schema from existing database |
 | `npm run import-data` | Import weather data from JSON file |
 
-## 🗄️ Database Schema
+## 🗄️ Database Schema & Data Structure
 
-The application uses a single `weather_data` table with a composite primary key:
+### Understanding the Synthetic Year
 
-### WeatherData Model
+**CRITICAL:** The existing weather data in the database uses a **synthetic year representation** where:
 
+- All dates are labeled as **2020** (chosen as a leap year for the extra day)
+- Each day represents the **average of years 2016-2020** for that calendar date
+- Each city may have **multiple weather stations**, each with its own 366-day synthetic year
+- This means a city like Berlin has records for `2020-01-01` through `2020-12-31` from **multiple stations**, where each station's value is the 5-year average for that station
+
+**Example: Berlin Weather Data**
+```
+id       cityId   stationId   date         PRCP
+365780   1223     1223        2020-01-01   1.16  (avg of 2016-2020 Jan 1 for station 1)
+365781   1223     1223        2020-01-02   0.67  (avg of 2016-2020 Jan 2 for station 1)
+...
+2755193  1223     8848        2020-01-01   1.27  (avg of 2016-2020 Jan 1 for station 2)
+2755194  1223     8848        2020-01-02   0.66  (avg of 2016-2020 Jan 2 for station 2)
+```
+
+**Data Volume:**
+- Total records per city: `366 days × number_of_stations`
+- Berlin example: 732 records (2 stations × 366 days)
+- Cities with 1 station: 366 records
+- Cities with 4 stations: 1,464 records
+
+### Future: Open-Meteo Enrichment
+
+The database will be enriched with **real individual-year data** from Open-Meteo (2010-2024):
+- Each city will get a dummy station called "{CityName} Open-Meteo"
+- This dummy station will have **real daily data** for years 2010-2015 and 2021-2024
+- Total new records per city: ~3,650 (10 years × 365 days)
+- These will blend with existing synthetic data during aggregation
+
+**After enrichment - Berlin example:**
+```
+Before: 732 records (2 synthetic stations)
+After:  4,382 records (2 synthetic stations + 1 Open-Meteo with 3,650 real days)
+```
+
+### Current Database Structure
+
+The application uses a normalized schema with separate tables for cities, stations, and weather records:
+
+### Database Models
+
+The application uses a **normalized 3-table schema** optimized for read performance:
+
+#### City Model
 ```prisma
-model WeatherData {
-  // Composite primary key
-  city   String
-  date   String
-  name   String  // Weather station name
-  
-  // Location information
-  country    String?
-  state      String?
-  suburb     String?
-  lat        String?
-  long       String?
-  population Float?
-  
-  // Weather metrics
-  PRCP    Float?  // Precipitation (mm)
-  SNWD    Float?  // Snow depth (mm)
-  TAVG    Float?  // Average temperature (°C)
-  TMAX    Float?  // Maximum temperature (°C)
-  TMIN    Float?  // Minimum temperature (°C)
-  
-  // Metadata
-  submitter_id String?
-  
-  @@id([city, date, name])
+model City {
+  id             Int              @id @default(autoincrement())
+  name           String
+  country        String
+  state          String?
+  suburb         String?
+  lat            Float
+  long           Float
+  cityAscii      String?
+  iso2           String?
+  iso3           String?
+  capital        String?
+  worldcitiesId  Float?
+  population     Float?
+  dataSource     String?
+
+  // Relations
+  weatherStations WeatherStation[]
+  weatherRecords  WeatherRecord[]
+  monthlySunshine MonthlySunshine?
+  weeklyWeather   WeeklyWeather?
+
+  @@unique([name, country, lat, long])
+  @@index([name])
+  @@index([country])
+  @@index([lat, long])
+  @@index([country, lat, long])
+  @@index([country, population])
+
+  @@map("cities")
+}
+```
+
+#### WeatherStation Model
+```prisma
+model WeatherStation {
+  id       Int             @id @default(autoincrement())
+  name     String
+  cityId   Int
+
+  // Relations
+  city            City            @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  weatherRecords  WeatherRecord[]
+
+  @@unique([name, cityId])
+  @@index([cityId])
+
+  @@map("weather_stations")
+}
+```
+
+#### WeatherRecord Model
+```prisma
+model WeatherRecord {
+  id        Int      @id @default(autoincrement())
+  cityId    Int
+  stationId Int
+  date      String   // Format: YYYY-MM-DD
+
+  // Core weather metrics
+  PRCP      Float?   // Precipitation (mm)
+  SNWD      Float?   // Snow depth (mm)
+  TAVG      Float?   // Average temperature (°C)
+  TMAX      Float?   // Maximum temperature (°C)
+  TMIN      Float?   // Minimum temperature (°C)
+
+  // Additional weather metrics
+  AWND      Float?   // Average wind speed
+  DAPR      Float?   // Number of days included in multiday precipitation
+  DATN      Float?   // Number of days included in multiday minimum temperature
+  DATX      Float?   // Number of days included in multiday maximum temperature
+  DWPR      Float?   // Number of days with non-zero precipitation
+  MDPR      Float?   // Multiday precipitation total
+  MDTN      Float?   // Multiday minimum temperature
+  MDTX      Float?   // Multiday maximum temperature
+  WDF2      Float?   // Direction of fastest 2-minute wind
+  WDF5      Float?   // Direction of fastest 5-second wind
+  WSF2      Float?   // Fastest 2-minute wind speed
+  WSF5      Float?   // Fastest 5-second wind speed
+
+  // Relations
+  city    City           @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  station WeatherStation @relation(fields: [stationId], references: [id], onDelete: Cascade)
+
+  @@unique([cityId, stationId, date])
   @@index([date])
-  @@index([city])
+  @@index([cityId, date])
+  @@index([cityId])
+  @@index([date, TAVG])
+
+  @@map("weather_records")
 }
 ```
 
 **Key Points:**
-- Composite primary key: `(city, date, name)`
-- Indexed fields: `date`, `city` for query performance
-- Nullable fields: Most fields are optional to handle incomplete data
+- Each city can have **multiple weather stations** (e.g., Berlin has 2 stations)
+- Each station stores **366 days** of synthetic year data (2020-01-01 to 2020-12-31)
+- Synthetic year represents **5-year average** (2016-2020) for existing data
+- Unique constraint ensures no duplicate records per `(cityId, stationId, date)`
+- Indexes optimized for common query patterns (by date, by city, by city+date)
+- All weather metrics are nullable to handle incomplete data
 - Date format: `YYYY-MM-DD` (e.g., `2020-03-15`)
 
 ## 🔌 GraphQL API
@@ -165,6 +276,31 @@ The GraphQL schema is built using **Nexus** (code-first approach):
 3. **Context** (`src/context.ts`):
    - Provides Prisma client to resolvers
    - Handles database connections
+
+
+MONTHLY_SUNSHINE TABLE (snippet):
+id	"cityId"	jan	feb	mar	apr	may	jun	jul	aug
+104	1223	47.0	74.0	121.0	159.0	220.0	222.0	217.0	211.0
+
+CITIES TABLE:
+id	"name"	country	state	suburb	lat	long	"cityAscii"	iso2	iso3	capital	"worldcitiesId"	population	"dataSource"
+1223	Berlin	Germany	Berlin		52.5167	13.3833	Berlin	DE	DEU	primary	1276451290	3644826.0	worldcities
+
+
+WEATHER_STATIONS TABLE:
+id		name					cityId
+1223	Berlin Weather Station		1223
+8848	Potsdam Weather Station	1223
+
+WEATHER_RECORDS TABLE (snippet):
+id	"cityId"	"stationId"	"date"	"PRCP"	"SNWD"	"TAVG"	"TMAX"
+365780	1223	1223	2020-01-01	1.16	0.0	4.04	6.29
+365781	1223	1223	2020-01-02	0.67	0.1	0.59	3.86
+365782	1223	1223	2020-01-03	5.88	0.0	0.35	2.32
+...
+2755193	1223	8848	2020-01-01	1.27	0.0	3.05	6.29
+2755194	1223	8848	2020-01-02	0.66	0.1	0.29	3.81
+2755195	1223	8848	2020-01-03	4.57	0.0	-0.04	2.63
 
 ### Query Optimization System
 

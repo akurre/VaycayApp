@@ -5,6 +5,7 @@ import type { WeatherDataUnion } from '@/types/mapTypes';
 
 describe('AdditionalInfo', () => {
   const mockCity: WeatherDataUnion = {
+    cityId: 234,
     city: 'Test City',
     country: 'Test Country',
     state: null,

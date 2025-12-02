@@ -19,6 +19,7 @@ export const WeatherData = objectType({
   name: 'WeatherData',
   description: 'Weather data for a specific location and date',
   definition(t) {
+    t.nonNull.int('cityId', { description: 'Unique city identifier' });
     t.nonNull.string('city', { description: 'City name' });
     t.string('country', { description: 'Country name' });
     t.string('state', { description: 'State or region' });
@@ -121,6 +122,7 @@ export const weatherByDateQuery = queryField('weatherByDate', {
       console.log(`  🔝 Top countries: ${topCountries.map(([c, n]) => `${c}(${n})`).join(', ')}`);
 
       return records.map((record: WeatherRecordWithRelations) => ({
+        cityId: record.city.id,
         city: record.city.name,
         country: record.city.country,
         state: record.city.state,
@@ -219,6 +221,7 @@ export const weatherByDateAndBoundsQuery = queryField('weatherByDateAndBounds', 
       console.log(`  🔝 Top countries: ${topCountries.map(([c, n]) => `${c}(${n})`).join(', ')}`);
 
       return records.map((record: WeatherRecordWithRelations) => ({
+        cityId: record.city.id,
         city: record.city.name,
         country: record.city.country,
         state: record.city.state,

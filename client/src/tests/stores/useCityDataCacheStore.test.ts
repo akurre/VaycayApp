@@ -28,6 +28,7 @@ Object.defineProperty(globalThis, 'localStorage', {
 describe('useCityDataCacheStore', () => {
   // Sample weather data for testing
   const weatherData: WeatherData = {
+    cityId: 2133,
     city: 'Berlin',
     country: 'Germany',
     state: 'Berlin',
@@ -47,6 +48,7 @@ describe('useCityDataCacheStore', () => {
 
   // Sample sunshine data for testing
   const sunshineData: SunshineData = {
+    cityId: 2133,
     city: 'Berlin',
     country: 'Germany',
     state: 'Berlin',

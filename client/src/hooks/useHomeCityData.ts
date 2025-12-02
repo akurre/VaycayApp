@@ -8,6 +8,11 @@ import useSunshineDataForCity from '@/api/dates/useSunshineDataForCity';
  * Fetches and stores weather/sunshine data for the home location in the app store.
  * This ensures the home location always has data available, even if it's not in
  * the filtered cities array.
+ *
+ * NOTE: The fetched data for a single city returns ONE weather record (not consolidated).
+ * For cities with multiple stations, this will show data from only one station.
+ * To get consolidated data (average of all stations), the home city must be visible
+ * on the map, where consolidation happens at the map level.
  */
 export function useHomeCityData(dataType: DataType, selectedDate?: string) {
   const homeLocation = useAppStore((state) => state.homeLocation);

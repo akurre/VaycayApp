@@ -7,6 +7,7 @@ import { ViewMode, DataType } from '@/types/mapTypes';
 
 describe('useMapInteractions', () => {
   const createMockCity = (overrides?: Partial<WeatherData>): WeatherData => ({
+    cityId: 215,
     city: 'Milan',
     country: 'Italy',
     state: null,

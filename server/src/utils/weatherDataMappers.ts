@@ -10,6 +10,7 @@ export type WeatherRecordWithRelations = WeatherRecord & {
  */
 export function mapWeatherRecord(record: WeatherRecordWithRelations) {
   return {
+    cityId: record.city.id,
     city: record.city.name,
     country: record.city.country,
     state: record.city.state,
