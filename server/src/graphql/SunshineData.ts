@@ -239,7 +239,7 @@ export const sunshineByCityQuery = queryField('sunshineByCity', {
 
       return {
         cityId: record.city.id,
-    city: record.city.name,
+        city: record.city.name,
         country: record.city.country,
         state: record.city.state,
         suburb: record.city.suburb,
@@ -288,7 +288,7 @@ export const sunshineByCityQuery = queryField('sunshineByCity', {
 
     return {
       cityId: record.city.id,
-    city: record.city.name,
+      city: record.city.name,
       country: record.city.country,
       state: record.city.state,
       suburb: record.city.suburb,
