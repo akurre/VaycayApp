@@ -95,8 +95,29 @@ add-city-sunshine: check-prereqs
 	@export DATABASE_URL="postgresql://postgres:iwantsun@localhost:5433/postgres_v2" && cd server && npx tsx scripts/add-city-sunshine.ts
 	@echo "$(GREEN)✓ Done$(NC)"
 
-# Setup database (temporarily redirected to v2)
-db-setup: db-setup-v2
+db-setup: check-prereqs
+	@echo "$(GREEN)Setting up v3 database with new weather data...$(NC)"
+	@echo "$(YELLOW)Starting PostgreSQL v3 container...$(NC)"
+	docker compose up -d db-v3
+	@echo "$(YELLOW)Waiting for database to be ready...$(NC)"
+	@sleep 5
+	@echo "$(YELLOW)Running Prisma migrations on v3...$(NC)"
+	@export DATABASE_URL="postgresql://postgres:iwantsun@localhost:5431/postgres_v3" && cd server && npx prisma migrate reset --force --skip-seed
+	@echo "$(YELLOW)Generating Prisma client...$(NC)"
+	cd server && npm run prisma:generate
+	@echo "$(YELLOW)Importing CSV weather data from worldData_v2 (this will take 30-60 minutes for 7.5M records)...$(NC)"
+	@export DATABASE_URL="postgresql://postgres:iwantsun@localhost:5431/postgres_v3" && cd server && npm run import-csv-data
+	@echo "$(YELLOW)Merging duplicate cities and consolidating PRCP data (this will take 5-10 minutes)...$(NC)"
+	@export DATABASE_URL="postgresql://postgres:iwantsun@localhost:5431/postgres_v3" && cd server && npx tsx scripts/merge-duplicate-cities-optimized.ts
+	@echo "$(YELLOW)Reassigning small cities to major cities...$(NC)"
+	@export DATABASE_URL="postgresql://postgres:iwantsun@localhost:5431/postgres_v3" && cd server && npx tsx scripts/reassign-cities-to-major-cities.ts
+	@echo "$(YELLOW)Importing monthly sunshine hours data...$(NC)"
+	@export DATABASE_URL="postgresql://postgres:iwantsun@localhost:5431/postgres_v3" && cd server && npx tsx scripts/import-sunshine-hours.ts
+	@echo "$(YELLOW)Aggregating weekly weather data (this will take 2-5 minutes)...$(NC)"
+	@export DATABASE_URL="postgresql://postgres:iwantsun@localhost:5431/postgres_v3" && cd server && npm run aggregate-weekly-weather
+	@echo "$(YELLOW)Adding custom city sunshine data...$(NC)"
+	@export DATABASE_URL="postgresql://postgres:iwantsun@localhost:5431/postgres_v3" && cd server && npx tsx scripts/add-city-sunshine.ts
+	@echo "$(GREEN)✓ V2 Database setup complete$(NC)"
 
 # Start all services for development
 dev: check-prereqs
@@ -222,7 +243,7 @@ prisma: check-prereqs
 
 # Delete node_modules in all locations and reinstall
 delete-package: check-prereqs
-	@echo "$(GREEN)Cleaning up all package files...$(NC)"
+	@echo "$(GREEN)Cleaning up all package files and node modules...$(NC)"
 	@echo "$(YELLOW)Deleting root node_modules and package-lock.json...$(NC)"
 	@rm -rf node_modules package-lock.json
 	@echo "$(YELLOW)Deleting client node_modules and package-lock.json...$(NC)"

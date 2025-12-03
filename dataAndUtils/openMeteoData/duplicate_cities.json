@@ -1,0 +1,2265 @@
+[
+  {
+    "cityName": "Tokyo",
+    "country": "Japan",
+    "states": [
+      "",
+      "Hachijō Subprefecture",
+      "Miyake Subprefecture",
+      "Oshima Subprefecture",
+      "Tōkyō"
+    ],
+    "totalStations": 12,
+    "uniqueCitiesKept": 12,
+    "note": "-7 state variant(s) will fetch same weather data",
+    "keptStations": [
+      {
+        "id": 16608,
+        "state": null,
+        "lat": 35.6897,
+        "long": 139.6922
+      },
+      {
+        "id": 16602,
+        "state": null,
+        "lat": 25.89045714285709,
+        "long": 147.2430000000002
+      },
+      {
+        "id": 16604,
+        "state": null,
+        "lat": 26.387475,
+        "long": 145.14175
+      },
+      {
+        "id": 16601,
+        "state": null,
+        "lat": 25.69165000000005,
+        "long": 148.0835000000004
+      },
+      {
+        "id": 16605,
+        "state": null,
+        "lat": 26.15553333333333,
+        "long": 146.1223333333333
+      },
+      {
+        "id": 16606,
+        "state": null,
+        "lat": 25.96998,
+        "long": 146.9068
+      },
+      {
+        "id": 16607,
+        "state": null,
+        "lat": 25.41332,
+        "long": 149.2602
+      },
+      {
+        "id": 16609,
+        "state": "Hachijō Subprefecture",
+        "lat": 33.11700000000015,
+        "long": 139.7830000000009
+      },
+      {
+        "id": 16610,
+        "state": "Miyake Subprefecture",
+        "lat": 34.11700000000015,
+        "long": 139.5169999999999
+      },
+      {
+        "id": 16603,
+        "state": null,
+        "lat": 25.49284285714289,
+        "long": 148.9240000000003
+      },
+      {
+        "id": 16611,
+        "state": "Oshima Subprefecture",
+        "lat": 34.75,
+        "long": 139.3830000000011
+      },
+      {
+        "id": 16612,
+        "state": "Tōkyō",
+        "lat": 35.57193522293591,
+        "long": 139.8396352308211
+      }
+    ]
+  },
+  {
+    "cityName": "Paris",
+    "country": "United States",
+    "states": [
+      "Kentucky",
+      "Tennessee",
+      "Texas",
+      "Illinois"
+    ],
+    "totalStations": 4,
+    "uniqueCitiesKept": 4,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 8468,
+        "state": "Kentucky",
+        "lat": 38.38446801457208,
+        "long": -84.26216950819648
+      },
+      {
+        "id": 8470,
+        "state": "Tennessee",
+        "lat": 36.2241291746374,
+        "long": -88.20420182197951
+      },
+      {
+        "id": 8471,
+        "state": "Texas",
+        "lat": 33.70687989916735,
+        "long": -95.55267205492677
+      },
+      {
+        "id": 8467,
+        "state": "Illinois",
+        "lat": 39.57640150392727,
+        "long": -87.689376243009
+      }
+    ]
+  },
+  {
+    "cityName": "Lima",
+    "country": "United States",
+    "states": [
+      "Montana",
+      "Ohio"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 5497,
+        "state": "Montana",
+        "lat": 44.63577571092265,
+        "long": -112.592917613667
+      },
+      {
+        "id": 5498,
+        "state": "Ohio",
+        "lat": 40.72305288276743,
+        "long": -84.07059755644667
+      }
+    ]
+  },
+  {
+    "cityName": "Miami",
+    "country": "United States",
+    "states": [
+      "Oklahoma",
+      "Florida"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 6194,
+        "state": "Oklahoma",
+        "lat": 36.88330000000005,
+        "long": -94.88330000000043
+      },
+      {
+        "id": 6193,
+        "state": "Florida",
+        "lat": 25.7839,
+        "long": -80.2102
+      }
+    ]
+  },
+  {
+    "cityName": "Dallas",
+    "country": "United States",
+    "states": [
+      "Texas",
+      "Oregon"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 2559,
+        "state": "Texas",
+        "lat": 32.7936,
+        "long": -96.7662
+      },
+      {
+        "id": 2557,
+        "state": "Oregon",
+        "lat": 44.96036706088981,
+        "long": -123.4558198302116
+      }
+    ]
+  },
+  {
+    "cityName": "Philadelphia",
+    "country": "United States",
+    "states": [
+      "Pennsylvania",
+      "Mississippi"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 8619,
+        "state": "Pennsylvania",
+        "lat": 40.01770660136579,
+        "long": -75.08991546207513
+      },
+      {
+        "id": 8618,
+        "state": "Mississippi",
+        "lat": 40.0077,
+        "long": -75.1339
+      }
+    ]
+  },
+  {
+    "cityName": "Houston",
+    "country": "United States",
+    "states": [
+      "Texas",
+      "Mississippi",
+      "Missouri"
+    ],
+    "totalStations": 3,
+    "uniqueCitiesKept": 3,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 4293,
+        "state": "Texas",
+        "lat": 29.7863,
+        "long": -95.3889
+      },
+      {
+        "id": 4291,
+        "state": "Mississippi",
+        "lat": 33.88470000000007,
+        "long": -88.98670000000055
+      },
+      {
+        "id": 4292,
+        "state": "Missouri",
+        "lat": 37.31399360547327,
+        "long": -91.9616365148758
+      }
+    ]
+  },
+  {
+    "cityName": "Atlanta",
+    "country": "United States",
+    "states": [
+      "Georgia",
+      "Texas"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 803,
+        "state": "Georgia",
+        "lat": 33.76009649864113,
+        "long": -84.4248246786627
+      },
+      {
+        "id": 804,
+        "state": "Texas",
+        "lat": 33.7627,
+        "long": -84.4224
+      }
+    ]
+  },
+  {
+    "cityName": "Washington",
+    "country": "United States",
+    "states": [
+      "Iowa",
+      "Kansas",
+      "Missouri",
+      "North Carolina",
+      "District of Columbia",
+      "Utah",
+      "Indiana"
+    ],
+    "totalStations": 7,
+    "uniqueCitiesKept": 7,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 17416,
+        "state": "Iowa",
+        "lat": 41.25620872495419,
+        "long": -91.73567679748298
+      },
+      {
+        "id": 17417,
+        "state": "Kansas",
+        "lat": 39.8089,
+        "long": -97.05500000000025
+      },
+      {
+        "id": 17418,
+        "state": "Missouri",
+        "lat": 38.52151491379436,
+        "long": -91.00582512156885
+      },
+      {
+        "id": 17420,
+        "state": "North Carolina",
+        "lat": 35.49777334621587,
+        "long": -76.94182151883776
+      },
+      {
+        "id": 17414,
+        "state": "District of Columbia",
+        "lat": 38.9047,
+        "long": -77.0163
+      },
+      {
+        "id": 17422,
+        "state": "Utah",
+        "lat": 37.39999999999976,
+        "long": -113.4599999999993
+      },
+      {
+        "id": 17415,
+        "state": "Indiana",
+        "lat": 38.6463427623606,
+        "long": -87.15653582368145
+      }
+    ]
+  },
+  {
+    "cityName": "Alexandria",
+    "country": "United States",
+    "states": [
+      "Louisiana",
+      "Minnesota"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 155,
+        "state": "Louisiana",
+        "lat": 31.32768184246755,
+        "long": -92.48942625332063
+      },
+      {
+        "id": 156,
+        "state": "Minnesota",
+        "lat": 45.81905887002615,
+        "long": -95.41417530642137
+      }
+    ]
+  },
+  {
+    "cityName": "Minneapolis",
+    "country": "United States",
+    "states": [
+      "Minnesota",
+      "Kansas"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 6279,
+        "state": "Minnesota",
+        "lat": 45.05313766663344,
+        "long": -93.30826999705504
+      },
+      {
+        "id": 6278,
+        "state": "Kansas",
+        "lat": 44.9635,
+        "long": -93.2678
+      }
+    ]
+  },
+  {
+    "cityName": "Manchester",
+    "country": "United States",
+    "states": [
+      "Iowa",
+      "New Hampshire"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 5822,
+        "state": "Iowa",
+        "lat": 42.47329999999977,
+        "long": -91.45170000000053
+      },
+      {
+        "id": 5823,
+        "state": "New Hampshire",
+        "lat": 43.11107793005129,
+        "long": -71.43921401071978
+      }
+    ]
+  },
+  {
+    "cityName": "Portland",
+    "country": "United States",
+    "states": [
+      "Indiana",
+      "Oregon",
+      "Maine",
+      "Tennessee"
+    ],
+    "totalStations": 4,
+    "uniqueCitiesKept": 4,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 8826,
+        "state": "Indiana",
+        "lat": 40.39652927786773,
+        "long": -84.97498715950776
+      },
+      {
+        "id": 8828,
+        "state": "Oregon",
+        "lat": 45.52205012566942,
+        "long": -122.6742205838569
+      },
+      {
+        "id": 8827,
+        "state": "Maine",
+        "lat": 43.76749810706399,
+        "long": -70.3220436153361
+      },
+      {
+        "id": 8829,
+        "state": "Tennessee",
+        "lat": 45.5372,
+        "long": -122.65
+      }
+    ]
+  },
+  {
+    "cityName": "Warsaw",
+    "country": "United States",
+    "states": [
+      "Virginia",
+      "Indiana"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 17409,
+        "state": "Virginia",
+        "lat": 37.98810000000008,
+        "long": -76.77690000000051
+      },
+      {
+        "id": 17408,
+        "state": "Indiana",
+        "lat": 41.28148223535487,
+        "long": -85.80111812006426
+      }
+    ]
+  },
+  {
+    "cityName": "Cleveland",
+    "country": "United States",
+    "states": [
+      "Tennessee",
+      "Ohio",
+      "Texas",
+      "Georgia",
+      "Mississippi"
+    ],
+    "totalStations": 5,
+    "uniqueCitiesKept": 5,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 2190,
+        "state": "Tennessee",
+        "lat": 35.18761351425175,
+        "long": -84.8048934808428
+      },
+      {
+        "id": 2189,
+        "state": "Ohio",
+        "lat": 41.43303476385019,
+        "long": -81.7093317164784
+      },
+      {
+        "id": 2191,
+        "state": "Texas",
+        "lat": 41.4767,
+        "long": -81.6804
+      },
+      {
+        "id": 2187,
+        "state": "Georgia",
+        "lat": 34.67855982833719,
+        "long": -83.74088707737208
+      },
+      {
+        "id": 2188,
+        "state": "Mississippi",
+        "lat": 33.73255656008752,
+        "long": -90.73627518431765
+      }
+    ]
+  },
+  {
+    "cityName": "Austin",
+    "country": "United States",
+    "states": [
+      "Texas",
+      "Minnesota",
+      "Nevada"
+    ],
+    "totalStations": 3,
+    "uniqueCitiesKept": 3,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 872,
+        "state": "Texas",
+        "lat": 30.3004,
+        "long": -97.7522
+      },
+      {
+        "id": 870,
+        "state": "Minnesota",
+        "lat": 43.657236492324,
+        "long": -92.9694079989594
+      },
+      {
+        "id": 871,
+        "state": "Nevada",
+        "lat": 39.49684284413211,
+        "long": -117.0727025533435
+      }
+    ]
+  },
+  {
+    "cityName": "Kansas City",
+    "country": "United States",
+    "states": [
+      "Kansas",
+      "Missouri"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 4769,
+        "state": "Kansas",
+        "lat": 39.20930295041015,
+        "long": -94.84956700088308
+      },
+      {
+        "id": 4770,
+        "state": "Missouri",
+        "lat": 39.1239,
+        "long": -94.5541
+      }
+    ]
+  },
+  {
+    "cityName": "Columbus",
+    "country": "United States",
+    "states": [
+      "Georgia",
+      "Texas",
+      "Montana",
+      "Nebraska",
+      "Ohio",
+      "Indiana",
+      "Mississippi"
+    ],
+    "totalStations": 7,
+    "uniqueCitiesKept": 7,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 2290,
+        "state": "Georgia",
+        "lat": 32.50992796752413,
+        "long": -84.98189841612333
+      },
+      {
+        "id": 2297,
+        "state": "Texas",
+        "lat": 39.9862,
+        "long": -82.985
+      },
+      {
+        "id": 2293,
+        "state": "Montana",
+        "lat": 45.64439999999968,
+        "long": -109.267500000001
+      },
+      {
+        "id": 2294,
+        "state": "Nebraska",
+        "lat": 41.37182479309003,
+        "long": -97.31316978757496
+      },
+      {
+        "id": 2296,
+        "state": "Ohio",
+        "lat": 40.06077821618481,
+        "long": -82.9771021703592
+      },
+      {
+        "id": 2291,
+        "state": "Indiana",
+        "lat": 39.20354921966834,
+        "long": -85.91020057053045
+      },
+      {
+        "id": 2292,
+        "state": "Mississippi",
+        "lat": 33.48981389057433,
+        "long": -88.37631475767618
+      }
+    ]
+  },
+  {
+    "cityName": "Ulaanbaatar",
+    "country": "Mongolia",
+    "states": [
+      "Töv",
+      "Ulaanbaatar"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 16914,
+        "state": "Töv",
+        "lat": 47.29999999999968,
+        "long": 107.4830000000002
+      },
+      {
+        "id": 16915,
+        "state": "Ulaanbaatar",
+        "lat": 47.84300000000035,
+        "long": 106.7669999999998
+      }
+    ]
+  },
+  {
+    "cityName": "Memphis",
+    "country": "United States",
+    "states": [
+      "Texas",
+      "Tennessee",
+      "Missouri"
+    ],
+    "totalStations": 3,
+    "uniqueCitiesKept": 3,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 6127,
+        "state": "Texas",
+        "lat": 34.72529802888371,
+        "long": -100.5371999999995
+      },
+      {
+        "id": 6126,
+        "state": "Tennessee",
+        "lat": 35.07801714171818,
+        "long": -89.91167872587464
+      },
+      {
+        "id": 6125,
+        "state": "Missouri",
+        "lat": 40.45792137349276,
+        "long": -92.17936127331065
+      }
+    ]
+  },
+  {
+    "cityName": "Louisville",
+    "country": "United States",
+    "states": [
+      "Kentucky",
+      "Mississippi"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 5632,
+        "state": "Kentucky",
+        "lat": 38.18527333781459,
+        "long": -85.67805745473483
+      },
+      {
+        "id": 5633,
+        "state": "Mississippi",
+        "lat": 33.12324699958218,
+        "long": -89.1040476107189
+      }
+    ]
+  },
+  {
+    "cityName": "Bridgeport",
+    "country": "United States",
+    "states": [
+      "West Virginia",
+      "Nebraska",
+      "California",
+      "Connecticut",
+      "Washington"
+    ],
+    "totalStations": 5,
+    "uniqueCitiesKept": 5,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 1574,
+        "state": "West Virginia",
+        "lat": 39.31329999999983,
+        "long": -80.0296999999994
+      },
+      {
+        "id": 1571,
+        "state": "Nebraska",
+        "lat": 41.66810000000032,
+        "long": -103.1038999999995
+      },
+      {
+        "id": 1569,
+        "state": "California",
+        "lat": 38.25749999999982,
+        "long": -119.2286000000001
+      },
+      {
+        "id": 1570,
+        "state": "Connecticut",
+        "lat": 41.2266007163154,
+        "long": -73.17644770364727
+      },
+      {
+        "id": 1573,
+        "state": "Washington",
+        "lat": 47.99669999999978,
+        "long": -119.6483000000006
+      }
+    ]
+  },
+  {
+    "cityName": "Buffalo",
+    "country": "United States",
+    "states": [
+      "Oklahoma",
+      "Wyoming",
+      "New York"
+    ],
+    "totalStations": 3,
+    "uniqueCitiesKept": 3,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 1664,
+        "state": "Oklahoma",
+        "lat": 36.83139999999968,
+        "long": -99.64110000000053
+      },
+      {
+        "id": 1665,
+        "state": "Wyoming",
+        "lat": 44.35376094847783,
+        "long": -106.7006003805623
+      },
+      {
+        "id": 1663,
+        "state": "New York",
+        "lat": 42.90558202614746,
+        "long": -78.81801518125657
+      }
+    ]
+  },
+  {
+    "cityName": "Hartford",
+    "country": "United States",
+    "states": [
+      "Wisconsin",
+      "Connecticut"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 4024,
+        "state": "Wisconsin",
+        "lat": 43.33170000000025,
+        "long": -88.41170000000038
+      },
+      {
+        "id": 4022,
+        "state": "Connecticut",
+        "lat": 41.81151515223038,
+        "long": -72.7867889649498
+      }
+    ]
+  },
+  {
+    "cityName": "Portsmouth",
+    "country": "United States",
+    "states": [
+      "Ohio",
+      "New Hampshire"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 8835,
+        "state": "Ohio",
+        "lat": 38.79525762713847,
+        "long": -82.93336413763845
+      },
+      {
+        "id": 8834,
+        "state": "New Hampshire",
+        "lat": 42.97582872202714,
+        "long": -70.8265770586134
+      }
+    ]
+  },
+  {
+    "cityName": "Hempstead",
+    "country": "United States",
+    "states": [
+      "Texas",
+      "New York"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 4122,
+        "state": "Texas",
+        "lat": 30.03246699453549,
+        "long": -96.21804224043663
+      },
+      {
+        "id": 4121,
+        "state": "New York",
+        "lat": 40.72794482929847,
+        "long": -73.42732392893836
+      }
+    ]
+  },
+  {
+    "cityName": "Dayton",
+    "country": "United States",
+    "states": [
+      "Tennessee",
+      "Texas",
+      "Ohio"
+    ],
+    "totalStations": 3,
+    "uniqueCitiesKept": 3,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 2607,
+        "state": "Tennessee",
+        "lat": 35.57939216319325,
+        "long": -85.06600956161418
+      },
+      {
+        "id": 2608,
+        "state": "Texas",
+        "lat": 30.07284932648105,
+        "long": -94.85989831453618
+      },
+      {
+        "id": 2606,
+        "state": "Ohio",
+        "lat": 39.74798346393807,
+        "long": -84.20823148083268
+      }
+    ]
+  },
+  {
+    "cityName": "Athens",
+    "country": "United States",
+    "states": [
+      "Georgia",
+      "Ohio",
+      "Texas",
+      "Tennessee"
+    ],
+    "totalStations": 4,
+    "uniqueCitiesKept": 4,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 794,
+        "state": "Georgia",
+        "lat": 33.95716081890966,
+        "long": -83.29518470109973
+      },
+      {
+        "id": 795,
+        "state": "Ohio",
+        "lat": 39.32015172375419,
+        "long": -82.12754306240768
+      },
+      {
+        "id": 797,
+        "state": "Texas",
+        "lat": 32.21190844912821,
+        "long": -95.80675817893996
+      },
+      {
+        "id": 796,
+        "state": "Tennessee",
+        "lat": 35.46432821359884,
+        "long": -84.63768238266415
+      }
+    ]
+  },
+  {
+    "cityName": "Concord",
+    "country": "United States",
+    "states": [
+      "North Carolina",
+      "California",
+      "New Hampshire"
+    ],
+    "totalStations": 3,
+    "uniqueCitiesKept": 3,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 2320,
+        "state": "North Carolina",
+        "lat": 35.44954211065467,
+        "long": -80.57516117450447
+      },
+      {
+        "id": 2317,
+        "state": "California",
+        "lat": 37.96081552293921,
+        "long": -122.0486153625253
+      },
+      {
+        "id": 2318,
+        "state": "New Hampshire",
+        "lat": 43.25161870023404,
+        "long": -71.61992194213005
+      }
+    ]
+  },
+  {
+    "cityName": "Grand Rapids",
+    "country": "United States",
+    "states": [
+      "Michigan",
+      "Minnesota"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 3708,
+        "state": "Michigan",
+        "lat": 42.95646349089097,
+        "long": -85.61684226354106
+      },
+      {
+        "id": 3709,
+        "state": "Minnesota",
+        "lat": 47.20361997693136,
+        "long": -93.56212277071026
+      }
+    ]
+  },
+  {
+    "cityName": "Akron",
+    "country": "United States",
+    "states": [
+      "Colorado",
+      "Ohio"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 90,
+        "state": "Colorado",
+        "lat": 40.16669999999986,
+        "long": -103.2167000000002
+      },
+      {
+        "id": 92,
+        "state": "Ohio",
+        "lat": 41.06994544119024,
+        "long": -81.43329407825843
+      }
+    ]
+  },
+  {
+    "cityName": "Oakland",
+    "country": "United States",
+    "states": [
+      "Maryland",
+      "Iowa"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 7041,
+        "state": "Maryland",
+        "lat": 39.41309999999986,
+        "long": -79.40030000000034
+      },
+      {
+        "id": 7040,
+        "state": "Iowa",
+        "lat": 41.30440000000038,
+        "long": -95.38439999999977
+      }
+    ]
+  },
+  {
+    "cityName": "Augusta",
+    "country": "United States",
+    "states": [
+      "Georgia",
+      "Maine"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 858,
+        "state": "Georgia",
+        "lat": 33.44421735479253,
+        "long": -82.02778277927708
+      },
+      {
+        "id": 860,
+        "state": "Maine",
+        "lat": 44.28893225544342,
+        "long": -69.80042800104412
+      }
+    ]
+  },
+  {
+    "cityName": "London",
+    "country": "United States",
+    "states": [
+      "Kentucky",
+      "Ohio"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 5591,
+        "state": "Kentucky",
+        "lat": 37.0921478928631,
+        "long": -84.07959836893545
+      },
+      {
+        "id": 5592,
+        "state": "Ohio",
+        "lat": 39.89719999999982,
+        "long": -83.50969999999948
+      }
+    ]
+  },
+  {
+    "cityName": "Lancaster",
+    "country": "United States",
+    "states": [
+      "California",
+      "Pennsylvania",
+      "Ohio"
+    ],
+    "totalStations": 3,
+    "uniqueCitiesKept": 3,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 5318,
+        "state": "California",
+        "lat": 34.68023519585523,
+        "long": -118.1925419442825
+      },
+      {
+        "id": 5321,
+        "state": "Pennsylvania",
+        "lat": 40.06478776539335,
+        "long": -76.30367903330918
+      },
+      {
+        "id": 5320,
+        "state": "Ohio",
+        "lat": 39.719018441851,
+        "long": -82.64758235627733
+      }
+    ]
+  },
+  {
+    "cityName": "Newcastle",
+    "country": "United States",
+    "states": [
+      "Oklahoma",
+      "Wyoming"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 6813,
+        "state": "Oklahoma",
+        "lat": 35.11830000000008,
+        "long": -97.66999999999909
+      },
+      {
+        "id": 6814,
+        "state": "Wyoming",
+        "lat": 43.8495931370201,
+        "long": -104.193102781405
+      }
+    ]
+  },
+  {
+    "cityName": "Lincoln",
+    "country": "United States",
+    "states": [
+      "New Hampshire",
+      "Illinois",
+      "Nebraska",
+      "Maine"
+    ],
+    "totalStations": 4,
+    "uniqueCitiesKept": 4,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 5510,
+        "state": "New Hampshire",
+        "lat": 44.04249999999983,
+        "long": -71.67280000000015
+      },
+      {
+        "id": 5506,
+        "state": "Illinois",
+        "lat": 40.13857868195021,
+        "long": -89.35037590295269
+      },
+      {
+        "id": 5509,
+        "state": "Nebraska",
+        "lat": 40.77943568994466,
+        "long": -96.71287328281856
+      },
+      {
+        "id": 5507,
+        "state": "Maine",
+        "lat": 45.38048124512077,
+        "long": -68.49635343481656
+      }
+    ]
+  },
+  {
+    "cityName": "Davenport",
+    "country": "United States",
+    "states": [
+      "Washington",
+      "Iowa"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 2602,
+        "state": "Washington",
+        "lat": 47.65713614363789,
+        "long": -118.1612519906319
+      },
+      {
+        "id": 2600,
+        "state": "Iowa",
+        "lat": 41.57035109515711,
+        "long": -90.53596330467204
+      }
+    ]
+  },
+  {
+    "cityName": "Savannah",
+    "country": "United States",
+    "states": [
+      "Tennessee",
+      "Georgia",
+      "Missouri"
+    ],
+    "totalStations": 3,
+    "uniqueCitiesKept": 3,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 15618,
+        "state": "Tennessee",
+        "lat": 35.15332274072712,
+        "long": -88.32149872888637
+      },
+      {
+        "id": 15616,
+        "state": "Georgia",
+        "lat": 32.04520605570631,
+        "long": -81.14229187613927
+      },
+      {
+        "id": 15617,
+        "state": "Missouri",
+        "lat": 39.99808702905295,
+        "long": -94.9518189396124
+      }
+    ]
+  },
+  {
+    "cityName": "Windsor",
+    "country": "Canada",
+    "states": [
+      "Quebec",
+      "Ontario"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 17703,
+        "state": "Quebec",
+        "lat": 45.63330000000001,
+        "long": -72.13329999999996
+      },
+      {
+        "id": 17702,
+        "state": "Ontario",
+        "lat": 42.12375542940756,
+        "long": -82.92838724992438
+      }
+    ]
+  },
+  {
+    "cityName": "Plymouth",
+    "country": "United States",
+    "states": [
+      "Indiana",
+      "Massachusetts",
+      "New Hampshire"
+    ],
+    "totalStations": 3,
+    "uniqueCitiesKept": 3,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 8722,
+        "state": "Indiana",
+        "lat": 41.32335433070421,
+        "long": -86.45147495229031
+      },
+      {
+        "id": 8723,
+        "state": "Massachusetts",
+        "lat": 41.9321847097244,
+        "long": -70.74152966023084
+      },
+      {
+        "id": 8724,
+        "state": "New Hampshire",
+        "lat": 43.80205484860887,
+        "long": -71.68872350055426
+      }
+    ]
+  },
+  {
+    "cityName": "Evansville",
+    "country": "United States",
+    "states": [
+      "Wisconsin",
+      "Indiana"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 3166,
+        "state": "Wisconsin",
+        "lat": 42.61982402162717,
+        "long": -89.36261931081903
+      },
+      {
+        "id": 3165,
+        "state": "Indiana",
+        "lat": 37.96555714132325,
+        "long": -87.47451677969975
+      }
+    ]
+  },
+  {
+    "cityName": "Aberdeen",
+    "country": "United States",
+    "states": [
+      "Washington",
+      "South Dakota"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 18,
+        "state": "Washington",
+        "lat": 46.97657347007679,
+        "long": -123.8315584976639
+      },
+      {
+        "id": 17,
+        "state": "South Dakota",
+        "lat": 45.46500340990006,
+        "long": -98.42832931651228
+      }
+    ]
+  },
+  {
+    "cityName": "Gainesville",
+    "country": "United States",
+    "states": [
+      "Georgia",
+      "Florida",
+      "Texas"
+    ],
+    "totalStations": 3,
+    "uniqueCitiesKept": 3,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 3435,
+        "state": "Georgia",
+        "lat": 34.25723614198139,
+        "long": -83.92581445720357
+      },
+      {
+        "id": 3434,
+        "state": "Florida",
+        "lat": 29.64216560715163,
+        "long": -82.35920687098147
+      },
+      {
+        "id": 3436,
+        "state": "Texas",
+        "lat": 33.76717270511978,
+        "long": -97.14093346785464
+      }
+    ]
+  },
+  {
+    "cityName": "Geneva",
+    "country": "United States",
+    "states": [
+      "Alabama",
+      "New York",
+      "Nebraska"
+    ],
+    "totalStations": 3,
+    "uniqueCitiesKept": 3,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 3525,
+        "state": "Alabama",
+        "lat": 31.03830000000013,
+        "long": -85.8708000000004
+      },
+      {
+        "id": 3527,
+        "state": "New York",
+        "lat": 42.86605353679003,
+        "long": -77.02309843668073
+      },
+      {
+        "id": 3526,
+        "state": "Nebraska",
+        "lat": 40.53139999999987,
+        "long": -97.59639999999963
+      }
+    ]
+  },
+  {
+    "cityName": "Norwich",
+    "country": "United States",
+    "states": [
+      "Kansas",
+      "New York",
+      "Connecticut"
+    ],
+    "totalStations": 3,
+    "uniqueCitiesKept": 3,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 6948,
+        "state": "Kansas",
+        "lat": 37.45529999999975,
+        "long": -97.84830000000038
+      },
+      {
+        "id": 6949,
+        "state": "New York",
+        "lat": 42.5954480439045,
+        "long": -75.52318333893336
+      },
+      {
+        "id": 6947,
+        "state": "Connecticut",
+        "lat": 41.56105106316316,
+        "long": -72.08817334845723
+      }
+    ]
+  },
+  {
+    "cityName": "Ontario",
+    "country": "United States",
+    "states": [
+      "Oregon",
+      "California"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 7140,
+        "state": "Oregon",
+        "lat": 43.9994520262028,
+        "long": -116.9958298741146
+      },
+      {
+        "id": 7139,
+        "state": "California",
+        "lat": 34.13517674450548,
+        "long": -117.7078555082415
+      }
+    ]
+  },
+  {
+    "cityName": "Murfreesboro",
+    "country": "United States",
+    "states": [
+      "Tennessee",
+      "Arkansas"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 6583,
+        "state": "Tennessee",
+        "lat": 35.87751188973824,
+        "long": -86.3803402187164
+      },
+      {
+        "id": 6582,
+        "state": "Arkansas",
+        "lat": 34.07566394570198,
+        "long": -93.6990895009323
+      }
+    ]
+  },
+  {
+    "cityName": "Peoria",
+    "country": "United States",
+    "states": [
+      "Arizona",
+      "Illinois"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 8566,
+        "state": "Arizona",
+        "lat": 33.86262803564244,
+        "long": -112.3778489179184
+      },
+      {
+        "id": 8567,
+        "state": "Illinois",
+        "lat": 40.69274587799742,
+        "long": -89.56328630686225
+      }
+    ]
+  },
+  {
+    "cityName": "Medford",
+    "country": "United States",
+    "states": [
+      "Oregon",
+      "Oklahoma",
+      "Wisconsin"
+    ],
+    "totalStations": 3,
+    "uniqueCitiesKept": 3,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 6086,
+        "state": "Oregon",
+        "lat": 42.31500121424118,
+        "long": -122.8747663031745
+      },
+      {
+        "id": 6085,
+        "state": "Oklahoma",
+        "lat": 36.79249999999971,
+        "long": -97.74580000000012
+      },
+      {
+        "id": 6087,
+        "state": "Wisconsin",
+        "lat": 45.13080000000036,
+        "long": -90.34389999999986
+      }
+    ]
+  },
+  {
+    "cityName": "Lakewood",
+    "country": "United States",
+    "states": [
+      "Colorado",
+      "New Jersey"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 5301,
+        "state": "Colorado",
+        "lat": 39.65139521118063,
+        "long": -105.2597548320598
+      },
+      {
+        "id": 5302,
+        "state": "New Jersey",
+        "lat": 40.13959394835731,
+        "long": -74.12464170510967
+      }
+    ]
+  },
+  {
+    "cityName": "Lafayette",
+    "country": "United States",
+    "states": [
+      "Louisiana",
+      "Indiana",
+      "Tennessee"
+    ],
+    "totalStations": 3,
+    "uniqueCitiesKept": 3,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 5256,
+        "state": "Louisiana",
+        "lat": 30.16942050162012,
+        "long": -91.98830924951453
+      },
+      {
+        "id": 5255,
+        "state": "Indiana",
+        "lat": 40.45135197843952,
+        "long": -86.95611874033067
+      },
+      {
+        "id": 5257,
+        "state": "Tennessee",
+        "lat": 36.57143727265593,
+        "long": -85.92217531834379
+      }
+    ]
+  },
+  {
+    "cityName": "Frederick",
+    "country": "United States",
+    "states": [
+      "Maryland",
+      "Oklahoma"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 3376,
+        "state": "Maryland",
+        "lat": 39.41745365742003,
+        "long": -77.30180191757415
+      },
+      {
+        "id": 3377,
+        "state": "Oklahoma",
+        "lat": 34.36219999999972,
+        "long": -98.97609999999987
+      }
+    ]
+  },
+  {
+    "cityName": "Oxford",
+    "country": "United States",
+    "states": [
+      "Ohio",
+      "Mississippi",
+      "Alabama"
+    ],
+    "totalStations": 3,
+    "uniqueCitiesKept": 3,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 7260,
+        "state": "Ohio",
+        "lat": 39.42397386823203,
+        "long": -85.01457174363999
+      },
+      {
+        "id": 7259,
+        "state": "Mississippi",
+        "lat": 34.31183975207838,
+        "long": -89.56908055647966
+      },
+      {
+        "id": 7258,
+        "state": "Alabama",
+        "lat": 33.57220000000006,
+        "long": -86.05719999999951
+      }
+    ]
+  },
+  {
+    "cityName": "Leesburg",
+    "country": "United States",
+    "states": [
+      "Virginia",
+      "Florida"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 5404,
+        "state": "Virginia",
+        "lat": 39.12873555326654,
+        "long": -77.62604904988348
+      },
+      {
+        "id": 5403,
+        "state": "Florida",
+        "lat": 28.81422238513624,
+        "long": -81.8889431307416
+      }
+    ]
+  },
+  {
+    "cityName": "York",
+    "country": "United States",
+    "states": [
+      "Nebraska",
+      "Pennsylvania"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 17932,
+        "state": "Nebraska",
+        "lat": 40.92410296149357,
+        "long": -97.5693796563133
+      },
+      {
+        "id": 17933,
+        "state": "Pennsylvania",
+        "lat": 39.87714741260108,
+        "long": -76.83502294919954
+      }
+    ]
+  },
+  {
+    "cityName": "Macon",
+    "country": "United States",
+    "states": [
+      "Georgia",
+      "Missouri",
+      "Mississippi"
+    ],
+    "totalStations": 3,
+    "uniqueCitiesKept": 3,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 5729,
+        "state": "Georgia",
+        "lat": 32.90053300667152,
+        "long": -83.7425567345174
+      },
+      {
+        "id": 5731,
+        "state": "Missouri",
+        "lat": 39.78240135173358,
+        "long": -92.4912815213093
+      },
+      {
+        "id": 5730,
+        "state": "Mississippi",
+        "lat": 33.15439999999991,
+        "long": -88.55860000000025
+      }
+    ]
+  },
+  {
+    "cityName": "Fairfield",
+    "country": "United States",
+    "states": [
+      "California",
+      "Iowa",
+      "Montana"
+    ],
+    "totalStations": 3,
+    "uniqueCitiesKept": 3,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 3187,
+        "state": "California",
+        "lat": 38.33488644356337,
+        "long": -122.0028964897738
+      },
+      {
+        "id": 3188,
+        "state": "Iowa",
+        "lat": 40.88377701654026,
+        "long": -91.96222627307165
+      },
+      {
+        "id": 3189,
+        "state": "Montana",
+        "lat": 47.61499999999991,
+        "long": -111.9860999999997
+      }
+    ]
+  },
+  {
+    "cityName": "Elkhart",
+    "country": "United States",
+    "states": [
+      "Indiana",
+      "Kansas"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 3036,
+        "state": "Indiana",
+        "lat": 41.55973733244002,
+        "long": -85.85945705666214
+      },
+      {
+        "id": 3037,
+        "state": "Kansas",
+        "lat": 37.00588393877324,
+        "long": -101.8868995877489
+      }
+    ]
+  },
+  {
+    "cityName": "Yuma",
+    "country": "United States",
+    "states": [
+      "Arizona",
+      "Colorado"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 17956,
+        "state": "Arizona",
+        "lat": 32.69337816074039,
+        "long": -114.5441488504992
+      },
+      {
+        "id": 17957,
+        "state": "Colorado",
+        "lat": 40.12360000000019,
+        "long": -102.7216999999992
+      }
+    ]
+  },
+  {
+    "cityName": "Warren",
+    "country": "United States",
+    "states": [
+      "Minnesota",
+      "Pennsylvania",
+      "Ohio"
+    ],
+    "totalStations": 3,
+    "uniqueCitiesKept": 3,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 17399,
+        "state": "Minnesota",
+        "lat": 48.19529999999975,
+        "long": -96.77609999999952
+      },
+      {
+        "id": 17401,
+        "state": "Pennsylvania",
+        "lat": 41.84670000000005,
+        "long": -79.1493999999994
+      },
+      {
+        "id": 17400,
+        "state": "Ohio",
+        "lat": 41.30719999999975,
+        "long": -81.01329999999952
+      }
+    ]
+  },
+  {
+    "cityName": "Bloomington",
+    "country": "United States",
+    "states": [
+      "Illinois",
+      "Indiana"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 1363,
+        "state": "Illinois",
+        "lat": 40.52143768855156,
+        "long": -89.01069933076268
+      },
+      {
+        "id": 1364,
+        "state": "Indiana",
+        "lat": 39.15836335733312,
+        "long": -86.56256812793822
+      }
+    ]
+  },
+  {
+    "cityName": "Cambridge",
+    "country": "United States",
+    "states": [
+      "Ohio",
+      "Nebraska",
+      "Minnesota",
+      "Idaho",
+      "Maryland"
+    ],
+    "totalStations": 5,
+    "uniqueCitiesKept": 5,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 1807,
+        "state": "Ohio",
+        "lat": 40.01109999999981,
+        "long": -81.57939999999952
+      },
+      {
+        "id": 1806,
+        "state": "Nebraska",
+        "lat": 40.28471039010334,
+        "long": -100.1438298952643
+      },
+      {
+        "id": 1805,
+        "state": "Minnesota",
+        "lat": 45.60351503367413,
+        "long": -93.12531113576189
+      },
+      {
+        "id": 1803,
+        "state": "Idaho",
+        "lat": 44.57330000000001,
+        "long": -116.6753000000003
+      },
+      {
+        "id": 1804,
+        "state": "Maryland",
+        "lat": 38.49361429221975,
+        "long": -75.98682428896726
+      }
+    ]
+  },
+  {
+    "cityName": "Stamford",
+    "country": "United States",
+    "states": [
+      "Connecticut",
+      "Texas"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 16092,
+        "state": "Connecticut",
+        "lat": 41.09939531061703,
+        "long": -73.58502574938395
+      },
+      {
+        "id": 16093,
+        "state": "Texas",
+        "lat": 32.94123114754075,
+        "long": -99.80271319281827
+      }
+    ]
+  },
+  {
+    "cityName": "Johnson City",
+    "country": "United States",
+    "states": [
+      "Kansas",
+      "Tennessee"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 4655,
+        "state": "Kansas",
+        "lat": 37.56715889799622,
+        "long": -101.7505832969032
+      },
+      {
+        "id": 4656,
+        "state": "Tennessee",
+        "lat": 36.36046386779768,
+        "long": -82.36818448066323
+      }
+    ]
+  },
+  {
+    "cityName": "Boulder",
+    "country": "United States",
+    "states": [
+      "Utah",
+      "Montana",
+      "Colorado"
+    ],
+    "totalStations": 3,
+    "uniqueCitiesKept": 3,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 1487,
+        "state": "Utah",
+        "lat": 37.91438929872482,
+        "long": -111.4228080145715
+      },
+      {
+        "id": 1486,
+        "state": "Montana",
+        "lat": 46.2320653442259,
+        "long": -112.1139410784777
+      },
+      {
+        "id": 1485,
+        "state": "Colorado",
+        "lat": 40.01900534545274,
+        "long": -105.3624398490513
+      }
+    ]
+  },
+  {
+    "cityName": "Preston",
+    "country": "United States",
+    "states": [
+      "Minnesota",
+      "Idaho"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 8883,
+        "state": "Minnesota",
+        "lat": 43.67121668726697,
+        "long": -92.07551528103062
+      },
+      {
+        "id": 8882,
+        "state": "Idaho",
+        "lat": 42.1267962258485,
+        "long": -111.908183841155
+      }
+    ]
+  },
+  {
+    "cityName": "St. George",
+    "country": "United States",
+    "states": [
+      "Utah",
+      "Alaska"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 16067,
+        "state": "Utah",
+        "lat": 37.16361232042365,
+        "long": -113.4373494127157
+      },
+      {
+        "id": 16066,
+        "state": "Alaska",
+        "lat": 56.59999999999991,
+        "long": -169.5650000000008
+      }
+    ]
+  },
+  {
+    "cityName": "Billings",
+    "country": "United States",
+    "states": [
+      "Montana",
+      "Oklahoma"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 1286,
+        "state": "Montana",
+        "lat": 45.80916848891688,
+        "long": -108.4896865424009
+      },
+      {
+        "id": 1287,
+        "state": "Oklahoma",
+        "lat": 36.52969999999969,
+        "long": -97.44719999999968
+      }
+    ]
+  },
+  {
+    "cityName": "Dover",
+    "country": "United States",
+    "states": [
+      "Delaware",
+      "New Hampshire",
+      "Tennessee"
+    ],
+    "totalStations": 3,
+    "uniqueCitiesKept": 3,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 2788,
+        "state": "Delaware",
+        "lat": 39.10063146579807,
+        "long": -75.58488275408361
+      },
+      {
+        "id": 2789,
+        "state": "New Hampshire",
+        "lat": 43.16203996767813,
+        "long": -70.84198617580725
+      },
+      {
+        "id": 2791,
+        "state": "Tennessee",
+        "lat": 36.4819000000001,
+        "long": -87.86279999999987
+      }
+    ]
+  },
+  {
+    "cityName": "Seaside",
+    "country": "United States",
+    "states": [
+      "Oregon",
+      "California"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 15670,
+        "state": "Oregon",
+        "lat": 45.88652350170325,
+        "long": -123.8788640562145
+      },
+      {
+        "id": 15669,
+        "state": "California",
+        "lat": 36.55802651366699,
+        "long": -121.8340614829945
+      }
+    ]
+  },
+  {
+    "cityName": "Clovis",
+    "country": "United States",
+    "states": [
+      "New Mexico",
+      "California"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 2213,
+        "state": "New Mexico",
+        "lat": 34.53162244516216,
+        "long": -103.2036917941424
+      },
+      {
+        "id": 2212,
+        "state": "California",
+        "lat": 36.97320305620583,
+        "long": -119.6092715267433
+      }
+    ]
+  },
+  {
+    "cityName": "Spring Hill",
+    "country": "United States",
+    "states": [
+      "Florida",
+      "Tennessee"
+    ],
+    "totalStations": 2,
+    "uniqueCitiesKept": 2,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 16014,
+        "state": "Florida",
+        "lat": 28.46781020128957,
+        "long": -82.46848727316815
+      },
+      {
+        "id": 16016,
+        "state": "Tennessee",
+        "lat": 35.66647775917942,
+        "long": -87.02493769354031
+      }
+    ]
+  },
+  {
+    "cityName": "Columbia",
+    "country": "United States",
+    "states": [
+      "New Hampshire",
+      "South Carolina",
+      "Mississippi",
+      "Tennessee",
+      "Missouri"
+    ],
+    "totalStations": 5,
+    "uniqueCitiesKept": 5,
+    "note": "All state variants kept as separate cities (correct for different locations)",
+    "keptStations": [
+      {
+        "id": 2285,
+        "state": "New Hampshire",
+        "lat": 44.86110000000007,
+        "long": -71.53919999999952
+      },
+      {
+        "id": 2286,
+        "state": "South Carolina",
+        "lat": 34.06086761163471,
+        "long": -81.01627879392038
+      },
+      {
+        "id": 2283,
+        "state": "Mississippi",
+        "lat": 31.23746033369394,
+        "long": -89.86461792207824
+      },
+      {
+        "id": 2287,
+        "state": "Tennessee",
+        "lat": 35.65243186582852,
+        "long": -87.30496834381485
+      },
+      {
+        "id": 2284,
+        "state": "Missouri",
+        "lat": 38.91495868909929,
+        "long": -92.33431465060082
+      }
+    ]
+  }
+]

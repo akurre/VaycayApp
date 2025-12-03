@@ -1,0 +1,26 @@
+{
+  "timestamp": "2025-12-03T15:31:18.931Z",
+  "phase": "collection",
+  "cities": {
+    "Rome|Italy|Lazio": {
+      "coordSum": {
+        "lat": 15318.230402301593,
+        "long": 4526.597060515866,
+        "count": 366
+      },
+      "avgLat": 41.85308853087867,
+      "avgLong": 12.367751531464116,
+      "worldcitiesId": "1380382862.0"
+    },
+    "Paris|France|Île-de-France": {
+      "coordSum": {
+        "lat": 17870.715716969753,
+        "long": 871.4905937373705,
+        "count": 366
+      },
+      "avgLat": 48.82709212286818,
+      "avgLong": 2.381121840812488,
+      "worldcitiesId": "1250015082.0"
+    }
+  }
+}

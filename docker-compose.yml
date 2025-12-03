@@ -41,6 +41,27 @@ services:
       timeout: 5s
       retries: 5
 
+  # V2 PostgreSQL Database (for new data comparison)
+  db-v3:
+    platform: linux/x86_64
+    container_name: postgres-db-v3
+    image: postgres:15-alpine
+    restart: always
+    ports:
+      - "5431:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: iwantsun
+      POSTGRES_DB: postgres_v3
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data_v3:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   # TypeScript GraphQL API
   graphql-api:
     container_name: vaycay-graphql
@@ -81,3 +102,4 @@ services:
 volumes:
   postgres_data:
   postgres_data_v2:
+  postgres_data_v3:
