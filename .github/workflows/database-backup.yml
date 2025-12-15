@@ -43,7 +43,7 @@ jobs:
           ls -lh backups/
 
       - name: Upload Backup Artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: database-backup-${{ github.run_number }}
           path: backups/*.sql.gz
