@@ -32,6 +32,7 @@ interface WorldMapProps {
   dataType: DataType;
   selectedMonth: number;
   selectedDate?: string;
+  debouncedDate?: string;
   onBoundsChange?: (
     bounds: {
       minLat: number;
@@ -49,6 +50,7 @@ const WorldMap = ({
   dataType,
   selectedMonth,
   selectedDate,
+  debouncedDate,
   onBoundsChange,
 }: WorldMapProps) => {
   // Track initial map load time
@@ -64,7 +66,7 @@ const WorldMap = ({
   const [mapOpacity, setMapOpacity] = useState(1);
 
   // Track previous date/month to detect data changes (not just bounds changes)
-  const prevDateRef = useRef(selectedDate);
+  const prevDebouncedDateRef = useRef(debouncedDate);
   const prevMonthRef = useRef(selectedMonth);
   const prevDataTypeRef = useRef(dataType);
 
@@ -177,25 +179,26 @@ const WorldMap = ({
 
   // Delayed loader effect - only show when basemap loads or when date/month changes (not for zoom/pan)
   useEffect(() => {
-    // Check if date/month/dataType has changed (new data loading)
-    const dateChanged = prevDateRef.current !== selectedDate;
+    // Check if debounced date/month/dataType has changed (new data loading)
+    const debouncedDateChanged = prevDebouncedDateRef.current !== debouncedDate;
     const monthChanged = prevMonthRef.current !== selectedMonth;
     const dataTypeChanged = prevDataTypeRef.current !== dataType;
-    const dataHasChanged = dateChanged || monthChanged || dataTypeChanged;
+    const dataHasChanged = debouncedDateChanged || monthChanged || dataTypeChanged;
 
-    // Only show loading for basemap or when actual date/month/dataType changes
-    const isLoading =
-      !isBasemapLoaded ||
-      (dataHasChanged && (isLoadingWeather || isLoadingSunshine));
+    // Show loading when:
+    // 1. Basemap is not loaded yet, OR
+    // 2. Data is actually loading (isLoadingWeather/isLoadingSunshine is true)
+    const shouldShowLoading =
+      !isBasemapLoaded || (isLoadingWeather || isLoadingSunshine);
 
-    if (isLoading) {
+    if (shouldShowLoading) {
       // Fade out map content when loading starts
       setMapOpacity(MAP_LOADING_OPACITY);
       const timer = setTimeout(() => setShowLoader(true), LOADER_DELAY_MS);
       return () => clearTimeout(timer);
     } else {
       // Update refs when loading completes
-      prevDateRef.current = selectedDate;
+      prevDebouncedDateRef.current = debouncedDate;
       prevMonthRef.current = selectedMonth;
       prevDataTypeRef.current = dataType;
 
@@ -212,7 +215,7 @@ const WorldMap = ({
     isBasemapLoaded,
     isLoadingWeather,
     isLoadingSunshine,
-    selectedDate,
+    debouncedDate,
     selectedMonth,
     dataType,
     LOADER_DELAY_MS,
