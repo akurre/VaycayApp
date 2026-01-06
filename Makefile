@@ -4,6 +4,7 @@
 GREEN := \033[0;32m
 YELLOW := \033[0;33m
 RED := \033[0;31m
+BLUE := \033[0;34m
 NC := \033[0m # No Color
 
 # Default target - show help
@@ -58,8 +59,8 @@ install: check-prereqs
 	
 kill-ports: ## Kill processes on ports 4000 and 5173
 	@echo "$(BLUE)Checking for processes on development ports...$(NC)"
-	@echo "$(YELLOW)Killing process on port 4001 (server)...$(NC)"
-	@lsof -ti:4001 | xargs kill -9 2>/dev/null || echo "$(GREEN)✓ Port 4001 is free$(NC)"
+	@echo "$(YELLOW)Killing process on port 4000 (server)...$(NC)"
+	@lsof -ti:4000 | xargs kill -9 2>/dev/null || echo "$(GREEN)✓ Port 4000 is free$(NC)"
 	@echo "$(YELLOW)Killing process on port 5173 (client)...$(NC)"
 	@lsof -ti:5173 | xargs kill -9 2>/dev/null || echo "$(GREEN)✓ Port 5173 is free$(NC)"
 	@echo "$(GREEN)✓ Ports cleared$(NC)"
@@ -99,19 +100,24 @@ add-city-sunshine: check-prereqs
 db-setup: db-setup-v2
 
 # Start all services for development
-dev: check-prereqs
-	@echo "$(GREEN)Starting all services...$(NC)"
+dev: kill-ports check-prereqs
+	@echo "$(BLUE)Starting all services...$(NC)"
 	@echo "$(YELLOW)Make sure database is running (make db-start if needed)$(NC)"
-	@echo "$(YELLOW)Starting GraphQL server...$(NC)"
-	@echo "$(YELLOW)Server will be available at: http://localhost:4001$(NC)"
-	@cd server && npm run dev &
-	@sleep 5
-	@echo "$(YELLOW)Starting React client...$(NC)"
-	@echo "$(YELLOW)Client will be available at: http://localhost:3000$(NC)"
-	@echo ""
-	@echo "$(GREEN)All services started!$(NC)"
-	@echo "$(YELLOW)Press Ctrl+C to stop the client, then run 'make clean' to stop all services$(NC)"
-	@cd client && npm run dev
+	@if command -v concurrently >/dev/null 2>&1; then \
+		echo "$(GREEN)Using concurrently for parallel execution$(NC)"; \
+		npx concurrently -n "server,client" -c "blue,green" \
+			"cd server && npm run dev" \
+			"cd client && npm run dev"; \
+	else \
+		echo "$(YELLOW)Note: Install 'concurrently' globally for better output: npm install -g concurrently$(NC)"; \
+		echo "$(BLUE)Starting server in background...$(NC)"; \
+		cd server && npm run dev & \
+		SERVER_PID=$$!; \
+		sleep 5; \
+		echo "$(BLUE)Starting client...$(NC)"; \
+		cd client && npm run dev; \
+		kill $$SERVER_PID 2>/dev/null || true; \
+	fi
 
 # Start database only
 db-start: check-prereqs
@@ -126,10 +132,10 @@ db-stop:
 	@echo "$(GREEN)✓ Database stopped$(NC)"
 
 # Run server only
-server-dev: check-prereqs
+server-dev: kill-ports check-prereqs
 	@echo "$(GREEN)Starting GraphQL server...$(NC)"
 	@echo "$(YELLOW)Make sure database is running (make db-start)$(NC)"
-	@echo "$(YELLOW)Server will be available at: http://localhost:4001$(NC)"
+	@echo "$(YELLOW)Server will be available at: http://localhost:4000$(NC)"
 	cd server && npm run dev
 
 # Run client only
