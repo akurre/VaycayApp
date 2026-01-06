@@ -183,13 +183,14 @@ const WorldMap = ({
     const debouncedDateChanged = prevDebouncedDateRef.current !== debouncedDate;
     const monthChanged = prevMonthRef.current !== selectedMonth;
     const dataTypeChanged = prevDataTypeRef.current !== dataType;
-    const dataHasChanged = debouncedDateChanged || monthChanged || dataTypeChanged;
+    const dataHasChanged =
+      debouncedDateChanged || monthChanged || dataTypeChanged;
 
     // Show loading when:
     // 1. Basemap is not loaded yet, OR
     // 2. Data is actually loading (isLoadingWeather/isLoadingSunshine is true)
     const shouldShowLoading =
-      !isBasemapLoaded || (isLoadingWeather || isLoadingSunshine);
+      !isBasemapLoaded || isLoadingWeather || isLoadingSunshine;
 
     if (shouldShowLoading) {
       // Fade out map content when loading starts
