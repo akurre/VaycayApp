@@ -42,6 +42,7 @@ const DailyTempValues = ({
           comparisonMinTemperature={comparisonWeatherData?.minTemperature}
           comparisonCity={comparisonWeatherData?.city}
           baseCity={displayWeatherData.city}
+          date={displayWeatherData.date}
         />
       ) : (
         <>No weather data to show.</>

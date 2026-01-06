@@ -4,6 +4,7 @@ import GreaterSection from './GreaterSection';
 import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
 import CityBadge from './graphs/CityBadge';
 import { useAppStore } from '@/stores/useAppStore';
+import formatDateString from '@/utils/dateFormatting/formatDateString';
 
 interface TemperatureSectionProps {
   avgTemperature: number | null;
@@ -14,6 +15,7 @@ interface TemperatureSectionProps {
   comparisonMinTemperature?: number | null;
   comparisonCity?: string;
   baseCity?: string;
+  date?: string;
 }
 
 const TemperatureSection = ({
@@ -25,6 +27,7 @@ const TemperatureSection = ({
   comparisonMinTemperature,
   comparisonCity,
   baseCity,
+  date,
 }: TemperatureSectionProps) => {
   const temperatureUnit = useAppStore((state) => state.temperatureUnit);
   const hasComparison =
@@ -32,8 +35,13 @@ const TemperatureSection = ({
     comparisonMaxTemperature !== undefined ||
     comparisonMinTemperature !== undefined;
 
+  const formattedDate = formatDateString(date);
+
   return (
-    <GreaterSection className="w-full h-full" title="Temperature">
+    <GreaterSection
+      className="w-full h-full"
+      title={`Temperature for ${formattedDate}`}
+    >
       <div className="flex flex-col gap-2">
         {/* Column headers - only show when comparing */}
         {hasComparison && comparisonCity && baseCity && (

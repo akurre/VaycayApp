@@ -1,8 +1,9 @@
 import { ActionIcon, Badge, Tooltip } from '@mantine/core';
-import { useMemo, memo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { IconX } from '@tabler/icons-react';
 import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
 import type { CityPopupProps } from '@/types/mapTypes';
+import { DataType } from '@/types/mapTypes';
 import useWeatherDataForCity from '@/api/dates/useWeatherDataForCity';
 import useSunshineDataForCity from '@/api/dates/useSunshineDataForCity';
 import useWeeklyWeatherForCity from '@/api/dates/useWeeklyWeatherForCity';
@@ -13,7 +14,6 @@ import DataChartTabs from './DataChartTabs';
 import { extractMonthFromDate } from '@/utils/dateFormatting/extractMonthFromDate';
 import { extractMonthDay } from '@/utils/dateFormatting/extractMonthDay';
 import { isWeatherData } from '@/utils/typeGuards';
-import arePropsEqual from './utils/arePropsEqual';
 import ComparisonCitySelector from './ComparisonCitySelector';
 import type { SearchCitiesResult } from '@/types/userLocationType';
 
@@ -44,23 +44,25 @@ const CityPopup = ({
 
   // Construct the date for weather fetching - clearer logic
   const dateToUse = useMemo(() => {
-    // If we have weather data, use its date
-    if (cityAsWeather?.date) {
-      return cityAsWeather.date;
-    }
-
-    // For temperature mode with selected date, use it
-    if (selectedDate && hasWeatherData) {
+    // For temperature mode, always use the selectedDate if available
+    if (selectedDate && dataType === DataType.Temperature) {
       return selectedDate;
     }
 
+    // If we have weather data and no selectedDate, use the data's date
+    if (cityAsWeather?.date && !selectedDate) {
+      return cityAsWeather.date;
+    }
+
     // For sunshine mode, construct mm-15 format from month
-    return `${monthToUse.toString().padStart(2, '0')}-15`;
-  }, [cityAsWeather, selectedDate, hasWeatherData, monthToUse]);
+    const sunshineDate = `${monthToUse.toString().padStart(2, '0')}-15`;
+    return sunshineDate;
+  }, [selectedDate, dataType, cityAsWeather, monthToUse]);
 
   // Determine if we should fetch weather data
-  // Fetch when: we don't have weather data and we have a valid date
-  const shouldFetchWeather = !hasWeatherData && !!dateToUse;
+  // Always fetch when we have a city and we're in temperature mode
+  // The hook will handle caching internally
+  const shouldFetchWeather = !!city && dataType === DataType.Temperature;
 
   // always call hooks unconditionally (rules of hooks)
   const { weatherData, weatherLoading, weatherError } = useWeatherDataForCity({
@@ -137,8 +139,16 @@ const CityPopup = ({
     skipFetch: !comparisonCity,
   });
 
-  // use what we already have, or fall back to fetched data
-  const displayWeatherData = cityAsWeather ?? weatherData;
+  // For weather data: prefer fetched data if it matches the selected date
+  // This ensures we show the correct date's data when the slider changes
+  const displayWeatherData = useMemo(() => {
+    if (weatherData && dataType === DataType.Temperature) {
+      return weatherData;
+    }
+    return cityAsWeather;
+  }, [weatherData, cityAsWeather, dataType]);
+
+  // For sunshine data: use what we have or fall back to fetched
   const displaySunshineData = cityAsSunshine ?? sunshineData;
 
   // Memoize excludeCity to prevent unnecessary re-renders and search queries
@@ -258,4 +268,4 @@ const CityPopup = ({
   );
 };
 
-export default memo(CityPopup, arePropsEqual);
+export default CityPopup;

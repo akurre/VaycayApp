@@ -202,6 +202,7 @@ const MapPage: FC = () => {
               onBoundsChange={handleBoundsChange}
               selectedMonth={monthFromDate}
               selectedDate={selectedDate}
+              debouncedDate={debouncedDate}
             />
           </ComponentErrorBoundary>
         )}
