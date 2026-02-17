@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import type { DataType } from '@/types/mapTypes';
 import { TIER2_ESCALATION_MS } from '@/const';
 
@@ -33,27 +33,18 @@ export const useLoadingTier = ({
   const [isEscalated, setIsEscalated] = useState(false);
   const escalationTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const detectDataChange = useCallback((): boolean => {
-    const debouncedDateChanged = prevDebouncedDateRef.current !== debouncedDate;
-    const monthChanged = prevMonthRef.current !== selectedMonth;
-    const dataTypeChanged = prevDataTypeRef.current !== dataType;
-    return debouncedDateChanged || monthChanged || dataTypeChanged;
-  }, [debouncedDate, selectedMonth, dataType]);
+  // Derive data change status directly (no memoization needed for simple comparison)
+  const dataHasChanged =
+    prevDebouncedDateRef.current !== debouncedDate ||
+    prevMonthRef.current !== selectedMonth ||
+    prevDataTypeRef.current !== dataType;
 
-  const calculateRawTier = useCallback((): LoadingTier => {
-    if (!isLoading) {
-      return 'none';
-    }
-
-    const dataHasChanged = detectDataChange();
-    if (dataHasChanged || !isBasemapLoaded) {
-      return 'tier1';
-    }
-
-    return 'tier2';
-  }, [isLoading, isBasemapLoaded, detectDataChange]);
-
-  const rawTier = calculateRawTier();
+  // Derive raw tier directly (no memoization needed for simple logic)
+  const rawTier: LoadingTier = !isLoading
+    ? 'none'
+    : dataHasChanged || !isBasemapLoaded
+      ? 'tier1'
+      : 'tier2';
 
   const tier: LoadingTier =
     rawTier === 'tier2' && isEscalated ? 'tier1' : rawTier;
@@ -92,7 +83,6 @@ export const useLoadingTier = ({
     };
   }, [rawTier, isEscalated]);
 
-  const dataHasChanged = detectDataChange();
   const isDataChange = tier === 'tier1' && dataHasChanged;
   const isPanLoad = tier === 'tier2';
 

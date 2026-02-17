@@ -286,7 +286,8 @@ export const BREATHE_MAX_OPACITY = 0.8;
 export const BREATHE_CYCLE_MS = 1200;
 
 // Ghost dot constants for Tier 2 loading placeholders
-export const GHOST_DOT_OPACITY = 0.15;
+export const GHOST_DOT_OPACITY = 0.15; // Layer-level opacity for DeckGL
+export const GHOST_DOT_ALPHA = 40; // Per-vertex color alpha channel (0-255)
 export const GHOST_DOT_MAX_COUNT = 50;
 export const GHOST_DOT_GRID_SPACING_DEG = 2;
 export const GHOST_DOT_EXCLUSION_RADIUS_DEG = 1;

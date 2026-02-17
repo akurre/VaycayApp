@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useEffect } from 'react';
 import type { MapViewState } from '@deck.gl/core';
 import { WebMercatorViewport } from '@deck.gl/core';
 import type { WeatherDataUnion } from '@/types/mapTypes';
@@ -9,6 +9,7 @@ import {
   GHOST_DOT_MAX_COUNT,
   GHOST_DOT_GRID_SPACING_DEG,
   GHOST_DOT_EXCLUSION_RADIUS_DEG,
+  GHOST_DOT_ALPHA,
 } from '@/const';
 
 export interface GhostDot {
@@ -33,11 +34,16 @@ export function useGhostDots({
   const snapshotRef = useRef(viewState);
   const wasActiveRef = useRef(false);
 
-  if (isActive && !wasActiveRef.current) {
-    snapshotRef.current = viewState;
-  }
-  wasActiveRef.current = isActive;
+  // Snapshot the viewport when loading becomes active (moved to useEffect)
+  useEffect(() => {
+    if (isActive && !wasActiveRef.current) {
+      snapshotRef.current = viewState;
+    }
+    wasActiveRef.current = isActive;
+  }, [isActive, viewState]);
 
+  // Intentionally excludes viewState from deps — we snapshot it once when isActive becomes true
+  // and hold that snapshot for the duration of the loading session (see useEffect above)
   return useMemo(() => {
     if (!isActive) {
       return [];
@@ -62,7 +68,7 @@ export function useGhostDots({
       baseColor[0],
       baseColor[1],
       baseColor[2],
-      40,
+      GHOST_DOT_ALPHA,
     ];
 
     const candidates: GhostDot[] = [];
@@ -77,6 +83,8 @@ export function useGhostDots({
         long <= maxLong;
         long += GHOST_DOT_GRID_SPACING_DEG
       ) {
+        // Deterministic jitter based on position — avoids flickering when ghost dots recompute
+        // with same viewport (Math.random would produce different dots each time)
         const jitterLat = ((lat * 7 + long * 13) % 100) / 100 - 0.5;
         const jitterLong = ((lat * 11 + long * 3) % 100) / 100 - 0.5;
         const jitteredLat = lat + jitterLat * 0.5;
