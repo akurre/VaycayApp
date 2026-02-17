@@ -14,7 +14,9 @@ const MapTooltip = ({ x, y, content }: MapTooltipProps) => {
 
   const colorScheme = useComputedColorScheme('dark');
   const isLightMode = colorScheme === 'light';
-  const backgroundColor = isLightMode ? appColors.light.background : appColors.dark.surface;
+  const backgroundColor = isLightMode
+    ? appColors.light.background
+    : appColors.dark.surface;
   const textColor = isLightMode ? appColors.light.text : appColors.dark.text;
 
   useLayoutEffect(() => {

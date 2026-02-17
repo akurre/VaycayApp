@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react';
-import { BREATHE_MIN_OPACITY, BREATHE_MAX_OPACITY, BREATHE_CYCLE_MS } from '@/const';
+import {
+  BREATHE_MIN_OPACITY,
+  BREATHE_MAX_OPACITY,
+  BREATHE_CYCLE_MS,
+} from '@/const';
 
 export interface UseBreatheAnimationProps {
   isActive: boolean;

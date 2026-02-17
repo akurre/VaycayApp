@@ -73,11 +73,7 @@ export function useGhostDots({
 
     const candidates: GhostDot[] = [];
 
-    for (
-      let lat = minLat;
-      lat <= maxLat;
-      lat += GHOST_DOT_GRID_SPACING_DEG
-    ) {
+    for (let lat = minLat; lat <= maxLat; lat += GHOST_DOT_GRID_SPACING_DEG) {
       for (
         let long = minLong;
         long <= maxLong;

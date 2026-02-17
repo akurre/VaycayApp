@@ -131,7 +131,7 @@ describe('useLoadingTier', () => {
   });
 
   // 8. Tier 1 takes precedence: if date changes, tier is 'tier1' regardless
-  it("tier1 takes precedence when data param changes regardless of escalation state", () => {
+  it('tier1 takes precedence when data param changes regardless of escalation state', () => {
     const { result, rerender } = renderHook(
       (props: UseLoadingTierProps) => useLoadingTier(props),
       { initialProps: { ...defaultProps, isLoading: false } }
