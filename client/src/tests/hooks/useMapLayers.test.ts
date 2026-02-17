@@ -95,7 +95,6 @@ describe('useMapLayers', () => {
         viewMode: ViewMode.Markers,
         dataType: DataType.Temperature,
         selectedMonth: 1,
-        isLoadingWeather: false,
       })
     );
 
@@ -111,7 +110,6 @@ describe('useMapLayers', () => {
         viewMode: ViewMode.Markers,
         dataType: DataType.Sunshine,
         selectedMonth: 1,
-        isLoadingWeather: false,
       })
     );
 
@@ -127,7 +125,6 @@ describe('useMapLayers', () => {
         viewMode: ViewMode.Markers,
         dataType: DataType.Temperature,
         selectedMonth: 1,
-        isLoadingWeather: false,
       })
     );
 
@@ -144,7 +141,6 @@ describe('useMapLayers', () => {
         viewMode: ViewMode.Markers,
         dataType: DataType.Temperature,
         selectedMonth: 1,
-        isLoadingWeather: false,
       })
     );
 
@@ -161,7 +157,6 @@ describe('useMapLayers', () => {
         viewMode: ViewMode.Heatmap,
         dataType: DataType.Temperature,
         selectedMonth: 1,
-        isLoadingWeather: false,
       })
     );
 
@@ -178,7 +173,6 @@ describe('useMapLayers', () => {
         viewMode: ViewMode.Markers,
         dataType: DataType.Temperature,
         selectedMonth: 1,
-        isLoadingWeather: false,
       })
     );
 
@@ -195,7 +189,6 @@ describe('useMapLayers', () => {
         viewMode: ViewMode.Markers,
         dataType: DataType.Sunshine,
         selectedMonth: 1,
-        isLoadingWeather: false,
       })
     );
 
@@ -212,7 +205,6 @@ describe('useMapLayers', () => {
         viewMode: ViewMode.Markers,
         dataType: DataType.Temperature,
         selectedMonth: 1,
-        isLoadingWeather: false,
       })
     );
 
@@ -230,7 +222,6 @@ describe('useMapLayers', () => {
         viewMode: ViewMode.Heatmap,
         dataType: DataType.Temperature,
         selectedMonth: 1,
-        isLoadingWeather: false,
       })
     );
 
@@ -242,14 +233,14 @@ describe('useMapLayers', () => {
     ).toBeUndefined();
   });
 
-  it('reduces temperature marker opacity when loading weather', () => {
+  it('uses breatheOpacity for temperature marker opacity when provided', () => {
     const { result } = renderHook(() =>
       useMapLayers({
         cities: mockWeatherCities,
         viewMode: ViewMode.Markers,
         dataType: DataType.Temperature,
         selectedMonth: 1,
-        isLoadingWeather: true,
+        breatheOpacity: 0.5,
       })
     );
 
@@ -259,14 +250,13 @@ describe('useMapLayers', () => {
     expect(markerLayer?.props.opacity).toBe(0.5);
   });
 
-  it('uses normal temperature marker opacity when not loading', () => {
+  it('uses default temperature marker opacity when breatheOpacity not provided', () => {
     const { result } = renderHook(() =>
       useMapLayers({
         cities: mockWeatherCities,
         viewMode: ViewMode.Markers,
         dataType: DataType.Temperature,
         selectedMonth: 1,
-        isLoadingWeather: false,
       })
     );
 
@@ -276,14 +266,14 @@ describe('useMapLayers', () => {
     expect(markerLayer?.props.opacity).toBe(0.8);
   });
 
-  it('reduces sunshine marker opacity when loading weather', () => {
+  it('uses breatheOpacity for sunshine marker opacity when provided', () => {
     const { result } = renderHook(() =>
       useMapLayers({
         cities: mockSunshineCities,
         viewMode: ViewMode.Markers,
         dataType: DataType.Sunshine,
         selectedMonth: 1,
-        isLoadingWeather: true,
+        breatheOpacity: 0.5,
       })
     );
 
@@ -293,14 +283,13 @@ describe('useMapLayers', () => {
     expect(markerLayer?.props.opacity).toBe(0.5);
   });
 
-  it('uses normal sunshine marker opacity when not loading', () => {
+  it('uses default sunshine marker opacity when breatheOpacity not provided', () => {
     const { result } = renderHook(() =>
       useMapLayers({
         cities: mockSunshineCities,
         viewMode: ViewMode.Markers,
         dataType: DataType.Sunshine,
         selectedMonth: 1,
-        isLoadingWeather: false,
       })
     );
 
@@ -323,7 +312,6 @@ describe('useMapLayers', () => {
         viewMode: ViewMode.Markers,
         dataType: DataType.Temperature,
         selectedMonth: 1,
-        isLoadingWeather: false,
       })
     );
 
@@ -360,7 +348,6 @@ describe('useMapLayers', () => {
         viewMode: ViewMode.Markers,
         dataType: DataType.Sunshine,
         selectedMonth: 1, // January
-        isLoadingWeather: false,
       })
     );
 

@@ -29,6 +29,10 @@ export const useMapInteractions = (
   const homeCityData = useAppStore((state) => state.homeCityData);
   const temperatureUnit = useAppStore((state) => state.temperatureUnit);
 
+  // Ref for stable callback identity — cities changes on every fetch but callbacks shouldn't recreate
+  const citiesRef = useRef(cities);
+  citiesRef.current = cities;
+
   // Throttle hover updates to reduce re-renders from mouse movement
   const pendingHoverRef = useRef<HoverInfo | null>(null);
   const throttleTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -86,7 +90,7 @@ export const useMapInteractions = (
       } else if (viewMode === 'heatmap' && info.coordinate) {
         const [longitude, latitude] = info.coordinate;
         const content = getTooltipContent(
-          cities,
+          citiesRef.current,
           longitude,
           latitude,
           dataType,
@@ -114,7 +118,6 @@ export const useMapInteractions = (
       }
     },
     [
-      cities,
       viewMode,
       dataType,
       selectedMonth,
@@ -136,7 +139,7 @@ export const useMapInteractions = (
         setSelectedCity(info.object as WeatherDataUnion);
       } else if (viewMode === 'heatmap' && info.coordinate) {
         const [longitude, latitude] = info.coordinate;
-        const city = cities.find(
+        const city = citiesRef.current.find(
           (c) =>
             c.lat !== null &&
             c.long !== null &&
@@ -148,7 +151,7 @@ export const useMapInteractions = (
         }
       }
     },
-    [cities, viewMode, homeCityData]
+    [viewMode, homeCityData]
   );
 
   const handleClosePopup = useCallback(() => {

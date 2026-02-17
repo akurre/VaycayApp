@@ -193,19 +193,17 @@ const MapPage: FC = () => {
 
       {/* map */}
       <div className="h-full w-full">
-        {displayedData && (
-          <ComponentErrorBoundary componentName="WorldMap">
-            <WorldMap
-              cities={displayedData}
-              viewMode={viewMode}
-              dataType={dataType}
-              onBoundsChange={handleBoundsChange}
-              selectedMonth={monthFromDate}
-              selectedDate={selectedDate}
-              debouncedDate={debouncedDate}
-            />
-          </ComponentErrorBoundary>
-        )}
+        <ComponentErrorBoundary componentName="WorldMap">
+          <WorldMap
+            cities={displayedData ?? []}
+            viewMode={viewMode}
+            dataType={dataType}
+            onBoundsChange={handleBoundsChange}
+            selectedMonth={monthFromDate}
+            selectedDate={selectedDate}
+            debouncedDate={debouncedDate}
+          />
+        </ComponentErrorBoundary>
       </div>
     </div>
   );
