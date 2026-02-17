@@ -17,7 +17,7 @@ export const MILES_LOCALES = ['en-US', 'en-GB', 'en-LR', 'en-MM'];
 // zoom-based loading thresholds
 export const ZOOM_THRESHOLD = 2; // switch to bounds query at zoom level 2+ (continental view)
 export const DEBOUNCE_DELAY = 200; // ms - debounce delay for zoom/pan events (reduced for more responsive feel)
-export const BOUNDS_BUFFER_PERCENT = 0.1; // add 10% buffer to viewport bounds to include nearby cities just off-screen
+export const BOUNDS_BUFFER_PERCENT = 0.3; // add 30% buffer to viewport bounds to pre-fetch dots before they're visible
 export const ZOOM_AMPLIFICATION_FACTOR = 1.5; // amplify zoom changes for more sensitive pinch/scroll zoom
 
 // initial map view state
