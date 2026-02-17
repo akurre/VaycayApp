@@ -17,7 +17,7 @@ export const MILES_LOCALES = ['en-US', 'en-GB', 'en-LR', 'en-MM'];
 // zoom-based loading thresholds
 export const ZOOM_THRESHOLD = 2; // switch to bounds query at zoom level 2+ (continental view)
 export const DEBOUNCE_DELAY = 200; // ms - debounce delay for zoom/pan events (reduced for more responsive feel)
-export const BOUNDS_BUFFER_PERCENT = 0.5; // add 50% buffer to viewport bounds to include nearby cities outside visible area
+export const BOUNDS_BUFFER_PERCENT = 0.1; // add 10% buffer to viewport bounds to include nearby cities just off-screen
 export const ZOOM_AMPLIFICATION_FACTOR = 1.5; // amplify zoom changes for more sensitive pinch/scroll zoom
 
 // initial map view state
@@ -280,3 +280,13 @@ export const LOADER_DELAY_MS = 300;
 export const MAP_FADE_IN_DELAY_MS = 100;
 export const MAP_LOADING_OPACITY = 0.3;
 export const MAP_LOADED_OPACITY = 1;
+export const TIER2_ESCALATION_MS = 3000;
+export const BREATHE_MIN_OPACITY = 0.5;
+export const BREATHE_MAX_OPACITY = 0.8;
+export const BREATHE_CYCLE_MS = 1200;
+
+// Ghost dot constants for Tier 2 loading placeholders
+export const GHOST_DOT_OPACITY = 0.15;
+export const GHOST_DOT_MAX_COUNT = 50;
+export const GHOST_DOT_GRID_SPACING_DEG = 2;
+export const GHOST_DOT_EXCLUSION_RADIUS_DEG = 1;

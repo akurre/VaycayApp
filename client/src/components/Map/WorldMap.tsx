@@ -7,6 +7,8 @@ import { useMapInteractions } from '../../hooks/useMapInteractions';
 import { useMapBounds } from '../../hooks/useMapBounds';
 import { useHomeCityData } from '../../hooks/useHomeCityData';
 import { useHomeLocationLayers } from '../../hooks/useHomeLocationLayers';
+import { useLoadingTier } from '../../hooks/useLoadingTier';
+import { useBreatheAnimation } from '../../hooks/useBreatheAnimation';
 import {
   INITIAL_VIEW_STATE,
   LOADER_DELAY_MS,
@@ -65,11 +67,6 @@ const WorldMap = ({
   // Track map content opacity for smooth transitions
   const [mapOpacity, setMapOpacity] = useState(1);
 
-  // Track previous date/month to detect data changes (not just bounds changes)
-  const prevDebouncedDateRef = useRef(debouncedDate);
-  const prevMonthRef = useRef(selectedMonth);
-  const prevDataTypeRef = useRef(dataType);
-
   const colorScheme = useComputedColorScheme('dark');
   const isLoadingWeather = useWeatherStore((state) => state.isLoadingWeather);
   const isLoadingSunshine = useSunshineStore(
@@ -87,13 +84,29 @@ const WorldMap = ({
   const isLoading =
     dataType === DataType.Temperature ? isLoadingWeather : isLoadingSunshine;
 
+  // Determine loading tier (Tier 1 = data change, Tier 2 = pan/zoom)
+  const { tier } = useLoadingTier({
+    isLoading,
+    debouncedDate,
+    selectedMonth,
+    dataType,
+    isBasemapLoaded,
+  });
+
+  // Breathe animation — only active during Tier 2 (pan/zoom) loads
+  const { opacity: breatheOpacity } = useBreatheAnimation({
+    isActive: tier === 'tier2',
+  });
+
   // Get city layers (heatmap + markers) - these are expensive to recreate
   const cityLayers = useMapLayers({
     cities,
     viewMode,
     dataType,
     selectedMonth,
-    isLoadingWeather: isLoading,
+    breatheOpacity: tier === 'tier2' ? breatheOpacity : undefined,
+    isGhostDotsActive: tier === 'tier2',
+    viewState,
   });
 
   // Get home location layers separately - these update 15fps for animation
@@ -177,53 +190,23 @@ const WorldMap = ({
     }
   }, [selectedCity]);
 
-  // Delayed loader effect - only show when basemap loads or when date/month changes (not for zoom/pan)
+  // Delayed loader effect - Tier 1 shows overlay, Tier 2 uses breathe animation (no overlay)
   useEffect(() => {
-    // Check if debounced date/month/dataType has changed (new data loading)
-    const debouncedDateChanged = prevDebouncedDateRef.current !== debouncedDate;
-    const monthChanged = prevMonthRef.current !== selectedMonth;
-    const dataTypeChanged = prevDataTypeRef.current !== dataType;
-    const dataHasChanged =
-      debouncedDateChanged || monthChanged || dataTypeChanged;
-
-    // Show loading when:
-    // 1. Basemap is not loaded yet, OR
-    // 2. Data is actually loading (isLoadingWeather/isLoadingSunshine is true)
-    const shouldShowLoading =
-      !isBasemapLoaded || isLoadingWeather || isLoadingSunshine;
-
-    if (shouldShowLoading) {
-      // Fade out map content when loading starts
+    if (tier === 'tier1') {
+      // Tier 1: Show blocking overlay (date change, initial load)
       setMapOpacity(MAP_LOADING_OPACITY);
       const timer = setTimeout(() => setShowLoader(true), LOADER_DELAY_MS);
       return () => clearTimeout(timer);
     } else {
-      // Update refs when loading completes
-      prevDebouncedDateRef.current = debouncedDate;
-      prevMonthRef.current = selectedMonth;
-      prevDataTypeRef.current = dataType;
-
-      // Fade in map content when loading completes
+      // Tier 2 or no loading: no overlay, full opacity
       setShowLoader(false);
-      // Small delay to ensure loader fades out before map fades in
       const fadeTimer = setTimeout(
         () => setMapOpacity(MAP_LOADED_OPACITY),
         MAP_FADE_IN_DELAY_MS
       );
       return () => clearTimeout(fadeTimer);
     }
-  }, [
-    isBasemapLoaded,
-    isLoadingWeather,
-    isLoadingSunshine,
-    debouncedDate,
-    selectedMonth,
-    dataType,
-    LOADER_DELAY_MS,
-    MAP_FADE_IN_DELAY_MS,
-    MAP_LOADING_OPACITY,
-    MAP_LOADED_OPACITY,
-  ]);
+  }, [tier]);
 
   // Use the current or last selected city for rendering during transition
   const cityToRender = selectedCity || lastSelectedCityRef.current;

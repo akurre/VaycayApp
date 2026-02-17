@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { HeatmapLayer } from '@deck.gl/aggregation-layers';
 import { ScatterplotLayer } from '@deck.gl/layers';
-import type { Layer } from '@deck.gl/core';
+import type { Layer, MapViewState } from '@deck.gl/core';
 import type {
   WeatherData,
   ValidMarkerData,
@@ -14,7 +14,10 @@ import {
   SUNSHINE_COLOR_RANGE,
   SUNSHINE_LOADING_COLOR,
   TEMPERATURE_LOADING_COLOR,
+  GHOST_DOT_OPACITY,
+  INITIAL_VIEW_STATE,
 } from '@/const';
+import { useGhostDots, type GhostDot } from './useGhostDots';
 import { useWeatherStore } from '@/stores/useWeatherStore';
 import { useSunshineStore } from '@/stores/useSunshineStore';
 import type { ValidSunshineMarkerData } from '@/utils/typeGuards';
@@ -38,7 +41,9 @@ interface UseMapLayersProps {
   viewMode: ViewMode;
   dataType: DataType;
   selectedMonth?: number;
-  isLoadingWeather: boolean;
+  breatheOpacity?: number;
+  isGhostDotsActive?: boolean;
+  viewState?: MapViewState;
 }
 
 function useMapLayers({
@@ -46,7 +51,9 @@ function useMapLayers({
   viewMode,
   dataType,
   selectedMonth = 1,
-  isLoadingWeather,
+  breatheOpacity,
+  isGhostDotsActive = false,
+  viewState,
 }: UseMapLayersProps) {
   // Get max cities to show from appropriate store
   const maxTemperatureCities = useWeatherStore(
@@ -59,6 +66,19 @@ function useMapLayers({
     dataType === DataType.Temperature
       ? maxTemperatureCities
       : maxSunshineCities;
+
+  const defaultViewState: MapViewState = {
+    latitude: INITIAL_VIEW_STATE.latitude,
+    longitude: INITIAL_VIEW_STATE.longitude,
+    zoom: INITIAL_VIEW_STATE.zoom,
+  };
+
+  const ghostDots = useGhostDots({
+    realCities: cities,
+    viewState: viewState ?? defaultViewState,
+    isActive: isGhostDotsActive,
+    dataType,
+  });
 
   // Use smaller focused hooks
   const heatmapData = useHeatmapData(cities, dataType, selectedMonth);
@@ -77,18 +97,64 @@ function useMapLayers({
   return useMemo(() => {
     perfMonitor.start('map-layer-creation');
 
-    // pre-create all layers and toggle visibility instead of creating/destroying
-    // this prevents expensive layer creation from blocking the segmentedcontrol transition
-    const layers: Layer[] = [
+    const layers: Layer[] = [];
+
+    if (ghostDots.length > 0) {
+      layers.push(
+        new HeatmapLayer({
+          id: 'ghost-heatmap',
+          data: ghostDots.map((d) => ({
+            position: [d.long, d.lat] as [number, number],
+            weight: 0.3,
+          })),
+          getPosition: (d) => d.position,
+          getWeight: (d) => d.weight,
+          radiusMeters: 80000,
+          intensity: 0.3,
+          threshold: 0.5,
+          colorRange:
+            dataType === DataType.Temperature
+              ? COLOR_RANGE
+              : SUNSHINE_COLOR_RANGE.map(
+                  (c) => [...c] as [number, number, number]
+                ),
+          aggregation: 'MEAN',
+          opacity: GHOST_DOT_OPACITY,
+          visible: viewMode === 'heatmap',
+        })
+      );
+
+      layers.push(
+        new ScatterplotLayer<GhostDot>({
+          id: 'ghost-markers',
+          data: ghostDots,
+          getPosition: (d) => [d.long, d.lat],
+          getFillColor: (d) => d.color,
+          getRadius: 50000,
+          radiusMinPixels: 3,
+          radiusMaxPixels: 8,
+          pickable: false,
+          opacity: GHOST_DOT_OPACITY,
+          visible: viewMode === 'markers',
+          transitions: {
+            opacity: {
+              duration: 200,
+              easing: (t: number) => t,
+            },
+          },
+        })
+      );
+    }
+
+    layers.push(
       new HeatmapLayer({
         id: 'data-heatmap',
         data: heatmapData,
         getPosition: (d) => d.position,
         getWeight: (d) => d.weight,
-        // Use radiusMeters instead of radiusPixels for natural zoom scaling
-        radiusMeters: 80000, // ~80km radius - scales naturally with zoom level
-        intensity: 1, // Higher intensity = more vivid colors at center
-        threshold: 0.5, // Higher threshold = smoother boundaries, fades edges to transparent
+        radiusMeters: 80000,
+        intensity: 1,
+        threshold: 0.5,
         colorRange:
           dataType === DataType.Temperature
             ? COLOR_RANGE
@@ -96,12 +162,10 @@ function useMapLayers({
                 (c) => [...c] as [number, number, number]
               ),
         aggregation: 'MEAN',
-        opacity: 0.6,
+        opacity: breatheOpacity != null ? Math.min(breatheOpacity, 0.6) : 0.6,
         visible: viewMode === 'heatmap',
-        // Remove transitions to prevent interference with zoom operations
-        // Transitions can cause lag and stuttering during rapid zoom changes
-      }),
-    ];
+      })
+    );
 
     // Add appropriate marker layer based on data type
     if (dataType === DataType.Temperature) {
@@ -126,7 +190,7 @@ function useMapLayers({
           radiusMinPixels: 3,
           radiusMaxPixels: 8,
           pickable: true,
-          opacity: isLoadingWeather ? 0.5 : 0.8,
+          opacity: breatheOpacity ?? 0.8,
           visible: viewMode === 'markers',
           transitions: {
             getFillColor: {
@@ -134,8 +198,8 @@ function useMapLayers({
               easing: (t: number) => t * (2 - t),
             },
             opacity: {
-              duration: 300,
-              easing: (t: number) => t,
+              duration: 550,
+              easing: (t: number) => t * (2 - t),
             },
             getRadius: {
               duration: 400,
@@ -165,7 +229,7 @@ function useMapLayers({
           radiusMinPixels: 3,
           radiusMaxPixels: 8,
           pickable: true,
-          opacity: isLoadingWeather ? 0.5 : 0.8,
+          opacity: breatheOpacity ?? 0.8,
           visible: viewMode === 'markers',
           transitions: {
             getFillColor: {
@@ -173,8 +237,8 @@ function useMapLayers({
               easing: (t: number) => t * (2 - t),
             },
             opacity: {
-              duration: 300,
-              easing: (t: number) => t,
+              duration: 550,
+              easing: (t: number) => t * (2 - t),
             },
             getRadius: {
               duration: 400,
@@ -190,9 +254,10 @@ function useMapLayers({
 
     return layers;
   }, [
+    ghostDots,
     heatmapData,
     viewMode,
-    isLoadingWeather,
+    breatheOpacity,
     temperatureCacheResult,
     sunshineCacheResult,
     dataType,
