@@ -6,11 +6,18 @@ import type { RibbonStat } from '@/types/cityPopupTypes';
 import type { TemperatureUnit } from '@/types/mapTypes';
 import { useAppStore } from '@/stores/useAppStore';
 import { formatTemperature } from '@/utils/tempFormatting/formatTemperature';
+import { calculateDistance } from '@/utils/location/calculateDistance';
+import { formatDistance } from '@/utils/location/formatDistance';
+import SunStatValue from '../Ribbon/SunStatValue';
 import { useSunshineAndRainfallData } from './useSunshineAndRainfallData';
 
 interface UseRibbonStatsProps {
   basePopulation: number | null;
   comparisonPopulation: number | null;
+  baseLat: number | null;
+  baseLong: number | null;
+  comparisonLat: number | null;
+  comparisonLong: number | null;
   displayWeatherData: WeatherData | null;
   comparisonWeatherData: WeatherData | null;
   displaySunshineData: SunshineData | null;
@@ -38,15 +45,35 @@ const formatTempRange = (
   return `${minLabel}–${maxLabel}`;
 };
 
-const formatHours = (n: number | null): string =>
-  n === null ? PLACEHOLDER : `${n.toFixed(0)}h`;
-
 const formatMm = (n: number | null): string =>
   n === null ? PLACEHOLDER : `${n.toFixed(0)}mm`;
+
+const formatDistanceFromHome = (
+  homeLat: number | null | undefined,
+  homeLong: number | null | undefined,
+  cityLat: number | null,
+  cityLong: number | null
+): string => {
+  if (
+    homeLat === null ||
+    homeLat === undefined ||
+    homeLong === null ||
+    homeLong === undefined ||
+    cityLat === null ||
+    cityLong === null
+  ) {
+    return PLACEHOLDER;
+  }
+  return formatDistance(calculateDistance(homeLat, homeLong, cityLat, cityLong));
+};
 
 export const useRibbonStats = ({
   basePopulation,
   comparisonPopulation,
+  baseLat,
+  baseLong,
+  comparisonLat,
+  comparisonLong,
   displayWeatherData,
   comparisonWeatherData,
   displaySunshineData,
@@ -55,6 +82,9 @@ export const useRibbonStats = ({
   comparisonWeeklyWeatherData,
 }: UseRibbonStatsProps): ReadonlyArray<RibbonStat> => {
   const temperatureUnit = useAppStore((s) => s.temperatureUnit);
+  const homeLocation = useAppStore((s) => s.homeLocation);
+  const homeLat = homeLocation?.coordinates.lat ?? null;
+  const homeLong = homeLocation?.coordinates.long ?? null;
 
   const {
     averageSunshine,
@@ -72,8 +102,18 @@ export const useRibbonStats = ({
     () => [
       {
         label: 'Sun / yr',
-        v1: formatHours(averageSunshine),
-        v2: formatHours(comparisonAverageSunshine),
+        v1: (
+          <SunStatValue
+            averageMonthlyHours={averageSunshine}
+            latitude={baseLat}
+          />
+        ),
+        v2: (
+          <SunStatValue
+            averageMonthlyHours={comparisonAverageSunshine}
+            latitude={comparisonLat}
+          />
+        ),
       },
       {
         label: 'Rain / yr',
@@ -94,17 +134,14 @@ export const useRibbonStats = ({
         ),
       },
       {
-        label: 'Avg today',
-        v1:
-          formatTemperature(
-            displayWeatherData?.avgTemperature ?? null,
-            temperatureUnit
-          ) ?? PLACEHOLDER,
-        v2:
-          formatTemperature(
-            comparisonWeatherData?.avgTemperature ?? null,
-            temperatureUnit
-          ) ?? PLACEHOLDER,
+        label: 'From home',
+        v1: formatDistanceFromHome(homeLat, homeLong, baseLat, baseLong),
+        v2: formatDistanceFromHome(
+          homeLat,
+          homeLong,
+          comparisonLat,
+          comparisonLong
+        ),
       },
       {
         label: 'Population',
@@ -121,6 +158,12 @@ export const useRibbonStats = ({
       comparisonWeatherData,
       basePopulation,
       comparisonPopulation,
+      baseLat,
+      baseLong,
+      comparisonLat,
+      comparisonLong,
+      homeLat,
+      homeLong,
       temperatureUnit,
     ]
   );

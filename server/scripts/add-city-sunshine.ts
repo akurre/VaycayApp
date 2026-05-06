@@ -61,6 +61,25 @@ const CITIES_TO_ADD: CityData[] = [
       dec: 155,
     },
   },
+  {
+    name: 'San Jose',
+    state: 'California',
+    country: 'United States',
+    sunshineHours: {
+      jan: 186,
+      feb: 209,
+      mar: 270,
+      apr: 310,
+      may: 324,
+      jun: 312,
+      jul: 313,
+      aug: 288,
+      sep: 270,
+      oct: 243,
+      nov: 173,
+      dec: 160,
+    },
+  },
   // Add more cities here:
   // {
   //   name: 'Seattle',

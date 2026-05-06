@@ -1,4 +1,4 @@
-import { Fragment, useMemo, memo, useCallback } from 'react';
+import { useMemo, memo, useCallback } from 'react';
 import {
   BarChart,
   Bar,
@@ -31,8 +31,6 @@ const RainfallGraph = ({
   onHover,
 }: RainfallGraphProps) => {
   const chartColors = useChartColors();
-  const baseCityName = weeklyWeatherData?.city ?? null;
-  const compCityName = comparisonWeeklyWeatherData?.city ?? null;
   const selectedWeek = useMemo(
     () => dateToWeekOfYear(selectedDate),
     [selectedDate]
@@ -219,32 +217,20 @@ const RainfallGraph = ({
                   )}
                   <div className="flex items-baseline gap-3">
                     {main && (
-                      <Fragment>
-                        {compCityName && (
-                          <span className="text-[9px] uppercase tracking-[0.08em] text-[var(--mantine-color-dimmed)] font-semibold">
-                            {baseCityName}
-                          </span>
-                        )}
-                        <span
-                          className="font-semibold"
-                          style={{ color: main.color }}
-                        >
-                          {main.formatted}
-                        </span>
-                      </Fragment>
+                      <span
+                        className="font-semibold"
+                        style={{ color: main.color }}
+                      >
+                        {main.formatted}
+                      </span>
                     )}
                     {comp && (
-                      <Fragment>
-                        <span className="text-[9px] uppercase tracking-[0.08em] text-[var(--mantine-color-dimmed)] font-semibold">
-                          {compCityName}
-                        </span>
-                        <span
-                          className="font-semibold"
-                          style={{ color: comp.color }}
-                        >
-                          {comp.formatted}
-                        </span>
-                      </Fragment>
+                      <span
+                        className="font-semibold"
+                        style={{ color: comp.color }}
+                      >
+                        {comp.formatted}
+                      </span>
                     )}
                   </div>
                 </div>

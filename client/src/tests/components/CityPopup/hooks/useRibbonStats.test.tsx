@@ -4,13 +4,27 @@ import { useRibbonStats } from '@/components/CityPopup/hooks/useRibbonStats';
 import { TemperatureUnit } from '@/types/mapTypes';
 import { useAppStore } from '@/stores/useAppStore';
 import {
+  render,
   createMockWeatherData,
   createMockSunshineData,
   createMockWeeklyWeather,
   createMockWeekDataPoint,
 } from '@/test-utils';
+import type { ReactNode } from 'react';
 
 const placeholder = '—';
+
+const renderToText = (node: ReactNode): string => {
+  // Wrap in a marked div so we read only the rendered node's text, not the
+  // Mantine theme <style> tags injected at the provider level.
+  const { container, unmount } = render(
+    <div data-testid="render-to-text-root">{node}</div>
+  );
+  const root = container.querySelector('[data-testid="render-to-text-root"]');
+  const text = root?.textContent ?? '';
+  unmount();
+  return text;
+};
 
 describe('useRibbonStats', () => {
   beforeEach(() => {
@@ -22,6 +36,10 @@ describe('useRibbonStats', () => {
       useRibbonStats({
         basePopulation: 1000,
         comparisonPopulation: null,
+        baseLat: null,
+        baseLong: null,
+        comparisonLat: null,
+        comparisonLong: null,
         displayWeatherData: null,
         comparisonWeatherData: null,
         displaySunshineData: null,
@@ -35,8 +53,8 @@ describe('useRibbonStats', () => {
     expect(labels).toEqual([
       'Sun / yr',
       'Rain / yr',
-      'Today range',
-      'Avg today',
+      "Today's range",
+      'From home',
       'Population',
     ]);
   });
@@ -46,6 +64,10 @@ describe('useRibbonStats', () => {
       useRibbonStats({
         basePopulation: null,
         comparisonPopulation: null,
+        baseLat: null,
+        baseLong: null,
+        comparisonLat: null,
+        comparisonLong: null,
         displayWeatherData: null,
         comparisonWeatherData: null,
         displaySunshineData: null,
@@ -56,8 +78,13 @@ describe('useRibbonStats', () => {
     );
 
     result.current.forEach((stat) => {
-      expect(stat.v1).toBe(placeholder);
-      expect(stat.v2).toBe(placeholder);
+      // Sun / yr renders a JSX node; everything else is a plain string.
+      const v1Text =
+        typeof stat.v1 === 'string' ? stat.v1 : renderToText(stat.v1);
+      const v2Text =
+        typeof stat.v2 === 'string' ? stat.v2 : renderToText(stat.v2);
+      expect(v1Text).toBe(placeholder);
+      expect(v2Text).toBe(placeholder);
     });
   });
 
@@ -66,6 +93,10 @@ describe('useRibbonStats', () => {
       useRibbonStats({
         basePopulation: null,
         comparisonPopulation: null,
+        baseLat: null,
+        baseLong: null,
+        comparisonLat: null,
+        comparisonLong: null,
         displayWeatherData: null,
         comparisonWeatherData: null,
         displaySunshineData: createMockSunshineData({
@@ -89,9 +120,10 @@ describe('useRibbonStats', () => {
     );
 
     const sun = result.current.find((s) => s.label === 'Sun / yr');
-    // expect a string ending with "h"
-    expect(typeof sun?.v1).toBe('string');
-    expect(sun?.v1).toMatch(/^\d+h$/);
+    // Sun / yr renders a JSX node — extract its text content. With no latitude
+    // there is no percentage, only the hours line.
+    const text = renderToText(sun?.v1);
+    expect(text).toMatch(/^\d+h$/);
   });
 
   it('formats today range using the user’s temperature unit', () => {
@@ -101,6 +133,10 @@ describe('useRibbonStats', () => {
       useRibbonStats({
         basePopulation: null,
         comparisonPopulation: null,
+        baseLat: null,
+        baseLong: null,
+        comparisonLat: null,
+        comparisonLong: null,
         displayWeatherData: createMockWeatherData({
           minTemperature: 0,
           maxTemperature: 10,
@@ -113,7 +149,7 @@ describe('useRibbonStats', () => {
       })
     );
 
-    const range = result.current.find((s) => s.label === 'Today range');
+    const range = result.current.find((s) => s.label === "Today's range");
     // 0°C → 32°F, 10°C → 50°F
     expect(range?.v1).toBe('32.0°F–50.0°F');
   });
@@ -123,6 +159,10 @@ describe('useRibbonStats', () => {
       useRibbonStats({
         basePopulation: 1234567,
         comparisonPopulation: null,
+        baseLat: null,
+        baseLong: null,
+        comparisonLat: null,
+        comparisonLong: null,
         displayWeatherData: null,
         comparisonWeatherData: null,
         displaySunshineData: null,
@@ -142,6 +182,10 @@ describe('useRibbonStats', () => {
       useRibbonStats({
         basePopulation: null,
         comparisonPopulation: null,
+        baseLat: null,
+        baseLong: null,
+        comparisonLat: null,
+        comparisonLong: null,
         displayWeatherData: null,
         comparisonWeatherData: null,
         displaySunshineData: null,

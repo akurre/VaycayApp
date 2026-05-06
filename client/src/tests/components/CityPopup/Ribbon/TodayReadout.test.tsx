@@ -160,4 +160,90 @@ describe('TodayReadout', () => {
       expect(screen.queryByText(/daylight/)).not.toBeInTheDocument();
     });
   });
+
+  describe('sub values (sunshine percentage)', () => {
+    it('renders subV1 stacked under v1 when provided', () => {
+      render(
+        <TodayReadout
+          tab={DataType.Sunshine}
+          c1Value={null}
+          c2Value={null}
+          hasComparison={false}
+          selectedDate="2026-05-06"
+          hover={{
+            label: 'Jul',
+            v1: '14.0h',
+            v2: null,
+            subV1: '32% sun',
+          }}
+        />
+      );
+
+      expect(screen.getByText('14.0h')).toBeInTheDocument();
+      expect(screen.getByText('32% sun')).toBeInTheDocument();
+    });
+
+    it('renders subV2 only when hasComparison is true', () => {
+      render(
+        <TodayReadout
+          tab={DataType.Sunshine}
+          c1Value={null}
+          c2Value={null}
+          hasComparison={true}
+          selectedDate="2026-05-06"
+          hover={{
+            label: 'Jul',
+            v1: '14.0h',
+            v2: '8.5h',
+            subV1: '32% sun',
+            subV2: '28% sun',
+          }}
+        />
+      );
+
+      expect(screen.getByText('32% sun')).toBeInTheDocument();
+      expect(screen.getByText('28% sun')).toBeInTheDocument();
+    });
+
+    it('hides subV2 when hasComparison is false even if provided', () => {
+      render(
+        <TodayReadout
+          tab={DataType.Sunshine}
+          c1Value={null}
+          c2Value={null}
+          hasComparison={false}
+          selectedDate="2026-05-06"
+          hover={{
+            label: 'Jul',
+            v1: '14.0h',
+            v2: '8.5h',
+            subV1: '32% sun',
+            subV2: '28% sun',
+          }}
+        />
+      );
+
+      expect(screen.getByText('32% sun')).toBeInTheDocument();
+      expect(screen.queryByText('28% sun')).not.toBeInTheDocument();
+    });
+
+    it('does not render a sub line when subV1/subV2 are absent', () => {
+      render(
+        <TodayReadout
+          tab={DataType.Sunshine}
+          c1Value={null}
+          c2Value={null}
+          hasComparison={true}
+          selectedDate="2026-05-06"
+          hover={{
+            label: 'Jul',
+            v1: '14.0h',
+            v2: '8.5h',
+          }}
+        />
+      );
+
+      expect(screen.queryByText(/% sun/)).not.toBeInTheDocument();
+    });
+  });
 });

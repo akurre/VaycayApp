@@ -4,6 +4,7 @@ import type { ChartHoverState } from '@/types/chartTypes';
 import type { RibbonHoverPayload } from '@/types/cityPopupTypes';
 import { transformSunshineDataForChart } from '@/utils/dataFormatting/transformSunshineDataForChart';
 import { generateTheoreticalMaxSunshineData } from '@/utils/dataFormatting/generateTheoreticalMaxSunshineData';
+import { formatSunshinePercentage } from '@/utils/dataFormatting/formatSunshinePercentage';
 import RechartsLineGraph, {
   type LineConfig,
   type AreaConfig,
@@ -20,7 +21,7 @@ interface SunshineGraphProps {
 
 const SunshineLegend = () => (
   <div
-    className="flex gap-3 text-[9px] uppercase tracking-[0.08em]"
+    className="flex flex-col gap-0.5 text-[9px] uppercase tracking-[0.08em]"
     style={{ color: 'var(--mantine-color-dimmed)' }}
   >
     <span className="flex items-center gap-1">
@@ -193,13 +194,47 @@ const SunshineGraph = ({
       }
       const c1 = (point.hours ?? null) as number | null;
       const c2 = (point.comparisonHours ?? null) as number | null;
+      const max1 = (point.theoreticalMax ?? null) as number | null;
+      const max2 = (point.comparisonTheoreticalMax ?? null) as number | null;
       onHover({
         label: typeof point.month === 'string' ? point.month : `${point.month}`,
         v1: c1 === null ? null : `${c1.toFixed(1)}h`,
         v2: c2 === null ? null : `${c2.toFixed(1)}h`,
+        subV1: formatSunshinePercentage(c1, max1),
+        subV2: formatSunshinePercentage(c2, max2),
       });
     },
     [combined, onHover]
+  );
+
+  const renderTooltipExtras = useCallback(
+    (row: (typeof combined)[number]) => {
+      const c1 = (row.hours ?? null) as number | null;
+      const c2 = (row.comparisonHours ?? null) as number | null;
+      const max1 = (row.theoreticalMax ?? null) as number | null;
+      const max2 = (row.comparisonTheoreticalMax ?? null) as number | null;
+      const sub1 = formatSunshinePercentage(c1, max1);
+      const sub2 = formatSunshinePercentage(c2, max2);
+      if (!sub1 && !sub2) return null;
+      const hasComp = !!comparisonSunshineData;
+      return (
+        <div className="flex justify-end gap-3 text-[10px] font-semibold">
+          {sub1 && (
+            <span style={{ color: CITY1_PRIMARY_COLOR }}>{sub1}</span>
+          )}
+          {hasComp && sub2 && (
+            <span
+              style={{
+                color: sunshineData ? CITY2_PRIMARY_COLOR : CITY1_PRIMARY_COLOR,
+              }}
+            >
+              {sub2}
+            </span>
+          )}
+        </div>
+      );
+    },
+    [sunshineData, comparisonSunshineData]
   );
 
   if (!baseData || !baseStructure) return null;
@@ -216,8 +251,11 @@ const SunshineGraph = ({
       referenceLines={referenceLines}
       showLegend={false}
       yTickFormatter={(v) => `${v}h`}
+      yAxisOrientation="left"
+      margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
       overlay={<SunshineLegend />}
       onHover={handleHover}
+      renderTooltipExtras={renderTooltipExtras}
     />
   );
 };

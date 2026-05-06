@@ -1,6 +1,6 @@
 import type { RibbonHoverPayload } from '@/types/cityPopupTypes';
 import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
-import { formatDateString } from '@/utils/dateFormatting/formatDateString';
+import { formatDateAsMonthDay } from '@/utils/dateFormatting/formatDateAsMonthDay';
 import { DataType } from '@/types/mapTypes';
 import type { TemperatureUnit } from '@/types/mapTypes';
 import { formatTemperature } from '@/utils/tempFormatting/formatTemperature';
@@ -46,10 +46,12 @@ const TodayReadout = ({
 
   const v1 = hover ? hover.v1 : formatForTab(tab, c1Value, temperatureUnit);
   const v2 = hover ? hover.v2 : formatForTab(tab, c2Value, temperatureUnit);
+  const subV1 = hover?.subV1 ?? null;
+  const subV2 = hover?.subV2 ?? null;
 
   const baseLabel = hover
     ? hover.label
-    : `Today · ${formatDateString(selectedDate) || selectedDate}`;
+    : `On this day · ${formatDateAsMonthDay(selectedDate) || selectedDate}`;
   const valueLabel = VALUE_LABEL[tab];
   const fullLabel = valueLabel ? `${baseLabel} · ${valueLabel}` : baseLabel;
 
@@ -58,20 +60,40 @@ const TodayReadout = ({
       <div className="text-[10px] uppercase tracking-[0.1em] text-[var(--mantine-color-dimmed)]">
         {fullLabel}
       </div>
-      <div className="flex gap-3.5 items-baseline justify-end mt-0.5">
-        <span
-          style={{ color: CITY1_PRIMARY_COLOR }}
-          className="text-[24px] font-bold font-[Outfit] tabular-nums leading-none"
-        >
-          {v1 ?? PLACEHOLDER}
-        </span>
-        {hasComparison && (
+      <div className="flex gap-3.5 items-start justify-end mt-0.5">
+        <div className="flex flex-col items-end">
           <span
-            style={{ color: CITY2_PRIMARY_COLOR }}
-            className="text-[18px] font-bold font-[Outfit] tabular-nums leading-none"
+            style={{ color: CITY1_PRIMARY_COLOR }}
+            className="text-[24px] font-bold font-[Outfit] tabular-nums leading-none"
           >
-            {v2 ?? PLACEHOLDER}
+            {v1 ?? PLACEHOLDER}
           </span>
+          {subV1 && (
+            <span
+              style={{ color: CITY1_PRIMARY_COLOR }}
+              className="text-[10px] font-semibold font-[Outfit] tabular-nums leading-none mt-1 opacity-80"
+            >
+              {subV1}
+            </span>
+          )}
+        </div>
+        {hasComparison && (
+          <div className="flex flex-col items-end">
+            <span
+              style={{ color: CITY2_PRIMARY_COLOR }}
+              className="text-[18px] font-bold font-[Outfit] tabular-nums leading-none"
+            >
+              {v2 ?? PLACEHOLDER}
+            </span>
+            {subV2 && (
+              <span
+                style={{ color: CITY2_PRIMARY_COLOR }}
+                className="text-[10px] font-semibold font-[Outfit] tabular-nums leading-none mt-1 opacity-80"
+              >
+                {subV2}
+              </span>
+            )}
+          </div>
         )}
       </div>
     </div>

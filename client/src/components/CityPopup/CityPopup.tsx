@@ -131,6 +131,10 @@ const CityPopup = ({
   const stats = useRibbonStats({
     basePopulation: city?.population ?? null,
     comparisonPopulation: comparisonCity?.population ?? null,
+    baseLat: city?.lat ?? null,
+    baseLong: city?.long ?? null,
+    comparisonLat: comparisonCity?.lat ?? null,
+    comparisonLong: comparisonCity?.long ?? null,
     displayWeatherData,
     comparisonWeatherData,
     displaySunshineData,

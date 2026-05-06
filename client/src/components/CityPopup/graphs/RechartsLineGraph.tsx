@@ -61,6 +61,10 @@ interface ExtendedProps<T extends ChartDataPoint>
   yTickFormatter?: (value: number) => string;
   // Hide Y-axis entirely (used by Sunshine where caller draws its own scale)
   hideYAxis?: boolean;
+  // Which side the Y-axis renders on. Defaults to 'right' to match the
+  // popover's traditional layout; pass 'left' when an in-chart overlay
+  // (legend, etc.) needs the right gutter.
+  yAxisOrientation?: 'left' | 'right';
   // Optional Y-axis domain — defaults to recharts' auto-scaling. Pass a tight
   // [floor-1, ceil+1] pair when the default leaves an awkward bottom gap.
   yDomain?: [YDomainBound, YDomainBound];
@@ -69,6 +73,10 @@ interface ExtendedProps<T extends ChartDataPoint>
   // Formats the tooltip header label. Recharts hands us the raw activeLabel
   // (e.g. a week-of-year integer); the caller decides how to render it.
   formatTooltipLabel?: (raw: string | number) => string;
+  // Optional render-prop for an extra row appended below the metric grid in
+  // the in-chart tooltip. Receives the active data row so callers can derive
+  // values (e.g. sunshine % vs. theoretical max).
+  renderTooltipExtras?: (row: T) => ReactNode;
 }
 
 const RechartsLineGraphComponent = <T extends ChartDataPoint>({
@@ -80,11 +88,13 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
   referenceDots = [],
   yTickFormatter,
   hideYAxis = false,
+  yAxisOrientation = 'right',
   yDomain,
   margin = { top: 8, right: 28, left: 0, bottom: 0 },
   onHover,
   overlay,
   formatTooltipLabel,
+  renderTooltipExtras,
 }: ExtendedProps<T>) => {
   const chartColors = useChartColors();
 
@@ -138,7 +148,7 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
 
           {!hideYAxis && (
             <YAxis
-              orientation="right"
+              orientation={yAxisOrientation}
               tick={{
                 fontSize: 9,
                 fill: chartColors.textColor,
@@ -261,6 +271,12 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
                     ? formatTooltipLabel(label as string | number)
                     : String(label);
 
+              const activeRow = (payload[0]?.payload ?? null) as T | null;
+              const extras =
+                renderTooltipExtras && activeRow
+                  ? renderTooltipExtras(activeRow)
+                  : null;
+
               return (
                 <div className="rounded-md px-2.5 py-1.5 text-[11px] tabular-nums bg-[var(--mantine-color-default-hover)] border border-[var(--mantine-color-default-border)] shadow-md">
                   {headerLabel && (
@@ -300,6 +316,7 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
                       );
                     })}
                   </div>
+                  {extras && <div className="mt-1.5">{extras}</div>}
                 </div>
               );
             }}
