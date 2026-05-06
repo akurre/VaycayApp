@@ -1,5 +1,72 @@
 import { createTheme, Button, Text, Popover, Divider } from '@mantine/core';
-import type { MantineThemeOverride } from '@mantine/core';
+import type { MantineColorsTuple, MantineThemeOverride } from '@mantine/core';
+
+// Mantine shade tuples — single source of truth for the palette.
+// Index conventions used elsewhere: 4 = brand-light, 6 = brand-deep.
+export const primaryAmberShades: MantineColorsTuple = [
+  '#FCF6E6',
+  '#F8E8C2',
+  '#F4D592',
+  '#F0BE5F',
+  '#E8973C', // 4 — recommended primary shade (light)
+  '#C97A24',
+  '#9E5C18',
+  '#724311',
+  '#4D2D0B',
+  '#2A1906',
+];
+
+export const secondaryOceanShades: MantineColorsTuple = [
+  '#EAF2F7',
+  '#CADDE8',
+  '#9DBED1',
+  '#6E9DB6',
+  '#487D99',
+  '#2E627F',
+  '#1F4E66', // 6 — secondary brand
+  '#163C50',
+  '#0E2B3A',
+  '#071821',
+];
+
+export const tertiarySandShades: MantineColorsTuple = [
+  '#FBF7EF',
+  '#F4ECDB',
+  '#ECE0C2',
+  '#DCCBA5',
+  '#C8B387',
+  '#A8946B',
+  '#857250',
+  '#615337',
+  '#3F3623',
+  '#211C12',
+];
+
+export const successShades: MantineColorsTuple = [
+  '#F1F5EB',
+  '#DDE7CC',
+  '#BFD09E',
+  '#A0B973',
+  '#80A052',
+  '#5C8C3F',
+  '#476B30',
+  '#344F23',
+  '#223516',
+  '#111B0A',
+];
+
+export const errorShades: MantineColorsTuple = [
+  '#FBEEE9',
+  '#F2D2C5',
+  '#E5AC97',
+  '#D6856A',
+  '#C0533C',
+  '#A33E29',
+  '#7E2E1E',
+  '#5A2014',
+  '#3B140C',
+  '#1F0905',
+];
 
 // custom color palette for the application
 export const appColors = {
@@ -66,90 +133,13 @@ export const theme: MantineThemeOverride = createTheme({
 
   // Define custom colors as proper Mantine color arrays
   colors: {
-    'primary-amber': [
-      '#FCF6E6',
-      '#F8E8C2',
-      '#F4D592',
-      '#F0BE5F',
-      '#E8973C', // 4 — recommended primary shade (light)
-      '#C97A24',
-      '#9E5C18',
-      '#724311',
-      '#4D2D0B',
-      '#2A1906',
-    ],
-    'secondary-ocean': [
-      '#EAF2F7',
-      '#CADDE8',
-      '#9DBED1',
-      '#6E9DB6',
-      '#487D99',
-      '#2E627F',
-      '#1F4E66', // 6 — secondary brand
-      '#163C50',
-      '#0E2B3A',
-      '#071821',
-    ],
-    'tertiary-sand': [
-      '#FBF7EF',
-      '#F4ECDB',
-      '#ECE0C2',
-      '#DCCBA5',
-      '#C8B387',
-      '#A8946B',
-      '#857250',
-      '#615337',
-      '#3F3623',
-      '#211C12',
-    ],
-    success: [
-      '#F1F5EB',
-      '#DDE7CC',
-      '#BFD09E',
-      '#A0B973',
-      '#80A052',
-      '#5C8C3F',
-      '#476B30',
-      '#344F23',
-      '#223516',
-      '#111B0A',
-    ],
-    warning: [
-      '#FCF6E6',
-      '#F8E8C2',
-      '#F4D592',
-      '#F0BE5F',
-      '#E8973C',
-      '#C97A24',
-      '#9E5C18',
-      '#724311',
-      '#4D2D0B',
-      '#2A1906',
-    ],
-    error: [
-      '#FBEEE9',
-      '#F2D2C5',
-      '#E5AC97',
-      '#D6856A',
-      '#C0533C',
-      '#A33E29',
-      '#7E2E1E',
-      '#5A2014',
-      '#3B140C',
-      '#1F0905',
-    ],
-    info: [
-      '#EAF2F7',
-      '#CADDE8',
-      '#9DBED1',
-      '#6E9DB6',
-      '#487D99',
-      '#2E627F',
-      '#1F4E66',
-      '#163C50',
-      '#0E2B3A',
-      '#071821',
-    ],
+    'primary-amber': primaryAmberShades,
+    'secondary-ocean': secondaryOceanShades,
+    'tertiary-sand': tertiarySandShades,
+    success: successShades,
+    warning: primaryAmberShades, // amber doubles as warning
+    error: errorShades,
+    info: secondaryOceanShades, // ocean doubles as info
   },
 
   // Component-specific styles using the extend pattern
