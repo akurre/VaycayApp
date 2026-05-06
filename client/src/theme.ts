@@ -1,5 +1,17 @@
-import { createTheme, Button, Text, Popover, Divider, parseThemeColor, defaultVariantColorsResolver } from '@mantine/core';
-import type { MantineColorsTuple, MantineThemeOverride, VariantColorsResolver } from '@mantine/core';
+import {
+  Button,
+  createTheme,
+  defaultVariantColorsResolver,
+  Divider,
+  parseThemeColor,
+  Popover,
+  Text,
+} from '@mantine/core';
+import type {
+  MantineColorsTuple,
+  MantineThemeOverride,
+  VariantColorsResolver,
+} from '@mantine/core';
 
 // Mantine shade tuples — single source of truth for the palette.
 // Each palette has a "brand" anchor shade; other shades are picked relative to it.
@@ -74,6 +86,7 @@ export const errorShades: MantineColorsTuple = [
   '#1F0905',
 ];
 
+// Force dark text on filled primary-amber buttons (default would be white).
 const variantColorResolver: VariantColorsResolver = (input) => {
   const defaultResolvedColors = defaultVariantColorsResolver(input);
   const parsedColor = parseThemeColor({
@@ -81,8 +94,11 @@ const variantColorResolver: VariantColorsResolver = (input) => {
     theme: input.theme,
   });
 
-  // Override text color for primary-amber filled variant
-  if (parsedColor.isThemeColor && parsedColor.color === 'primary-amber' && input.variant === 'filled') {
+  if (
+    parsedColor.isThemeColor &&
+    parsedColor.color === 'primary-amber' &&
+    input.variant === 'filled'
+  ) {
     return {
       ...defaultResolvedColors,
       color: primaryAmberShades[9],
@@ -93,25 +109,27 @@ const variantColorResolver: VariantColorsResolver = (input) => {
   return defaultResolvedColors;
 };
 
-// custom color palette for the application
+// Brand-palette tokens reference the shade tuples above so the tuples remain
+// the single source of truth. light/dark mode tokens are designed neutrals
+// kept as literals because they don't always map cleanly to a single shade.
 export const appColors = {
   // primary · amber sunlight (warmth, the destination)
-  primary: '#E8973C',
-  primaryLight: '#F0BE5F',
-  primaryDark: '#C97A24',
-  primaryHover: '#D9871F',
+  primary: primaryAmberShades[AMBER_BRAND_SHADE],
+  primaryLight: primaryAmberShades[AMBER_BRAND_SHADE - 1],
+  primaryDark: primaryAmberShades[AMBER_BRAND_SHADE + 1],
+  primaryHover: '#D9871F', // off-palette: between [4] and [5]
 
   // secondary · ocean blue (the action, the journey)
-  secondary: '#1F4E66',
-  secondaryLight: '#487D99',
-  secondaryDark: '#163C50',
-  secondaryHover: '#2E627F',
+  secondary: secondaryOceanShades[OCEAN_BRAND_SHADE],
+  secondaryLight: secondaryOceanShades[OCEAN_BRAND_SHADE - 2],
+  secondaryDark: secondaryOceanShades[OCEAN_BRAND_SHADE + 1],
+  secondaryHover: secondaryOceanShades[OCEAN_BRAND_SHADE - 1],
 
   // tertiary · warm sand (the room, the canvas)
-  tertiary: '#C8B387',
-  tertiaryLight: '#ECE0C2',
-  tertiaryDark: '#A8946B',
-  tertiaryHover: '#B8A077',
+  tertiary: tertiarySandShades[SAND_BRAND_SHADE],
+  tertiaryLight: tertiarySandShades[SAND_BRAND_SHADE - 2],
+  tertiaryDark: tertiarySandShades[SAND_BRAND_SHADE + 1],
+  tertiaryHover: '#B8A077', // off-palette: between [4] and [5]
 
   light: {
     background: '#FBF7EF', // warm cream, not stark white
@@ -135,10 +153,10 @@ export const appColors = {
     textShadow: '0 0 8px rgba(0,0,0,0.8), 0 0 4px rgba(0,0,0,0.6)',
   },
 
-  success: '#5C8C3F', // olive — fits the warm palette
-  warning: '#E8973C', // reuse primary amber
-  error: '#C0533C', // terracotta, not burgundy
-  info: '#487D99', // ocean light
+  success: successShades[5],
+  warning: primaryAmberShades[AMBER_BRAND_SHADE], // amber doubles as warning
+  error: errorShades[ERROR_BRAND_SHADE],
+  info: secondaryOceanShades[OCEAN_BRAND_SHADE - 2],
 } as const;
 
 // Define the theme with proper Mantine color arrays
@@ -176,15 +194,6 @@ export const theme: MantineThemeOverride = createTheme({
       defaultProps: {
         color: 'primary-amber',
         variant: 'filled',
-      },
-      styles: {
-        root: {
-          '&[data-variant="filled"]': {
-            // dark warm brown for legible contrast on amber-filled buttons.
-            // Same in both modes since the button fill (amber) doesn't swap.
-            color: tertiarySandShades[9],
-          },
-        },
       },
     }),
 

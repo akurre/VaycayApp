@@ -19,9 +19,11 @@ export const useChartColors = () => {
     return {
       lineColor: theme.colors['primary-amber'][AMBER_BRAND_SHADE],
       maxLineColor: theme.colors.error[ERROR_BRAND_SHADE],
+      // Min line is a subtle reference; axis stays the most readable label.
+      // Each mode uses two distinct sand shades so they don't visually collide.
       minLineColor: isDark
         ? theme.colors['tertiary-sand'][SAND_BRAND_SHADE]
-        : theme.colors['tertiary-sand'][SAND_BRAND_SHADE + 2],
+        : theme.colors['tertiary-sand'][SAND_BRAND_SHADE + 1],
       axisColor: isDark
         ? theme.colors['tertiary-sand'][SAND_BRAND_SHADE + 1]
         : theme.colors['tertiary-sand'][SAND_BRAND_SHADE + 2],

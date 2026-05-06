@@ -261,15 +261,28 @@ export const monthlyMarks = [
 // GRAPH COLOR CONSTANTS
 // ============================================================================
 
+// Each city plots avg/max/min temp lines on the same chart. We pick three
+// shades from the brand palette: lighter = max temp, deeper = min temp.
+// City 2 swings wider because the ocean palette's mid shades read as similar
+// dark blues; the extra spread keeps min/avg/max distinguishable at a glance.
+const CITY1_MAX_OFFSET = -1;
+const CITY1_MIN_OFFSET = 2;
+const CITY2_MAX_OFFSET = -3;
+const CITY2_MIN_OFFSET = 2;
+
 // City 1 (main / warmest destination) — Amber family
-export const CITY1_PRIMARY_COLOR = primaryAmberShades[AMBER_BRAND_SHADE]; // avg
-export const CITY1_MAX_COLOR = primaryAmberShades[AMBER_BRAND_SHADE - 1]; // max (lighter)
-export const CITY1_MIN_COLOR = primaryAmberShades[AMBER_BRAND_SHADE + 2]; // min (deeper)
+export const CITY1_PRIMARY_COLOR = primaryAmberShades[AMBER_BRAND_SHADE];
+export const CITY1_MAX_COLOR =
+  primaryAmberShades[AMBER_BRAND_SHADE + CITY1_MAX_OFFSET];
+export const CITY1_MIN_COLOR =
+  primaryAmberShades[AMBER_BRAND_SHADE + CITY1_MIN_OFFSET];
 
 // City 2 (comparison / home) — Ocean family, recedes visually
-export const CITY2_PRIMARY_COLOR = secondaryOceanShades[OCEAN_BRAND_SHADE]; // avg
-export const CITY2_MAX_COLOR = secondaryOceanShades[OCEAN_BRAND_SHADE - 3]; // max (lighter)
-export const CITY2_MIN_COLOR = secondaryOceanShades[OCEAN_BRAND_SHADE + 2]; // min (deeper)
+export const CITY2_PRIMARY_COLOR = secondaryOceanShades[OCEAN_BRAND_SHADE];
+export const CITY2_MAX_COLOR =
+  secondaryOceanShades[OCEAN_BRAND_SHADE + CITY2_MAX_OFFSET];
+export const CITY2_MIN_COLOR =
+  secondaryOceanShades[OCEAN_BRAND_SHADE + CITY2_MIN_OFFSET];
 
 // ============================================================================
 // WORLD MAP BIG LOADER CONSTANTS
