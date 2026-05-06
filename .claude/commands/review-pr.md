@@ -2,7 +2,7 @@
 description: Review current changes for code quality issues
 ---
 
-Review the current git changes (or specified files) for common code quality issues. Check against the standards in `.claudecode/rules.md`.
+Review the current git changes (or specified files) for common code quality issues. Check against the standards in `CLAUDE.md`.
 
 ## Analysis Checklist
 

@@ -1,10 +1,14 @@
 import { useMantineColorScheme, useMantineTheme } from '@mantine/core';
 import { useMemo } from 'react';
+import {
+  AMBER_BRAND_SHADE,
+  appColors,
+  ERROR_BRAND_SHADE,
+  SAND_BRAND_SHADE,
+} from '@/theme';
 
-/**
- * Hook that provides theme-aware colors for charts
- * Colors automatically adapt to light/dark mode
- */
+// Branded accents come from indexed palette shades (same in both modes);
+// surface neutrals come from appColors because they swap by mode, not shade.
 export const useChartColors = () => {
   const { colorScheme } = useMantineColorScheme();
   const theme = useMantineTheme();
@@ -13,20 +17,20 @@ export const useChartColors = () => {
     const isDark = colorScheme === 'dark';
 
     return {
-      // Line colors
-      lineColor: theme.colors['secondary-teal'][5], // stays consistent
-      maxLineColor: theme.colors['primary-red'][5], // stays consistent
-      minLineColor: isDark ? '#6b7280' : '#9ca3af', // lighter in light mode
+      lineColor: theme.colors['primary-amber'][AMBER_BRAND_SHADE],
+      maxLineColor: theme.colors.error[ERROR_BRAND_SHADE],
+      // Min line is a subtle reference; axis stays the most readable label.
+      // Each mode uses two distinct sand shades so they don't visually collide.
+      minLineColor: isDark
+        ? theme.colors['tertiary-sand'][SAND_BRAND_SHADE]
+        : theme.colors['tertiary-sand'][SAND_BRAND_SHADE + 1],
+      axisColor: isDark
+        ? theme.colors['tertiary-sand'][SAND_BRAND_SHADE + 1]
+        : theme.colors['tertiary-sand'][SAND_BRAND_SHADE + 2],
 
-      // Grid and axis colors
-      gridColor: isDark ? '#374151' : '#e5e7eb', // darker in dark mode, light in light mode
-      axisColor: isDark ? '#6b7280' : '#4b5563', // medium gray, darker in light mode for contrast
-
-      // Text colors for labels
-      textColor: isDark ? '#d1d5db' : '#374151', // light text in dark mode, dark text in light mode
-
-      // Background color for tooltips and other overlays
-      backgroundColor: isDark ? '#1f2937' : '#ffffff', // dark gray in dark mode, white in light mode
+      gridColor: isDark ? appColors.dark.border : appColors.light.border,
+      textColor: isDark ? appColors.dark.text : appColors.light.text,
+      backgroundColor: isDark ? appColors.dark.paper : appColors.light.paper,
     };
   }, [colorScheme, theme]);
 };

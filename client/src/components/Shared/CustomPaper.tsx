@@ -14,9 +14,7 @@ const CustomPaper = ({ children, className, p = 'sm' }: CustomPaperProps) => {
     <Paper
       style={{
         backgroundColor:
-          colorScheme === 'dark'
-            ? appColors.dark.paper
-            : appColors.light.surface,
+          colorScheme === 'dark' ? appColors.dark.paper : appColors.light.paper,
       }}
       shadow="sm"
       p={p}

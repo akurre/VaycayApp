@@ -49,4 +49,4 @@ Before implementing a new feature or making significant changes, consider:
 
 ---
 
-After considering these points, proceed with implementation following the standards in `.claudecode/rules.md`.
+After considering these points, proceed with implementation following the standards in `CLAUDE.md`.

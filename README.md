@@ -2,9 +2,9 @@
 
 Hey, I'm Ashlen, welcome to my little side project (currently being developed).
 
-**Vaycay** is a weather data API platform providing historical average weather data for locations worldwide. The system uses a modern TypeScript GraphQL API with a React frontend, enabling users to query weather statistics for specific dates or cities to help with vacation planning based on historical weather patterns.
+**Vaycay** is a weather data API platform providing historical average weather data for locations worldwide. The system uses a TypeScript GraphQL API with a React frontend, enabling users to query weather statistics for specific dates or cities to help with vacation planning based on historical weather patterns.
 
-**Important to note:** I built this originally with Python FastAPI in the very (very) start of my programming career, where I was moreso in the business of just playing with dataframes in pandas. I had not revisited it really until now (late Oct 2025), but I want to play with GraphQL / React in my own way. That being said, it's very primitive! Will be building it out as time goes on.
+**Important to note:** I built this originally with Python FastAPI in the very start of my programming career, where I was moreso in the business of just playing with dataframes in pandas. I had not revisited it really until now (late Oct 2025), but I wanted to play with React, as well as learn GraphQL as I needed it for my job at the time. That being said, it's very primitive! Will be building it out as time goes on.
 
 Why, you might ask, did I use GraphQL? Honestly, I just wanted to practice with a different framework. I am still fresh at GraphQL and need it for a client, so this is my way of getting in touch with it. 
 
@@ -66,8 +66,15 @@ The application uses a PostgreSQL database with a single main table (`weather_da
 Before setting up the project, ensure you have the following installed:
 
 - **Node.js 20+**: Required for running the GraphQL API and React frontend
-- **npm**: Node package manager (comes with Node.js)
-- **Docker & Docker Compose**: For running PostgreSQL database and containerized services
+  ```bash
+  brew install node@20
+  ```
+- **npm**: Comes bundled with Node.js — no separate install needed
+- **Docker Desktop**: Includes Docker and Docker Compose, used to run the PostgreSQL database
+  ```bash
+  brew install --cask docker
+  ```
+  After installing, open Docker Desktop and let it finish its first-run setup before proceeding.
 
 ## 🚀 Quick Start (Recommended)
 
@@ -80,9 +87,25 @@ make install
 # 2. Setup database (migrations + data import)
 make db-setup
 
-# 3. Start all services
+# 3. Create server/.env (see "Environment setup" below)
+
+# 4. Start all services
 make dev
 ```
+
+### Environment setup
+
+The server reads `DATABASE_URL` from [server/.env](server/.env) (gitignored, so it doesn't ship with the repo). On a fresh clone, create it:
+
+```bash
+cat > server/.env <<'EOF'
+DATABASE_URL=postgresql://postgres:iwantsun@localhost:5433/postgres_v2
+DATABASE_SCHEMA=vaycay_v2
+PORT=4000
+EOF
+```
+
+Port `5433` matches the `db-v2` service in [docker-compose.yml](docker-compose.yml). Without this file, `make dev` will fail with `Environment variable not found: DATABASE_URL`.
 
 That's it! The application will be running at:
 - **React Frontend**: http://localhost:3000
@@ -244,6 +267,10 @@ If you can't connect to the database:
 1. Ensure Docker is running: `docker ps`
 2. Check if PostgreSQL container is up: `docker-compose ps`
 3. Restart the database: `docker-compose down && docker-compose up db`
+
+### `Environment variable not found: DATABASE_URL`
+
+Prisma can't find the connection string. The server reads it from `server/.env`, which is gitignored and won't exist on a fresh clone. Create it as shown in [Environment setup](#environment-setup).
 
 ### GraphQL Server Issues
 

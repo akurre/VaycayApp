@@ -1,4 +1,9 @@
-import { ActionIcon, Badge, Tooltip } from '@mantine/core';
+import {
+  ActionIcon,
+  Badge,
+  Tooltip,
+  useMantineColorScheme,
+} from '@mantine/core';
 import { useMemo, useState } from 'react';
 import { IconX } from '@tabler/icons-react';
 import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
@@ -16,6 +21,8 @@ import { extractMonthDay } from '@/utils/dateFormatting/extractMonthDay';
 import { isWeatherData } from '@/utils/typeGuards';
 import ComparisonCitySelector from './ComparisonCitySelector';
 import type { SearchCitiesResult } from '@/types/userLocationType';
+import { appColors } from '@/theme';
+import CityBadge from './graphs/CityBadge';
 
 const CityPopup = ({
   city,
@@ -24,6 +31,8 @@ const CityPopup = ({
   selectedDate,
   dataType,
 }: CityPopupProps) => {
+  const { colorScheme } = useMantineColorScheme();
+
   // State for comparison city
   const [comparisonCity, setComparisonCity] =
     useState<SearchCitiesResult | null>(null);
@@ -184,7 +193,10 @@ const CityPopup = ({
       style={{
         height: '33.333vh',
         pointerEvents: 'auto',
-        backgroundColor: 'var(--mantine-color-body)',
+        backgroundColor:
+          colorScheme === 'dark'
+            ? appColors.dark.surface
+            : appColors.light.surface,
         borderTop: '1px solid var(--mantine-color-default-border)',
       }}
     >
@@ -201,7 +213,7 @@ const CityPopup = ({
           <div className="flex gap-6">
             <div className="flex items-center">
               <Tooltip label={cityAndCountry}>
-                <Badge size="xl">{cityAndCountry}</Badge>
+                <CityBadge isLarge cityName={cityAndCountry}></CityBadge>
               </Tooltip>
             </div>
             <div className="flex-1" />

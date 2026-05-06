@@ -134,7 +134,6 @@ const SunshineGraph = ({
       });
     }
 
-    // Add actual sunshine line - City 1 (burgundy) - only if base city has data
     if (sunshineData) {
       lineConfigs.push({
         dataKey: 'hours',
@@ -146,7 +145,6 @@ const SunshineGraph = ({
       });
     }
 
-    // Add comparison city sunshine line if data exists - City 2 (purple)
     if (comparisonSunshineData) {
       lineConfigs.push({
         dataKey: 'comparisonHours',

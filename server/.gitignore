@@ -15,9 +15,6 @@ build/
 schema.graphql
 nexus-typegen.ts
 
-# Prisma
-prisma/migrations/
-
 # IDE
 .vscode/
 .idea/
@@ -44,3 +41,6 @@ coverage/
 .cache/
 temp/
 tmp/
+
+# Diagnostic output from db-setup / import scripts
+import-diagnostic-*.json

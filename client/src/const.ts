@@ -2,7 +2,13 @@
 // MAP CONSTANTS
 // ============================================================================
 
-import type { SunshineData } from './types/sunshineDataType';
+import {
+  AMBER_BRAND_SHADE,
+  OCEAN_BRAND_SHADE,
+  primaryAmberShades,
+  secondaryOceanShades,
+} from '@/theme';
+import type { SunshineData } from '@/types/sunshineDataType';
 
 export const KM_TO_MILES = 0.621371;
 
@@ -208,13 +214,6 @@ export const MONTH_FIELDS: Record<number, keyof SunshineData> = {
 // custom date slider thumb dimensions for positioning calculations
 export const SLIDER_THUMB_WIDTH = 32; // 8 * 4 (w-8 in tailwind)
 
-// sunshine graph chart colors
-export const SUNSHINE_CHART_LINE_COLOR = '#20A39E'; // secondary teal
-export const SUNSHINE_CHART_GRID_COLOR = '#e5e7eb'; // light gray
-export const SUNSHINE_CHART_AXIS_COLOR = '#9ca3af'; // medium gray
-export const SUNSHINE_CHART_MAX_LINE_COLOR = '#E63E55'; // theme red for theoretical max
-export const SUNSHINE_CHART_MIN_LINE_COLOR = '#6b7280'; // gray for baseline
-
 // days in each month (using 28.25 for February to account for leap years)
 export const DAYS_IN_MONTH = [
   31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31,
@@ -262,15 +261,27 @@ export const monthlyMarks = [
 // GRAPH COLOR CONSTANTS
 // ============================================================================
 
-// City 1 (main city) colors - Blue shades
-export const CITY1_PRIMARY_COLOR = '#BB4A52'; // medium burgundy
-export const CITY1_MAX_COLOR = '#eb3845'; // light burgundy
-export const CITY1_MIN_COLOR = '#9F2042'; // dark burgundy
+// Each city plots avg/max/min temp lines on the same chart. We pick three
+// shades from the brand palette: lighter = max temp, deeper = min temp.
+// City 2 swings wider because the ocean palette's mid shades read as similar
+// dark blues; the extra spread keeps min/avg/max distinguishable at a glance.
+const CITY1_MAX_OFFSET = -1;
+const CITY1_MIN_OFFSET = 2;
+const CITY2_MAX_OFFSET = -3;
+const CITY2_MIN_OFFSET = 3;
 
-// City 2 (comparison city) colors - Purple shades
-export const CITY2_PRIMARY_COLOR = '#b47ad6'; // medium purple
-export const CITY2_MAX_COLOR = '#C9B8DC'; // light purple
-export const CITY2_MIN_COLOR = '#9c74c2'; // dark purple
+// City 1 (main / warmest destination) — Amber family
+export const CITY1_PRIMARY_COLOR = primaryAmberShades[AMBER_BRAND_SHADE];
+export const CITY1_MAX_COLOR =
+  primaryAmberShades[AMBER_BRAND_SHADE + CITY1_MAX_OFFSET];
+export const CITY1_MIN_COLOR =
+  primaryAmberShades[AMBER_BRAND_SHADE + CITY1_MIN_OFFSET];
+
+// City 2 (comparison / home) — Ocean family, recedes visually
+export const CITY2_PRIMARY_COLOR = secondaryOceanShades[3]; // #6E9DB6
+export const CITY2_MAX_COLOR = secondaryOceanShades[2]; // #9DBED1
+export const CITY2_MIN_COLOR = secondaryOceanShades[4]; // #487D99
+export const CITY2_BADGE_BACKGROUND = `${CITY2_PRIMARY_COLOR}26`; // 15% opacity (0x26 = 38 ≈ 0.15 * 255)
 
 // ============================================================================
 // WORLD MAP BIG LOADER CONSTANTS

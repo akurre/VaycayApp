@@ -176,7 +176,6 @@ const RainfallGraph = ({
             iconType="rect"
           />
 
-          {/* Bars - City 1 (blue), City 2 (purple) */}
           {hasMainData && (
             <Bar
               dataKey="totalPrecip"
