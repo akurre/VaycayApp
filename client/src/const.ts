@@ -208,12 +208,12 @@ export const MONTH_FIELDS: Record<number, keyof SunshineData> = {
 // custom date slider thumb dimensions for positioning calculations
 export const SLIDER_THUMB_WIDTH = 32; // 8 * 4 (w-8 in tailwind)
 
-// sunshine graph chart colors
-export const SUNSHINE_CHART_LINE_COLOR = '#20A39E'; // secondary teal
-export const SUNSHINE_CHART_GRID_COLOR = '#e5e7eb'; // light gray
-export const SUNSHINE_CHART_AXIS_COLOR = '#9ca3af'; // medium gray
-export const SUNSHINE_CHART_MAX_LINE_COLOR = '#E63E55'; // theme red for theoretical max
-export const SUNSHINE_CHART_MIN_LINE_COLOR = '#6b7280'; // gray for baseline
+// Sunshine chart accents
+export const SUNSHINE_CHART_LINE_COLOR     = '#E8973C'; // amber, was teal
+export const SUNSHINE_CHART_GRID_COLOR     = '#EAD6B3'; // warm grid
+export const SUNSHINE_CHART_AXIS_COLOR     = '#A8946B'; // warm gray axis
+export const SUNSHINE_CHART_MAX_LINE_COLOR = '#C0533C'; // terracotta for theoretical max
+export const SUNSHINE_CHART_MIN_LINE_COLOR = '#857250'; // sand-7 for baseline
 
 // days in each month (using 28.25 for February to account for leap years)
 export const DAYS_IN_MONTH = [
@@ -262,15 +262,15 @@ export const monthlyMarks = [
 // GRAPH COLOR CONSTANTS
 // ============================================================================
 
-// City 1 (main city) colors - Blue shades
-export const CITY1_PRIMARY_COLOR = '#BB4A52'; // medium burgundy
-export const CITY1_MAX_COLOR = '#eb3845'; // light burgundy
-export const CITY1_MIN_COLOR = '#9F2042'; // dark burgundy
+// City 1 (main / warmest destination) — Amber family
+export const CITY1_PRIMARY_COLOR = '#E8973C'; // amber — avg
+export const CITY1_MAX_COLOR     = '#F0BE5F'; // light amber — max
+export const CITY1_MIN_COLOR     = '#9E5C18'; // deep amber — min
 
-// City 2 (comparison city) colors - Purple shades
-export const CITY2_PRIMARY_COLOR = '#b47ad6'; // medium purple
-export const CITY2_MAX_COLOR = '#C9B8DC'; // light purple
-export const CITY2_MIN_COLOR = '#9c74c2'; // dark purple
+// City 2 (comparison / home) — Ocean family, recedes visually
+export const CITY2_PRIMARY_COLOR = '#1F4E66'; // ocean — avg
+export const CITY2_MAX_COLOR     = '#6E9DB6'; // light ocean — max
+export const CITY2_MIN_COLOR     = '#0E2B3A'; // deep ocean — min
 
 // ============================================================================
 // WORLD MAP BIG LOADER CONSTANTS
