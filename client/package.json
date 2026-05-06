@@ -13,10 +13,10 @@
     "type-check": "tsc --noEmit",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\"",
-    "test": "NODE_OPTIONS='--no-experimental-webstorage' vitest",
-    "test:ui": "NODE_OPTIONS='--no-experimental-webstorage' vitest --ui",
-    "test:coverage": "NODE_OPTIONS='--no-experimental-webstorage' vitest --coverage",
-    "test:run": "NODE_OPTIONS='--no-experimental-webstorage' vitest run"
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "test:run": "vitest run"
   },
   "dependencies": {
     "@apollo/client": "^4.0.8",
