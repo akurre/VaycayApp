@@ -154,7 +154,8 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
             />
           ))}
 
-          {/* Cursor-only tooltip: vertical hairline at the active X, no popup */}
+          {/* Hover affordance: vertical hairline + compact value chip near
+              cursor. Reference lines (dashed strokes) are filtered out. */}
           <Tooltip
             cursor={{
               stroke: 'var(--mantine-color-dimmed)',
@@ -162,8 +163,54 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
               strokeOpacity: 0.4,
               strokeDasharray: '3 3',
             }}
-            content={() => null}
-            wrapperStyle={{ display: 'none' }}
+            wrapperStyle={{ outline: 'none' }}
+            content={({ active, payload, label }) => {
+              if (!active || !payload || payload.length === 0) return null;
+              const visible = payload.filter((p) => {
+                if (p.value === null || p.value === undefined) return false;
+                const cfg = lines.find((l) => l.dataKey === p.dataKey);
+                return cfg ? !cfg.strokeDasharray : true;
+              });
+              if (visible.length === 0) return null;
+              return (
+                <div className="rounded-md px-2 py-1 text-[11px] tabular-nums bg-[var(--mantine-color-default-hover)] border border-[var(--mantine-color-default-border)] shadow-md">
+                  {label !== undefined && (
+                    <div className="text-[9px] uppercase tracking-[0.08em] text-[var(--mantine-color-dimmed)] mb-0.5">
+                      {label}
+                    </div>
+                  )}
+                  {visible.map((p) => {
+                    const rounded =
+                      typeof p.value === 'number'
+                        ? Number(p.value.toFixed(1))
+                        : p.value;
+                    const formatted =
+                      typeof rounded === 'number' && yTickFormatter
+                        ? yTickFormatter(rounded)
+                        : typeof rounded === 'number'
+                          ? rounded.toFixed(1)
+                          : String(rounded);
+                    return (
+                      <div
+                        key={String(p.dataKey)}
+                        className="flex items-center gap-1.5 leading-tight"
+                      >
+                        <span
+                          className="w-1.5 h-1.5 rounded-full shrink-0"
+                          style={{ background: p.color }}
+                        />
+                        <span
+                          style={{ color: p.color }}
+                          className="font-semibold"
+                        >
+                          {formatted}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            }}
           />
 
           {/* Reference lines (today, selected month, etc.) */}
@@ -201,6 +248,7 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
                 name={lineConfig.name}
                 stroke={lineConfig.stroke}
                 strokeWidth={lineConfig.strokeWidth ?? 2}
+                strokeOpacity={lineConfig.strokeOpacity ?? 1}
                 strokeDasharray={lineConfig.strokeDasharray}
                 dot={lineConfig.dot ?? false}
                 activeDot={activeDot}

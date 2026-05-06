@@ -49,7 +49,7 @@ const CityNamesHeader = ({
       {comparisonCity && (
         <Row
           color={CITY2_PRIMARY_COLOR}
-          name={comparisonCity.name}
+          name={[comparisonCity.name, comparisonCity.state, comparisonCity.country].join(', ')}
           lat={comparisonCity.lat}
         />
       )}

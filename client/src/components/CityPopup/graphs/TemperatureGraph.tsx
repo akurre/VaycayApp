@@ -52,17 +52,14 @@ const TemperatureGraph = ({
     });
   }, [weeklyWeatherData.weeklyData, comparisonWeeklyWeatherData]);
 
-  // Areas: one envelope per city (min as baseline, max as top edge).
+  // Areas: subtle filled envelope per city under the max/min strokes.
   const areas: AreaConfig[] = useMemo(() => {
     const list: AreaConfig[] = [
       {
         dataKey: 'maxTemp',
         baseDataKey: 'minTemp',
         fill: CITY1_PRIMARY_COLOR,
-        fillOpacity: 0.18,
-        stroke: CITY1_PRIMARY_COLOR,
-        strokeWidth: 1,
-        strokeOpacity: 0.5,
+        fillOpacity: 0.12,
       },
     ];
     if (comparisonWeeklyWeatherData) {
@@ -70,21 +67,38 @@ const TemperatureGraph = ({
         dataKey: 'compMaxTemp',
         baseDataKey: 'compMinTemp',
         fill: CITY2_PRIMARY_COLOR,
-        fillOpacity: 0.18,
-        stroke: CITY2_PRIMARY_COLOR,
-        strokeWidth: 1,
-        strokeOpacity: 0.5,
+        fillOpacity: 0.12,
       });
     }
     return list;
   }, [comparisonWeeklyWeatherData]);
 
-  // Lines: only the average per city, drawn heavier than the envelope edges.
+  // Three lines per city — max and min as thin envelope strokes, avg as the
+  // heavier focal line. All three populate the hover popover.
   const lines: LineConfig[] = useMemo(() => {
+    const cityName = weeklyWeatherData.city;
     const list: LineConfig[] = [
       {
+        dataKey: 'maxTemp',
+        name: `${cityName} max`,
+        stroke: CITY1_PRIMARY_COLOR,
+        strokeWidth: 1,
+        strokeOpacity: 0.55,
+        dot: false,
+        connectNulls: true,
+      },
+      {
+        dataKey: 'minTemp',
+        name: `${cityName} min`,
+        stroke: CITY1_PRIMARY_COLOR,
+        strokeWidth: 1,
+        strokeOpacity: 0.55,
+        dot: false,
+        connectNulls: true,
+      },
+      {
         dataKey: 'avgTemp',
-        name: weeklyWeatherData.city,
+        name: cityName,
         stroke: CITY1_PRIMARY_COLOR,
         strokeWidth: 2,
         dot: false,
@@ -92,14 +106,35 @@ const TemperatureGraph = ({
       },
     ];
     if (comparisonWeeklyWeatherData) {
-      list.push({
-        dataKey: 'compAvgTemp',
-        name: comparisonWeeklyWeatherData.city,
-        stroke: CITY2_PRIMARY_COLOR,
-        strokeWidth: 2,
-        dot: false,
-        connectNulls: true,
-      });
+      const compName = comparisonWeeklyWeatherData.city;
+      list.push(
+        {
+          dataKey: 'compMaxTemp',
+          name: `${compName} max`,
+          stroke: CITY2_PRIMARY_COLOR,
+          strokeWidth: 1,
+          strokeOpacity: 0.55,
+          dot: false,
+          connectNulls: true,
+        },
+        {
+          dataKey: 'compMinTemp',
+          name: `${compName} min`,
+          stroke: CITY2_PRIMARY_COLOR,
+          strokeWidth: 1,
+          strokeOpacity: 0.55,
+          dot: false,
+          connectNulls: true,
+        },
+        {
+          dataKey: 'compAvgTemp',
+          name: compName,
+          stroke: CITY2_PRIMARY_COLOR,
+          strokeWidth: 2,
+          dot: false,
+          connectNulls: true,
+        }
+      );
     }
     return list;
   }, [weeklyWeatherData.city, comparisonWeeklyWeatherData]);

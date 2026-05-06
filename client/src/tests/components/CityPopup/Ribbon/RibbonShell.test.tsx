@@ -94,7 +94,7 @@ describe('RibbonShell', () => {
         todayC2={17.6}
       />
     );
-    expect(screen.getByText('Birmingham')).toBeInTheDocument();
+    expect(screen.getByText(/Birmingham/)).toBeInTheDocument();
     expect(screen.getByText('17.6°C')).toBeInTheDocument();
   });
 });

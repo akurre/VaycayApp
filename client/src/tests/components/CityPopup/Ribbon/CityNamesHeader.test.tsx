@@ -40,7 +40,7 @@ describe('CityNamesHeader', () => {
     );
 
     expect(screen.getByText('Berlin')).toBeInTheDocument();
-    expect(screen.getByText('Birmingham')).toBeInTheDocument();
+    expect(screen.getByText(/Birmingham/)).toBeInTheDocument();
   });
 
   it('renders the lat-suffix zone pill for the base city', () => {

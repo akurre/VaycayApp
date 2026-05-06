@@ -78,7 +78,7 @@ const RibbonShell = ({
 
         <MonthLabels />
 
-        <footer className="mt-2 flex items-center justify-between gap-4">
+        <footer className="mt-2 flex items-center justify-between">
           <IconTabs tab={tab} onTab={setTab} />
           {comparisonSlot && <div className="shrink-0">{comparisonSlot}</div>}
         </footer>
