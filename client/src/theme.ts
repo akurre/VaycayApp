@@ -152,12 +152,12 @@ export const theme: MantineThemeOverride = createTheme({
         variant: 'filled',
       },
       styles: {
-      root: {
-        '&[data-variant="filled"]': {
-          color: '#1A1106', // dark brown text on amber for contrast
-        }
-      }
-    }
+        root: {
+          '&[data-variant="filled"]': {
+            color: '#1A1106', // dark brown text on amber for contrast
+          },
+        },
+      },
     }),
 
     Text: Text.extend({
