@@ -27,6 +27,7 @@ export enum ViewMode {
 export enum DataType {
   Temperature = 'temperature',
   Sunshine = 'sunshine',
+  Precip = 'precip',
 }
 
 export enum TemperatureUnit {

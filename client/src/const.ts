@@ -294,6 +294,14 @@ export const monthlyMarks = [
 ] as const;
 
 // ============================================================================
+// CITY POPUP RIBBON CONSTANTS
+// ============================================================================
+
+// Fixed width of the right-side stat-card rail in the CityPopup ribbon. Used
+// in both width and flex-basis calculations, so it lives as a named constant.
+export const RIBBON_STAT_RAIL_WIDTH_PX = 158;
+
+// ============================================================================
 // GRAPH COLOR CONSTANTS
 // ============================================================================
 
