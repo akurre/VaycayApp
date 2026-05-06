@@ -194,7 +194,7 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
               fill={d.fill}
               stroke={d.stroke ?? 'transparent'}
               strokeWidth={d.strokeWidth ?? 1.5}
-              isFront
+              zIndex={1}
             />
           ))}
         </ComposedChart>
