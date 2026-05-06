@@ -158,7 +158,7 @@ const CityPopup = ({
     <div
       className="fixed bottom-4 left-4 right-4 shadow-lg rounded-xl z-50 flex flex-col"
       style={{
-        height: '33.333vh',
+        height: '40vh',
         pointerEvents: 'auto',
         backgroundColor:
           colorScheme === 'dark'
@@ -167,14 +167,6 @@ const CityPopup = ({
         borderTop: '1px solid var(--mantine-color-default-border)',
       }}
     >
-      <div className="absolute top-2 right-12 z-10">
-        <ComparisonCitySelector
-          onCitySelect={setComparisonCity}
-          onCityRemove={() => setComparisonCity(null)}
-          selectedCity={comparisonCity}
-          excludeCity={excludeCity}
-        />
-      </div>
       <div className="absolute top-2 right-2 z-10">
         <ActionIcon onClick={onClose} aria-label="Close">
           <IconX size={24} />
@@ -189,6 +181,14 @@ const CityPopup = ({
         todayC2={todayC2}
         selectedDate={dateToUse}
         stats={stats}
+        comparisonSlot={
+          <ComparisonCitySelector
+            onCitySelect={setComparisonCity}
+            onCityRemove={() => setComparisonCity(null)}
+            selectedCity={comparisonCity}
+            excludeCity={excludeCity}
+          />
+        }
         renderChart={(tab, onHover) => (
           <DataChartTabs
             tab={tab}

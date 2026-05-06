@@ -4,7 +4,7 @@ import type {
   RibbonStat,
 } from '@/types/cityPopupTypes';
 import type { SearchCitiesResult } from '@/types/userLocationType';
-import { DataType } from '@/types/mapTypes';
+import type { DataType } from '@/types/mapTypes';
 import CityNamesHeader from './CityNamesHeader';
 import TodayReadout from './TodayReadout';
 import IconTabs from './IconTabs';
@@ -20,6 +20,7 @@ interface RibbonShellProps {
   todayC2: number | null;
   selectedDate: string;
   stats: ReadonlyArray<RibbonStat>;
+  comparisonSlot?: ReactNode;
   renderChart: (
     tab: DataType,
     onHover: (payload: RibbonHoverPayload | null) => void
@@ -27,9 +28,8 @@ interface RibbonShellProps {
 }
 
 // Right-side padding budget reserved in the header row for the popup's
-// top-right control cluster (comparison-city search + close button).
-// Wide enough for the search input at its default width.
-const HEADER_RIGHT_RESERVE = 320;
+// close button only — the comparison selector is no longer absolute-positioned.
+const HEADER_RIGHT_RESERVE = 40;
 
 const RibbonShell = ({
   baseCityName,
@@ -40,6 +40,7 @@ const RibbonShell = ({
   todayC2,
   selectedDate,
   stats,
+  comparisonSlot,
   renderChart,
 }: RibbonShellProps) => {
   const [tab, setTab] = useState<DataType>(initialTab);
@@ -77,8 +78,9 @@ const RibbonShell = ({
 
         <MonthLabels />
 
-        <footer className="mt-2">
+        <footer className="mt-2 flex items-center justify-between gap-4">
           <IconTabs tab={tab} onTab={setTab} />
+          {comparisonSlot && <div className="shrink-0">{comparisonSlot}</div>}
         </footer>
       </div>
 
