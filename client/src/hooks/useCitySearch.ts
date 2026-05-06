@@ -8,6 +8,7 @@ import type {
 import { LocationSource } from '@/types/userLocationType';
 import { useAppStore } from '@/stores/useAppStore';
 import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
+import { MIN_CITY_SEARCH_LENGTH } from '@/const';
 
 interface UseCitySearchReturn {
   searchCities: (searchTerm: string) => Promise<SearchCitiesResult[]>;
@@ -26,7 +27,7 @@ function useCitySearch(): UseCitySearchReturn {
   // wrap in usecallback to prevent infinite loops in components that use this function in useeffect dependencies
   const searchCities = useCallback(
     async (searchTerm: string): Promise<SearchCitiesResult[]> => {
-      if (!searchTerm || searchTerm.trim().length < 2) {
+      if (!searchTerm || searchTerm.trim().length < MIN_CITY_SEARCH_LENGTH) {
         return [];
       }
 

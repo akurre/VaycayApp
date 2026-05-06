@@ -1,22 +1,26 @@
 import type { FC } from 'react';
-import { IconGripVertical } from '@tabler/icons-react';
 import { SLIDER_THUMB_WIDTH } from '@/const';
+import { appColors } from '@/theme';
+import useGlassTokens from '@/hooks/useGlassTokens';
 
 interface SliderThumbProps {
   position: number;
 }
 
 const SliderThumb: FC<SliderThumbProps> = ({ position }) => {
+  const glass = useGlassTokens();
+
   return (
     <div
-      className="absolute z-20 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full shadow-lg flex items-center justify-center cursor-grab active:cursor-grabbing hover:shadow-xl"
+      className="absolute z-20 top-1/2 -translate-y-1/2 rounded-full cursor-grab active:cursor-grabbing"
       style={{
         left: `calc(${position}% - ${SLIDER_THUMB_WIDTH / 2}px)`,
-        color: 'white',
+        width: SLIDER_THUMB_WIDTH,
+        height: SLIDER_THUMB_WIDTH,
+        background: appColors.primary,
+        boxShadow: `0 0 0 4px ${glass.triggerOpenBg}, 0 2px 6px rgba(0,0,0,0.4)`,
       }}
-    >
-      <IconGripVertical size={20} stroke={1.5} />
-    </div>
+    />
   );
 };
 

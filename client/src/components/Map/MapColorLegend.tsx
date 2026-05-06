@@ -11,6 +11,7 @@ import { IconChevronDown } from '@tabler/icons-react';
 import { TEMP_THRESHOLDS, SUNSHINE_THRESHOLDS } from '@/const';
 import { DataType } from '@/types/mapTypes';
 import { useAppStore } from '@/stores/useAppStore';
+import useGlassTokens from '@/hooks/useGlassTokens';
 import {
   convertTemperature,
   getTemperatureUnitSymbol,
@@ -25,6 +26,7 @@ const MapColorLegend: FC<MapColorLegendProps> = ({ dataType }) => {
   const isSunshine = dataType === DataType.Sunshine;
   const temperatureUnit = useAppStore((state) => state.temperatureUnit);
   const unitSymbol = getTemperatureUnitSymbol(temperatureUnit);
+  const glass = useGlassTokens();
 
   // Convert RGB array to CSS rgb() string
   const rgbToString = (
@@ -60,48 +62,71 @@ const MapColorLegend: FC<MapColorLegendProps> = ({ dataType }) => {
     }
   };
 
-  // Select representative thresholds to avoid overcrowding
-  // Show every other threshold for a cleaner look
   const thresholds = isSunshine ? SUNSHINE_THRESHOLDS : TEMP_THRESHOLDS;
-  const displayedIndices = thresholds
-    .map((_, index) => index)
-    .filter((index) => index % 2 === 0);
+  const displayedIndices = thresholds.map((_, index) => index);
 
   return (
-    <div>
-      <div className="flex gap-4 pb-2">
-        <UnstyledButton
-          onClick={() => setOpened((o) => !o)}
-          className="flex items-center gap-1"
+    <div
+      className="rounded-xl px-3.5 py-3 min-w-[170px]"
+      style={{
+        background: glass.bg,
+        backdropFilter: glass.blur,
+        WebkitBackdropFilter: glass.blur,
+        border: `1px solid ${glass.border}`,
+        boxShadow: glass.shadow,
+        color: glass.text,
+      }}
+    >
+      <UnstyledButton
+        onClick={() => setOpened((o) => !o)}
+        className="flex items-center gap-1"
+        style={{ color: 'currentColor' }}
+      >
+        <Text
+          size="xs"
+          fw={500}
+          tt="uppercase"
+          ff="monospace"
+          style={{ color: 'currentColor', letterSpacing: '0.05em' }}
         >
-          <Text size="xs" className="font-mono">
-            Legend
-          </Text>
-          <div
-            style={{
-              transition: 'transform 0.2s',
-              transform: opened ? 'rotate(180deg)' : 'rotate(0deg)',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <IconChevronDown size={12} style={{ opacity: 0.6 }} />
-          </div>
-        </UnstyledButton>
-      </div>
+          Legend
+        </Text>
+        <div
+          className="flex items-center"
+          style={{
+            transition: 'transform 0.2s',
+            transform: opened ? 'rotate(180deg)' : 'rotate(0deg)',
+          }}
+        >
+          <IconChevronDown
+            size={12}
+            color="currentColor"
+            style={{ opacity: 0.6 }}
+          />
+        </div>
+      </UnstyledButton>
       <Collapse in={opened}>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 pt-2">
           {displayedIndices.map((index) => {
             const threshold = thresholds[index];
+            const keyValue =
+              'temp' in threshold ? threshold.temp : threshold.hours;
 
             return (
-              <Group key={index} gap="xs" wrap="nowrap">
+              <Group key={keyValue} gap="xs" wrap="nowrap">
                 <ColorSwatch
                   color={rgbToString(threshold.color)}
                   size={16}
                   style={{ minWidth: 16 }}
                 />
-                <Text size="xs" style={{ opacity: 0.6, whiteSpace: 'nowrap' }}>
+                <Text
+                  size="xs"
+                  style={{
+                    color: 'currentColor',
+                    opacity: 0.6,
+                    whiteSpace: 'nowrap',
+                  }}
+                >
                   {formatLabel(index)}
                 </Text>
               </Group>

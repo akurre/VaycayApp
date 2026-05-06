@@ -5,17 +5,12 @@ import { useDebouncedValue } from '@mantine/hooks';
 import useWeatherByDateAndBounds from '../api/dates/useWeatherByDateAndBounds';
 import useSunshineByMonthAndBounds from '../api/dates/useSunshineByMonthAndBounds';
 import WorldMap from '../components/Map/WorldMap';
-import MapViewToggle from '../components/Map/MapViewToggle';
-import MapThemeToggle from '../components/Map/MapThemeToggle';
-import MapDataToggle from '../components/Map/MapDataToggle';
-import TemperatureUnitToggle from '../components/Map/TemperatureUnitToggle';
-import HomeLocationSelector from '../components/Navigation/HomeLocationSelector';
 import FeedbackButton from '../components/Navigation/FeedbackButton';
+import TopCommandBar from '../components/Navigation/TopCommandBar';
 import { getTodayAsMMDD } from '@/utils/dateFormatting/getTodayAsMMDD';
 import { useWeatherStore } from '../stores/useWeatherStore';
 import { useSunshineStore } from '../stores/useSunshineStore';
 import { useAppStore } from '../stores/useAppStore';
-import DateSliderWrapper from '@/components/Navigation/DateSliderWrapper';
 import { DataType, ViewMode } from '@/types/mapTypes';
 import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
 import { INITIAL_VIEW_STATE, ZOOM_THRESHOLD } from '@/const';
@@ -161,34 +156,24 @@ const MapPage: FC = () => {
 
   return (
     <div className="relative w-full h-screen">
-      {/* navigation panel */}
-      <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
-        <div className="flex gap-2">
-          <HomeLocationSelector />
-          <FeedbackButton />
-        </div>
+      <div className="absolute top-4 left-4 z-20">
         <MapColorLegend dataType={dataType} />
       </div>
-      <div className="absolute top-4 right-4 z-20 flex gap-2">
-        <MapViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
-        <MapDataToggle dataType={dataType} onDataTypeChange={setDataType} />
-        <TemperatureUnitToggle
-          temperatureUnit={temperatureUnit}
-          onTemperatureUnitChange={setTemperatureUnit}
-        />
-      </div>
-      <div className="absolute bottom-4 left-4 z-10 flex gap-2">
-        <MapThemeToggle />
-      </div>
-      <div
-        className="absolute top-12 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30"
-        style={{ width: 'calc(100% - 16rem)', maxWidth: '44rem' }}
-      >
-        <DateSliderWrapper
-          currentDate={selectedDate}
-          onDateChange={handleDateChange}
-          isMonthly={dataType === DataType.Sunshine}
-        />
+
+      <TopCommandBar
+        selectedDate={selectedDate}
+        onDateChange={handleDateChange}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
+        dataType={dataType}
+        onDataTypeChange={setDataType}
+        temperatureUnit={temperatureUnit}
+        onTemperatureUnitChange={setTemperatureUnit}
+        isMonthly={dataType === DataType.Sunshine}
+      />
+
+      <div className="absolute bottom-4 right-4 z-20">
+        <FeedbackButton />
       </div>
 
       {/* map */}

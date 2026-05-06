@@ -1,10 +1,19 @@
 import { describe, it, expect, vi, assert } from 'vitest';
 import { renderHook } from '@testing-library/react';
+import type * as MantineCore from '@mantine/core';
 import useMapLayers from '@/hooks/useMapLayers';
 import type { WeatherData } from '@/types/cityWeatherDataType';
 import type { SunshineData } from '@/types/sunshineDataType';
 import { DataType, ViewMode } from '@/types/mapTypes';
 import { TEMPERATURE_LOADING_COLOR, SUNSHINE_LOADING_COLOR } from '@/const';
+
+vi.mock('@mantine/core', async () => {
+  const actual = await vi.importActual<typeof MantineCore>('@mantine/core');
+  return {
+    ...actual,
+    useComputedColorScheme: () => 'dark',
+  };
+});
 
 // Define a type for layer props with getFillColor function
 interface LayerPropsWithFillColor {

@@ -1,8 +1,12 @@
 import type { FC } from 'react';
+import { useEffect, useState } from 'react';
+import { Text } from '@mantine/core';
 import { dateToDayOfYear } from '@/utils/dateFormatting/dateToDayOfYear';
 import { dayOfYearToDate } from '@/utils/dateFormatting/dayOfYearToDate';
+import formatSliderLabel from '@/utils/dateFormatting/formatSliderLabel';
 import CustomDateSlider from './CustomDateSlider';
 import { monthMarks, monthlyMarks } from '@/const';
+import useGlassTokens from '@/hooks/useGlassTokens';
 
 interface DateSliderWrapperProps {
   currentDate: string;
@@ -15,33 +19,80 @@ const DateSliderWrapper: FC<DateSliderWrapperProps> = ({
   onDateChange,
   isMonthly = false,
 }) => {
-  // For monthly mode: use month number (1-12), for daily: use day of year (1-365)
+  const glass = useGlassTokens();
+
   const sliderValue = isMonthly
     ? Number.parseInt(currentDate.substring(0, 2), 10)
     : dateToDayOfYear(currentDate);
 
-  // Convert slider value back to date string format
+  // Tracks the value while the user is dragging so the trailing label updates
+  // live, before the debounced onChange commits a new currentDate prop.
+  const [previewValue, setPreviewValue] = useState<number | null>(null);
+
+  // Once the parent commits a new value, drop the preview so the label tracks
+  // the prop again (and external date changes — URL, etc. — take over).
+  useEffect(() => {
+    setPreviewValue(null);
+  }, [sliderValue]);
+
   const handleSliderChange = (value: number) => {
     const newDate = isMonthly
-      ? `${value.toString().padStart(2, '0')}-15` // Convert month number to MM-15 format
-      : dayOfYearToDate(value); // Convert day of year to MM-DD format
+      ? `${value.toString().padStart(2, '0')}-15`
+      : dayOfYearToDate(value);
     onDateChange(newDate);
   };
 
-  // Spread to convert readonly arrays to mutable for component compatibility
   const marks = isMonthly ? [...monthlyMarks] : [...monthMarks];
   const maxValue = isMonthly ? 12 : 365;
 
+  const labelValue = previewValue ?? sliderValue;
+  const currentLabel = isMonthly
+    ? (monthlyMarks.find((mark) => mark.value === labelValue)?.label ?? '')
+    : formatSliderLabel(labelValue);
+
   return (
-    <div className="w-full">
-      <CustomDateSlider
-        value={sliderValue}
-        onChange={handleSliderChange}
-        min={1}
-        max={maxValue}
-        marks={marks}
-        isMonthly={isMonthly}
-      />
+    <div
+      className="flex items-center gap-6 rounded-xl px-6 py-4"
+      style={{
+        background: glass.bgStrong,
+        backdropFilter: glass.blurStrong,
+        WebkitBackdropFilter: glass.blurStrong,
+        border: `1px solid ${glass.borderLight}`,
+        boxShadow: glass.shadow,
+      }}
+    >
+      <Text
+        size="xs"
+        c="dimmed"
+        fw={500}
+        ff="monospace"
+        tt="uppercase"
+        className="min-w-16 text-left shrink-0"
+      >
+        Date
+      </Text>
+
+      <div className="flex-1">
+        <CustomDateSlider
+          value={sliderValue}
+          onChange={handleSliderChange}
+          onValuePreview={setPreviewValue}
+          min={1}
+          max={maxValue}
+          marks={marks}
+          isMonthly={isMonthly}
+        />
+      </div>
+
+      <Text
+        size="xs"
+        c="dimmed"
+        fw={500}
+        ff="monospace"
+        className="shrink-0 min-w-16 text-right"
+      >
+        {currentLabel}
+      </Text>
     </div>
   );
 };
