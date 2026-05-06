@@ -150,7 +150,10 @@ const ComparisonCitySelector = ({
                   className="w-full text-left px-3 py-2 rounded text-sm transition-colors hover:bg-[var(--mantine-color-default-border)]"
                 >
                   <div className="font-medium">{city.name}</div>
-                  <div className="text-xs" style={{ color: 'var(--mantine-color-dimmed)' }}>
+                  <div
+                    className="text-xs"
+                    style={{ color: 'var(--mantine-color-dimmed)' }}
+                  >
                     {city.state && `${city.state}, `}
                     {city.country}
                     {city.population &&
@@ -164,13 +167,19 @@ const ComparisonCitySelector = ({
           {!isSearchLoading &&
             searchTerm.trim().length >= 2 &&
             searchResults.length === 0 && (
-              <div className="text-center py-4 text-sm" style={{ color: 'var(--mantine-color-dimmed)' }}>
+              <div
+                className="text-center py-4 text-sm"
+                style={{ color: 'var(--mantine-color-dimmed)' }}
+              >
                 No cities found
               </div>
             )}
 
           {searchTerm.trim().length < 2 && (
-            <div className="text-center py-4 text-sm" style={{ color: 'var(--mantine-color-dimmed)' }}>
+            <div
+              className="text-center py-4 text-sm"
+              style={{ color: 'var(--mantine-color-dimmed)' }}
+            >
               Type at least 2 characters to search
             </div>
           )}

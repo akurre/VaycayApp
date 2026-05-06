@@ -213,7 +213,7 @@ export const MONTH_FIELDS: Record<number, keyof SunshineData> = {
 
 // custom date slider thumb dimensions for positioning calculations
 export const SLIDER_THUMB_WIDTH = 32; // 8 * 4 (w-8 in tailwind)
- 
+
 // days in each month (using 28.25 for February to account for leap years)
 export const DAYS_IN_MONTH = [
   31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31,
@@ -268,7 +268,7 @@ export const monthlyMarks = [
 const CITY1_MAX_OFFSET = -1;
 const CITY1_MIN_OFFSET = 2;
 const CITY2_MAX_OFFSET = -3;
-const CITY2_MIN_OFFSET = 3; 
+const CITY2_MIN_OFFSET = 3;
 
 // City 1 (main / warmest destination) — Amber family
 export const CITY1_PRIMARY_COLOR = primaryAmberShades[AMBER_BRAND_SHADE];

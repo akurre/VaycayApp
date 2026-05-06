@@ -1,5 +1,9 @@
 import { Badge } from '@mantine/core';
-import { CITY1_PRIMARY_COLOR, CITY2_BADGE_BACKGROUND, CITY2_PRIMARY_COLOR } from '@/const';
+import {
+  CITY1_PRIMARY_COLOR,
+  CITY2_BADGE_BACKGROUND,
+  CITY2_PRIMARY_COLOR,
+} from '@/const';
 
 interface CityBadgeProps {
   cityName: string;
