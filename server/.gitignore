@@ -15,9 +15,6 @@ build/
 schema.graphql
 nexus-typegen.ts
 
-# Prisma
-prisma/migrations/
-
 # IDE
 .vscode/
 .idea/

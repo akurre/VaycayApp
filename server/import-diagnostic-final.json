@@ -1,0 +1,32 @@
+{
+  "timestamp": "2026-05-06T08:47:49.366Z",
+  "phase": "final",
+  "stats": {
+    "totalRecords": 5549547,
+    "citiesCreated": 18162,
+    "stationsCreated": 18162,
+    "weatherRecordsCreated": 5532326,
+    "errors": 0,
+    "skipped": 0
+  },
+  "majorCities": {
+    "Rome|Italy|Lazio": {
+      "cityId": 15237,
+      "recordCount": 366
+    },
+    "London|United Kingdom|England": {
+      "cityId": null,
+      "recordCount": 0,
+      "error": "City not found in cityIdMap"
+    },
+    "Tokyo|Japan|": {
+      "cityId": null,
+      "recordCount": 0,
+      "error": "City not found in cityIdMap"
+    },
+    "Paris|France|Île-de-France": {
+      "cityId": 8466,
+      "recordCount": 366
+    }
+  }
+}
