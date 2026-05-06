@@ -2,6 +2,7 @@ import { SegmentedControl, Tooltip } from '@mantine/core';
 import type { SegmentedControlProps } from '@mantine/core';
 import type { ComponentType } from 'react';
 import getIconSizeFromControlSize from '@/utils/map/getIconSizeFromControlSize';
+import { secondaryOceanShades } from '@/theme';
 
 interface MapToggleOption<T extends string> {
   value: T;
@@ -32,12 +33,16 @@ const MapToggle = <T extends string>({
       className="z-40"
       value={value}
       size={size}
+      color={secondaryOceanShades[4]}
+      bg="transparent"
       {...props}
       transitionDuration={300}
       onChange={(val) => onChange(val as T)}
       styles={{
         root: {
-          backdropFilter: 'blur(8px)',
+          background: 'transparent',
+          backdropFilter: 'none',
+          WebkitBackdropFilter: 'none',
         },
         label: {
           opacity: 1,

@@ -157,6 +157,41 @@ export const appColors = {
   warning: primaryAmberShades[AMBER_BRAND_SHADE], // amber doubles as warning
   error: errorShades[ERROR_BRAND_SHADE],
   info: secondaryOceanShades[OCEAN_BRAND_SHADE - 2],
+
+  // Glassmorphism tokens for the floating top command bar.
+  // Pick the active set with `useGlassTokens()` based on color scheme.
+  glass: {
+    dark: {
+      bg: 'rgba(30, 36, 46, 0.25)', // lower alpha so the blurred map shows through
+      bgStrong: 'rgba(30, 36, 46, 0.78)',
+      border: 'rgba(255, 255, 255, 0.08)',
+      borderLight: 'rgba(255, 255, 255, 0.10)',
+      shadow: '0 8px 32px rgba(0, 0, 0, 0.40)',
+      blur: 'blur(14px) saturate(180%)', // saturate boosts blurred-map color richness
+      blurStrong: 'blur(20px) saturate(180%)',
+      triggerIdleBg: 'rgba(255, 255, 255, 0.08)',
+      triggerOpenBg: 'rgba(232, 151, 60, 0.15)',
+      triggerOpenBorder: 'rgba(232, 151, 60, 0.30)',
+      divider: 'rgba(255, 255, 255, 0.10)',
+      inputBg: 'rgba(0, 0, 0, 0.20)',
+      text: '#E8DFD0',
+    },
+    light: {
+      bg: 'rgba(252, 246, 230, 0.25)', // lower alpha so the blurred map shows through
+      bgStrong: 'rgba(252, 246, 230, 0.80)',
+      border: 'rgba(200, 179, 135, 0.50)', // sand @ 50%
+      borderLight: 'rgba(200, 179, 135, 0.55)', // sand @ 55%
+      shadow: '0 8px 32px rgba(31, 78, 102, 0.14)', // ocean shadow
+      blur: 'blur(14px) saturate(180%)',
+      blurStrong: 'blur(20px) saturate(180%)',
+      triggerIdleBg: 'rgba(200, 179, 135, 0.18)', // warm sand wash
+      triggerOpenBg: 'rgba(232, 151, 60, 0.20)',
+      triggerOpenBorder: 'rgba(232, 151, 60, 0.40)',
+      divider: 'rgba(31, 78, 102, 0.18)', // teal-tinted, visible on cream
+      inputBg: 'rgba(31, 78, 102, 0.06)', // teal-tinted input wash
+      text: '#1F4E66', // ocean (was warm gray, too low contrast)
+    },
+  },
 } as const;
 
 // Define the theme with proper Mantine color arrays
@@ -173,8 +208,8 @@ export const theme: MantineThemeOverride = createTheme({
   defaultRadius: 'md',
 
   // Font configurations
-  fontFamily: 'Verdana, sans-serif',
-  fontFamilyMonospace: 'Monaco, Courier, monospace',
+  fontFamily: 'Inter, system-ui, sans-serif',
+  fontFamilyMonospace: '"JetBrains Mono", Monaco, Courier, monospace',
   headings: { fontFamily: 'Outfit, sans-serif' },
 
   // Define custom colors as proper Mantine color arrays

@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { Text } from '@mantine/core';
-import CustomPopover from '@/components/Shared/CustomPopover';
+import useGlassTokens from '@/hooks/useGlassTokens';
 
 interface SliderMarksProps {
   marks: Array<{ value: number; label: string }>;
@@ -9,8 +9,10 @@ interface SliderMarksProps {
 }
 
 const SliderMarks: FC<SliderMarksProps> = ({ marks, min, max }) => {
+  const glass = useGlassTokens();
+
   return (
-    <div className="relative mt-1">
+    <div className="relative mt-3 h-4">
       {marks.map((mark) => {
         const markPosition = ((mark.value - min) / (max - min)) * 100;
         return (
@@ -19,11 +21,9 @@ const SliderMarks: FC<SliderMarksProps> = ({ marks, min, max }) => {
             className="absolute -translate-x-1/2"
             style={{ left: `${markPosition}%` }}
           >
-            <CustomPopover showBackground={false} size="xxs" direction="up">
-              <Text size="xs" fw={500}>
-                {mark.label}
-              </Text>
-            </CustomPopover>
+            <Text size="xs" style={{ color: glass.text, opacity: 0.7 }}>
+              {mark.label}
+            </Text>
           </div>
         );
       })}

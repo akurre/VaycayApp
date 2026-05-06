@@ -37,6 +37,36 @@ export const INITIAL_VIEW_STATE = {
 
 export const TOGGLE_ICON_SIZE = 16;
 
+// ============================================================================
+// TOP COMMAND BAR / HOVER POPOVER CONSTANTS
+// ============================================================================
+
+// Delay before a hover-popover closes after the cursor leaves both trigger
+// and content. Long enough to forgive a quick mouse-out, short enough to feel
+// snappy. Mutual-exclusion (opening another popover) bypasses this delay.
+export const POPOVER_CLOSE_DELAY_MS = 300;
+
+// Vertical gap between the anchor's bottom edge and the popover's top edge.
+export const POPOVER_OFFSET_Y = 8;
+
+// Fixed widths for the two popovers in the top command bar.
+export const HOME_POPOVER_WIDTH_PX = 320;
+export const DATE_POPOVER_WIDTH_PX = 720;
+
+// Date popover slide-in animation: duration of the fade/slide and the
+// off-screen vertical offset (px) when hidden.
+export const DATE_POPOVER_TRANSITION_MS = 250;
+export const DATE_POPOVER_HIDDEN_OFFSET_PX = -10;
+
+// Minimum characters typed before kicking off a city-search request.
+// Used by the search hook and any UI that gates "no results" messaging on
+// whether a real query has been issued.
+export const MIN_CITY_SEARCH_LENGTH = 2;
+
+// Debounce window for the city-search TextInput. Long enough to skip
+// mid-word typing churn, short enough to feel responsive.
+export const CITY_SEARCH_DEBOUNCE_MS = 300;
+
 // map style urls for light and dark themes
 // Carto basemaps - using direct CDN URLs (no proxy needed, CORS-enabled)
 export const MAP_STYLES = {
@@ -154,6 +184,12 @@ export const SUNSHINE_LOADING_COLOR: [number, number, number, number] = [
 // Type for color cache entries
 export type ColorCacheEntry = [number, number, number, number]; // r, g, b, a
 
+// Light-mode dot stroke — ocean shade 6 (#1F4E66) at ~20% alpha. Adds a subtle
+// outline so cool-blue dots don't disappear into the cream basemap.
+export const DOT_STROKE_LIGHT: [number, number, number, number] = [
+  31, 78, 102, 51,
+];
+
 // ============================================================================
 // ERROR NOTIFICATION CONSTANTS
 // ============================================================================
@@ -212,7 +248,7 @@ export const MONTH_FIELDS: Record<number, keyof SunshineData> = {
 };
 
 // custom date slider thumb dimensions for positioning calculations
-export const SLIDER_THUMB_WIDTH = 32; // 8 * 4 (w-8 in tailwind)
+export const SLIDER_THUMB_WIDTH = 14;
 
 // days in each month (using 28.25 for February to account for leap years)
 export const DAYS_IN_MONTH = [

@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useComputedColorScheme } from '@mantine/core';
 import { HeatmapLayer } from '@deck.gl/aggregation-layers';
 import { ScatterplotLayer } from '@deck.gl/layers';
 import type { Layer, MapViewState } from '@deck.gl/core';
@@ -11,6 +12,7 @@ import { COLOR_RANGE } from '../utils/map/getMarkerColor';
 import { DataType } from '@/types/mapTypes';
 import type { ViewMode, WeatherDataUnion } from '@/types/mapTypes';
 import {
+  DOT_STROKE_LIGHT,
   SUNSHINE_COLOR_RANGE,
   SUNSHINE_LOADING_COLOR,
   TEMPERATURE_LOADING_COLOR,
@@ -79,6 +81,11 @@ function useMapLayers({
     isActive: isGhostDotsActive,
     dataType,
   });
+
+  // Light mode: subtle ocean outline so cool-blue dots don't disappear into
+  // the cream basemap. Dark mode: no outline (dots already pop on near-black).
+  const colorScheme = useComputedColorScheme('dark');
+  const isLightMode = colorScheme === 'light';
 
   // Use smaller focused hooks
   const heatmapData = useHeatmapData(cities, dataType, selectedMonth);
@@ -192,6 +199,10 @@ function useMapLayers({
           pickable: true,
           opacity: breatheOpacity ?? 0.8,
           visible: viewMode === 'markers',
+          stroked: isLightMode,
+          getLineColor: DOT_STROKE_LIGHT,
+          lineWidthMinPixels: 0.5,
+          lineWidthMaxPixels: 1.5,
           transitions: {
             getFillColor: {
               duration: 600,
@@ -231,6 +242,10 @@ function useMapLayers({
           pickable: true,
           opacity: breatheOpacity ?? 0.8,
           visible: viewMode === 'markers',
+          stroked: isLightMode,
+          getLineColor: DOT_STROKE_LIGHT,
+          lineWidthMinPixels: 0.5,
+          lineWidthMaxPixels: 1.5,
           transitions: {
             getFillColor: {
               duration: 600,
@@ -262,6 +277,7 @@ function useMapLayers({
     sunshineCacheResult,
     dataType,
     selectedMonth,
+    isLightMode,
   ]);
 }
 

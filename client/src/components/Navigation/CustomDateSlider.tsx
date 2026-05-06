@@ -3,12 +3,12 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { clamp, useMove } from '@mantine/hooks';
 import SliderTrack from './DateSliderParts/SliderTrack';
 import SliderThumb from './DateSliderParts/SliderThumb';
-import SliderLabel from './DateSliderParts/SliderLabel';
 import SliderMarks from './DateSliderParts/SliderMarks';
 
 interface CustomDateSliderProps {
   value: number;
   onChange: (value: number) => void;
+  onValuePreview?: (value: number) => void;
   min: number;
   max: number;
   marks: Array<{ value: number; label: string }>;
@@ -18,6 +18,7 @@ interface CustomDateSliderProps {
 const CustomDateSlider: FC<CustomDateSliderProps> = ({
   value,
   onChange,
+  onValuePreview,
   min,
   max,
   marks,
@@ -45,8 +46,10 @@ const CustomDateSlider: FC<CustomDateSliderProps> = ({
       setDisplayValue(clampedValue);
       // Store the value but don't trigger onChange yet
       pendingValueRef.current = clampedValue;
+      // Notify parent so trailing labels can update mid-drag
+      onValuePreview?.(clampedValue);
     },
-    [effectiveMin, effectiveMax]
+    [effectiveMin, effectiveMax, onValuePreview]
   );
 
   const handleMoveEnd = useCallback(() => {
@@ -65,18 +68,11 @@ const CustomDateSlider: FC<CustomDateSliderProps> = ({
     : ((displayValue - min) / (max - min)) * 100;
 
   return (
-    <div className="w-full px-8">
-      {/* track container with draggable elements */}
+    <div className="w-full">
       <SliderTrack trackRef={ref}>
         <SliderThumb position={position} />
-        <SliderLabel
-          value={displayValue}
-          position={position}
-          isMonthly={isMonthly}
-        />
       </SliderTrack>
 
-      {/* month marks below track */}
       <SliderMarks marks={marks} min={effectiveMin} max={effectiveMax} />
     </div>
   );
