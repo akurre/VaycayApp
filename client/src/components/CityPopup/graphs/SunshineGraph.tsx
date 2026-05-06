@@ -151,6 +151,7 @@ const SunshineGraph = ({
         strokeWidth: 2,
         dot: false,
         connectNulls: true,
+        cityRole: 'main',
       });
     }
     if (comparisonSunshineData) {
@@ -161,6 +162,7 @@ const SunshineGraph = ({
         strokeWidth: 2,
         dot: false,
         connectNulls: true,
+        cityRole: 'comparison',
       });
     }
     return list;

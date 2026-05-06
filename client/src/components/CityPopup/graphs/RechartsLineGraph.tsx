@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { Fragment, memo } from 'react';
 import {
   ComposedChart,
   Line,
@@ -154,8 +154,11 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
             />
           ))}
 
-          {/* Hover affordance: vertical hairline + compact value chip near
-              cursor. Reference lines (dashed strokes) are filtered out. */}
+          {/* Hover affordance: vertical hairline + grid-laid-out value
+              popover. Each row is a metric (Max/Avg/Min); each column is
+              a city (main vs comparison). Areas duplicating a Line's
+              dataKey are deduped; dashed reference lines (sun ceilings)
+              are dropped. */}
           <Tooltip
             cursor={{
               stroke: 'var(--mantine-color-dimmed)',
@@ -166,48 +169,112 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
             wrapperStyle={{ outline: 'none' }}
             content={({ active, payload, label }) => {
               if (!active || !payload || payload.length === 0) return null;
-              const visible = payload.filter((p) => {
-                if (p.value === null || p.value === undefined) return false;
-                const cfg = lines.find((l) => l.dataKey === p.dataKey);
-                return cfg ? !cfg.strokeDasharray : true;
-              });
-              if (visible.length === 0) return null;
+
+              const formatValue = (v: unknown): string => {
+                if (typeof v !== 'number') return String(v);
+                const rounded = Number(v.toFixed(1));
+                return yTickFormatter
+                  ? yTickFormatter(rounded)
+                  : rounded.toFixed(1);
+              };
+
+              interface Item {
+                dataKey: string;
+                metricLabel: string | undefined;
+                cityRole: 'main' | 'comparison';
+                color: string;
+                formatted: string;
+              }
+
+              const seen = new Set<string>();
+              const items: Item[] = [];
+              for (const p of payload) {
+                if (p.value === null || p.value === undefined) continue;
+                const key = String(p.dataKey);
+                if (seen.has(key)) continue;
+                const cfg = lines.find((l) => l.dataKey === key);
+                if (!cfg || cfg.strokeDasharray) continue;
+                seen.add(key);
+                items.push({
+                  dataKey: key,
+                  metricLabel: cfg.metricLabel,
+                  cityRole: cfg.cityRole ?? 'main',
+                  color: (p.color as string | undefined) ?? cfg.stroke,
+                  formatted: formatValue(p.value),
+                });
+              }
+              if (items.length === 0) return null;
+
+              // Group by metricLabel, preserving first-seen order.
+              const metricOrder: string[] = [];
+              const grouped = new Map<
+                string,
+                { main?: Item; comparison?: Item }
+              >();
+              for (const it of items) {
+                const key = it.metricLabel ?? '';
+                if (!grouped.has(key)) {
+                  grouped.set(key, {});
+                  metricOrder.push(key);
+                }
+                const slot = grouped.get(key);
+                if (!slot) continue;
+                if (it.cityRole === 'comparison') slot.comparison = it;
+                else slot.main = it;
+              }
+
+              const hasComparison = items.some(
+                (i) => i.cityRole === 'comparison'
+              );
+              const hasLabels = items.some((i) => i.metricLabel);
+
+              const cols = [
+                hasLabels ? 'auto' : null,
+                'auto',
+                hasComparison ? 'auto' : null,
+              ]
+                .filter(Boolean)
+                .join(' ');
+
               return (
-                <div className="rounded-md px-2 py-1 text-[11px] tabular-nums bg-[var(--mantine-color-default-hover)] border border-[var(--mantine-color-default-border)] shadow-md">
+                <div className="rounded-md px-2.5 py-1.5 text-[11px] tabular-nums bg-[var(--mantine-color-default-hover)] border border-[var(--mantine-color-default-border)] shadow-md">
                   {label !== undefined && (
-                    <div className="text-[9px] uppercase tracking-[0.08em] text-[var(--mantine-color-dimmed)] mb-0.5">
+                    <div className="text-[9px] uppercase tracking-[0.08em] text-[var(--mantine-color-dimmed)] mb-1">
                       {label}
                     </div>
                   )}
-                  {visible.map((p) => {
-                    const rounded =
-                      typeof p.value === 'number'
-                        ? Number(p.value.toFixed(1))
-                        : p.value;
-                    const formatted =
-                      typeof rounded === 'number' && yTickFormatter
-                        ? yTickFormatter(rounded)
-                        : typeof rounded === 'number'
-                          ? rounded.toFixed(1)
-                          : String(rounded);
-                    return (
-                      <div
-                        key={String(p.dataKey)}
-                        className="flex items-center gap-1.5 leading-tight"
-                      >
-                        <span
-                          className="w-1.5 h-1.5 rounded-full shrink-0"
-                          style={{ background: p.color }}
-                        />
-                        <span
-                          style={{ color: p.color }}
-                          className="font-semibold"
-                        >
-                          {formatted}
-                        </span>
-                      </div>
-                    );
-                  })}
+                  <div
+                    className="grid gap-x-3 gap-y-0.5 items-baseline"
+                    style={{ gridTemplateColumns: cols }}
+                  >
+                    {metricOrder.map((m) => {
+                      const slot = grouped.get(m);
+                      if (!slot) return null;
+                      return (
+                        <Fragment key={m || 'metric'}>
+                          {hasLabels && (
+                            <span className="text-[9px] uppercase tracking-[0.08em] text-[var(--mantine-color-dimmed)] font-semibold">
+                              {m}
+                            </span>
+                          )}
+                          <span
+                            className="font-semibold"
+                            style={{ color: slot.main?.color }}
+                          >
+                            {slot.main ? slot.main.formatted : '—'}
+                          </span>
+                          {hasComparison && (
+                            <span
+                              className="font-semibold"
+                              style={{ color: slot.comparison?.color }}
+                            >
+                              {slot.comparison ? slot.comparison.formatted : '—'}
+                            </span>
+                          )}
+                        </Fragment>
+                      );
+                    })}
+                  </div>
                 </div>
               );
             }}

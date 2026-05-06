@@ -31,6 +31,12 @@ interface RibbonShellProps {
 // close button only — the comparison selector is no longer absolute-positioned.
 const HEADER_RIGHT_RESERVE = 40;
 
+// Right-side reserve that mirrors the chart's plot-area inset
+// (`margin.right` + right-oriented `YAxis` width in RechartsLineGraph)
+// so the footer's right edge aligns with the chart's data-plot right edge
+// above it, rather than extending under the Y-axis tick-label band.
+const CHART_RIGHT_RESERVE = 28;
+
 const RibbonShell = ({
   baseCityName,
   baseCityLat,
@@ -78,7 +84,10 @@ const RibbonShell = ({
 
         <MonthLabels />
 
-        <footer className="mt-2 flex items-center justify-between">
+        <footer
+          className="mt-2 flex items-center justify-between"
+          style={{ paddingRight: CHART_RIGHT_RESERVE }}
+        >
           <IconTabs tab={tab} onTab={setTab} />
           {comparisonSlot && <div className="shrink-0">{comparisonSlot}</div>}
         </footer>

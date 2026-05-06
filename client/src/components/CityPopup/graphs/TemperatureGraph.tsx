@@ -74,27 +74,21 @@ const TemperatureGraph = ({
   }, [comparisonWeeklyWeatherData]);
 
   // Three lines per city — max and min as thin envelope strokes, avg as the
-  // heavier focal line. All three populate the hover popover.
+  // heavier focal line. All three populate the hover popover, ordered
+  // Max -> Avg -> Min so the popover rows render top-down high-to-low.
   const lines: LineConfig[] = useMemo(() => {
     const cityName = weeklyWeatherData.city;
     const list: LineConfig[] = [
       {
         dataKey: 'maxTemp',
-        name: `${cityName} max`,
+        name: cityName,
         stroke: CITY1_PRIMARY_COLOR,
         strokeWidth: 1,
         strokeOpacity: 0.55,
         dot: false,
         connectNulls: true,
-      },
-      {
-        dataKey: 'minTemp',
-        name: `${cityName} min`,
-        stroke: CITY1_PRIMARY_COLOR,
-        strokeWidth: 1,
-        strokeOpacity: 0.55,
-        dot: false,
-        connectNulls: true,
+        cityRole: 'main',
+        metricLabel: 'Max',
       },
       {
         dataKey: 'avgTemp',
@@ -103,6 +97,19 @@ const TemperatureGraph = ({
         strokeWidth: 2,
         dot: false,
         connectNulls: true,
+        cityRole: 'main',
+        metricLabel: 'Avg',
+      },
+      {
+        dataKey: 'minTemp',
+        name: cityName,
+        stroke: CITY1_PRIMARY_COLOR,
+        strokeWidth: 1,
+        strokeOpacity: 0.55,
+        dot: false,
+        connectNulls: true,
+        cityRole: 'main',
+        metricLabel: 'Min',
       },
     ];
     if (comparisonWeeklyWeatherData) {
@@ -110,21 +117,14 @@ const TemperatureGraph = ({
       list.push(
         {
           dataKey: 'compMaxTemp',
-          name: `${compName} max`,
+          name: compName,
           stroke: CITY2_PRIMARY_COLOR,
           strokeWidth: 1,
           strokeOpacity: 0.55,
           dot: false,
           connectNulls: true,
-        },
-        {
-          dataKey: 'compMinTemp',
-          name: `${compName} min`,
-          stroke: CITY2_PRIMARY_COLOR,
-          strokeWidth: 1,
-          strokeOpacity: 0.55,
-          dot: false,
-          connectNulls: true,
+          cityRole: 'comparison',
+          metricLabel: 'Max',
         },
         {
           dataKey: 'compAvgTemp',
@@ -133,6 +133,19 @@ const TemperatureGraph = ({
           strokeWidth: 2,
           dot: false,
           connectNulls: true,
+          cityRole: 'comparison',
+          metricLabel: 'Avg',
+        },
+        {
+          dataKey: 'compMinTemp',
+          name: compName,
+          stroke: CITY2_PRIMARY_COLOR,
+          strokeWidth: 1,
+          strokeOpacity: 0.55,
+          dot: false,
+          connectNulls: true,
+          cityRole: 'comparison',
+          metricLabel: 'Min',
         }
       );
     }

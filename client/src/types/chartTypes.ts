@@ -20,6 +20,10 @@ export interface LineConfig {
   strokeDasharray?: string;
   dot?: boolean | ((props: Record<string, unknown>) => ReactElement);
   connectNulls?: boolean;
+  // Hover-popover grouping: which city column this line belongs to and the
+  // optional metric label (e.g. 'Max', 'Avg', 'Min') for its row.
+  cityRole?: 'main' | 'comparison';
+  metricLabel?: string;
 }
 
 // Reference line configuration
