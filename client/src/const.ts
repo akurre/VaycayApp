@@ -2,7 +2,12 @@
 // MAP CONSTANTS
 // ============================================================================
 
-import { primaryAmberShades, secondaryOceanShades } from '@/theme';
+import {
+  AMBER_BRAND_SHADE,
+  OCEAN_BRAND_SHADE,
+  primaryAmberShades,
+  secondaryOceanShades,
+} from '@/theme';
 import type { SunshineData } from '@/types/sunshineDataType';
 
 export const KM_TO_MILES = 0.621371;
@@ -257,14 +262,14 @@ export const monthlyMarks = [
 // ============================================================================
 
 // City 1 (main / warmest destination) — Amber family
-export const CITY1_PRIMARY_COLOR = primaryAmberShades[4]; // avg
-export const CITY1_MAX_COLOR = primaryAmberShades[3]; // max (lighter)
-export const CITY1_MIN_COLOR = primaryAmberShades[6]; // min (deeper)
+export const CITY1_PRIMARY_COLOR = primaryAmberShades[AMBER_BRAND_SHADE]; // avg
+export const CITY1_MAX_COLOR = primaryAmberShades[AMBER_BRAND_SHADE - 1]; // max (lighter)
+export const CITY1_MIN_COLOR = primaryAmberShades[AMBER_BRAND_SHADE + 2]; // min (deeper)
 
 // City 2 (comparison / home) — Ocean family, recedes visually
-export const CITY2_PRIMARY_COLOR = secondaryOceanShades[6]; // avg
-export const CITY2_MAX_COLOR = secondaryOceanShades[3]; // max (lighter)
-export const CITY2_MIN_COLOR = secondaryOceanShades[8]; // min (deeper)
+export const CITY2_PRIMARY_COLOR = secondaryOceanShades[OCEAN_BRAND_SHADE]; // avg
+export const CITY2_MAX_COLOR = secondaryOceanShades[OCEAN_BRAND_SHADE - 3]; // max (lighter)
+export const CITY2_MIN_COLOR = secondaryOceanShades[OCEAN_BRAND_SHADE + 2]; // min (deeper)
 
 // ============================================================================
 // WORLD MAP BIG LOADER CONSTANTS

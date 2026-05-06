@@ -1,6 +1,11 @@
 import { useMantineColorScheme, useMantineTheme } from '@mantine/core';
 import { useMemo } from 'react';
-import { appColors } from '@/theme';
+import {
+  AMBER_BRAND_SHADE,
+  appColors,
+  ERROR_BRAND_SHADE,
+  SAND_BRAND_SHADE,
+} from '@/theme';
 
 // Branded accents come from indexed palette shades (same in both modes);
 // surface neutrals come from appColors because they swap by mode, not shade.
@@ -12,14 +17,14 @@ export const useChartColors = () => {
     const isDark = colorScheme === 'dark';
 
     return {
-      lineColor: theme.colors['primary-amber'][4],
-      maxLineColor: theme.colors.error[4],
+      lineColor: theme.colors['primary-amber'][AMBER_BRAND_SHADE],
+      maxLineColor: theme.colors.error[ERROR_BRAND_SHADE],
       minLineColor: isDark
-        ? theme.colors['tertiary-sand'][4]
-        : theme.colors['tertiary-sand'][6],
+        ? theme.colors['tertiary-sand'][SAND_BRAND_SHADE]
+        : theme.colors['tertiary-sand'][SAND_BRAND_SHADE + 2],
       axisColor: isDark
-        ? theme.colors['tertiary-sand'][5]
-        : theme.colors['tertiary-sand'][6],
+        ? theme.colors['tertiary-sand'][SAND_BRAND_SHADE + 1]
+        : theme.colors['tertiary-sand'][SAND_BRAND_SHADE + 2],
 
       gridColor: isDark ? appColors.dark.border : appColors.light.border,
       textColor: isDark ? appColors.dark.text : appColors.light.text,

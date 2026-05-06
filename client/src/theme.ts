@@ -1,8 +1,14 @@
-import { createTheme, Button, Text, Popover, Divider } from '@mantine/core';
-import type { MantineColorsTuple, MantineThemeOverride } from '@mantine/core';
+import { createTheme, Button, Text, Popover, Divider, parseThemeColor, defaultVariantColorsResolver } from '@mantine/core';
+import type { MantineColorsTuple, MantineThemeOverride, VariantColorsResolver } from '@mantine/core';
 
 // Mantine shade tuples — single source of truth for the palette.
-// Index conventions used elsewhere: 4 = brand-light, 6 = brand-deep.
+// Each palette has a "brand" anchor shade; other shades are picked relative to it.
+// Amber/sand/error anchor at 4 (brand pops); ocean anchors at 6 (brand recedes).
+export const AMBER_BRAND_SHADE = 4;
+export const OCEAN_BRAND_SHADE = 6;
+export const SAND_BRAND_SHADE = 4;
+export const ERROR_BRAND_SHADE = 4;
+
 export const primaryAmberShades: MantineColorsTuple = [
   '#FCF6E6',
   '#F8E8C2',
@@ -68,6 +74,25 @@ export const errorShades: MantineColorsTuple = [
   '#1F0905',
 ];
 
+const variantColorResolver: VariantColorsResolver = (input) => {
+  const defaultResolvedColors = defaultVariantColorsResolver(input);
+  const parsedColor = parseThemeColor({
+    color: input.color || input.theme.primaryColor,
+    theme: input.theme,
+  });
+
+  // Override text color for primary-amber filled variant
+  if (parsedColor.isThemeColor && parsedColor.color === 'primary-amber' && input.variant === 'filled') {
+    return {
+      ...defaultResolvedColors,
+      color: primaryAmberShades[9],
+      hoverColor: primaryAmberShades[9],
+    };
+  }
+
+  return defaultResolvedColors;
+};
+
 // custom color palette for the application
 export const appColors = {
   // primary · amber sunlight (warmth, the destination)
@@ -120,6 +145,7 @@ export const appColors = {
 export const theme: MantineThemeOverride = createTheme({
   // Set primary color to your actual primary color
   primaryColor: 'primary-amber',
+  variantColorResolver,
 
   // Shade 4 (#E8973C) is the canonical brand amber and matches appColors.primary.
   // Both modes resolve to the same shade so brand identity stays consistent.
@@ -154,7 +180,9 @@ export const theme: MantineThemeOverride = createTheme({
       styles: {
         root: {
           '&[data-variant="filled"]': {
-            color: '#1A1106', // dark brown text on amber for contrast
+            // dark warm brown for legible contrast on amber-filled buttons.
+            // Same in both modes since the button fill (amber) doesn't swap.
+            color: tertiarySandShades[9],
           },
         },
       },
