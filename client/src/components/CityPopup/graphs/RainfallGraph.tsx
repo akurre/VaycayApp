@@ -1,41 +1,30 @@
-import { useMemo, memo } from 'react';
+import { useMemo, memo, useCallback } from 'react';
 import {
   BarChart,
   Bar,
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
   ResponsiveContainer,
-  Legend,
 } from 'recharts';
+import type { CategoricalChartFunc } from 'recharts/types/chart/types';
 import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
+import type { RibbonHoverPayload } from '@/types/cityPopupTypes';
 import { useChartColors } from '@/hooks/useChartColors';
 import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
-import RainfallGraphTooltip from './RainfallGraphTooltip';
 
 interface RainfallGraphProps {
   weeklyWeatherData: CityWeeklyWeather | null;
   comparisonWeeklyWeatherData?: CityWeeklyWeather | null;
+  onHover?: (payload: RibbonHoverPayload | null) => void;
 }
 
 const RainfallGraph = ({
   weeklyWeatherData,
   comparisonWeeklyWeatherData,
+  onHover,
 }: RainfallGraphProps) => {
-  // Get theme-aware colors
   const chartColors = useChartColors();
-
-  // Create a wrapper component for the tooltip that has access to city names
-  const TooltipWrapper = (
-    props: Parameters<typeof RainfallGraphTooltip>[0]
-  ) => (
-    <RainfallGraphTooltip
-      {...props}
-      cityName={weeklyWeatherData?.city}
-      comparisonCityName={comparisonWeeklyWeatherData?.city}
-    />
-  );
 
   // Transform weekly weather data for chart - filter out weeks with no precipitation data
   // to prevent displaying zero values where no measurements exist
@@ -130,58 +119,72 @@ const RainfallGraph = ({
   // use whichever data is available for the base chart structure
   const baseData = weeklyWeatherData ?? comparisonWeeklyWeatherData;
 
+  const handleMouseMove: CategoricalChartFunc = useCallback(
+    (state) => {
+      if (!onHover) return;
+      const idx = state.activeTooltipIndex;
+      if (idx === undefined || idx === null || typeof idx === 'string') {
+        onHover(null);
+        return;
+      }
+      const point = chartData[idx] as
+        | {
+            week: number;
+            totalPrecip?: number | null;
+            compTotalPrecip?: number | null;
+          }
+        | undefined;
+      if (!point) {
+        onHover(null);
+        return;
+      }
+      const c1 = point.totalPrecip ?? null;
+      const c2 = point.compTotalPrecip ?? null;
+      onHover({
+        label: `Week ${point.week}`,
+        v1: c1 === null ? null : `${Math.round(c1)}mm`,
+        v2: c2 === null ? null : `${Math.round(c2)}mm`,
+      });
+    },
+    [chartData, onHover]
+  );
+
+  const handleMouseLeave = useCallback(() => {
+    if (onHover) onHover(null);
+  }, [onHover]);
+
   // if neither exists, return null (shouldn't happen due to WeatherDataSection check)
   if (!baseData) return null;
 
   return (
     <div className="w-full h-full">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData} margin={{ left: 0, bottom: 5 }}>
+        <BarChart
+          data={chartData}
+          margin={{ top: 5, right: 10, left: -20, bottom: 5 }}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+        >
           <CartesianGrid strokeDasharray="3 3" stroke={chartColors.gridColor} />
 
-          {/* X Axis */}
           <XAxis
             dataKey="week"
-            tick={{ fontSize: 12, fill: chartColors.textColor }}
+            tick={false}
             stroke={chartColors.axisColor}
-            label={{
-              value: 'Week of Year',
-              position: 'insideBottom',
-              offset: -5,
-              style: { fontSize: 12, fill: chartColors.textColor },
-            }}
           />
 
-          {/* Y Axis */}
           <YAxis
+            orientation="right"
             tick={{ fontSize: 12, fill: chartColors.textColor }}
             stroke={chartColors.axisColor}
-            label={{
-              value: 'Precipitation (mm)',
-              angle: -90,
-              position: 'insideLeft',
-              style: { fontSize: 12, fill: chartColors.textColor },
-            }}
-          />
-
-          {/* Tooltip */}
-          <Tooltip content={TooltipWrapper} />
-
-          {/* Legend */}
-          <Legend
-            wrapperStyle={{ fontSize: '12px', paddingLeft: '13px' }}
-            layout="horizontal"
-            verticalAlign="top"
-            align="center"
-            iconType="rect"
           />
 
           {hasMainData && (
             <Bar
               dataKey="totalPrecip"
               name={
-                hasCompData
-                  ? `${weeklyWeatherData!.city} Total Precip`
+                hasCompData && weeklyWeatherData
+                  ? weeklyWeatherData.city
                   : 'Total Precipitation'
               }
               fill={CITY1_PRIMARY_COLOR}
@@ -191,7 +194,7 @@ const RainfallGraph = ({
           {hasCompData && (
             <Bar
               dataKey="compTotalPrecip"
-              name={`${comparisonWeeklyWeatherData!.city} Total Precip`}
+              name={comparisonWeeklyWeatherData?.city ?? ''}
               fill={hasMainData ? CITY2_PRIMARY_COLOR : CITY1_PRIMARY_COLOR}
               radius={[4, 4, 0, 0]}
             />

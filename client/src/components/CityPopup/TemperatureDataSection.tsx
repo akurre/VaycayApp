@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
+import type { RibbonHoverPayload } from '@/types/cityPopupTypes';
 import TemperatureGraph from './graphs/TemperatureGraph';
 import WeatherDataSection from './WeatherDataSection';
 import ComponentErrorBoundary from '../ErrorBoundary/ComponentErrorBoundary';
@@ -11,6 +12,7 @@ interface TemperatureDataSectionProps {
   comparisonWeeklyWeatherData?: CityWeeklyWeather | null;
   comparisonIsLoading?: boolean;
   comparisonHasError?: boolean;
+  onHover?: (payload: RibbonHoverPayload | null) => void;
 }
 
 const TemperatureDataSection = ({
@@ -18,8 +20,7 @@ const TemperatureDataSection = ({
   isLoading,
   hasError,
   comparisonWeeklyWeatherData,
-  comparisonIsLoading,
-  comparisonHasError,
+  onHover,
 }: TemperatureDataSectionProps) => {
   return (
     <WeatherDataSection
@@ -34,6 +35,7 @@ const TemperatureDataSection = ({
           <TemperatureGraph
             weeklyWeatherData={data}
             comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
+            onHover={onHover}
           />
         </ComponentErrorBoundary>
       )}

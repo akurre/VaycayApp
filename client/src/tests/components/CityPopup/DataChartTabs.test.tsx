@@ -1,228 +1,110 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@/test-utils';
-import { userEvent } from '@testing-library/user-event';
+import { describe, it, expect, vi } from 'vitest';
+import { render } from '@/test-utils';
 import DataChartTabs from '@/components/CityPopup/DataChartTabs';
 import type { SunshineData } from '@/types/sunshineDataType';
 import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
 import { DataType } from '@/types/mapTypes';
 
+vi.mock('@/components/CityPopup/TemperatureDataSection', () => ({
+  default: () => <div data-testid="panel-temperature">temp panel</div>,
+}));
+vi.mock('@/components/CityPopup/SunshineDataSection', () => ({
+  default: () => <div data-testid="panel-sunshine">sun panel</div>,
+}));
+vi.mock('@/components/CityPopup/RainfallDataSection', () => ({
+  default: () => <div data-testid="panel-precip">precip panel</div>,
+}));
+
+const mockSunshineData: SunshineData = {
+  cityId: 213,
+  city: 'Test City',
+  country: 'Test Country',
+  lat: 40.7,
+  long: -74,
+  population: 1_000_000,
+  jan: 150,
+  feb: 140,
+  mar: 180,
+  apr: 200,
+  may: 220,
+  jun: 240,
+  jul: 260,
+  aug: 250,
+  sep: 210,
+  oct: 180,
+  nov: 150,
+  dec: 140,
+};
+
+const mockWeeklyWeather: CityWeeklyWeather = {
+  city: 'Test City',
+  country: 'Test Country',
+  state: null,
+  lat: 40.7,
+  long: -74,
+  weeklyData: [
+    {
+      week: 1,
+      avgTemp: 20,
+      minTemp: 15,
+      maxTemp: 25,
+      totalPrecip: 10,
+      avgPrecip: 2,
+      daysWithRain: 3,
+      daysWithData: 7,
+    },
+  ],
+};
+
+const baseProps = {
+  displaySunshineData: mockSunshineData,
+  sunshineLoading: false,
+  sunshineError: false,
+  selectedMonth: 1,
+  weeklyWeatherData: mockWeeklyWeather,
+  weeklyWeatherLoading: false,
+  weeklyWeatherError: false,
+};
+
 describe('DataChartTabs', () => {
-  const mockSunshineData: SunshineData = {
-    cityId: 213,
-    city: 'Test City',
-    country: 'Test Country',
-    lat: 40.7128,
-    long: -74.006,
-    population: 1000000,
-    jan: 150,
-    feb: 140,
-    mar: 180,
-    apr: 200,
-    may: 220,
-    jun: 240,
-    jul: 260,
-    aug: 250,
-    sep: 210,
-    oct: 180,
-    nov: 150,
-    dec: 140,
-  };
+  it('renders the temperature panel when tab=Temperature', () => {
+    const { getByTestId, queryByTestId } = render(
+      <DataChartTabs tab={DataType.Temperature} {...baseProps} />
+    );
+    expect(getByTestId('panel-temperature')).toBeInTheDocument();
+    expect(queryByTestId('panel-sunshine')).not.toBeInTheDocument();
+    expect(queryByTestId('panel-precip')).not.toBeInTheDocument();
+  });
 
-  const mockWeeklyWeather: CityWeeklyWeather = {
-    city: 'Test City',
-    country: 'Test Country',
-    state: null,
-    lat: 40.7128,
-    long: -74.006,
-    weeklyData: [
-      {
-        week: 1,
-        avgTemp: 20,
-        minTemp: 15,
-        maxTemp: 25,
-        totalPrecip: 10,
-        avgPrecip: 2,
-        daysWithRain: 3,
-        daysWithData: 7,
-      },
-    ],
-  };
+  it('renders the sunshine panel when tab=Sunshine', () => {
+    const { getByTestId, queryByTestId } = render(
+      <DataChartTabs tab={DataType.Sunshine} {...baseProps} />
+    );
+    expect(getByTestId('panel-sunshine')).toBeInTheDocument();
+    expect(queryByTestId('panel-temperature')).not.toBeInTheDocument();
+    expect(queryByTestId('panel-precip')).not.toBeInTheDocument();
+  });
 
-  it('renders all three tabs', () => {
+  it('renders the precip panel when tab=Precip', () => {
+    const { getByTestId, queryByTestId } = render(
+      <DataChartTabs tab={DataType.Precip} {...baseProps} />
+    );
+    expect(getByTestId('panel-precip')).toBeInTheDocument();
+    expect(queryByTestId('panel-temperature')).not.toBeInTheDocument();
+    expect(queryByTestId('panel-sunshine')).not.toBeInTheDocument();
+  });
+
+  it('accepts an onHover prop without error', () => {
+    const onHover = vi.fn();
     render(
       <DataChartTabs
-        displaySunshineData={mockSunshineData}
-        sunshineLoading={false}
-        sunshineError={false}
-        selectedMonth={1}
-        weeklyWeatherData={mockWeeklyWeather}
-        weeklyWeatherLoading={false}
-        weeklyWeatherError={false}
-        dataType={DataType.Temperature}
+        tab={DataType.Temperature}
+        {...baseProps}
+        onHover={onHover}
       />
     );
-
-    expect(screen.getByRole('tab', { name: /temp/i })).toBeInTheDocument();
-    expect(screen.getByRole('tab', { name: /sun/i })).toBeInTheDocument();
-    expect(screen.getByRole('tab', { name: /precip/i })).toBeInTheDocument();
-  });
-
-  it('renders temperature tab as default', () => {
-    render(
-      <DataChartTabs
-        displaySunshineData={mockSunshineData}
-        sunshineLoading={false}
-        sunshineError={false}
-        selectedMonth={1}
-        weeklyWeatherData={mockWeeklyWeather}
-        weeklyWeatherLoading={false}
-        weeklyWeatherError={false}
-        dataType={DataType.Temperature}
-      />
-    );
-
-    const tempTab = screen.getByRole('tab', { name: /temp/i });
-    expect(tempTab).toHaveAttribute('aria-selected', 'true');
-  });
-
-  it('switches to sunshine tab when clicked', async () => {
-    const user = userEvent.setup();
-    render(
-      <DataChartTabs
-        displaySunshineData={mockSunshineData}
-        sunshineLoading={false}
-        sunshineError={false}
-        selectedMonth={1}
-        weeklyWeatherData={mockWeeklyWeather}
-        weeklyWeatherLoading={false}
-        weeklyWeatherError={false}
-        dataType={DataType.Temperature}
-      />
-    );
-
-    const sunTab = screen.getByRole('tab', { name: /sun/i });
-    await user.click(sunTab);
-
-    expect(sunTab).toHaveAttribute('aria-selected', 'true');
-  });
-
-  it('switches to precipitation tab when clicked', async () => {
-    const user = userEvent.setup();
-    render(
-      <DataChartTabs
-        displaySunshineData={mockSunshineData}
-        sunshineLoading={false}
-        sunshineError={false}
-        selectedMonth={1}
-        weeklyWeatherData={mockWeeklyWeather}
-        weeklyWeatherLoading={false}
-        weeklyWeatherError={false}
-        dataType={DataType.Temperature}
-      />
-    );
-
-    const precipTab = screen.getByRole('tab', { name: /precip/i });
-    await user.click(precipTab);
-
-    expect(precipTab).toHaveAttribute('aria-selected', 'true');
-  });
-
-  it('passes loading state to temperature section', () => {
-    const { container } = render(
-      <DataChartTabs
-        displaySunshineData={mockSunshineData}
-        sunshineLoading={false}
-        sunshineError={false}
-        selectedMonth={1}
-        weeklyWeatherData={null}
-        weeklyWeatherLoading={true}
-        weeklyWeatherError={false}
-        dataType={DataType.Temperature}
-      />
-    );
-
-    // temperaturedatasection should show loader component
-    expect(container.querySelector('.mantine-Loader-root')).toBeInTheDocument();
-  });
-
-  it('passes error state to temperature section', () => {
-    render(
-      <DataChartTabs
-        displaySunshineData={mockSunshineData}
-        sunshineLoading={false}
-        sunshineError={false}
-        selectedMonth={1}
-        weeklyWeatherData={null}
-        weeklyWeatherLoading={false}
-        weeklyWeatherError={true}
-        dataType={DataType.Temperature}
-      />
-    );
-
-    // temperaturedatasection should show error state
-    const errorElements = screen.getAllByText(/error|failed/i);
-    expect(errorElements.length).toBeGreaterThan(0);
-  });
-
-  it('passes loading state to sunshine section', async () => {
-    const user = userEvent.setup();
-    const { container } = render(
-      <DataChartTabs
-        displaySunshineData={null}
-        sunshineLoading={true}
-        sunshineError={false}
-        selectedMonth={1}
-        weeklyWeatherData={mockWeeklyWeather}
-        weeklyWeatherLoading={false}
-        weeklyWeatherError={false}
-        dataType={DataType.Temperature}
-      />
-    );
-
-    const sunTab = screen.getByRole('tab', { name: /sun/i });
-    await user.click(sunTab);
-
-    // sunshinedatasection should show loader component
-    expect(container.querySelector('.mantine-Loader-root')).toBeInTheDocument();
-  });
-
-  it('passes error state to sunshine section', async () => {
-    const user = userEvent.setup();
-    render(
-      <DataChartTabs
-        displaySunshineData={null}
-        sunshineLoading={false}
-        sunshineError={true}
-        selectedMonth={1}
-        weeklyWeatherData={mockWeeklyWeather}
-        weeklyWeatherLoading={false}
-        weeklyWeatherError={false}
-        dataType={DataType.Temperature}
-      />
-    );
-
-    const sunTab = screen.getByRole('tab', { name: /sun/i });
-    await user.click(sunTab);
-
-    const errorElements = screen.getAllByText(/error|failed/i);
-    expect(errorElements.length).toBeGreaterThan(0);
-  });
-
-  it('renders with vertical orientation', () => {
-    const { container } = render(
-      <DataChartTabs
-        displaySunshineData={mockSunshineData}
-        sunshineLoading={false}
-        sunshineError={false}
-        selectedMonth={1}
-        weeklyWeatherData={mockWeeklyWeather}
-        weeklyWeatherLoading={false}
-        weeklyWeatherError={false}
-        dataType={DataType.Temperature}
-      />
-    );
-
-    const tabsContainer = container.querySelector('[role="tablist"]');
-    expect(tabsContainer).toHaveAttribute('aria-orientation', 'vertical');
+    // The mocked panel doesn't fire onHover; this test just guards the prop
+    // surface compiles and renders.
+    expect(onHover).not.toHaveBeenCalled();
   });
 });

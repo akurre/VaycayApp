@@ -1,8 +1,9 @@
 import { useMemo, memo, useCallback } from 'react';
 import type { SunshineData } from '@/types/sunshineDataType';
+import type { ChartHoverState } from '@/types/chartTypes';
+import type { RibbonHoverPayload } from '@/types/cityPopupTypes';
 import { transformSunshineDataForChart } from '@/utils/dataFormatting/transformSunshineDataForChart';
 import { generateTheoreticalMaxSunshineData } from '@/utils/dataFormatting/generateTheoreticalMaxSunshineData';
-import SunshineGraphTooltipWrapper from './SunshineGraphTooltipWrapper';
 import SunshineGraphDot from './SunshineGraphDot';
 import RechartsLineGraph, {
   type LineConfig,
@@ -15,12 +16,14 @@ interface SunshineGraphProps {
   sunshineData: SunshineData | null;
   selectedMonth?: number;
   comparisonSunshineData?: SunshineData | null;
+  onHover?: (payload: RibbonHoverPayload | null) => void;
 }
 
 const SunshineGraph = ({
   sunshineData,
   selectedMonth,
   comparisonSunshineData,
+  onHover,
 }: SunshineGraphProps) => {
   // Get theme-aware colors
   const chartColors = useChartColors();
@@ -180,6 +183,29 @@ const SunshineGraph = ({
     ];
   }, [selectedMonth, combinedChartData, chartColors]);
 
+  const handleHover = useCallback(
+    (state: ChartHoverState | null) => {
+      if (!onHover) return;
+      if (!state) {
+        onHover(null);
+        return;
+      }
+      const point = combinedChartData[state.activeIndex];
+      if (!point) {
+        onHover(null);
+        return;
+      }
+      const c1 = (point.hours ?? null) as number | null;
+      const c2 = (point.comparisonHours ?? null) as number | null;
+      onHover({
+        label: typeof point.month === 'string' ? point.month : `${point.month}`,
+        v1: c1 === null ? null : `${c1.toFixed(1)}h`,
+        v2: c2 === null ? null : `${c2.toFixed(1)}h`,
+      });
+    },
+    [combinedChartData, onHover]
+  );
+
   // if neither city has data, return null (shouldn't happen due to WeatherDataSection check)
   if (!baseData || !baseChartStructure) return null;
 
@@ -187,24 +213,36 @@ const SunshineGraph = ({
   const cityKey = `${baseData.city}-${baseData.lat}-${baseData.long}`;
 
   return (
-    <RechartsLineGraph
-      data={combinedChartData}
-      cityKey={cityKey}
-      xAxisDataKey="month"
-      yAxisLabel="Hours"
-      lines={lines}
-      legendLayout="horizontal"
-      legendVerticalAlign="top"
-      legendAlign="center"
-      referenceLines={referenceLines}
-      tooltipContent={
-        <SunshineGraphTooltipWrapper
-          cityName={sunshineData?.city}
-          comparisonCityName={comparisonSunshineData?.city}
+    <div className="w-full h-full flex flex-col">
+      <div className="text-[10px] text-[var(--mantine-color-dimmed)] flex gap-3 px-2 pb-1">
+        <span className="flex items-center gap-1">
+          <span
+            className="inline-block w-3 h-px"
+            style={{ background: CITY1_PRIMARY_COLOR, height: 2 }}
+          />
+          actual sun
+        </span>
+        <span className="flex items-center gap-1">
+          <span
+            className="inline-block w-3 h-px border-t border-dashed"
+            style={{ borderColor: CITY1_PRIMARY_COLOR }}
+          />
+          100% sun ceiling
+        </span>
+      </div>
+      <div className="flex-1 min-h-0">
+        <RechartsLineGraph
+          data={combinedChartData}
+          cityKey={cityKey}
+          xAxisDataKey="month"
+          lines={lines}
+          showLegend={false}
+          referenceLines={referenceLines}
+          margin={{ left: 0 }}
+          onHover={handleHover}
         />
-      }
-      margin={{ left: 0 }}
-    />
+      </div>
+    </div>
   );
 };
 

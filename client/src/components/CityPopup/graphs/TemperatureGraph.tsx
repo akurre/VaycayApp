@@ -1,11 +1,11 @@
-import { useMemo, memo } from 'react';
+import { useMemo, memo, useCallback } from 'react';
 import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
+import type { ChartHoverState } from '@/types/chartTypes';
+import type { RibbonHoverPayload } from '@/types/cityPopupTypes';
 
 import RechartsLineGraph, { type LineConfig } from './RechartsLineGraph';
-import TemperatureGraphTooltip from './TemperatureGraphTooltip';
-import { useChartColors } from '@/hooks/useChartColors';
 import { useAppStore } from '@/stores/useAppStore';
-import { getTemperatureUnitSymbol } from '@/utils/tempFormatting/convertTemperature';
+import { formatTemperature } from '@/utils/tempFormatting/formatTemperature';
 import {
   CITY1_PRIMARY_COLOR,
   CITY1_MAX_COLOR,
@@ -18,38 +18,15 @@ import {
 interface TemperatureGraphProps {
   weeklyWeatherData: CityWeeklyWeather;
   comparisonWeeklyWeatherData?: CityWeeklyWeather | null;
+  onHover?: (payload: RibbonHoverPayload | null) => void;
 }
 
 const TemperatureGraph = ({
   weeklyWeatherData,
   comparisonWeeklyWeatherData,
+  onHover,
 }: TemperatureGraphProps) => {
-  // Get theme-aware colors
   const temperatureUnit = useAppStore((state) => state.temperatureUnit);
-  const unitSymbol = getTemperatureUnitSymbol(temperatureUnit);
-
-  // Create a wrapper component for the tooltip that has access to city names
-  const TooltipWrapper = (props: {
-    active?: boolean;
-    payload?: ReadonlyArray<{
-      payload: {
-        week: number;
-        avgTemp: number | null;
-        maxTemp: number | null;
-        minTemp: number | null;
-        compAvgTemp?: number | null;
-        compMaxTemp?: number | null;
-        compMinTemp?: number | null;
-        daysWithData: number;
-      };
-    }>;
-  }) => (
-    <TemperatureGraphTooltip
-      {...props}
-      cityName={weeklyWeatherData.city}
-      comparisonCityName={comparisonWeeklyWeatherData?.city}
-    />
-  );
 
   // Generate unique city key for animation control
   const cityKey = `${weeklyWeatherData.city}-${weeklyWeatherData.lat}-${weeklyWeatherData.long}`;
@@ -90,19 +67,18 @@ const TemperatureGraph = ({
     return mainData;
   }, [weeklyWeatherData.weeklyData, comparisonWeeklyWeatherData]);
 
-  // Configure temperature lines
+  // Configure temperature lines. The ribbon header carries city names and the
+  // readout carries values, so per-line "Max/Avg/Min" suffixes (which only
+  // existed for the legend) are dropped — distinct strokes still distinguish
+  // them on hover via the underlying tooltip.
   const lines: LineConfig[] = useMemo(() => {
-    // Truncate city names to 3 chars when comparing to save legend space
-    const mainCityName = comparisonWeeklyWeatherData
-      ? weeklyWeatherData.city.substring(0, 3) + '.'
-      : weeklyWeatherData.city;
-    const compCityName =
-      comparisonWeeklyWeatherData?.city.substring(0, 3) + '.';
+    const mainCityName = weeklyWeatherData.city;
+    const compCityName = comparisonWeeklyWeatherData?.city ?? '';
 
     const baseLines: LineConfig[] = [
       {
         dataKey: 'maxTemp',
-        name: `${mainCityName} Max`,
+        name: mainCityName,
         stroke: CITY1_MAX_COLOR,
         strokeWidth: 2,
         dot: false,
@@ -110,7 +86,7 @@ const TemperatureGraph = ({
       },
       {
         dataKey: 'avgTemp',
-        name: `${mainCityName} Avg`,
+        name: mainCityName,
         stroke: CITY1_PRIMARY_COLOR,
         strokeWidth: 2.5,
         dot: false,
@@ -118,7 +94,7 @@ const TemperatureGraph = ({
       },
       {
         dataKey: 'minTemp',
-        name: `${mainCityName} Min`,
+        name: mainCityName,
         stroke: CITY1_MIN_COLOR,
         strokeWidth: 2,
         dot: false,
@@ -130,7 +106,7 @@ const TemperatureGraph = ({
       baseLines.push(
         {
           dataKey: 'compMaxTemp',
-          name: `${compCityName} Max`,
+          name: compCityName,
           stroke: CITY2_MAX_COLOR,
           strokeWidth: 2,
           dot: false,
@@ -138,7 +114,7 @@ const TemperatureGraph = ({
         },
         {
           dataKey: 'compAvgTemp',
-          name: `${compCityName} Avg`,
+          name: compCityName,
           stroke: CITY2_PRIMARY_COLOR,
           strokeWidth: 2.5,
           dot: false,
@@ -146,7 +122,7 @@ const TemperatureGraph = ({
         },
         {
           dataKey: 'compMinTemp',
-          name: `${compCityName} Min`,
+          name: compCityName,
           stroke: CITY2_MIN_COLOR,
           strokeWidth: 2,
           dot: false,
@@ -158,21 +134,50 @@ const TemperatureGraph = ({
     return baseLines;
   }, [weeklyWeatherData.city, comparisonWeeklyWeatherData]);
 
+  const handleHover = useCallback(
+    (state: ChartHoverState | null) => {
+      if (!onHover) return;
+      if (!state) {
+        onHover(null);
+        return;
+      }
+      const point = chartData[state.activeIndex] as
+        | {
+            week: number;
+            avgTemp: number | null;
+            compAvgTemp?: number | null;
+          }
+        | undefined;
+      if (!point) {
+        onHover(null);
+        return;
+      }
+      const compAvg = point.compAvgTemp ?? null;
+      onHover({
+        label: `Week ${point.week}`,
+        v1:
+          point.avgTemp == null
+            ? null
+            : (formatTemperature(point.avgTemp, temperatureUnit) ?? null),
+        v2:
+          compAvg == null
+            ? null
+            : (formatTemperature(compAvg, temperatureUnit) ?? null),
+      });
+    },
+    [chartData, onHover, temperatureUnit]
+  );
+
   return (
     <RechartsLineGraph
       data={chartData}
       cityKey={cityKey}
       xAxisDataKey="week"
-      xAxisLabel="Week of Year"
-      yAxisLabel={`Temperature (${unitSymbol})`}
       lines={lines}
       referenceLines={[]}
-      showLegend={true}
-      legendLayout="horizontal"
-      legendVerticalAlign="top"
-      legendAlign="center"
-      tooltipContent={<TooltipWrapper />}
+      showLegend={false}
       margin={{ left: 0, bottom: 5 }}
+      onHover={handleHover}
     />
   );
 };

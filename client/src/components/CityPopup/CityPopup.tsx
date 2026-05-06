@@ -1,9 +1,4 @@
-import {
-  ActionIcon,
-  Badge,
-  Tooltip,
-  useMantineColorScheme,
-} from '@mantine/core';
+import { ActionIcon, useMantineColorScheme } from '@mantine/core';
 import { useMemo, useState } from 'react';
 import { IconX } from '@tabler/icons-react';
 import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
@@ -12,9 +7,6 @@ import { DataType } from '@/types/mapTypes';
 import useWeatherDataForCity from '@/api/dates/useWeatherDataForCity';
 import useSunshineDataForCity from '@/api/dates/useSunshineDataForCity';
 import useWeeklyWeatherForCity from '@/api/dates/useWeeklyWeatherForCity';
-import DailyTempValues from './DailyTempValues';
-import SunshineValues from './SunshineValues';
-import AdditionalInfo from './AdditionalInfo';
 import DataChartTabs from './DataChartTabs';
 import { extractMonthFromDate } from '@/utils/dateFormatting/extractMonthFromDate';
 import { extractMonthDay } from '@/utils/dateFormatting/extractMonthDay';
@@ -22,7 +14,8 @@ import { isWeatherData } from '@/utils/typeGuards';
 import ComparisonCitySelector from './ComparisonCitySelector';
 import type { SearchCitiesResult } from '@/types/userLocationType';
 import { appColors } from '@/theme';
-import CityBadge from './graphs/CityBadge';
+import RibbonShell from './Ribbon/RibbonShell';
+import { useRibbonStats } from './hooks/useRibbonStats';
 
 const CityPopup = ({
   city,
@@ -33,48 +26,33 @@ const CityPopup = ({
 }: CityPopupProps) => {
   const { colorScheme } = useMantineColorScheme();
 
-  // State for comparison city
   const [comparisonCity, setComparisonCity] =
     useState<SearchCitiesResult | null>(null);
 
-  // Determine what type of data we have
   const hasWeatherData = city && isWeatherData(city);
   const hasSunshineData = city && !isWeatherData(city);
 
   const cityAsWeather = hasWeatherData ? city : null;
   const cityAsSunshine = hasSunshineData ? city : null;
 
-  // Determine the month to use with validation
-  // Prefer selectedMonth from parent, fall back to extracting from weather data
   const monthToUse =
     selectedMonth ??
     extractMonthFromDate(cityAsWeather?.date) ??
     new Date().getMonth() + 1;
 
-  // Construct the date for weather fetching - clearer logic
   const dateToUse = useMemo(() => {
-    // For temperature mode, always use the selectedDate if available
     if (selectedDate && dataType === DataType.Temperature) {
       return selectedDate;
     }
-
-    // If we have weather data and no selectedDate, use the data's date
     if (cityAsWeather?.date && !selectedDate) {
       return cityAsWeather.date;
     }
-
-    // For sunshine mode, construct mm-15 format from month
-    const sunshineDate = `${monthToUse.toString().padStart(2, '0')}-15`;
-    return sunshineDate;
+    return `${monthToUse.toString().padStart(2, '0')}-15`;
   }, [selectedDate, dataType, cityAsWeather, monthToUse]);
 
-  // Determine if we should fetch weather data
-  // Always fetch when we have a city and we're in temperature mode
-  // The hook will handle caching internally
   const shouldFetchWeather = !!city && dataType === DataType.Temperature;
 
-  // always call hooks unconditionally (rules of hooks)
-  const { weatherData, weatherLoading, weatherError } = useWeatherDataForCity({
+  const { weatherData } = useWeatherDataForCity({
     cityName: city?.city ?? null,
     lat: city?.lat ?? null,
     long: city?.long ?? null,
@@ -82,8 +60,6 @@ const CityPopup = ({
     skipFetch: !shouldFetchWeather,
   });
 
-  // determine if we should fetch sunshine data
-  // fetch when: we don't have sunshine data and we have a valid month
   const shouldFetchSunshine =
     !hasSunshineData && monthToUse >= 1 && monthToUse <= 12;
 
@@ -95,7 +71,6 @@ const CityPopup = ({
       skipFetch: !shouldFetchSunshine,
     });
 
-  // Fetch weekly weather data for the city (always fetch when we have a city)
   const {
     weeklyWeatherData,
     loading: weeklyWeatherLoading,
@@ -107,16 +82,9 @@ const CityPopup = ({
     skipFetch: !city,
   });
 
-  // Extract month-day only from dateToUse for comparison city
-  // (removes year if present, e.g., "2020-11-26" -> "11-26")
   const monthDayOnly = useMemo(() => extractMonthDay(dateToUse), [dateToUse]);
 
-  // Fetch weather data for the comparison city
-  const {
-    weatherData: comparisonWeatherData,
-    weatherLoading: comparisonWeatherLoading,
-    weatherError: comparisonWeatherError,
-  } = useWeatherDataForCity({
+  const { weatherData: comparisonWeatherData } = useWeatherDataForCity({
     cityName: comparisonCity?.name ?? null,
     lat: comparisonCity?.lat ?? null,
     long: comparisonCity?.long ?? null,
@@ -124,32 +92,21 @@ const CityPopup = ({
     skipFetch: !comparisonCity,
   });
 
-  // Fetch weekly weather data for the comparison city
-  const {
-    weeklyWeatherData: comparisonWeeklyWeatherData,
-    loading: comparisonWeeklyWeatherLoading,
-    error: comparisonWeeklyWeatherError,
-  } = useWeeklyWeatherForCity({
+  const { weeklyWeatherData: comparisonWeeklyWeatherData } =
+    useWeeklyWeatherForCity({
+      cityName: comparisonCity?.name ?? null,
+      lat: comparisonCity?.lat ?? null,
+      long: comparisonCity?.long ?? null,
+      skipFetch: !comparisonCity,
+    });
+
+  const { sunshineData: comparisonSunshineData } = useSunshineDataForCity({
     cityName: comparisonCity?.name ?? null,
     lat: comparisonCity?.lat ?? null,
     long: comparisonCity?.long ?? null,
     skipFetch: !comparisonCity,
   });
 
-  // Fetch sunshine data for the comparison city
-  const {
-    sunshineData: comparisonSunshineData,
-    sunshineLoading: comparisonSunshineLoading,
-    sunshineError: comparisonSunshineError,
-  } = useSunshineDataForCity({
-    cityName: comparisonCity?.name ?? null,
-    lat: comparisonCity?.lat ?? null,
-    long: comparisonCity?.long ?? null,
-    skipFetch: !comparisonCity,
-  });
-
-  // For weather data: prefer fetched data if it matches the selected date
-  // This ensures we show the correct date's data when the slider changes
   const displayWeatherData = useMemo(() => {
     if (weatherData && dataType === DataType.Temperature) {
       return weatherData;
@@ -157,10 +114,8 @@ const CityPopup = ({
     return cityAsWeather;
   }, [weatherData, cityAsWeather, dataType]);
 
-  // For sunshine data: use what we have or fall back to fetched
   const displaySunshineData = cityAsSunshine ?? sunshineData;
 
-  // Memoize excludeCity to prevent unnecessary re-renders and search queries
   const excludeCity = useMemo(
     () =>
       city
@@ -173,10 +128,19 @@ const CityPopup = ({
     [city?.city, city?.state, city?.country]
   );
 
-  // early return AFTER all hooks have been called
+  const stats = useRibbonStats({
+    basePopulation: city?.population ?? null,
+    comparisonPopulation: comparisonCity?.population ?? null,
+    displayWeatherData,
+    comparisonWeatherData,
+    displaySunshineData,
+    comparisonSunshineData,
+    weeklyWeatherData,
+    comparisonWeeklyWeatherData,
+  });
+
   if (!city) return null;
 
-  // Create the modal title
   let cityAndCountry = city.city ? toTitleCase(city.city) : 'Unknown City';
   if (city.state) {
     const state =
@@ -186,6 +150,9 @@ const CityPopup = ({
   if (city.country) {
     cityAndCountry += `, ${city.country}`;
   }
+
+  const todayC1 = displayWeatherData?.avgTemperature ?? null;
+  const todayC2 = comparisonWeatherData?.avgTemperature ?? null;
 
   return (
     <div
@@ -200,82 +167,44 @@ const CityPopup = ({
         borderTop: '1px solid var(--mantine-color-default-border)',
       }}
     >
+      <div className="absolute top-2 right-12 z-10">
+        <ComparisonCitySelector
+          onCitySelect={setComparisonCity}
+          onCityRemove={() => setComparisonCity(null)}
+          selectedCity={comparisonCity}
+          excludeCity={excludeCity}
+        />
+      </div>
       <div className="absolute top-2 right-2 z-10">
-        {/* close button */}
         <ActionIcon onClick={onClose} aria-label="Close">
           <IconX size={24} />
         </ActionIcon>
       </div>
-      {/* Content area with horizontal layout */}
-      <div className="flex h-full py-3 px-6 gap-6">
-        {/* Left section - City info and metadata */}
-        <div className="flex flex-col gap-3 min-w-1/2 grow">
-          <div className="flex gap-6">
-            <div className="flex items-center">
-              <Tooltip label={cityAndCountry}>
-                <CityBadge isLarge cityName={cityAndCountry}></CityBadge>
-              </Tooltip>
-            </div>
-            <div className="flex-1" />
-            <div className="flex justify-end">
-              <ComparisonCitySelector
-                onCitySelect={setComparisonCity}
-                onCityRemove={() => setComparisonCity(null)}
-                selectedCity={comparisonCity}
-                excludeCity={excludeCity}
-              />
-            </div>
-          </div>
-          <div className="flex gap-6 w-full flex-1 min-h-0 justify-end">
-            {/* city info */}
-            <AdditionalInfo city={city} isShowCity={!!comparisonSunshineData} />
-
-            {/* Average annual sunshine */}
-            <div className="flex flex-col w-5/12">
-              <SunshineValues
-                baseCity={city?.city}
-                comparisonCity={comparisonCity?.name}
-                displaySunshineData={displaySunshineData}
-                weeklyWeatherData={weeklyWeatherData?.weeklyData ?? null}
-                isLoading={sunshineLoading}
-                hasError={sunshineError}
-                comparisonSunshineData={comparisonSunshineData}
-                comparisonWeeklyWeatherData={
-                  comparisonWeeklyWeatherData?.weeklyData ?? null
-                }
-              />
-            </div>
-            <div className="flex flex-col w-5/12">
-              {/* Middle section - Weather data */}
-              <DailyTempValues
-                displayWeatherData={displayWeatherData}
-                isLoading={weatherLoading}
-                hasError={weatherError}
-                comparisonWeatherData={comparisonWeatherData}
-              />
-            </div>
-          </div>
-        </div>
-        {/* Right section - Data Charts */}
-        <div className="w-full h-full">
+      <RibbonShell
+        baseCityName={cityAndCountry}
+        baseCityLat={city.lat ?? null}
+        comparisonCity={comparisonCity}
+        initialTab={dataType}
+        todayC1={todayC1}
+        todayC2={todayC2}
+        selectedDate={dateToUse}
+        stats={stats}
+        renderChart={(tab, onHover) => (
           <DataChartTabs
-            dataType={dataType}
+            tab={tab}
             displaySunshineData={displaySunshineData}
             sunshineLoading={sunshineLoading}
-            sunshineError={sunshineError}
+            sunshineError={!!sunshineError}
             selectedMonth={monthToUse}
             weeklyWeatherData={weeklyWeatherData}
             weeklyWeatherLoading={weeklyWeatherLoading}
-            weeklyWeatherError={weeklyWeatherError}
+            weeklyWeatherError={!!weeklyWeatherError}
             comparisonSunshineData={comparisonSunshineData}
-            comparisonSunshineLoading={comparisonSunshineLoading}
-            comparisonSunshineError={comparisonSunshineError}
             comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
-            comparisonWeeklyWeatherLoading={comparisonWeeklyWeatherLoading}
-            comparisonWeeklyWeatherError={comparisonWeeklyWeatherError}
+            onHover={onHover}
           />
-        </div>
-      </div>
+        )}
+      />
     </div>
   );
 };

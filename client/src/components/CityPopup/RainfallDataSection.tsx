@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
+import type { RibbonHoverPayload } from '@/types/cityPopupTypes';
 import RainfallGraph from './graphs/RainfallGraph';
 import WeatherDataSection from './WeatherDataSection';
 import ComponentErrorBoundary from '../ErrorBoundary/ComponentErrorBoundary';
@@ -10,6 +11,7 @@ interface RainfallDataSectionProps {
   isLoading: boolean;
   hasError: boolean;
   comparisonWeeklyWeatherData?: CityWeeklyWeather | null;
+  onHover?: (payload: RibbonHoverPayload | null) => void;
 }
 
 const RainfallDataSection = ({
@@ -17,6 +19,7 @@ const RainfallDataSection = ({
   isLoading,
   hasError,
   comparisonWeeklyWeatherData,
+  onHover,
 }: RainfallDataSectionProps) => {
   // check if there's actual precipitation data (not just empty objects)
   const hasMainPrecipData = hasPrecipitationData(weeklyWeatherData);
@@ -41,6 +44,7 @@ const RainfallDataSection = ({
           <RainfallGraph
             weeklyWeatherData={data}
             comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
+            onHover={onHover}
           />
         </ComponentErrorBoundary>
       )}
