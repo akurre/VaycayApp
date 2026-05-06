@@ -21,7 +21,7 @@ const Field = ({
 }: FieldProps) => {
   const { colorScheme } = useMantineColorScheme();
   const labelColor =
-    colorScheme === 'dark' ? 'tertiary-purple.4' : 'tertiary-purple.7';
+    colorScheme === 'dark' ? 'tertiary-sand.4' : 'tertiary-sand.7';
   const classNames = `w-full ${isHorizontal ? 'flex gap-2' : ''}`;
 
   return (

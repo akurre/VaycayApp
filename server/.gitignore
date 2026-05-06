@@ -41,3 +41,6 @@ coverage/
 .cache/
 temp/
 tmp/
+
+# Diagnostic output from db-setup / import scripts
+import-diagnostic-*.json

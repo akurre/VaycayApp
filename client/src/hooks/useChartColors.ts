@@ -1,9 +1,10 @@
 import { useMantineColorScheme, useMantineTheme } from '@mantine/core';
 import { useMemo } from 'react';
+import { appColors } from '@/theme';
 
 /**
- * Hook that provides theme-aware colors for charts
- * Colors automatically adapt to light/dark mode
+ * Theme-aware chart colors built on the amber / ocean / sand palette.
+ * Returned values automatically swap for light vs dark mode.
  */
 export const useChartColors = () => {
   const { colorScheme } = useMantineColorScheme();
@@ -13,20 +14,20 @@ export const useChartColors = () => {
     const isDark = colorScheme === 'dark';
 
     return {
-      // Line colors
-      lineColor: theme.colors['secondary-teal'][5], // stays consistent
-      maxLineColor: theme.colors['primary-red'][5], // stays consistent
-      minLineColor: isDark ? '#6b7280' : '#9ca3af', // lighter in light mode
+      lineColor: theme.colors['primary-amber'][4],
+      maxLineColor: theme.colors.error[4],
+      minLineColor: isDark
+        ? theme.colors['tertiary-sand'][4]
+        : theme.colors['tertiary-sand'][6],
 
-      // Grid and axis colors
-      gridColor: isDark ? '#374151' : '#e5e7eb', // darker in dark mode, light in light mode
-      axisColor: isDark ? '#6b7280' : '#4b5563', // medium gray, darker in light mode for contrast
+      gridColor: isDark ? appColors.dark.border : appColors.light.border,
+      axisColor: isDark
+        ? theme.colors['tertiary-sand'][5]
+        : theme.colors['tertiary-sand'][6],
 
-      // Text colors for labels
-      textColor: isDark ? '#d1d5db' : '#374151', // light text in dark mode, dark text in light mode
+      textColor: isDark ? appColors.dark.text : appColors.light.text,
 
-      // Background color for tooltips and other overlays
-      backgroundColor: isDark ? '#1f2937' : '#ffffff', // dark gray in dark mode, white in light mode
+      backgroundColor: isDark ? appColors.dark.paper : appColors.light.surface,
     };
   }, [colorScheme, theme]);
 };

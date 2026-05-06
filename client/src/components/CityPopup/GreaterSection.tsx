@@ -13,7 +13,8 @@ const GreaterSection = ({
   className,
 }: GreaterSectionProps) => {
   const { colorScheme } = useMantineColorScheme();
-  const titleColor = colorScheme === 'dark' ? 'primary-red.5' : 'primary-red.7';
+  const titleColor =
+    colorScheme === 'dark' ? 'primary-amber.5' : 'primary-amber.7';
   const classNames = `${className} pb-3`;
   return (
     <div className={classNames}>

@@ -46,12 +46,12 @@ export const appColors = {
   warning: '#E8973C', // reuse primary amber
   error: '#C0533C', // terracotta, not burgundy
   info: '#487D99', // ocean light
-};
+} as const;
 
 // Define the theme with proper Mantine color arrays
 export const theme: MantineThemeOverride = createTheme({
   // Set primary color to your actual primary color
-  primaryColor: 'primary-red',
+  primaryColor: 'primary-amber',
 
   // Configure primary shade for light and dark modes
   primaryShade: { light: 6, dark: 8 },
@@ -156,7 +156,7 @@ export const theme: MantineThemeOverride = createTheme({
   components: {
     Button: Button.extend({
       defaultProps: {
-        color: 'primary-red',
+        color: 'primary-amber',
         variant: 'filled',
       },
       // we can add variant-specific styles here if needed
