@@ -209,9 +209,9 @@ export const MONTH_FIELDS: Record<number, keyof SunshineData> = {
 export const SLIDER_THUMB_WIDTH = 32; // 8 * 4 (w-8 in tailwind)
 
 // Sunshine chart accents
-export const SUNSHINE_CHART_LINE_COLOR     = '#E8973C'; // amber, was teal
-export const SUNSHINE_CHART_GRID_COLOR     = '#EAD6B3'; // warm grid
-export const SUNSHINE_CHART_AXIS_COLOR     = '#A8946B'; // warm gray axis
+export const SUNSHINE_CHART_LINE_COLOR = '#E8973C'; // amber, was teal
+export const SUNSHINE_CHART_GRID_COLOR = '#EAD6B3'; // warm grid
+export const SUNSHINE_CHART_AXIS_COLOR = '#A8946B'; // warm gray axis
 export const SUNSHINE_CHART_MAX_LINE_COLOR = '#C0533C'; // terracotta for theoretical max
 export const SUNSHINE_CHART_MIN_LINE_COLOR = '#857250'; // sand-7 for baseline
 
@@ -264,13 +264,13 @@ export const monthlyMarks = [
 
 // City 1 (main / warmest destination) — Amber family
 export const CITY1_PRIMARY_COLOR = '#E8973C'; // amber — avg
-export const CITY1_MAX_COLOR     = '#F0BE5F'; // light amber — max
-export const CITY1_MIN_COLOR     = '#9E5C18'; // deep amber — min
+export const CITY1_MAX_COLOR = '#F0BE5F'; // light amber — max
+export const CITY1_MIN_COLOR = '#9E5C18'; // deep amber — min
 
 // City 2 (comparison / home) — Ocean family, recedes visually
 export const CITY2_PRIMARY_COLOR = '#1F4E66'; // ocean — avg
-export const CITY2_MAX_COLOR     = '#6E9DB6'; // light ocean — max
-export const CITY2_MIN_COLOR     = '#0E2B3A'; // deep ocean — min
+export const CITY2_MAX_COLOR = '#6E9DB6'; // light ocean — max
+export const CITY2_MIN_COLOR = '#0E2B3A'; // deep ocean — min
 
 // ============================================================================
 // WORLD MAP BIG LOADER CONSTANTS

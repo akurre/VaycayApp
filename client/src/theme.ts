@@ -4,50 +4,49 @@ import type { MantineThemeOverride } from '@mantine/core';
 // custom color palette for the application
 export const appColors = {
   // primary · amber sunlight (warmth, the destination)
-  primary:        '#E8973C',
-  primaryLight:   '#F0BE5F',
-  primaryDark:    '#C97A24',
-  primaryHover:   '#D9871F',
+  primary: '#E8973C',
+  primaryLight: '#F0BE5F',
+  primaryDark: '#C97A24',
+  primaryHover: '#D9871F',
 
   // secondary · ocean blue (the action, the journey)
-  secondary:      '#1F4E66',
+  secondary: '#1F4E66',
   secondaryLight: '#487D99',
-  secondaryDark:  '#163C50',
+  secondaryDark: '#163C50',
   secondaryHover: '#2E627F',
 
   // tertiary · warm sand (the room, the canvas)
-  tertiary:       '#C8B387',
-  tertiaryLight:  '#ECE0C2',
-  tertiaryDark:   '#A8946B',
-  tertiaryHover:  '#B8A077',
+  tertiary: '#C8B387',
+  tertiaryLight: '#ECE0C2',
+  tertiaryDark: '#A8946B',
+  tertiaryHover: '#B8A077',
 
   light: {
-    background:       '#FBF7EF',  // warm cream, not stark white
-    surface:          '#FCF6E6',  // cards / paper
-    border:           '#EAD6B3',
-    text:             '#1A1715',
-    textSecondary:    '#6B5D49',  // warm gray, not cool
+    background: '#FBF7EF', // warm cream, not stark white
+    surface: '#FCF6E6', // cards / paper
+    border: '#EAD6B3',
+    text: '#1A1715',
+    textSecondary: '#6B5D49', // warm gray, not cool
     toggleBackground: '#ECE0C2',
     textShadow: '0 0 8px rgba(255,247,231,0.85), 0 0 4px rgba(255,247,231,0.6)',
   },
 
   dark: {
-    background:       '#14181F',  // deep ocean night
-    surface:          '#1E242E',
-    paper:            '#252C38',
-    border:           '#2C3543',
-    text:             '#E8DFD0',  // warm cream, easy on eyes
-    textSecondary:    '#9DB3C2',  // muted ocean, not purple
+    background: '#14181F', // deep ocean night
+    surface: '#1E242E',
+    paper: '#252C38',
+    border: '#2C3543',
+    text: '#E8DFD0', // warm cream, easy on eyes
+    textSecondary: '#9DB3C2', // muted ocean, not purple
     toggleBackground: '#252C38',
     textShadow: '0 0 8px rgba(0,0,0,0.8), 0 0 4px rgba(0,0,0,0.6)',
   },
 
-  success: '#5C8C3F',  // olive — fits the warm palette
-  warning: '#E8973C',  // reuse primary amber
-  error:   '#C0533C',  // terracotta, not burgundy
-  info:    '#487D99',  // ocean light
+  success: '#5C8C3F', // olive — fits the warm palette
+  warning: '#E8973C', // reuse primary amber
+  error: '#C0533C', // terracotta, not burgundy
+  info: '#487D99', // ocean light
 };
-
 
 // Define the theme with proper Mantine color arrays
 export const theme: MantineThemeOverride = createTheme({
@@ -68,24 +67,89 @@ export const theme: MantineThemeOverride = createTheme({
   // Define custom colors as proper Mantine color arrays
   colors: {
     'primary-amber': [
-      '#FCF6E6', '#F8E8C2', '#F4D592', '#F0BE5F',
+      '#FCF6E6',
+      '#F8E8C2',
+      '#F4D592',
+      '#F0BE5F',
       '#E8973C', // 4 — recommended primary shade (light)
-      '#C97A24', '#9E5C18', '#724311', '#4D2D0B', '#2A1906',
+      '#C97A24',
+      '#9E5C18',
+      '#724311',
+      '#4D2D0B',
+      '#2A1906',
     ],
     'secondary-ocean': [
-      '#EAF2F7', '#CADDE8', '#9DBED1', '#6E9DB6',
-      '#487D99', '#2E627F',
+      '#EAF2F7',
+      '#CADDE8',
+      '#9DBED1',
+      '#6E9DB6',
+      '#487D99',
+      '#2E627F',
       '#1F4E66', // 6 — secondary brand
-      '#163C50', '#0E2B3A', '#071821',
+      '#163C50',
+      '#0E2B3A',
+      '#071821',
     ],
     'tertiary-sand': [
-      '#FBF7EF', '#F4ECDB', '#ECE0C2', '#DCCBA5',
-      '#C8B387', '#A8946B', '#857250', '#615337', '#3F3623', '#211C12',
+      '#FBF7EF',
+      '#F4ECDB',
+      '#ECE0C2',
+      '#DCCBA5',
+      '#C8B387',
+      '#A8946B',
+      '#857250',
+      '#615337',
+      '#3F3623',
+      '#211C12',
     ],
-    success: ['#F1F5EB','#DDE7CC','#BFD09E','#A0B973','#80A052','#5C8C3F','#476B30','#344F23','#223516','#111B0A'],
-    warning: ['#FCF6E6','#F8E8C2','#F4D592','#F0BE5F','#E8973C','#C97A24','#9E5C18','#724311','#4D2D0B','#2A1906'],
-    error:   ['#FBEEE9','#F2D2C5','#E5AC97','#D6856A','#C0533C','#A33E29','#7E2E1E','#5A2014','#3B140C','#1F0905'],
-    info:    ['#EAF2F7','#CADDE8','#9DBED1','#6E9DB6','#487D99','#2E627F','#1F4E66','#163C50','#0E2B3A','#071821'],
+    success: [
+      '#F1F5EB',
+      '#DDE7CC',
+      '#BFD09E',
+      '#A0B973',
+      '#80A052',
+      '#5C8C3F',
+      '#476B30',
+      '#344F23',
+      '#223516',
+      '#111B0A',
+    ],
+    warning: [
+      '#FCF6E6',
+      '#F8E8C2',
+      '#F4D592',
+      '#F0BE5F',
+      '#E8973C',
+      '#C97A24',
+      '#9E5C18',
+      '#724311',
+      '#4D2D0B',
+      '#2A1906',
+    ],
+    error: [
+      '#FBEEE9',
+      '#F2D2C5',
+      '#E5AC97',
+      '#D6856A',
+      '#C0533C',
+      '#A33E29',
+      '#7E2E1E',
+      '#5A2014',
+      '#3B140C',
+      '#1F0905',
+    ],
+    info: [
+      '#EAF2F7',
+      '#CADDE8',
+      '#9DBED1',
+      '#6E9DB6',
+      '#487D99',
+      '#2E627F',
+      '#1F4E66',
+      '#163C50',
+      '#0E2B3A',
+      '#071821',
+    ],
   },
 
   // Component-specific styles using the extend pattern
