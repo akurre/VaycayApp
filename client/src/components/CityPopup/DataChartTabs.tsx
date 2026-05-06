@@ -5,7 +5,6 @@ import type { SunshineData } from '@/types/sunshineDataType';
 import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
 import type { RibbonHoverPayload } from '@/types/cityPopupTypes';
 import { DataType } from '@/types/mapTypes';
-import CustomPaper from '../Shared/CustomPaper';
 
 interface DataChartTabsProps {
   tab: DataType;
@@ -35,7 +34,7 @@ const DataChartTabs = ({
   onHover,
 }: DataChartTabsProps) => {
   return (
-    <CustomPaper className="h-full" p="sm">
+    <div className="h-full w-full">
       {tab === DataType.Temperature && (
         <TemperatureDataSection
           weeklyWeatherData={weeklyWeatherData}
@@ -64,7 +63,7 @@ const DataChartTabs = ({
           onHover={onHover}
         />
       )}
-    </CustomPaper>
+    </div>
   );
 };
 

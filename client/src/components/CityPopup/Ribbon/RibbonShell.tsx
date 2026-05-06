@@ -16,21 +16,20 @@ interface RibbonShellProps {
   baseCityLat: number | null;
   comparisonCity: SearchCitiesResult | null;
   initialTab: DataType;
-
-  // Today readout values per active tab. Parent computes per-tab (temp/sun/precip).
   todayC1: number | null;
   todayC2: number | null;
   selectedDate: string;
-
-  // Stat rail
   stats: ReadonlyArray<RibbonStat>;
-
-  // Chart panel — caller renders the active graph and forwards onHover up
   renderChart: (
     tab: DataType,
     onHover: (payload: RibbonHoverPayload | null) => void
   ) => ReactNode;
 }
+
+// Right-side padding budget reserved in the header row for the popup's
+// top-right control cluster (comparison-city search + close button).
+// Wide enough for the search input at its default width.
+const HEADER_RIGHT_RESERVE = 320;
 
 const RibbonShell = ({
   baseCityName,
@@ -48,15 +47,17 @@ const RibbonShell = ({
 
   const hasComparison = !!comparisonCity;
 
-  // Stable identity so the memoized chart panel doesn't re-render on hover churn
   const handleHover = useCallback((payload: RibbonHoverPayload | null) => {
     setHover(payload);
   }, []);
 
   return (
-    <div className="flex h-full py-3 px-6 gap-4">
+    <div className="flex h-full py-3 pl-4 pr-4 gap-4">
       <div className="flex-1 min-w-0 flex flex-col">
-        <header className="flex items-start justify-between gap-6 mb-2.5">
+        <header
+          className="flex items-start justify-between gap-6 mb-2.5"
+          style={{ paddingRight: HEADER_RIGHT_RESERVE }}
+        >
           <CityNamesHeader
             baseCityName={baseCityName}
             baseCityLat={baseCityLat}

@@ -2,7 +2,7 @@ import type { RibbonHoverPayload } from '@/types/cityPopupTypes';
 import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
 import { formatDateString } from '@/utils/dateFormatting/formatDateString';
 import { DataType } from '@/types/mapTypes';
-import { TemperatureUnit } from '@/types/mapTypes';
+import type { TemperatureUnit } from '@/types/mapTypes';
 import { formatTemperature } from '@/utils/tempFormatting/formatTemperature';
 import { useAppStore } from '@/stores/useAppStore';
 

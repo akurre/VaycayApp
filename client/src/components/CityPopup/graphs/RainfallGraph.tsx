@@ -26,86 +26,54 @@ const RainfallGraph = ({
 }: RainfallGraphProps) => {
   const chartColors = useChartColors();
 
-  // Transform weekly weather data for chart - filter out weeks with no precipitation data
-  // to prevent displaying zero values where no measurements exist
-  // Merge main city data with comparison city data
   const { chartData, hasMainData, hasCompData } = useMemo(() => {
-    // process main city data if it exists
+    const normalize = (w: {
+      totalPrecip: number | null;
+      daysWithData: number;
+    }) =>
+      w.totalPrecip !== null && w.daysWithData > 0
+        ? (w.totalPrecip / w.daysWithData) * 7
+        : null;
+
     const mainData = weeklyWeatherData
       ? weeklyWeatherData.weeklyData
-          .filter(
-            (week) => week.totalPrecip !== null || week.avgPrecip !== null
-          )
-          .map((week) => {
-            // normalize totalPrecip to get average weekly precipitation
-            const normalizedTotalPrecip =
-              week.totalPrecip !== null && week.daysWithData > 0
-                ? (week.totalPrecip / week.daysWithData) * 7
-                : null;
-
-            return {
-              week: week.week,
-              totalPrecip: normalizedTotalPrecip,
-              avgPrecip: week.avgPrecip,
-              daysWithRain: week.daysWithRain,
-              daysWithData: week.daysWithData,
-            };
-          })
+          .filter((w) => w.totalPrecip !== null || w.avgPrecip !== null)
+          .map((w) => ({
+            week: w.week,
+            totalPrecip: normalize(w),
+            avgPrecip: w.avgPrecip,
+          }))
       : [];
 
-    // process comparison city data if it exists
     const compData = comparisonWeeklyWeatherData
       ? comparisonWeeklyWeatherData.weeklyData
-          .filter(
-            (week) => week.totalPrecip !== null || week.avgPrecip !== null
-          )
-          .map((week) => {
-            const normalizedTotalPrecip =
-              week.totalPrecip !== null && week.daysWithData > 0
-                ? (week.totalPrecip / week.daysWithData) * 7
-                : null;
-
-            return {
-              week: week.week,
-              totalPrecip: normalizedTotalPrecip,
-              avgPrecip: week.avgPrecip,
-              daysWithRain: week.daysWithRain,
-              daysWithData: week.daysWithData,
-            };
-          })
+          .filter((w) => w.totalPrecip !== null || w.avgPrecip !== null)
+          .map((w) => ({
+            week: w.week,
+            totalPrecip: normalize(w),
+            avgPrecip: w.avgPrecip,
+          }))
       : [];
 
-    // use base data structure from whichever city has data
     const baseStructure = mainData.length > 0 ? mainData : compData;
-
-    // determine final chart data based on what data exists
     let finalChartData;
 
-    // if we have both datasets with actual data, merge them
     if (mainData.length > 0 && compData.length > 0) {
-      finalChartData = baseStructure.map((baseWeek) => {
-        const compWeek = compData.find((w) => w.week === baseWeek.week);
-
+      finalChartData = baseStructure.map((b) => {
+        const c = compData.find((w) => w.week === b.week);
         return {
-          ...baseWeek,
-          compTotalPrecip: compWeek?.totalPrecip ?? null,
-          compAvgPrecip: compWeek?.avgPrecip ?? null,
+          ...b,
+          compTotalPrecip: c?.totalPrecip ?? null,
+          compAvgPrecip: c?.avgPrecip ?? null,
         };
       });
-    }
-    // if only comparison data exists, use comparison data directly
-    // don't include totalPrecip field at all to avoid duplicate rendering
-    else if (mainData.length === 0 && compData.length > 0) {
-      finalChartData = compData.map((week) => ({
-        week: week.week,
-        compTotalPrecip: week.totalPrecip,
-        compAvgPrecip: week.avgPrecip,
-        daysWithRain: week.daysWithRain,
-        daysWithData: week.daysWithData,
+    } else if (mainData.length === 0 && compData.length > 0) {
+      finalChartData = compData.map((w) => ({
+        week: w.week,
+        compTotalPrecip: w.totalPrecip,
+        compAvgPrecip: w.avgPrecip,
       }));
-    }
-    // fallback: only main data exists
-    else {
+    } else {
       finalChartData = baseStructure;
     }
 
@@ -116,7 +84,6 @@ const RainfallGraph = ({
     };
   }, [weeklyWeatherData, comparisonWeeklyWeatherData]);
 
-  // use whichever data is available for the base chart structure
   const baseData = weeklyWeatherData ?? comparisonWeeklyWeatherData;
 
   const handleMouseMove: CategoricalChartFunc = useCallback(
@@ -153,7 +120,6 @@ const RainfallGraph = ({
     if (onHover) onHover(null);
   }, [onHover]);
 
-  // if neither exists, return null (shouldn't happen due to WeatherDataSection check)
   if (!baseData) return null;
 
   return (
@@ -161,42 +127,53 @@ const RainfallGraph = ({
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={chartData}
-          margin={{ top: 5, right: 10, left: -20, bottom: 5 }}
+          margin={{ top: 8, right: 28, left: 0, bottom: 0 }}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
+          barCategoryGap="20%"
         >
-          <CartesianGrid strokeDasharray="3 3" stroke={chartColors.gridColor} />
-
+          <CartesianGrid
+            strokeDasharray="2 4"
+            stroke={chartColors.gridColor}
+            strokeOpacity={0.4}
+            vertical={false}
+          />
           <XAxis
             dataKey="week"
             tick={false}
-            stroke={chartColors.axisColor}
+            axisLine={false}
+            tickLine={false}
+            height={0}
           />
-
           <YAxis
             orientation="right"
-            tick={{ fontSize: 12, fill: chartColors.textColor }}
-            stroke={chartColors.axisColor}
+            tick={{
+              fontSize: 9,
+              fill: chartColors.textColor,
+              fontFamily: 'system-ui, sans-serif',
+            }}
+            axisLine={false}
+            tickLine={false}
+            width={28}
+            tickFormatter={(v) => `${v}mm`}
           />
 
           {hasMainData && (
             <Bar
               dataKey="totalPrecip"
-              name={
-                hasCompData && weeklyWeatherData
-                  ? weeklyWeatherData.city
-                  : 'Total Precipitation'
-              }
               fill={CITY1_PRIMARY_COLOR}
-              radius={[4, 4, 0, 0]}
+              fillOpacity={0.85}
+              radius={[1, 1, 0, 0]}
+              isAnimationActive={false}
             />
           )}
           {hasCompData && (
             <Bar
               dataKey="compTotalPrecip"
-              name={comparisonWeeklyWeatherData?.city ?? ''}
               fill={hasMainData ? CITY2_PRIMARY_COLOR : CITY1_PRIMARY_COLOR}
-              radius={[4, 4, 0, 0]}
+              fillOpacity={0.85}
+              radius={[1, 1, 0, 0]}
+              isAnimationActive={false}
             />
           )}
         </BarChart>

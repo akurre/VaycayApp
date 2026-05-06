@@ -3,7 +3,7 @@ import type { WeatherData } from '@/types/cityWeatherDataType';
 import type { SunshineData } from '@/types/sunshineDataType';
 import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
 import type { RibbonStat } from '@/types/cityPopupTypes';
-import { TemperatureUnit } from '@/types/mapTypes';
+import type { TemperatureUnit } from '@/types/mapTypes';
 import { useAppStore } from '@/stores/useAppStore';
 import { formatTemperature } from '@/utils/tempFormatting/formatTemperature';
 import { useSunshineAndRainfallData } from './useSunshineAndRainfallData';

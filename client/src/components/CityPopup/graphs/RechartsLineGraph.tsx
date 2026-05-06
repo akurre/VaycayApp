@@ -1,19 +1,19 @@
 import { memo } from 'react';
 import {
-  LineChart,
+  ComposedChart,
   Line,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
   ResponsiveContainer,
   ReferenceLine,
-  Legend,
+  ReferenceDot,
 } from 'recharts';
 import type { CategoricalChartFunc } from 'recharts/types/chart/types';
+import type { ReactNode } from 'react';
 
 import { useChartColors } from '@/hooks/useChartColors';
-import { CustomChartLegend } from './CustomChartLegend';
 import type {
   ChartDataPoint,
   LineConfig,
@@ -21,32 +21,56 @@ import type {
   RechartsLineGraphProps,
 } from '@/types/chartTypes';
 
-// Re-export types for backward compatibility
 export type { ChartDataPoint, LineConfig, ReferenceLineConfig };
+
+// Extra series config used by graphs that need filled envelopes (temp band,
+// sun-vs-ceiling). Kept narrow on purpose — anything fancier should go inline
+// via a children render prop, not through here.
+export interface AreaConfig {
+  dataKey: string;
+  baseDataKey?: string; // optional — when set, area is drawn baseLine=baseDataKey…dataKey
+  fill: string;
+  fillOpacity?: number;
+  stroke?: string;
+  strokeWidth?: number;
+  strokeOpacity?: number;
+  strokeDasharray?: string;
+}
+
+export interface ReferenceDotConfig {
+  x: string | number;
+  y: number;
+  fill: string;
+  stroke?: string;
+  strokeWidth?: number;
+  r?: number;
+}
+
+interface ExtendedProps<T extends ChartDataPoint>
+  extends RechartsLineGraphProps<T> {
+  areas?: AreaConfig[];
+  referenceDots?: ReferenceDotConfig[];
+  yTickFormatter?: (value: number) => string;
+  // Hide Y-axis entirely (used by Sunshine where caller draws its own scale)
+  hideYAxis?: boolean;
+  // Slot for in-chart legend (drawn in upper-right by caller via SVG/HTML)
+  overlay?: ReactNode;
+}
 
 const RechartsLineGraphComponent = <T extends ChartDataPoint>({
   data,
-  cityKey,
   xAxisDataKey,
-  xAxisLabel,
-  yAxisLabel,
   lines,
+  areas = [],
   referenceLines = [],
-  tooltipContent,
-  animationDuration = 800,
-  animationEasing = 'ease-in-out',
-  margin = { top: 5, right: 10, left: -20, bottom: 5 },
-  showLegend = true,
-  legendLayout = 'vertical',
-  legendVerticalAlign = 'middle',
-  legendAlign = 'right',
+  referenceDots = [],
+  yTickFormatter,
+  hideYAxis = false,
+  margin = { top: 8, right: 28, left: 0, bottom: 0 },
   onHover,
-}: RechartsLineGraphProps<T>) => {
-  // Get theme-aware colors
+  overlay,
+}: ExtendedProps<T>) => {
   const chartColors = useChartColors();
-
-  // Use smooth morphing transition for all city changes
-  const effectiveAnimationDuration = 300;
 
   const handleMouseMove: CategoricalChartFunc = (state) => {
     if (!onHover) return;
@@ -68,89 +92,68 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
   };
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full relative">
+      {overlay && (
+        <div className="absolute top-2 right-8 z-10 pointer-events-none">
+          {overlay}
+        </div>
+      )}
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart
+        <ComposedChart
           data={data}
           margin={margin}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke={chartColors.gridColor} />
+          <CartesianGrid
+            strokeDasharray="2 4"
+            stroke={chartColors.gridColor}
+            strokeOpacity={0.4}
+            vertical={false}
+          />
 
-          {/* X Axis */}
           <XAxis
             dataKey={xAxisDataKey}
-            tick={
-              xAxisLabel
-                ? { fontSize: 12, fill: chartColors.textColor }
-                : false
-            }
-            stroke={chartColors.axisColor}
-            label={
-              xAxisLabel
-                ? {
-                    value: xAxisLabel,
-                    position: 'insideBottom',
-                    offset: -5,
-                    style: { fontSize: 12, fill: chartColors.textColor },
-                  }
-                : undefined
-            }
+            tick={false}
+            axisLine={false}
+            tickLine={false}
+            height={0}
           />
 
-          {/* Y Axis — right-orientation by default; only show rotated title when yAxisLabel is provided */}
-          <YAxis
-            orientation="right"
-            tick={{ fontSize: 12, fill: chartColors.textColor }}
-            stroke={chartColors.axisColor}
-            label={
-              yAxisLabel
-                ? {
-                    value: yAxisLabel,
-                    angle: -90,
-                    position: 'insideRight',
-                    style: { fontSize: 12, fill: chartColors.textColor },
-                  }
-                : undefined
-            }
-          />
-
-          {/* Tooltip */}
-          {tooltipContent ? (
-            <Tooltip
-              content={tooltipContent}
-              contentStyle={{
-                backgroundColor: chartColors.backgroundColor,
-                border: `1px solid ${chartColors.gridColor}`,
-                borderRadius: '4px',
+          {!hideYAxis && (
+            <YAxis
+              orientation="right"
+              tick={{
+                fontSize: 9,
+                fill: chartColors.textColor,
+                fontFamily: 'system-ui, sans-serif',
               }}
-            />
-          ) : (
-            <Tooltip
-              contentStyle={{
-                fontSize: 12,
-                backgroundColor: chartColors.backgroundColor,
-                border: `1px solid ${chartColors.gridColor}`,
-                borderRadius: '4px',
-                color: chartColors.textColor,
-              }}
+              axisLine={false}
+              tickLine={false}
+              width={28}
+              tickFormatter={yTickFormatter}
             />
           )}
 
-          {/* Legend */}
-          {showLegend && (
-            <Legend
-              content={CustomChartLegend}
-              wrapperStyle={{ fontSize: '12px', paddingLeft: '13px' }}
-              layout={legendLayout}
-              verticalAlign={legendVerticalAlign}
-              align={legendAlign}
-              height={legendLayout === 'vertical' ? 24 : undefined}
+          {/* Filled areas (drawn under lines) */}
+          {areas.map((a) => (
+            <Area
+              key={`area-${a.dataKey}-${a.baseDataKey ?? ''}`}
+              type="monotone"
+              dataKey={a.dataKey}
+              {...(a.baseDataKey ? { baseLine: a.baseDataKey as never } : {})}
+              fill={a.fill}
+              fillOpacity={a.fillOpacity ?? 0.2}
+              stroke={a.stroke ?? 'none'}
+              strokeWidth={a.strokeWidth ?? 0}
+              strokeOpacity={a.strokeOpacity ?? 1}
+              strokeDasharray={a.strokeDasharray}
+              isAnimationActive={false}
+              connectNulls
             />
-          )}
+          ))}
 
-          {/* Reference Lines */}
+          {/* Reference lines (today, selected month, etc.) */}
           {referenceLines.map((refLine) => (
             <ReferenceLine
               key={`ref-${refLine.x ?? ''}-${refLine.y ?? ''}-${refLine.label ?? ''}`}
@@ -163,7 +166,7 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
             />
           ))}
 
-          {/* Data Lines */}
+          {/* Lines */}
           {lines.map((lineConfig) => (
             <Line
               key={lineConfig.dataKey}
@@ -175,18 +178,31 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
               strokeDasharray={lineConfig.strokeDasharray}
               dot={lineConfig.dot ?? false}
               connectNulls={lineConfig.connectNulls ?? true}
-              isAnimationActive={true}
-              animationDuration={effectiveAnimationDuration}
-              animationEasing={animationEasing}
+              isAnimationActive
+              animationDuration={300}
+              animationEasing="ease-in-out"
             />
           ))}
-        </LineChart>
+
+          {/* Today / hover dots */}
+          {referenceDots.map((d, i) => (
+            <ReferenceDot
+              key={`dot-${i}-${d.x}-${d.y}`}
+              x={d.x}
+              y={d.y}
+              r={d.r ?? 3.5}
+              fill={d.fill}
+              stroke={d.stroke ?? 'transparent'}
+              strokeWidth={d.strokeWidth ?? 1.5}
+              isFront
+            />
+          ))}
+        </ComposedChart>
       </ResponsiveContainer>
     </div>
   );
 };
 
-// Export with memo for performance optimization
 const RechartsLineGraph = memo(
   RechartsLineGraphComponent
 ) as typeof RechartsLineGraphComponent;

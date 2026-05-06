@@ -3,17 +3,13 @@ import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
 import type { ChartHoverState } from '@/types/chartTypes';
 import type { RibbonHoverPayload } from '@/types/cityPopupTypes';
 
-import RechartsLineGraph, { type LineConfig } from './RechartsLineGraph';
+import RechartsLineGraph, {
+  type LineConfig,
+  type AreaConfig,
+} from './RechartsLineGraph';
 import { useAppStore } from '@/stores/useAppStore';
 import { formatTemperature } from '@/utils/tempFormatting/formatTemperature';
-import {
-  CITY1_PRIMARY_COLOR,
-  CITY1_MAX_COLOR,
-  CITY1_MIN_COLOR,
-  CITY2_PRIMARY_COLOR,
-  CITY2_MAX_COLOR,
-  CITY2_MIN_COLOR,
-} from '@/const';
+import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
 
 interface TemperatureGraphProps {
   weeklyWeatherData: CityWeeklyWeather;
@@ -28,111 +24,87 @@ const TemperatureGraph = ({
 }: TemperatureGraphProps) => {
   const temperatureUnit = useAppStore((state) => state.temperatureUnit);
 
-  // Generate unique city key for animation control
-  const cityKey = `${weeklyWeatherData.city}-${weeklyWeatherData.lat}-${weeklyWeatherData.long}`;
-
-  // Transform weekly weather data for chart - filter out weeks with no temperature data
-  // Merge main city data with comparison city data
   const chartData = useMemo(() => {
-    const mainData = weeklyWeatherData.weeklyData
+    const main = weeklyWeatherData.weeklyData
       .filter(
-        (week) =>
-          week.avgTemp !== null ||
-          week.maxTemp !== null ||
-          week.minTemp !== null
+        (w) =>
+          w.avgTemp !== null || w.maxTemp !== null || w.minTemp !== null
       )
-      .map((week) => ({
-        week: week.week,
-        avgTemp: week.avgTemp,
-        maxTemp: week.maxTemp,
-        minTemp: week.minTemp,
-        daysWithData: week.daysWithData,
+      .map((w) => ({
+        week: w.week,
+        avgTemp: w.avgTemp,
+        maxTemp: w.maxTemp,
+        minTemp: w.minTemp,
       }));
 
-    // If we have comparison data, merge it
-    if (comparisonWeeklyWeatherData) {
-      return mainData.map((mainWeek) => {
-        const compWeek = comparisonWeeklyWeatherData.weeklyData.find(
-          (w) => w.week === mainWeek.week
-        );
-        return {
-          ...mainWeek,
-          compAvgTemp: compWeek?.avgTemp ?? null,
-          compMaxTemp: compWeek?.maxTemp ?? null,
-          compMinTemp: compWeek?.minTemp ?? null,
-        };
-      });
-    }
+    if (!comparisonWeeklyWeatherData) return main;
 
-    return mainData;
+    return main.map((m) => {
+      const c = comparisonWeeklyWeatherData.weeklyData.find(
+        (cc) => cc.week === m.week
+      );
+      return {
+        ...m,
+        compAvgTemp: c?.avgTemp ?? null,
+        compMaxTemp: c?.maxTemp ?? null,
+        compMinTemp: c?.minTemp ?? null,
+      };
+    });
   }, [weeklyWeatherData.weeklyData, comparisonWeeklyWeatherData]);
 
-  // Configure temperature lines. The ribbon header carries city names and the
-  // readout carries values, so per-line "Max/Avg/Min" suffixes (which only
-  // existed for the legend) are dropped — distinct strokes still distinguish
-  // them on hover via the underlying tooltip.
-  const lines: LineConfig[] = useMemo(() => {
-    const mainCityName = weeklyWeatherData.city;
-    const compCityName = comparisonWeeklyWeatherData?.city ?? '';
-
-    const baseLines: LineConfig[] = [
+  // Areas: one envelope per city (min as baseline, max as top edge).
+  const areas: AreaConfig[] = useMemo(() => {
+    const list: AreaConfig[] = [
       {
         dataKey: 'maxTemp',
-        name: mainCityName,
-        stroke: CITY1_MAX_COLOR,
-        strokeWidth: 2,
-        dot: false,
-        connectNulls: true,
+        baseDataKey: 'minTemp',
+        fill: CITY1_PRIMARY_COLOR,
+        fillOpacity: 0.18,
+        stroke: CITY1_PRIMARY_COLOR,
+        strokeWidth: 1,
+        strokeOpacity: 0.5,
       },
+    ];
+    if (comparisonWeeklyWeatherData) {
+      list.push({
+        dataKey: 'compMaxTemp',
+        baseDataKey: 'compMinTemp',
+        fill: CITY2_PRIMARY_COLOR,
+        fillOpacity: 0.18,
+        stroke: CITY2_PRIMARY_COLOR,
+        strokeWidth: 1,
+        strokeOpacity: 0.5,
+      });
+    }
+    return list;
+  }, [comparisonWeeklyWeatherData]);
+
+  // Lines: only the average per city, drawn heavier than the envelope edges.
+  const lines: LineConfig[] = useMemo(() => {
+    const list: LineConfig[] = [
       {
         dataKey: 'avgTemp',
-        name: mainCityName,
+        name: weeklyWeatherData.city,
         stroke: CITY1_PRIMARY_COLOR,
-        strokeWidth: 2.5,
-        dot: false,
-        connectNulls: true,
-      },
-      {
-        dataKey: 'minTemp',
-        name: mainCityName,
-        stroke: CITY1_MIN_COLOR,
         strokeWidth: 2,
         dot: false,
         connectNulls: true,
       },
     ];
-
     if (comparisonWeeklyWeatherData) {
-      baseLines.push(
-        {
-          dataKey: 'compMaxTemp',
-          name: compCityName,
-          stroke: CITY2_MAX_COLOR,
-          strokeWidth: 2,
-          dot: false,
-          connectNulls: true,
-        },
-        {
-          dataKey: 'compAvgTemp',
-          name: compCityName,
-          stroke: CITY2_PRIMARY_COLOR,
-          strokeWidth: 2.5,
-          dot: false,
-          connectNulls: true,
-        },
-        {
-          dataKey: 'compMinTemp',
-          name: compCityName,
-          stroke: CITY2_MIN_COLOR,
-          strokeWidth: 2,
-          dot: false,
-          connectNulls: true,
-        }
-      );
+      list.push({
+        dataKey: 'compAvgTemp',
+        name: comparisonWeeklyWeatherData.city,
+        stroke: CITY2_PRIMARY_COLOR,
+        strokeWidth: 2,
+        dot: false,
+        connectNulls: true,
+      });
     }
-
-    return baseLines;
+    return list;
   }, [weeklyWeatherData.city, comparisonWeeklyWeatherData]);
+
+  const cityKey = `${weeklyWeatherData.city}-${weeklyWeatherData.lat}-${weeklyWeatherData.long}`;
 
   const handleHover = useCallback(
     (state: ChartHoverState | null) => {
@@ -174,9 +146,10 @@ const TemperatureGraph = ({
       cityKey={cityKey}
       xAxisDataKey="week"
       lines={lines}
+      areas={areas}
       referenceLines={[]}
       showLegend={false}
-      margin={{ left: 0, bottom: 5 }}
+      yTickFormatter={(v) => `${v}°`}
       onHover={handleHover}
     />
   );
