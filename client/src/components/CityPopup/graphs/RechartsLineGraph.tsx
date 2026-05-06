@@ -9,6 +9,7 @@ import {
   ResponsiveContainer,
   ReferenceLine,
   ReferenceDot,
+  Tooltip,
 } from 'recharts';
 import type { CategoricalChartFunc } from 'recharts/types/chart/types';
 import type { ReactNode } from 'react';
@@ -139,7 +140,7 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
           {areas.map((a) => (
             <Area
               key={`area-${a.dataKey}-${a.baseDataKey ?? ''}`}
-              type="monotone"
+              type="basis"
               dataKey={a.dataKey}
               {...(a.baseDataKey ? { baseLine: a.baseDataKey as never } : {})}
               fill={a.fill}
@@ -152,6 +153,18 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
               connectNulls
             />
           ))}
+
+          {/* Cursor-only tooltip: vertical hairline at the active X, no popup */}
+          <Tooltip
+            cursor={{
+              stroke: 'var(--mantine-color-dimmed)',
+              strokeWidth: 1,
+              strokeOpacity: 0.4,
+              strokeDasharray: '3 3',
+            }}
+            content={() => null}
+            wrapperStyle={{ display: 'none' }}
+          />
 
           {/* Reference lines (today, selected month, etc.) */}
           {referenceLines.map((refLine) => (
@@ -167,22 +180,37 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
           ))}
 
           {/* Lines */}
-          {lines.map((lineConfig) => (
-            <Line
-              key={lineConfig.dataKey}
-              type="monotone"
-              dataKey={lineConfig.dataKey}
-              name={lineConfig.name}
-              stroke={lineConfig.stroke}
-              strokeWidth={lineConfig.strokeWidth ?? 2}
-              strokeDasharray={lineConfig.strokeDasharray}
-              dot={lineConfig.dot ?? false}
-              connectNulls={lineConfig.connectNulls ?? true}
-              isAnimationActive
-              animationDuration={300}
-              animationEasing="ease-in-out"
-            />
-          ))}
+          {lines.map((lineConfig) => {
+            // Reference lines (dashed ceilings, etc.) shouldn't get an
+            // active hover dot — those aren't data points the readout cares
+            // about. Solid lines do.
+            const isDashed = !!lineConfig.strokeDasharray;
+            const activeDot = isDashed
+              ? false
+              : {
+                  r: 4,
+                  stroke: 'var(--mantine-color-body)',
+                  strokeWidth: 1.5,
+                  fill: lineConfig.stroke,
+                };
+            return (
+              <Line
+                key={lineConfig.dataKey}
+                type="basis"
+                dataKey={lineConfig.dataKey}
+                name={lineConfig.name}
+                stroke={lineConfig.stroke}
+                strokeWidth={lineConfig.strokeWidth ?? 2}
+                strokeDasharray={lineConfig.strokeDasharray}
+                dot={lineConfig.dot ?? false}
+                activeDot={activeDot}
+                connectNulls={lineConfig.connectNulls ?? true}
+                isAnimationActive
+                animationDuration={300}
+                animationEasing="ease-in-out"
+              />
+            );
+          })}
 
           {/* Today / hover dots */}
           {referenceDots.map((d, i) => (
