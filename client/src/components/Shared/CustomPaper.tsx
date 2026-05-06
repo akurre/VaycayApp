@@ -16,7 +16,7 @@ const CustomPaper = ({ children, className, p = 'sm' }: CustomPaperProps) => {
         backgroundColor:
           colorScheme === 'dark'
             ? appColors.dark.paper
-            : appColors.light.surface,
+            : appColors.light.paper,
       }}
       shadow="sm"
       p={p}

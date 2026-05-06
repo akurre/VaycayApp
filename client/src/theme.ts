@@ -90,7 +90,8 @@ export const appColors = {
 
   light: {
     background: '#FBF7EF', // warm cream, not stark white
-    surface: '#FCF6E6', // cards / paper
+    surface: '#FCF6E6', // cards / panels
+    paper: '#FFFCF5', // elevated cards, slightly above surface
     border: '#EAD6B3',
     text: '#1A1715',
     textSecondary: '#6B5D49', // warm gray, not cool
@@ -101,7 +102,7 @@ export const appColors = {
   dark: {
     background: '#14181F', // deep ocean night
     surface: '#1E242E',
-    paper: '#252C38',
+    paper: '#252C38', // elevated cards, slightly above surface
     border: '#2C3543',
     text: '#E8DFD0', // warm cream, easy on eyes
     textSecondary: '#9DB3C2', // muted ocean, not purple
@@ -120,8 +121,9 @@ export const theme: MantineThemeOverride = createTheme({
   // Set primary color to your actual primary color
   primaryColor: 'primary-amber',
 
-  // Configure primary shade for light and dark modes
-  primaryShade: { light: 6, dark: 8 },
+  // Shade 4 (#E8973C) is the canonical brand amber and matches appColors.primary.
+  // Both modes resolve to the same shade so brand identity stays consistent.
+  primaryShade: { light: 4, dark: 4 },
 
   // Default radius for components
   defaultRadius: 'md',
@@ -149,15 +151,13 @@ export const theme: MantineThemeOverride = createTheme({
         color: 'primary-amber',
         variant: 'filled',
       },
-      // we can add variant-specific styles here if needed
-      // For example, to customize the filled variant:
-      // styles: {
-      //   root: {
-      //     '&[data-variant="filled"]': {
-      //       // Custom styles for filled variant
-      //     }
-      //   }
-      // }
+      styles: {
+      root: {
+        '&[data-variant="filled"]': {
+          color: '#1A1106', // dark brown text on amber for contrast
+        }
+      }
+    }
     }),
 
     Text: Text.extend({

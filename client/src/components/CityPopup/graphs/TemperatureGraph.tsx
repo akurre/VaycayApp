@@ -99,7 +99,6 @@ const TemperatureGraph = ({
     const compCityName =
       comparisonWeeklyWeatherData?.city.substring(0, 3) + '.';
 
-    // City 1 (main): Blue shades
     const baseLines: LineConfig[] = [
       {
         dataKey: 'maxTemp',
@@ -127,7 +126,6 @@ const TemperatureGraph = ({
       },
     ];
 
-    // City 2 (comparison): Purple shades
     if (comparisonWeeklyWeatherData) {
       baseLines.push(
         {

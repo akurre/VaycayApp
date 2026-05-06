@@ -87,9 +87,25 @@ make install
 # 2. Setup database (migrations + data import)
 make db-setup
 
-# 3. Start all services
+# 3. Create server/.env (see "Environment setup" below)
+
+# 4. Start all services
 make dev
 ```
+
+### Environment setup
+
+The server reads `DATABASE_URL` from [server/.env](server/.env) (gitignored, so it doesn't ship with the repo). On a fresh clone, create it:
+
+```bash
+cat > server/.env <<'EOF'
+DATABASE_URL=postgresql://postgres:iwantsun@localhost:5433/postgres_v2
+DATABASE_SCHEMA=vaycay_v2
+PORT=4000
+EOF
+```
+
+Port `5433` matches the `db-v2` service in [docker-compose.yml](docker-compose.yml). Without this file, `make dev` will fail with `Environment variable not found: DATABASE_URL`.
 
 That's it! The application will be running at:
 - **React Frontend**: http://localhost:3000
@@ -251,6 +267,10 @@ If you can't connect to the database:
 1. Ensure Docker is running: `docker ps`
 2. Check if PostgreSQL container is up: `docker-compose ps`
 3. Restart the database: `docker-compose down && docker-compose up db`
+
+### `Environment variable not found: DATABASE_URL`
+
+Prisma can't find the connection string. The server reads it from `server/.env`, which is gitignored and won't exist on a fresh clone. Create it as shown in [Environment setup](#environment-setup).
 
 ### GraphQL Server Issues
 

@@ -3,7 +3,7 @@
 // ============================================================================
 
 import { primaryAmberShades, secondaryOceanShades } from '@/theme';
-import type { SunshineData } from './types/sunshineDataType';
+import type { SunshineData } from '@/types/sunshineDataType';
 
 export const KM_TO_MILES = 0.621371;
 
