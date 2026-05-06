@@ -1,18 +1,18 @@
-import { Badge, BadgeProps } from '@mantine/core';
+import { Badge } from '@mantine/core';
 import { CITY1_PRIMARY_COLOR, CITY2_BADGE_BACKGROUND, CITY2_PRIMARY_COLOR } from '@/const';
 
-interface CityBadgeProps extends BadgeProps {
+interface CityBadgeProps {
   cityName: string;
   isComparison?: boolean;
   mb?: number;
-  isLarge?: boolean
+  isLarge?: boolean;
 }
 
-const CityBadge = ({ 
+const CityBadge = ({
   cityName,
-  isComparison = false, 
-  mb, 
-  isLarge=false,
+  isComparison = false,
+  mb,
+  isLarge = false,
 }: CityBadgeProps) => {
   const color = isComparison ? CITY2_PRIMARY_COLOR : CITY1_PRIMARY_COLOR;
 

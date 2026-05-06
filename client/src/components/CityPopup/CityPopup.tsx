@@ -1,4 +1,4 @@
-import { ActionIcon, Badge, Tooltip } from '@mantine/core';
+import { ActionIcon, Badge, Tooltip, useMantineColorScheme } from '@mantine/core';
 import { useMemo, useState } from 'react';
 import { IconX } from '@tabler/icons-react';
 import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
@@ -26,6 +26,8 @@ const CityPopup = ({
   selectedDate,
   dataType,
 }: CityPopupProps) => {
+  const { colorScheme } = useMantineColorScheme();
+
   // State for comparison city
   const [comparisonCity, setComparisonCity] =
     useState<SearchCitiesResult | null>(null);
@@ -186,7 +188,7 @@ const CityPopup = ({
       style={{
         height: '33.333vh',
         pointerEvents: 'auto',
-        backgroundColor: appColors.dark.surface,
+        backgroundColor: colorScheme === 'dark' ? appColors.dark.surface : appColors.light.surface,
         borderTop: '1px solid var(--mantine-color-default-border)',
       }}
     >
