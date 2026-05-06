@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render } from '@/test-utils';
 import RechartsLineGraph, {
   type LineConfig,
@@ -161,6 +161,38 @@ describe('RechartsLineGraph', () => {
     );
 
     // should still render the component
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
+  });
+
+  it('renders without a yAxisLabel (now optional)', () => {
+    const { container } = render(
+      <RechartsLineGraph
+        data={mockData}
+        cityKey="test-city"
+        xAxisDataKey="month"
+        lines={basicLines}
+      />
+    );
+
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
+  });
+
+  it('accepts the onHover prop without error', () => {
+    const onHover = vi.fn();
+    const { container } = render(
+      <RechartsLineGraph
+        data={mockData}
+        cityKey="test-city"
+        xAxisDataKey="month"
+        lines={basicLines}
+        onHover={onHover}
+      />
+    );
+
     expect(
       container.querySelector('.recharts-responsive-container')
     ).toBeInTheDocument();

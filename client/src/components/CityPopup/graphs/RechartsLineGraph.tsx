@@ -10,6 +10,7 @@ import {
   ReferenceLine,
   Legend,
 } from 'recharts';
+import type { CategoricalChartFunc } from 'recharts/types/chart/types';
 
 import { useChartColors } from '@/hooks/useChartColors';
 import { CustomChartLegend } from './CustomChartLegend';
@@ -39,6 +40,7 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
   legendLayout = 'vertical',
   legendVerticalAlign = 'middle',
   legendAlign = 'right',
+  onHover,
 }: RechartsLineGraphProps<T>) => {
   // Get theme-aware colors
   const chartColors = useChartColors();
@@ -46,16 +48,44 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
   // Use smooth morphing transition for all city changes
   const effectiveAnimationDuration = 300;
 
+  const handleMouseMove: CategoricalChartFunc = (state) => {
+    if (!onHover) return;
+    const { activeLabel, activeTooltipIndex } = state;
+    if (
+      activeLabel === undefined ||
+      activeTooltipIndex === undefined ||
+      activeTooltipIndex === null ||
+      typeof activeTooltipIndex === 'string'
+    ) {
+      onHover(null);
+      return;
+    }
+    onHover({ activeLabel, activeIndex: activeTooltipIndex });
+  };
+
+  const handleMouseLeave = () => {
+    if (onHover) onHover(null);
+  };
+
   return (
     <div className="w-full h-full">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data} margin={margin}>
+        <LineChart
+          data={data}
+          margin={margin}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+        >
           <CartesianGrid strokeDasharray="3 3" stroke={chartColors.gridColor} />
 
           {/* X Axis */}
           <XAxis
             dataKey={xAxisDataKey}
-            tick={{ fontSize: 12, fill: chartColors.textColor }}
+            tick={
+              xAxisLabel
+                ? { fontSize: 12, fill: chartColors.textColor }
+                : false
+            }
             stroke={chartColors.axisColor}
             label={
               xAxisLabel
@@ -69,16 +99,21 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
             }
           />
 
-          {/* Y Axis */}
+          {/* Y Axis — right-orientation by default; only show rotated title when yAxisLabel is provided */}
           <YAxis
+            orientation="right"
             tick={{ fontSize: 12, fill: chartColors.textColor }}
             stroke={chartColors.axisColor}
-            label={{
-              value: yAxisLabel,
-              angle: -90,
-              position: 'insideLeft',
-              style: { fontSize: 12, fill: chartColors.textColor },
-            }}
+            label={
+              yAxisLabel
+                ? {
+                    value: yAxisLabel,
+                    angle: -90,
+                    position: 'insideRight',
+                    style: { fontSize: 12, fill: chartColors.textColor },
+                  }
+                : undefined
+            }
           />
 
           {/* Tooltip */}

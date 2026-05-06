@@ -5,6 +5,11 @@ export interface ChartDataPoint {
   [key: string]: string | number | null | undefined;
 }
 
+export interface ChartHoverState {
+  activeLabel: string | number;
+  activeIndex: number;
+}
+
 // Line configuration for a single line on the chart
 export interface LineConfig {
   dataKey: string;
@@ -36,7 +41,7 @@ export interface RechartsLineGraphProps<T extends ChartDataPoint> {
   // Axis configuration
   xAxisDataKey: string;
   xAxisLabel?: string;
-  yAxisLabel: string;
+  yAxisLabel?: string;
 
   // Line configurations
   lines: LineConfig[];
@@ -59,4 +64,8 @@ export interface RechartsLineGraphProps<T extends ChartDataPoint> {
   legendLayout?: 'horizontal' | 'vertical';
   legendVerticalAlign?: 'top' | 'middle' | 'bottom';
   legendAlign?: 'left' | 'center' | 'right';
+
+  // Raw hover state propagation. Wrapping graphs translate this into a
+  // RibbonHoverPayload before forwarding to the panel.
+  onHover?: (state: ChartHoverState | null) => void;
 }
