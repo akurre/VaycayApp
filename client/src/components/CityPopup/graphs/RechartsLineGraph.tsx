@@ -56,6 +56,9 @@ interface ExtendedProps<T extends ChartDataPoint>
   hideYAxis?: boolean;
   // Slot for in-chart legend (drawn in upper-right by caller via SVG/HTML)
   overlay?: ReactNode;
+  // Formats the tooltip header label. Recharts hands us the raw activeLabel
+  // (e.g. a week-of-year integer); the caller decides how to render it.
+  formatTooltipLabel?: (raw: string | number) => string;
 }
 
 const RechartsLineGraphComponent = <T extends ChartDataPoint>({
@@ -70,6 +73,7 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
   margin = { top: 8, right: 28, left: 0, bottom: 0 },
   onHover,
   overlay,
+  formatTooltipLabel,
 }: ExtendedProps<T>) => {
   const chartColors = useChartColors();
 
@@ -236,11 +240,18 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
                 .filter(Boolean)
                 .join(' ');
 
+              const headerLabel =
+                label === undefined || label === null
+                  ? null
+                  : formatTooltipLabel
+                    ? formatTooltipLabel(label as string | number)
+                    : String(label);
+
               return (
                 <div className="rounded-md px-2.5 py-1.5 text-[11px] tabular-nums bg-[var(--mantine-color-default-hover)] border border-[var(--mantine-color-default-border)] shadow-md">
-                  {label !== undefined && (
+                  {headerLabel && (
                     <div className="text-[9px] uppercase tracking-[0.08em] text-[var(--mantine-color-dimmed)] mb-1">
-                      {label}
+                      {headerLabel}
                     </div>
                   )}
                   <div

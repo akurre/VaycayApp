@@ -9,6 +9,7 @@ import RechartsLineGraph, {
 } from './RechartsLineGraph';
 import { useAppStore } from '@/stores/useAppStore';
 import { formatTemperature } from '@/utils/tempFormatting/formatTemperature';
+import { weekStartLabel } from '@/utils/dateFormatting/weekStartLabel';
 import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
 
 interface TemperatureGraphProps {
@@ -174,7 +175,7 @@ const TemperatureGraph = ({
       }
       const compAvg = point.compAvgTemp ?? null;
       onHover({
-        label: `Week ${point.week}`,
+        label: weekStartLabel(point.week),
         v1:
           point.avgTemp == null
             ? null
@@ -198,6 +199,9 @@ const TemperatureGraph = ({
       referenceLines={[]}
       showLegend={false}
       yTickFormatter={(v) => `${v}°`}
+      formatTooltipLabel={(raw) =>
+        typeof raw === 'number' ? weekStartLabel(raw) : String(raw)
+      }
       onHover={handleHover}
     />
   );
