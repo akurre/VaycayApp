@@ -11,6 +11,7 @@ interface RainfallDataSectionProps {
   isLoading: boolean;
   hasError: boolean;
   comparisonWeeklyWeatherData?: CityWeeklyWeather | null;
+  selectedDate?: string;
   onHover?: (payload: RibbonHoverPayload | null) => void;
 }
 
@@ -19,6 +20,7 @@ const RainfallDataSection = ({
   isLoading,
   hasError,
   comparisonWeeklyWeatherData,
+  selectedDate,
   onHover,
 }: RainfallDataSectionProps) => {
   // check if there's actual precipitation data (not just empty objects)
@@ -44,6 +46,7 @@ const RainfallDataSection = ({
           <RainfallGraph
             weeklyWeatherData={data}
             comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
+            selectedDate={selectedDate}
             onHover={onHover}
           />
         </ComponentErrorBoundary>

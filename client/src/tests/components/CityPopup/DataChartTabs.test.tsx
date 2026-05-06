@@ -61,6 +61,7 @@ const baseProps = {
   sunshineLoading: false,
   sunshineError: false,
   selectedMonth: 1,
+  selectedDate: '01-15',
   weeklyWeatherData: mockWeeklyWeather,
   weeklyWeatherLoading: false,
   weeklyWeatherError: false,

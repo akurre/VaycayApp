@@ -91,6 +91,7 @@ describe('RibbonShell', () => {
       <RibbonShell
         {...baseProps}
         comparisonCity={comparisonCity}
+        comparisonNode={<div>Birmingham, UK</div>}
         todayC2={17.6}
       />
     );

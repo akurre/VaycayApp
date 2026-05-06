@@ -9,7 +9,6 @@ import RechartsLineGraph, {
   type AreaConfig,
   type ReferenceLineConfig,
 } from './RechartsLineGraph';
-import { useChartColors } from '@/hooks/useChartColors';
 import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
 
 interface SunshineGraphProps {
@@ -47,8 +46,6 @@ const SunshineGraph = ({
   comparisonSunshineData,
   onHover,
 }: SunshineGraphProps) => {
-  const chartColors = useChartColors();
-
   const chartData = useMemo(
     () => (sunshineData ? transformSunshineDataForChart(sunshineData) : null),
     [sunshineData]
@@ -170,15 +167,17 @@ const SunshineGraph = ({
 
   const referenceLines: ReferenceLineConfig[] = useMemo(() => {
     if (!selectedMonth) return [];
+    const x = combined[selectedMonth - 1]?.month;
+    if (typeof x !== 'string' && typeof x !== 'number') return [];
     return [
       {
-        x: combined[selectedMonth - 1]?.month,
-        stroke: chartColors.lineColor,
+        x,
+        stroke: 'var(--mantine-color-dimmed)',
         strokeWidth: 1,
-        strokeDasharray: '2 2',
+        strokeDasharray: '3 3',
       },
     ];
-  }, [selectedMonth, combined, chartColors]);
+  }, [selectedMonth, combined]);
 
   const handleHover = useCallback(
     (state: ChartHoverState | null) => {

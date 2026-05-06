@@ -12,6 +12,7 @@ interface DataChartTabsProps {
   sunshineLoading: boolean;
   sunshineError: boolean;
   selectedMonth: number;
+  selectedDate: string;
   weeklyWeatherData: CityWeeklyWeather | null;
   weeklyWeatherLoading: boolean;
   weeklyWeatherError: boolean;
@@ -26,6 +27,7 @@ const DataChartTabs = ({
   sunshineLoading,
   sunshineError,
   selectedMonth,
+  selectedDate,
   weeklyWeatherData,
   weeklyWeatherLoading,
   weeklyWeatherError,
@@ -41,6 +43,7 @@ const DataChartTabs = ({
           isLoading={weeklyWeatherLoading}
           hasError={weeklyWeatherError}
           comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
+          selectedDate={selectedDate}
           onHover={onHover}
         />
       )}
@@ -60,6 +63,7 @@ const DataChartTabs = ({
           isLoading={weeklyWeatherLoading}
           hasError={weeklyWeatherError}
           comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
+          selectedDate={selectedDate}
           onHover={onHover}
         />
       )}

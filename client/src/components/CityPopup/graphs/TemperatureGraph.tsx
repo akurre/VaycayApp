@@ -7,25 +7,35 @@ import RechartsLineGraph, {
   type LineConfig,
   type AreaConfig,
 } from './RechartsLineGraph';
+import type { ReferenceLineConfig } from '@/types/chartTypes';
 import { useAppStore } from '@/stores/useAppStore';
 import { formatTemperature } from '@/utils/tempFormatting/formatTemperature';
-import { weekStartLabel } from '@/utils/dateFormatting/weekStartLabel';
+import { weekRangeLabel } from '@/utils/dateFormatting/weekRangeLabel';
+import { dateToWeekOfYear } from '@/utils/dateFormatting/dateToWeekOfYear';
 import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
 
 interface TemperatureGraphProps {
   weeklyWeatherData: CityWeeklyWeather;
   comparisonWeeklyWeatherData?: CityWeeklyWeather | null;
+  selectedDate?: string;
   onHover?: (payload: RibbonHoverPayload | null) => void;
 }
 
 const TemperatureGraph = ({
   weeklyWeatherData,
   comparisonWeeklyWeatherData,
+  selectedDate,
   onHover,
 }: TemperatureGraphProps) => {
   const temperatureUnit = useAppStore((state) => state.temperatureUnit);
 
   const chartData = useMemo(() => {
+    const toRange = (
+      minTemp: number | null,
+      maxTemp: number | null
+    ): [number, number] | null =>
+      minTemp !== null && maxTemp !== null ? [minTemp, maxTemp] : null;
+
     const main = weeklyWeatherData.weeklyData
       .filter(
         (w) =>
@@ -36,6 +46,7 @@ const TemperatureGraph = ({
         avgTemp: w.avgTemp,
         maxTemp: w.maxTemp,
         minTemp: w.minTemp,
+        tempRange: toRange(w.minTemp, w.maxTemp),
       }));
 
     if (!comparisonWeeklyWeatherData) return main;
@@ -44,29 +55,31 @@ const TemperatureGraph = ({
       const c = comparisonWeeklyWeatherData.weeklyData.find(
         (cc) => cc.week === m.week
       );
+      const compMin = c?.minTemp ?? null;
+      const compMax = c?.maxTemp ?? null;
       return {
         ...m,
         compAvgTemp: c?.avgTemp ?? null,
-        compMaxTemp: c?.maxTemp ?? null,
-        compMinTemp: c?.minTemp ?? null,
+        compMaxTemp: compMax,
+        compMinTemp: compMin,
+        compTempRange: toRange(compMin, compMax),
       };
     });
   }, [weeklyWeatherData.weeklyData, comparisonWeeklyWeatherData]);
 
-  // Areas: subtle filled envelope per city under the max/min strokes.
+  // Areas: subtle filled envelope per city under the max/min strokes. Uses
+  // tuple-valued data fields so recharts draws baseline=min, top=max natively.
   const areas: AreaConfig[] = useMemo(() => {
     const list: AreaConfig[] = [
       {
-        dataKey: 'maxTemp',
-        baseDataKey: 'minTemp',
+        dataKey: 'tempRange',
         fill: CITY1_PRIMARY_COLOR,
         fillOpacity: 0.12,
       },
     ];
     if (comparisonWeeklyWeatherData) {
       list.push({
-        dataKey: 'compMaxTemp',
-        baseDataKey: 'compMinTemp',
+        dataKey: 'compTempRange',
         fill: CITY2_PRIMARY_COLOR,
         fillOpacity: 0.12,
       });
@@ -153,6 +166,19 @@ const TemperatureGraph = ({
     return list;
   }, [weeklyWeatherData.city, comparisonWeeklyWeatherData]);
 
+  const referenceLines: ReferenceLineConfig[] = useMemo(() => {
+    const week = dateToWeekOfYear(selectedDate);
+    if (week === null) return [];
+    return [
+      {
+        x: week,
+        stroke: 'var(--mantine-color-dimmed)',
+        strokeWidth: 1,
+        strokeDasharray: '3 3',
+      },
+    ];
+  }, [selectedDate]);
+
   const cityKey = `${weeklyWeatherData.city}-${weeklyWeatherData.lat}-${weeklyWeatherData.long}`;
 
   const handleHover = useCallback(
@@ -175,7 +201,7 @@ const TemperatureGraph = ({
       }
       const compAvg = point.compAvgTemp ?? null;
       onHover({
-        label: weekStartLabel(point.week),
+        label: weekRangeLabel(point.week),
         v1:
           point.avgTemp == null
             ? null
@@ -196,11 +222,15 @@ const TemperatureGraph = ({
       xAxisDataKey="week"
       lines={lines}
       areas={areas}
-      referenceLines={[]}
+      referenceLines={referenceLines}
       showLegend={false}
       yTickFormatter={(v) => `${v}°`}
+      yDomain={[
+        (dataMin: number) => Math.floor(dataMin) - 1,
+        (dataMax: number) => Math.ceil(dataMax) + 1,
+      ]}
       formatTooltipLabel={(raw) =>
-        typeof raw === 'number' ? weekStartLabel(raw) : String(raw)
+        typeof raw === 'number' ? weekRangeLabel(raw) : String(raw)
       }
       onHover={handleHover}
     />

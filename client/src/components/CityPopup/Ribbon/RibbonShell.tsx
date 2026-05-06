@@ -20,7 +20,7 @@ interface RibbonShellProps {
   todayC2: number | null;
   selectedDate: string;
   stats: ReadonlyArray<RibbonStat>;
-  comparisonSlot?: ReactNode;
+  comparisonNode?: ReactNode;
   renderChart: (
     tab: DataType,
     onHover: (payload: RibbonHoverPayload | null) => void
@@ -31,12 +31,6 @@ interface RibbonShellProps {
 // close button only — the comparison selector is no longer absolute-positioned.
 const HEADER_RIGHT_RESERVE = 40;
 
-// Right-side reserve that mirrors the chart's plot-area inset
-// (`margin.right` + right-oriented `YAxis` width in RechartsLineGraph)
-// so the footer's right edge aligns with the chart's data-plot right edge
-// above it, rather than extending under the Y-axis tick-label band.
-const CHART_RIGHT_RESERVE = 28;
-
 const RibbonShell = ({
   baseCityName,
   baseCityLat,
@@ -46,7 +40,7 @@ const RibbonShell = ({
   todayC2,
   selectedDate,
   stats,
-  comparisonSlot,
+  comparisonNode,
   renderChart,
 }: RibbonShellProps) => {
   const [tab, setTab] = useState<DataType>(initialTab);
@@ -68,7 +62,7 @@ const RibbonShell = ({
           <CityNamesHeader
             baseCityName={baseCityName}
             baseCityLat={baseCityLat}
-            comparisonCity={comparisonCity}
+            comparisonNode={comparisonNode}
           />
           <TodayReadout
             tab={tab}
@@ -84,12 +78,8 @@ const RibbonShell = ({
 
         <MonthLabels />
 
-        <footer
-          className="mt-2 flex items-center justify-between"
-          style={{ paddingRight: CHART_RIGHT_RESERVE }}
-        >
+        <footer className="mt-2">
           <IconTabs tab={tab} onTab={setTab} />
-          {comparisonSlot && <div className="shrink-0">{comparisonSlot}</div>}
         </footer>
       </div>
 

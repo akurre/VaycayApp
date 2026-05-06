@@ -1,11 +1,11 @@
-import type { SearchCitiesResult } from '@/types/userLocationType';
-import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
+import type { ReactNode } from 'react';
+import { CITY1_PRIMARY_COLOR } from '@/const';
 import { getClimateZoneFromLat } from '@/utils/climate/getClimateZoneFromLat';
 
 interface CityNamesHeaderProps {
   baseCityName: string;
   baseCityLat: number | null;
-  comparisonCity: SearchCitiesResult | null;
+  comparisonNode?: ReactNode;
 }
 
 interface RowProps {
@@ -41,18 +41,12 @@ const Row = ({ color, name, lat }: RowProps) => {
 const CityNamesHeader = ({
   baseCityName,
   baseCityLat,
-  comparisonCity,
+  comparisonNode,
 }: CityNamesHeaderProps) => {
   return (
     <div className="flex flex-col gap-1 min-w-0">
       <Row color={CITY1_PRIMARY_COLOR} name={baseCityName} lat={baseCityLat} />
-      {comparisonCity && (
-        <Row
-          color={CITY2_PRIMARY_COLOR}
-          name={[comparisonCity.name, comparisonCity.state, comparisonCity.country].join(', ')}
-          lat={comparisonCity.lat}
-        />
-      )}
+      {comparisonNode}
     </div>
   );
 };

@@ -182,7 +182,7 @@ const CityPopup = ({
         todayC2={todayC2}
         selectedDate={dateToUse}
         stats={stats}
-        comparisonSlot={
+        comparisonNode={
           <ComparisonCitySelector
             onCitySelect={setComparisonCity}
             onCityRemove={() => setComparisonCity(null)}
@@ -197,6 +197,7 @@ const CityPopup = ({
             sunshineLoading={sunshineLoading}
             sunshineError={!!sunshineError}
             selectedMonth={monthToUse}
+            selectedDate={dateToUse}
             weeklyWeatherData={weeklyWeatherData}
             weeklyWeatherLoading={weeklyWeatherLoading}
             weeklyWeatherError={!!weeklyWeatherError}

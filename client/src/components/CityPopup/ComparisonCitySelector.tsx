@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Popover, Loader } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { IconPlus, IconX } from '@tabler/icons-react';
 import useCitySearch from '@/hooks/useCitySearch';
 import type { SearchCitiesResult } from '@/types/userLocationType';
-import { CITY1_PRIMARY_COLOR } from '@/const';
+import { CITY2_PRIMARY_COLOR } from '@/const';
+import { getClimateZoneFromLat } from '@/utils/climate/getClimateZoneFromLat';
 
 interface ExcludeCity {
   name: string;
@@ -77,41 +78,23 @@ const ComparisonCitySelector = ({
     setOpened(false);
   };
 
-  // Selection chip — closed, no popover.
-  if (selectedCity && !opened) {
-    return (
-      <div className="flex items-center gap-1.5 text-[15px] font-bold font-[Outfit] text-[var(--mantine-color-dimmed)]">
-        <span className="text-[11px] uppercase tracking-wide text-[var(--mantine-color-dimmed)]">
-          vs
-        </span>
-        <span
-          className="text-[var(--mantine-color-text)] cursor-pointer hover:opacity-80"
-          onClick={() => setOpened(true)}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') setOpened(true);
-          }}
-        >
-          {selectedCity.name}
-        </span>
-        <button
-          type="button"
-          onClick={handleRemoveCity}
-          aria-label="Remove comparison city"
-          className="text-[var(--mantine-color-dimmed)] hover:text-[var(--mantine-color-text)] cursor-pointer"
-        >
-          <IconX size={14} />
-        </button>
-      </div>
-    );
-  }
+  const fullName = useMemo(() => {
+    if (!selectedCity) return '';
+    return [selectedCity.name, selectedCity.state, selectedCity.country]
+      .filter(Boolean)
+      .join(', ');
+  }, [selectedCity]);
+
+  const latLabel =
+    selectedCity !== null
+      ? getClimateZoneFromLat(selectedCity.lat).latLabel
+      : null;
 
   return (
     <Popover
       opened={opened}
       onChange={setOpened}
-      position="top-end"
+      position="bottom-start"
       offset={6}
       shadow="md"
       transitionProps={{ duration: 120 }}
@@ -133,19 +116,54 @@ const ComparisonCitySelector = ({
             }}
             placeholder="Compare a city…"
             aria-label="Search comparison city"
-            className="w-44 px-1 py-0.5 text-[15px] font-bold font-[Outfit] bg-transparent border-0 border-b text-[var(--mantine-color-text)] placeholder:text-[var(--mantine-color-dimmed)] placeholder:font-normal focus:outline-none"
-            style={{
-              borderBottomColor: CITY1_PRIMARY_COLOR,
-            }}
+            className="w-56 px-1 py-0.5 text-[15px] font-bold font-[Outfit] bg-transparent border-0 border-b text-[var(--mantine-color-text)] placeholder:text-[var(--mantine-color-dimmed)] placeholder:font-normal focus:outline-none"
+            style={{ borderBottomColor: CITY2_PRIMARY_COLOR }}
           />
+        ) : selectedCity ? (
+          <div className="flex items-center gap-2 min-w-0">
+            <span
+              className="w-2.5 h-2.5 rounded-full shrink-0"
+              style={{ background: CITY2_PRIMARY_COLOR }}
+            />
+            <h2
+              className="text-[17px] font-bold font-[Outfit] text-[var(--mantine-color-text)] truncate min-w-0 cursor-pointer hover:opacity-80"
+              title={fullName}
+              onClick={() => setOpened(true)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') setOpened(true);
+              }}
+            >
+              {fullName}
+            </h2>
+            {latLabel && (
+              <span className="text-[9px] uppercase tracking-[0.1em] px-1.5 py-0.5 rounded bg-[var(--mantine-color-default-hover)] border border-[var(--mantine-color-default-border)] text-[var(--mantine-color-dimmed)] shrink-0">
+                {latLabel}
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={handleRemoveCity}
+              aria-label="Remove comparison city"
+              className="ml-0.5 text-[var(--mantine-color-dimmed)] hover:text-[var(--mantine-color-text)] cursor-pointer shrink-0"
+            >
+              <IconX size={14} />
+            </button>
+          </div>
         ) : (
           <button
             type="button"
             onClick={() => setOpened(true)}
-            className="flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wide cursor-pointer text-[var(--mantine-color-dimmed)] hover:text-[var(--mantine-color-text)] transition-colors"
+            aria-label="Add comparison city"
+            className="flex items-center gap-2 min-w-0 cursor-pointer text-[var(--mantine-color-dimmed)] hover:text-[var(--mantine-color-text)] transition-colors"
           >
-            <IconPlus size={14} />
-            <span>Compare</span>
+            <span
+              className="w-2.5 h-2.5 rounded-full shrink-0 opacity-60"
+              style={{ background: CITY2_PRIMARY_COLOR }}
+            />
+            <span className="text-[17px] font-bold font-[Outfit]">Compare</span>
+            <IconPlus size={14} className="opacity-70 shrink-0" />
           </button>
         )}
       </Popover.Target>

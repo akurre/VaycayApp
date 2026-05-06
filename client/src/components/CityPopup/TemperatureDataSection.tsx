@@ -12,6 +12,7 @@ interface TemperatureDataSectionProps {
   comparisonWeeklyWeatherData?: CityWeeklyWeather | null;
   comparisonIsLoading?: boolean;
   comparisonHasError?: boolean;
+  selectedDate?: string;
   onHover?: (payload: RibbonHoverPayload | null) => void;
 }
 
@@ -20,6 +21,7 @@ const TemperatureDataSection = ({
   isLoading,
   hasError,
   comparisonWeeklyWeatherData,
+  selectedDate,
   onHover,
 }: TemperatureDataSectionProps) => {
   return (
@@ -35,6 +37,7 @@ const TemperatureDataSection = ({
           <TemperatureGraph
             weeklyWeatherData={data}
             comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
+            selectedDate={selectedDate}
             onHover={onHover}
           />
         </ComponentErrorBoundary>

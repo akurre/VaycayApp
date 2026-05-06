@@ -26,10 +26,10 @@ export type { ChartDataPoint, LineConfig, ReferenceLineConfig };
 
 // Extra series config used by graphs that need filled envelopes (temp band,
 // sun-vs-ceiling). Kept narrow on purpose — anything fancier should go inline
-// via a children render prop, not through here.
+// via a children render prop, not through here. For min/max bands, set
+// dataKey to a tuple field on the data row (e.g. tempRange: [min, max]).
 export interface AreaConfig {
   dataKey: string;
-  baseDataKey?: string; // optional — when set, area is drawn baseLine=baseDataKey…dataKey
   fill: string;
   fillOpacity?: number;
   stroke?: string;
@@ -47,6 +47,13 @@ export interface ReferenceDotConfig {
   r?: number;
 }
 
+type YDomainBound =
+  | number
+  | 'auto'
+  | 'dataMin'
+  | 'dataMax'
+  | ((value: number) => number);
+
 interface ExtendedProps<T extends ChartDataPoint>
   extends RechartsLineGraphProps<T> {
   areas?: AreaConfig[];
@@ -54,6 +61,9 @@ interface ExtendedProps<T extends ChartDataPoint>
   yTickFormatter?: (value: number) => string;
   // Hide Y-axis entirely (used by Sunshine where caller draws its own scale)
   hideYAxis?: boolean;
+  // Optional Y-axis domain — defaults to recharts' auto-scaling. Pass a tight
+  // [floor-1, ceil+1] pair when the default leaves an awkward bottom gap.
+  yDomain?: [YDomainBound, YDomainBound];
   // Slot for in-chart legend (drawn in upper-right by caller via SVG/HTML)
   overlay?: ReactNode;
   // Formats the tooltip header label. Recharts hands us the raw activeLabel
@@ -70,6 +80,7 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
   referenceDots = [],
   yTickFormatter,
   hideYAxis = false,
+  yDomain,
   margin = { top: 8, right: 28, left: 0, bottom: 0 },
   onHover,
   overlay,
@@ -137,16 +148,18 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
               tickLine={false}
               width={28}
               tickFormatter={yTickFormatter}
+              domain={yDomain}
             />
           )}
 
-          {/* Filled areas (drawn under lines) */}
+          {/* Filled areas (drawn under lines). For min/max envelopes, dataKey
+              points to a tuple field on the data row — recharts renders the
+              area between the two y values natively. */}
           {areas.map((a) => (
             <Area
-              key={`area-${a.dataKey}-${a.baseDataKey ?? ''}`}
+              key={`area-${a.dataKey}`}
               type="basis"
               dataKey={a.dataKey}
-              {...(a.baseDataKey ? { baseLine: a.baseDataKey as never } : {})}
               fill={a.fill}
               fillOpacity={a.fillOpacity ?? 0.2}
               stroke={a.stroke ?? 'none'}
@@ -155,6 +168,7 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
               strokeDasharray={a.strokeDasharray}
               isAnimationActive={false}
               connectNulls
+              activeDot={false}
             />
           ))}
 
