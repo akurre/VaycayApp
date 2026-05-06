@@ -1,19 +1,8 @@
-const MONTH_LABELS = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-];
-
-const DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+import {
+  CALENDAR_DAYS,
+  DAYS_IN_YEAR_NON_LEAP,
+  MONTH_ABBREVIATIONS_SHORT,
+} from '@/const';
 
 const dayOfYearToParts = (
   day: number
@@ -21,10 +10,13 @@ const dayOfYearToParts = (
   if (!Number.isFinite(day) || day < 1) return null;
   let remaining = day;
   for (let i = 0; i < 12; i++) {
-    if (remaining <= DAYS_IN_MONTH[i]) {
-      return { month: MONTH_LABELS[i], dayOfMonth: remaining };
+    if (remaining <= CALENDAR_DAYS[i]) {
+      return {
+        month: MONTH_ABBREVIATIONS_SHORT[i],
+        dayOfMonth: remaining,
+      };
     }
-    remaining -= DAYS_IN_MONTH[i];
+    remaining -= CALENDAR_DAYS[i];
   }
   return { month: 'Dec', dayOfMonth: 31 };
 };
@@ -32,7 +24,7 @@ const dayOfYearToParts = (
 export const weekRangeLabel = (week: number): string => {
   if (!Number.isFinite(week) || week < 1) return '';
   const startDay = (week - 1) * 7 + 1;
-  const endDay = Math.min(startDay + 6, 365);
+  const endDay = Math.min(startDay + 6, DAYS_IN_YEAR_NON_LEAP);
   const start = dayOfYearToParts(startDay);
   const end = dayOfYearToParts(endDay);
   if (!start || !end) return '';

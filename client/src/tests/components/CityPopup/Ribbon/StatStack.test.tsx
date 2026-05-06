@@ -38,15 +38,12 @@ describe('StatStack', () => {
   it('uses the named width constant for the rail container', () => {
     render(<StatStack stats={STATS} hasComparison={false} />);
     const rail = screen.getByTestId('stat-rail');
-    const widthAttr =
-      rail.style.width || (rail.getAttribute('style') ?? '');
+    const widthAttr = rail.style.width || (rail.getAttribute('style') ?? '');
     expect(widthAttr).toContain(String(RIBBON_STAT_RAIL_WIDTH_PX));
   });
 
   it('renders an em-dash placeholder when v1 is — (no-data)', () => {
-    const noDataStats: RibbonStat[] = [
-      { label: 'Sun / yr', v1: '—', v2: '—' },
-    ];
+    const noDataStats: RibbonStat[] = [{ label: 'Sun / yr', v1: '—', v2: '—' }];
     render(<StatStack stats={noDataStats} hasComparison={true} />);
 
     expect(screen.getAllByText('—').length).toBe(2);

@@ -1,5 +1,9 @@
 import type { RibbonHoverPayload } from '@/types/cityPopupTypes';
-import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
+import {
+  CITY1_PRIMARY_COLOR,
+  CITY2_PRIMARY_COLOR,
+  EM_DASH_PLACEHOLDER,
+} from '@/const';
 import { formatDateAsMonthDay } from '@/utils/dateFormatting/formatDateAsMonthDay';
 import { DataType } from '@/types/mapTypes';
 import type { TemperatureUnit } from '@/types/mapTypes';
@@ -15,16 +19,14 @@ interface TodayReadoutProps {
   hover: RibbonHoverPayload | null;
 }
 
-const PLACEHOLDER = '—';
-
 const formatForTab = (
   tab: DataType,
   value: number | null,
   unit: TemperatureUnit
 ): string => {
-  if (value === null) return PLACEHOLDER;
+  if (value === null) return EM_DASH_PLACEHOLDER;
   if (tab === DataType.Temperature) {
-    return formatTemperature(value, unit) ?? PLACEHOLDER;
+    return formatTemperature(value, unit) ?? EM_DASH_PLACEHOLDER;
   }
   if (tab === DataType.Sunshine) return `${value.toFixed(1)}h`;
   return `${Math.round(value)}mm`;
@@ -66,7 +68,7 @@ const TodayReadout = ({
             style={{ color: CITY1_PRIMARY_COLOR }}
             className="text-[24px] font-bold font-[Outfit] tabular-nums leading-none"
           >
-            {v1 ?? PLACEHOLDER}
+            {v1 ?? EM_DASH_PLACEHOLDER}
           </span>
           {subV1 && (
             <span
@@ -83,7 +85,7 @@ const TodayReadout = ({
               style={{ color: CITY2_PRIMARY_COLOR }}
               className="text-[18px] font-bold font-[Outfit] tabular-nums leading-none"
             >
-              {v2 ?? PLACEHOLDER}
+              {v2 ?? EM_DASH_PLACEHOLDER}
             </span>
             {subV2 && (
               <span

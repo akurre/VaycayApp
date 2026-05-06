@@ -163,7 +163,6 @@ const CityPopup = ({
       className="fixed bottom-4 left-4 right-4 shadow-lg rounded-xl z-50 flex flex-col"
       style={{
         height: '50vh',
-        // width: '50vw',
         pointerEvents: 'auto',
         backgroundColor:
           colorScheme === 'dark'

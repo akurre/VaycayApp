@@ -3,12 +3,7 @@ import type { ReactElement } from 'react';
 // Generic data point type - charts can add extra fields. Tuple values are
 // allowed for recharts <Area> min/max envelope ranges (e.g. [min, max]).
 export interface ChartDataPoint {
-  [key: string]:
-    | string
-    | number
-    | [number, number]
-    | null
-    | undefined;
+  [key: string]: string | number | [number, number] | null | undefined;
 }
 
 export interface ChartHoverState {

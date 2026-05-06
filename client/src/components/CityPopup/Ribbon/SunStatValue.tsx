@@ -1,34 +1,35 @@
+import { useMemo } from 'react';
 import { generateTheoreticalMaxSunshineData } from '@/utils/dataFormatting/generateTheoreticalMaxSunshineData';
 import { formatSunshinePercentage } from '@/utils/dataFormatting/formatSunshinePercentage';
+import { EM_DASH_PLACEHOLDER } from '@/const';
 
 interface SunStatValueProps {
   averageMonthlyHours: number | null;
   latitude: number | null;
 }
 
-const PLACEHOLDER = '—';
-
 const formatHours = (n: number | null): string =>
-  n === null ? PLACEHOLDER : `${n.toFixed(0)}h`;
+  n === null ? EM_DASH_PLACEHOLDER : `${n.toFixed(0)}h`;
 
 /**
  * Stacked "Sun / yr" value: average monthly sunshine hours on top, share of
  * the astronomical day-length ceiling below. Falls back to plain hours when
  * latitude or hours are missing.
  */
-const SunStatValue = ({
-  averageMonthlyHours,
-  latitude,
-}: SunStatValueProps) => {
+const SunStatValue = ({ averageMonthlyHours, latitude }: SunStatValueProps) => {
   const hoursLabel = formatHours(averageMonthlyHours);
+
+  const avgMaxMonthlyHours = useMemo(() => {
+    if (latitude === null) return null;
+    const maxes = generateTheoreticalMaxSunshineData(latitude);
+    if (maxes.length === 0) return null;
+    return maxes.reduce((acc, v) => acc + v, 0) / maxes.length;
+  }, [latitude]);
 
   if (latitude === null || averageMonthlyHours === null) {
     return <>{hoursLabel}</>;
   }
 
-  const maxes = generateTheoreticalMaxSunshineData(latitude);
-  const avgMaxMonthlyHours =
-    maxes.reduce((acc, v) => acc + v, 0) / maxes.length;
   const pct = formatSunshinePercentage(averageMonthlyHours, avgMaxMonthlyHours);
 
   if (!pct) return <>{hoursLabel}</>;

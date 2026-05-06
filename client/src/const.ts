@@ -17,9 +17,6 @@ export const MAX_CITIES_SHOWN = 300;
 // LRU cache size for city-specific data
 export const CITY_CACHE_MAX_SIZE = 30;
 
-// locales that use miles instead of kilometers
-export const MILES_LOCALES = ['en-US', 'en-GB', 'en-LR', 'en-MM'];
-
 // zoom-based loading thresholds
 export const ZOOM_THRESHOLD = 2; // switch to bounds query at zoom level 2+ (continental view)
 export const DEBOUNCE_DELAY = 200; // ms - debounce delay for zoom/pan events (reduced for more responsive feel)
@@ -300,6 +297,43 @@ export const monthlyMarks = [
 // Fixed width of the right-side stat-card rail in the CityPopup ribbon. Used
 // in both width and flex-basis calculations, so it lives as a named constant.
 export const RIBBON_STAT_RAIL_WIDTH_PX = 158;
+
+// Right-side padding budget reserved in the ribbon header row for the popup's
+// absolute-positioned close button.
+export const RIBBON_HEADER_RIGHT_RESERVE_PX = 40;
+
+// Em-dash placeholder shown in stat cells / readouts when a value is missing.
+export const EM_DASH_PLACEHOLDER = '—';
+
+// Day-of-year of the first of each month (non-leap year). Index 0 = Jan 1.
+export const MONTH_DAY_OF_YEAR_STARTS = [
+  0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334,
+];
+
+// Total days in a non-leap year. Used as the x-axis denominator for the
+// month-label rail so labels align with day-of-year positions.
+export const DAYS_IN_YEAR_NON_LEAP = 365;
+
+// Three-letter month abbreviations without trailing punctuation. Distinct
+// from MONTH_ABBREVIATIONS, which carries periods (e.g. "Jan.").
+export const MONTH_ABBREVIATIONS_SHORT = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
+// Wait one tick before focusing the comparison-city input — Popover mounts the
+// target lazily and the focus would otherwise race the mount.
+export const COMPARISON_INPUT_FOCUS_DELAY_MS = 10;
 
 // ============================================================================
 // GRAPH COLOR CONSTANTS

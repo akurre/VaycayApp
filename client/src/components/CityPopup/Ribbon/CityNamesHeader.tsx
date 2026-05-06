@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { CITY1_PRIMARY_COLOR } from '@/const';
 import { getClimateZoneFromLat } from '@/utils/climate/getClimateZoneFromLat';
+import LatBadge from './LatBadge';
 
 interface CityNamesHeaderProps {
   baseCityName: string;
@@ -15,7 +16,7 @@ interface RowProps {
 }
 
 const Row = ({ color, name, lat }: RowProps) => {
-  const latLabel = lat === null ? null : getClimateZoneFromLat(lat).latLabel;
+  const latLabel = lat === null ? null : getClimateZoneFromLat(lat);
 
   return (
     <div className="flex items-center gap-2 min-w-0">
@@ -29,11 +30,7 @@ const Row = ({ color, name, lat }: RowProps) => {
       >
         {name}
       </h2>
-      {latLabel && (
-        <span className="text-[9px] uppercase tracking-[0.1em] px-1.5 py-0.5 rounded bg-[var(--mantine-color-default-hover)] border border-[var(--mantine-color-default-border)] text-[var(--mantine-color-dimmed)] shrink-0">
-          {latLabel}
-        </span>
-      )}
+      {latLabel && <LatBadge label={latLabel} />}
     </div>
   );
 };

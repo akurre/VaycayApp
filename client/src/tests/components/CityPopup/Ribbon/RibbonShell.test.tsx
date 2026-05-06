@@ -51,14 +51,18 @@ describe('RibbonShell', () => {
     const renderChart = vi.fn(
       (
         _tab: DataType,
-        onHover: (payload: { label: string; v1: string | null; v2: string | null } | null) => void
+        onHover: (
+          payload: {
+            label: string;
+            v1: string | null;
+            v2: string | null;
+          } | null
+        ) => void
       ) => (
         <button
           type="button"
           data-testid="emit-hover"
-          onClick={() =>
-            onHover({ label: 'Week 22', v1: '14.0°C', v2: null })
-          }
+          onClick={() => onHover({ label: 'Week 22', v1: '14.0°C', v2: null })}
         >
           emit
         </button>

@@ -1,10 +1,8 @@
 import { useCallback, useState, type ReactNode } from 'react';
-import type {
-  RibbonHoverPayload,
-  RibbonStat,
-} from '@/types/cityPopupTypes';
+import type { RibbonHoverPayload, RibbonStat } from '@/types/cityPopupTypes';
 import type { SearchCitiesResult } from '@/types/userLocationType';
 import type { DataType } from '@/types/mapTypes';
+import { RIBBON_HEADER_RIGHT_RESERVE_PX } from '@/const';
 import CityNamesHeader from './CityNamesHeader';
 import TodayReadout from './TodayReadout';
 import IconTabs from './IconTabs';
@@ -26,10 +24,6 @@ interface RibbonShellProps {
     onHover: (payload: RibbonHoverPayload | null) => void
   ) => ReactNode;
 }
-
-// Right-side padding budget reserved in the header row for the popup's
-// close button only — the comparison selector is no longer absolute-positioned.
-const HEADER_RIGHT_RESERVE = 40;
 
 const RibbonShell = ({
   baseCityName,
@@ -57,7 +51,7 @@ const RibbonShell = ({
       <div className="flex-1 min-w-0 flex flex-col">
         <header
           className="flex items-start justify-between gap-6 mb-2.5"
-          style={{ paddingRight: HEADER_RIGHT_RESERVE }}
+          style={{ paddingRight: RIBBON_HEADER_RIGHT_RESERVE_PX }}
         >
           <CityNamesHeader
             baseCityName={baseCityName}

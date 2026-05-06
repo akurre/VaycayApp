@@ -10,6 +10,7 @@ import RechartsLineGraph, {
   type AreaConfig,
   type ReferenceLineConfig,
 } from './RechartsLineGraph';
+import SunshineLegend from './SunshineLegend';
 import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
 
 interface SunshineGraphProps {
@@ -18,28 +19,6 @@ interface SunshineGraphProps {
   comparisonSunshineData?: SunshineData | null;
   onHover?: (payload: RibbonHoverPayload | null) => void;
 }
-
-const SunshineLegend = () => (
-  <div
-    className="flex flex-col gap-0.5 text-[9px] uppercase tracking-[0.08em]"
-    style={{ color: 'var(--mantine-color-dimmed)' }}
-  >
-    <span className="flex items-center gap-1">
-      <span
-        className="inline-block w-3"
-        style={{ height: 2, background: CITY1_PRIMARY_COLOR }}
-      />
-      actual sun
-    </span>
-    <span className="flex items-center gap-1">
-      <span
-        className="inline-block w-3 border-t border-dashed"
-        style={{ borderColor: CITY1_PRIMARY_COLOR, height: 0 }}
-      />
-      100% ceiling
-    </span>
-  </div>
-);
 
 const SunshineGraph = ({
   sunshineData,
@@ -64,11 +43,13 @@ const SunshineGraph = ({
   const compLat = comparisonSunshineData?.lat ?? null;
 
   const theoreticalMax = useMemo(
-    () => (mainLat === null ? null : generateTheoreticalMaxSunshineData(mainLat)),
+    () =>
+      mainLat === null ? null : generateTheoreticalMaxSunshineData(mainLat),
     [mainLat]
   );
   const compTheoreticalMax = useMemo(
-    () => (compLat === null ? null : generateTheoreticalMaxSunshineData(compLat)),
+    () =>
+      compLat === null ? null : generateTheoreticalMaxSunshineData(compLat),
     [compLat]
   );
 
@@ -164,7 +145,12 @@ const SunshineGraph = ({
       });
     }
     return list;
-  }, [theoreticalMax, compTheoreticalMax, sunshineData, comparisonSunshineData]);
+  }, [
+    theoreticalMax,
+    compTheoreticalMax,
+    sunshineData,
+    comparisonSunshineData,
+  ]);
 
   const referenceLines: ReferenceLineConfig[] = useMemo(() => {
     if (!selectedMonth) return [];
@@ -192,12 +178,12 @@ const SunshineGraph = ({
         onHover(null);
         return;
       }
-      const c1 = (point.hours ?? null) as number | null;
-      const c2 = (point.comparisonHours ?? null) as number | null;
-      const max1 = (point.theoreticalMax ?? null) as number | null;
-      const max2 = (point.comparisonTheoreticalMax ?? null) as number | null;
+      const c1 = point.hours ?? null;
+      const c2 = point.comparisonHours ?? null;
+      const max1 = point.theoreticalMax ?? null;
+      const max2 = point.comparisonTheoreticalMax ?? null;
       onHover({
-        label: typeof point.month === 'string' ? point.month : `${point.month}`,
+        label: point.month,
         v1: c1 === null ? null : `${c1.toFixed(1)}h`,
         v2: c2 === null ? null : `${c2.toFixed(1)}h`,
         subV1: formatSunshinePercentage(c1, max1),
@@ -209,19 +195,17 @@ const SunshineGraph = ({
 
   const renderTooltipExtras = useCallback(
     (row: (typeof combined)[number]) => {
-      const c1 = (row.hours ?? null) as number | null;
-      const c2 = (row.comparisonHours ?? null) as number | null;
-      const max1 = (row.theoreticalMax ?? null) as number | null;
-      const max2 = (row.comparisonTheoreticalMax ?? null) as number | null;
+      const c1 = row.hours ?? null;
+      const c2 = row.comparisonHours ?? null;
+      const max1 = row.theoreticalMax ?? null;
+      const max2 = row.comparisonTheoreticalMax ?? null;
       const sub1 = formatSunshinePercentage(c1, max1);
       const sub2 = formatSunshinePercentage(c2, max2);
       if (!sub1 && !sub2) return null;
       const hasComp = !!comparisonSunshineData;
       return (
         <div className="flex justify-end gap-3 text-[10px] font-semibold">
-          {sub1 && (
-            <span style={{ color: CITY1_PRIMARY_COLOR }}>{sub1}</span>
-          )}
+          {sub1 && <span style={{ color: CITY1_PRIMARY_COLOR }}>{sub1}</span>}
           {hasComp && sub2 && (
             <span
               style={{

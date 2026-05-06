@@ -4,8 +4,10 @@ import { useDebouncedValue } from '@mantine/hooks';
 import { IconPlus, IconX } from '@tabler/icons-react';
 import useCitySearch from '@/hooks/useCitySearch';
 import type { SearchCitiesResult } from '@/types/userLocationType';
-import { CITY2_PRIMARY_COLOR } from '@/const';
+import { CITY2_PRIMARY_COLOR, COMPARISON_INPUT_FOCUS_DELAY_MS } from '@/const';
 import { getClimateZoneFromLat } from '@/utils/climate/getClimateZoneFromLat';
+import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
+import LatBadge from './Ribbon/LatBadge';
 
 interface ExcludeCity {
   name: string;
@@ -36,19 +38,26 @@ const ComparisonCitySelector = ({
 
   useEffect(() => {
     if (debouncedSearchTerm.trim().length >= 2) {
-      searchCities(debouncedSearchTerm).then((results) => {
-        const filtered = excludeCity
-          ? results.filter(
-              (city) =>
-                !(
-                  city.name === excludeCity.name &&
-                  city.state === excludeCity.state &&
-                  city.country === excludeCity.country
-                )
-            )
-          : results;
-        setSearchResults(filtered);
-      });
+      searchCities(debouncedSearchTerm)
+        .then((results) => {
+          const filtered = excludeCity
+            ? results.filter(
+                (city) =>
+                  !(
+                    city.name === excludeCity.name &&
+                    city.state === excludeCity.state &&
+                    city.country === excludeCity.country
+                  )
+              )
+            : results;
+          setSearchResults(filtered);
+        })
+        .catch((error) =>
+          parseErrorAndNotify(
+            error,
+            `failed to search cities for "${debouncedSearchTerm}"`
+          )
+        );
     } else {
       setSearchResults([]);
     }
@@ -56,8 +65,10 @@ const ComparisonCitySelector = ({
 
   useEffect(() => {
     if (opened) {
-      // wait one tick so Popover has mounted the input
-      const id = window.setTimeout(() => inputRef.current?.focus(), 10);
+      const id = window.setTimeout(
+        () => inputRef.current?.focus(),
+        COMPARISON_INPUT_FOCUS_DELAY_MS
+      );
       return () => window.clearTimeout(id);
     }
     return undefined;
@@ -86,9 +97,7 @@ const ComparisonCitySelector = ({
   }, [selectedCity]);
 
   const latLabel =
-    selectedCity !== null
-      ? getClimateZoneFromLat(selectedCity.lat).latLabel
-      : null;
+    selectedCity !== null ? getClimateZoneFromLat(selectedCity.lat) : null;
 
   return (
     <Popover
@@ -137,11 +146,7 @@ const ComparisonCitySelector = ({
             >
               {fullName}
             </h2>
-            {latLabel && (
-              <span className="text-[9px] uppercase tracking-[0.1em] px-1.5 py-0.5 rounded bg-[var(--mantine-color-default-hover)] border border-[var(--mantine-color-default-border)] text-[var(--mantine-color-dimmed)] shrink-0">
-                {latLabel}
-              </span>
-            )}
+            {latLabel && <LatBadge label={latLabel} />}
             <button
               type="button"
               onClick={handleRemoveCity}

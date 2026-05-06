@@ -8,6 +8,7 @@ import { useAppStore } from '@/stores/useAppStore';
 import { formatTemperature } from '@/utils/tempFormatting/formatTemperature';
 import { calculateDistance } from '@/utils/location/calculateDistance';
 import { formatDistance } from '@/utils/location/formatDistance';
+import { EM_DASH_PLACEHOLDER } from '@/const';
 import SunStatValue from '../Ribbon/SunStatValue';
 import { useSunshineAndRainfallData } from './useSunshineAndRainfallData';
 
@@ -26,10 +27,8 @@ interface UseRibbonStatsProps {
   comparisonWeeklyWeatherData: CityWeeklyWeather | null;
 }
 
-const PLACEHOLDER = '—';
-
 const formatPopulation = (pop: number | null): string => {
-  if (pop === null) return PLACEHOLDER;
+  if (pop === null) return EM_DASH_PLACEHOLDER;
   return pop.toLocaleString();
 };
 
@@ -38,33 +37,35 @@ const formatTempRange = (
   max: number | null,
   unit: TemperatureUnit
 ): string => {
-  if (min === null || max === null) return PLACEHOLDER;
+  if (min === null || max === null) return EM_DASH_PLACEHOLDER;
   const minLabel = formatTemperature(min, unit);
   const maxLabel = formatTemperature(max, unit);
-  if (minLabel === null || maxLabel === null) return PLACEHOLDER;
+  if (minLabel === null || maxLabel === null) return EM_DASH_PLACEHOLDER;
   return `${minLabel}–${maxLabel}`;
 };
 
 const formatMm = (n: number | null): string =>
-  n === null ? PLACEHOLDER : `${n.toFixed(0)}mm`;
+  n === null ? EM_DASH_PLACEHOLDER : `${n.toFixed(0)}mm`;
 
 const formatDistanceFromHome = (
-  homeLat: number | null | undefined,
-  homeLong: number | null | undefined,
+  homeLat: number | null,
+  homeLong: number | null,
   cityLat: number | null,
-  cityLong: number | null
+  cityLong: number | null,
+  temperatureUnit: TemperatureUnit
 ): string => {
   if (
     homeLat === null ||
-    homeLat === undefined ||
     homeLong === null ||
-    homeLong === undefined ||
     cityLat === null ||
     cityLong === null
   ) {
-    return PLACEHOLDER;
+    return EM_DASH_PLACEHOLDER;
   }
-  return formatDistance(calculateDistance(homeLat, homeLong, cityLat, cityLong));
+  return formatDistance(
+    calculateDistance(homeLat, homeLong, cityLat, cityLong),
+    temperatureUnit
+  );
 };
 
 export const useRibbonStats = ({
@@ -95,8 +96,14 @@ export const useRibbonStats = ({
     displaySunshineData,
     weeklyWeatherData: weeklyWeatherData?.weeklyData ?? null,
     comparisonSunshineData,
-    comparisonWeeklyWeatherData: comparisonWeeklyWeatherData?.weeklyData ?? null,
+    comparisonWeeklyWeatherData:
+      comparisonWeeklyWeatherData?.weeklyData ?? null,
   });
+
+  const baseMinTemp = displayWeatherData?.minTemperature ?? null;
+  const baseMaxTemp = displayWeatherData?.maxTemperature ?? null;
+  const compMinTemp = comparisonWeatherData?.minTemperature ?? null;
+  const compMaxTemp = comparisonWeatherData?.maxTemperature ?? null;
 
   return useMemo<ReadonlyArray<RibbonStat>>(
     () => [
@@ -122,25 +129,24 @@ export const useRibbonStats = ({
       },
       {
         label: "Today's range",
-        v1: formatTempRange(
-          displayWeatherData?.minTemperature ?? null,
-          displayWeatherData?.maxTemperature ?? null,
-          temperatureUnit
-        ),
-        v2: formatTempRange(
-          comparisonWeatherData?.minTemperature ?? null,
-          comparisonWeatherData?.maxTemperature ?? null,
-          temperatureUnit
-        ),
+        v1: formatTempRange(baseMinTemp, baseMaxTemp, temperatureUnit),
+        v2: formatTempRange(compMinTemp, compMaxTemp, temperatureUnit),
       },
       {
         label: 'From home',
-        v1: formatDistanceFromHome(homeLat, homeLong, baseLat, baseLong),
+        v1: formatDistanceFromHome(
+          homeLat,
+          homeLong,
+          baseLat,
+          baseLong,
+          temperatureUnit
+        ),
         v2: formatDistanceFromHome(
           homeLat,
           homeLong,
           comparisonLat,
-          comparisonLong
+          comparisonLong,
+          temperatureUnit
         ),
       },
       {
@@ -154,8 +160,10 @@ export const useRibbonStats = ({
       comparisonAverageSunshine,
       averageRainfall,
       comparisonAverageRainfall,
-      displayWeatherData,
-      comparisonWeatherData,
+      baseMinTemp,
+      baseMaxTemp,
+      compMinTemp,
+      compMaxTemp,
       basePopulation,
       comparisonPopulation,
       baseLat,

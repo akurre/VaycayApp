@@ -172,8 +172,8 @@ describe('CityPopup', () => {
 
       expect(screen.getByText('Sun / yr')).toBeInTheDocument();
       expect(screen.getByText('Rain / yr')).toBeInTheDocument();
-      expect(screen.getByText('Today range')).toBeInTheDocument();
-      expect(screen.getByText('Avg today')).toBeInTheDocument();
+      expect(screen.getByText("Today's range")).toBeInTheDocument();
+      expect(screen.getByText('From home')).toBeInTheDocument();
       expect(screen.getByText('Population')).toBeInTheDocument();
     });
 

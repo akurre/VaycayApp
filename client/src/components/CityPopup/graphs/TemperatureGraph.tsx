@@ -21,6 +21,19 @@ interface TemperatureGraphProps {
   onHover?: (payload: RibbonHoverPayload | null) => void;
 }
 
+interface TemperatureChartRow {
+  week: number;
+  avgTemp: number | null;
+  maxTemp: number | null;
+  minTemp: number | null;
+  tempRange: [number, number] | null;
+  compAvgTemp: number | null;
+  compMaxTemp: number | null;
+  compMinTemp: number | null;
+  compTempRange: [number, number] | null;
+  [key: string]: string | number | [number, number] | null | undefined;
+}
+
 const TemperatureGraph = ({
   weeklyWeatherData,
   comparisonWeeklyWeatherData,
@@ -29,42 +42,35 @@ const TemperatureGraph = ({
 }: TemperatureGraphProps) => {
   const temperatureUnit = useAppStore((state) => state.temperatureUnit);
 
-  const chartData = useMemo(() => {
+  const chartData = useMemo<TemperatureChartRow[]>(() => {
     const toRange = (
       minTemp: number | null,
       maxTemp: number | null
     ): [number, number] | null =>
       minTemp !== null && maxTemp !== null ? [minTemp, maxTemp] : null;
 
-    const main = weeklyWeatherData.weeklyData
+    return weeklyWeatherData.weeklyData
       .filter(
-        (w) =>
-          w.avgTemp !== null || w.maxTemp !== null || w.minTemp !== null
+        (w) => w.avgTemp !== null || w.maxTemp !== null || w.minTemp !== null
       )
-      .map((w) => ({
-        week: w.week,
-        avgTemp: w.avgTemp,
-        maxTemp: w.maxTemp,
-        minTemp: w.minTemp,
-        tempRange: toRange(w.minTemp, w.maxTemp),
-      }));
-
-    if (!comparisonWeeklyWeatherData) return main;
-
-    return main.map((m) => {
-      const c = comparisonWeeklyWeatherData.weeklyData.find(
-        (cc) => cc.week === m.week
-      );
-      const compMin = c?.minTemp ?? null;
-      const compMax = c?.maxTemp ?? null;
-      return {
-        ...m,
-        compAvgTemp: c?.avgTemp ?? null,
-        compMaxTemp: compMax,
-        compMinTemp: compMin,
-        compTempRange: toRange(compMin, compMax),
-      };
-    });
+      .map((w) => {
+        const c = comparisonWeeklyWeatherData?.weeklyData.find(
+          (cc) => cc.week === w.week
+        );
+        const compMin = c?.minTemp ?? null;
+        const compMax = c?.maxTemp ?? null;
+        return {
+          week: w.week,
+          avgTemp: w.avgTemp,
+          maxTemp: w.maxTemp,
+          minTemp: w.minTemp,
+          tempRange: toRange(w.minTemp, w.maxTemp),
+          compAvgTemp: c?.avgTemp ?? null,
+          compMaxTemp: compMax,
+          compMinTemp: compMin,
+          compTempRange: toRange(compMin, compMax),
+        };
+      });
   }, [weeklyWeatherData.weeklyData, comparisonWeeklyWeatherData]);
 
   // Areas: subtle filled envelope per city under the max/min strokes. Uses
@@ -188,18 +194,12 @@ const TemperatureGraph = ({
         onHover(null);
         return;
       }
-      const point = chartData[state.activeIndex] as
-        | {
-            week: number;
-            avgTemp: number | null;
-            compAvgTemp?: number | null;
-          }
-        | undefined;
+      const point = chartData[state.activeIndex];
       if (!point) {
         onHover(null);
         return;
       }
-      const compAvg = point.compAvgTemp ?? null;
+      const compAvg = point.compAvgTemp;
       onHover({
         label: weekRangeLabel(point.week),
         v1:

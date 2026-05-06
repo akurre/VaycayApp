@@ -1,4 +1,4 @@
-import { Fragment, memo } from 'react';
+import { memo } from 'react';
 import {
   ComposedChart,
   Line,
@@ -21,6 +21,7 @@ import type {
   ReferenceLineConfig,
   RechartsLineGraphProps,
 } from '@/types/chartTypes';
+import RechartsLineTooltip from './RechartsLineTooltip';
 
 export type { ChartDataPoint, LineConfig, ReferenceLineConfig };
 
@@ -54,8 +55,9 @@ type YDomainBound =
   | 'dataMax'
   | ((value: number) => number);
 
-interface ExtendedProps<T extends ChartDataPoint>
-  extends RechartsLineGraphProps<T> {
+interface ExtendedProps<
+  T extends ChartDataPoint,
+> extends RechartsLineGraphProps<T> {
   areas?: AreaConfig[];
   referenceDots?: ReferenceDotConfig[];
   yTickFormatter?: (value: number) => string;
@@ -183,10 +185,8 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
           ))}
 
           {/* Hover affordance: vertical hairline + grid-laid-out value
-              popover. Each row is a metric (Max/Avg/Min); each column is
-              a city (main vs comparison). Areas duplicating a Line's
-              dataKey are deduped; dashed reference lines (sun ceilings)
-              are dropped. */}
+              popover. Areas duplicating a Line's dataKey are deduped; dashed
+              reference lines (sun ceilings) are dropped. */}
           <Tooltip
             cursor={{
               stroke: 'var(--mantine-color-dimmed)',
@@ -195,131 +195,21 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
               strokeDasharray: '3 3',
             }}
             wrapperStyle={{ outline: 'none' }}
-            content={({ active, payload, label }) => {
-              if (!active || !payload || payload.length === 0) return null;
-
-              const formatValue = (v: unknown): string => {
-                if (typeof v !== 'number') return String(v);
-                const rounded = Number(v.toFixed(1));
-                return yTickFormatter
-                  ? yTickFormatter(rounded)
-                  : rounded.toFixed(1);
-              };
-
-              interface Item {
-                dataKey: string;
-                metricLabel: string | undefined;
-                cityRole: 'main' | 'comparison';
-                color: string;
-                formatted: string;
-              }
-
-              const seen = new Set<string>();
-              const items: Item[] = [];
-              for (const p of payload) {
-                if (p.value === null || p.value === undefined) continue;
-                const key = String(p.dataKey);
-                if (seen.has(key)) continue;
-                const cfg = lines.find((l) => l.dataKey === key);
-                if (!cfg || cfg.strokeDasharray) continue;
-                seen.add(key);
-                items.push({
-                  dataKey: key,
-                  metricLabel: cfg.metricLabel,
-                  cityRole: cfg.cityRole ?? 'main',
-                  color: (p.color as string | undefined) ?? cfg.stroke,
-                  formatted: formatValue(p.value),
-                });
-              }
-              if (items.length === 0) return null;
-
-              // Group by metricLabel, preserving first-seen order.
-              const metricOrder: string[] = [];
-              const grouped = new Map<
-                string,
-                { main?: Item; comparison?: Item }
-              >();
-              for (const it of items) {
-                const key = it.metricLabel ?? '';
-                if (!grouped.has(key)) {
-                  grouped.set(key, {});
-                  metricOrder.push(key);
+            content={({ active, payload, label }) => (
+              <RechartsLineTooltip<T>
+                active={active}
+                payload={payload}
+                label={
+                  typeof label === 'string' || typeof label === 'number'
+                    ? label
+                    : undefined
                 }
-                const slot = grouped.get(key);
-                if (!slot) continue;
-                if (it.cityRole === 'comparison') slot.comparison = it;
-                else slot.main = it;
-              }
-
-              const hasComparison = items.some(
-                (i) => i.cityRole === 'comparison'
-              );
-              const hasLabels = items.some((i) => i.metricLabel);
-
-              const cols = [
-                hasLabels ? 'auto' : null,
-                'auto',
-                hasComparison ? 'auto' : null,
-              ]
-                .filter(Boolean)
-                .join(' ');
-
-              const headerLabel =
-                label === undefined || label === null
-                  ? null
-                  : formatTooltipLabel
-                    ? formatTooltipLabel(label as string | number)
-                    : String(label);
-
-              const activeRow = (payload[0]?.payload ?? null) as T | null;
-              const extras =
-                renderTooltipExtras && activeRow
-                  ? renderTooltipExtras(activeRow)
-                  : null;
-
-              return (
-                <div className="rounded-md px-2.5 py-1.5 text-[11px] tabular-nums bg-[var(--mantine-color-default-hover)] border border-[var(--mantine-color-default-border)] shadow-md">
-                  {headerLabel && (
-                    <div className="text-[9px] uppercase tracking-[0.08em] text-[var(--mantine-color-dimmed)] mb-1">
-                      {headerLabel}
-                    </div>
-                  )}
-                  <div
-                    className="grid gap-x-3 gap-y-0.5 items-baseline"
-                    style={{ gridTemplateColumns: cols }}
-                  >
-                    {metricOrder.map((m) => {
-                      const slot = grouped.get(m);
-                      if (!slot) return null;
-                      return (
-                        <Fragment key={m || 'metric'}>
-                          {hasLabels && (
-                            <span className="text-[9px] uppercase tracking-[0.08em] text-[var(--mantine-color-dimmed)] font-semibold">
-                              {m}
-                            </span>
-                          )}
-                          <span
-                            className="font-semibold"
-                            style={{ color: slot.main?.color }}
-                          >
-                            {slot.main ? slot.main.formatted : '—'}
-                          </span>
-                          {hasComparison && (
-                            <span
-                              className="font-semibold"
-                              style={{ color: slot.comparison?.color }}
-                            >
-                              {slot.comparison ? slot.comparison.formatted : '—'}
-                            </span>
-                          )}
-                        </Fragment>
-                      );
-                    })}
-                  </div>
-                  {extras && <div className="mt-1.5">{extras}</div>}
-                </div>
-              );
-            }}
+                lines={lines}
+                yTickFormatter={yTickFormatter}
+                formatTooltipLabel={formatTooltipLabel}
+                renderExtras={renderTooltipExtras}
+              />
+            )}
           />
 
           {/* Reference lines (today, selected month, etc.) */}
@@ -370,9 +260,9 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
           })}
 
           {/* Today / hover dots */}
-          {referenceDots.map((d, i) => (
+          {referenceDots.map((d) => (
             <ReferenceDot
-              key={`dot-${i}-${d.x}-${d.y}`}
+              key={`dot-${d.x}-${d.y}-${d.fill}`}
               x={d.x}
               y={d.y}
               r={d.r ?? 3.5}
