@@ -1,9 +1,6 @@
-import { Button, useMantineColorScheme } from '@mantine/core';
 import { IconCalendar } from '@tabler/icons-react';
-import { TOGGLE_ICON_SIZE, monthlyMarks } from '@/const';
-import { dateToDayOfYear } from '@/utils/dateFormatting/dateToDayOfYear';
-import formatSliderLabel from '@/utils/dateFormatting/formatSliderLabel';
-import { secondaryOceanShades } from '@/theme';
+import formatDateForLabel from '@/utils/dateFormatting/formatDateForLabel';
+import CommandBarTriggerButton from '@/components/Navigation/CommandBarTriggerButton';
 
 interface DateTriggerButtonProps {
   isOpen: boolean;
@@ -16,25 +13,12 @@ const DateTriggerButton = ({
   date,
   isMonthly,
 }: DateTriggerButtonProps) => {
-  const { colorScheme } = useMantineColorScheme();
-  const isDark = colorScheme === 'dark';
-
-  const label = isMonthly
-    ? (monthlyMarks.find(
-        (mark) =>
-          mark.value === Number.parseInt(date.substring(0, 2), 10)
-      )?.label ?? '')
-    : formatSliderLabel(dateToDayOfYear(date));
+  const label = formatDateForLabel(date, isMonthly);
 
   return (
-    <Button
-      variant={isOpen ? 'light' : 'outline'}
-      color={isDark ? secondaryOceanShades[2] : secondaryOceanShades[4]}
-      size="xs"
-      leftSection={<IconCalendar size={TOGGLE_ICON_SIZE} />}
-    >
+    <CommandBarTriggerButton isOpen={isOpen} icon={IconCalendar}>
       {label}
-    </Button>
+    </CommandBarTriggerButton>
   );
 };
 

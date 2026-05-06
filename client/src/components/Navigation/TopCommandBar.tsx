@@ -8,7 +8,10 @@ import DateSliderWrapper from '@/components/Navigation/DateSliderWrapper';
 import HomeLocationContent from '@/components/Navigation/HomeLocationContent';
 import HomeTriggerButton from '@/components/Navigation/HomeTriggerButton';
 import DateTriggerButton from '@/components/Navigation/DateTriggerButton';
+import CommandBarDivider from '@/components/Navigation/CommandBarDivider';
 import {
+  DATE_POPOVER_HIDDEN_OFFSET_PX,
+  DATE_POPOVER_TRANSITION_MS,
   DATE_POPOVER_WIDTH_PX,
   HOME_POPOVER_WIDTH_PX,
   POPOVER_CLOSE_DELAY_MS,
@@ -28,14 +31,6 @@ interface TopCommandBarProps {
   onTemperatureUnitChange: (unit: TemperatureUnit) => void;
   isMonthly: boolean;
 }
-
-interface DividerProps {
-  color: string;
-}
-
-const Divider = ({ color }: DividerProps) => (
-  <div className="w-px h-7" style={{ background: color }} />
-);
 
 const TopCommandBar = ({
   selectedDate,
@@ -89,6 +84,8 @@ const TopCommandBar = ({
         }}
       >
         <HoverCard
+          // Force a remount on color-scheme change so the portaled dropdown
+          // picks up the new glass tokens (its inline styles are read once).
           key={scheme}
           width={HOME_POPOVER_WIDTH_PX}
           position="bottom"
@@ -120,7 +117,7 @@ const TopCommandBar = ({
           </HoverCard.Dropdown>
         </HoverCard>
 
-        <Divider color={glass.divider} />
+        <CommandBarDivider color={glass.divider} />
 
         <div onMouseEnter={openDate} onMouseLeave={scheduleDateClose}>
           <DateTriggerButton
@@ -130,7 +127,7 @@ const TopCommandBar = ({
           />
         </div>
 
-        <Divider color={glass.divider} />
+        <CommandBarDivider color={glass.divider} />
 
         <MapViewToggle viewMode={viewMode} onViewModeChange={onViewModeChange} />
         <MapDataToggle dataType={dataType} onDataTypeChange={onDataTypeChange} />
@@ -139,7 +136,7 @@ const TopCommandBar = ({
           onTemperatureUnitChange={onTemperatureUnitChange}
         />
 
-        <Divider color={glass.divider} />
+        <CommandBarDivider color={glass.divider} />
 
         <MapThemeToggle />
       </div>
@@ -150,9 +147,9 @@ const TopCommandBar = ({
         style={{
           width: DATE_POPOVER_WIDTH_PX,
           opacity: dateOpen ? 1 : 0,
-          marginTop: dateOpen ? 0 : -10,
+          marginTop: dateOpen ? 0 : DATE_POPOVER_HIDDEN_OFFSET_PX,
           pointerEvents: dateOpen ? 'auto' : 'none',
-          transition: 'opacity 250ms ease, margin-top 250ms ease',
+          transition: `opacity ${DATE_POPOVER_TRANSITION_MS}ms ease, margin-top ${DATE_POPOVER_TRANSITION_MS}ms ease`,
         }}
       >
         <DateSliderWrapper

@@ -1,4 +1,5 @@
 import { UnstyledButton, Text } from '@mantine/core';
+import useGlassTokens from '@/hooks/useGlassTokens';
 import type { SearchCitiesResult } from '@/types/userLocationType';
 
 interface HomeLocationSearchResultProps {
@@ -10,6 +11,7 @@ const HomeLocationSearchResult = ({
   city,
   onSelect,
 }: HomeLocationSearchResultProps) => {
+  const glass = useGlassTokens();
   const populationLabel = city.population
     ? ` • ${(city.population / 1000000).toFixed(1)}M`
     : '';
@@ -17,7 +19,13 @@ const HomeLocationSearchResult = ({
   return (
     <UnstyledButton
       onClick={() => onSelect(city)}
-      className="w-full text-left px-3 py-2 hover:bg-white/5 rounded text-sm transition-colors"
+      onMouseEnter={(e) => {
+        e.currentTarget.style.background = glass.triggerIdleBg;
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.background = 'transparent';
+      }}
+      className="w-full text-left px-3 py-2 rounded text-sm transition-colors"
     >
       <Text size="sm" fw={500}>
         {city.name}

@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 import { Text } from '@mantine/core';
 import { dateToDayOfYear } from '@/utils/dateFormatting/dateToDayOfYear';
 import { dayOfYearToDate } from '@/utils/dateFormatting/dayOfYearToDate';
-import formatSliderLabel from '@/utils/dateFormatting/formatSliderLabel';
-import CustomDateSlider from './CustomDateSlider';
+import formatSliderValueForLabel from '@/utils/dateFormatting/formatSliderValueForLabel';
+import CustomDateSlider from '@/components/Navigation/CustomDateSlider';
 import { monthMarks, monthlyMarks } from '@/const';
 import useGlassTokens from '@/hooks/useGlassTokens';
 
@@ -46,9 +46,7 @@ const DateSliderWrapper: FC<DateSliderWrapperProps> = ({
   const maxValue = isMonthly ? 12 : 365;
 
   const labelValue = previewValue ?? sliderValue;
-  const currentLabel = isMonthly
-    ? (monthlyMarks.find((mark) => mark.value === labelValue)?.label ?? '')
-    : formatSliderLabel(labelValue);
+  const currentLabel = formatSliderValueForLabel(labelValue, isMonthly);
 
   return (
     <div

@@ -4,15 +4,21 @@ import { useDebouncedValue } from '@mantine/hooks';
 import { IconMapPin, IconSearch } from '@tabler/icons-react';
 import { useUserLocation } from '@/hooks/useUserLocation';
 import useCitySearch from '@/hooks/useCitySearch';
+import useGlassTokens from '@/hooks/useGlassTokens';
 import type { SearchCitiesResult } from '@/types/userLocationType';
-import { MIN_CITY_SEARCH_LENGTH } from '@/const';
-import HomeLocationSearchResults from './HomeLocationSearchResults';
+import { CITY_SEARCH_DEBOUNCE_MS, MIN_CITY_SEARCH_LENGTH } from '@/const';
+import HomeLocationSearchResults from '@/components/Navigation/HomeLocationSearchResults';
 import { secondaryOceanShades } from '@/theme';
+import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
 
 const HomeLocationContent = () => {
+  const glass = useGlassTokens();
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<SearchCitiesResult[]>([]);
-  const [debouncedSearchTerm] = useDebouncedValue(searchTerm, 300);
+  const [debouncedSearchTerm] = useDebouncedValue(
+    searchTerm,
+    CITY_SEARCH_DEBOUNCE_MS
+  );
 
   const { requestLocation, isLoading: isGeoLoading } = useUserLocation();
   const {
@@ -23,7 +29,11 @@ const HomeLocationContent = () => {
 
   useEffect(() => {
     if (debouncedSearchTerm.trim().length >= MIN_CITY_SEARCH_LENGTH) {
-      searchCities(debouncedSearchTerm).then(setSearchResults);
+      searchCities(debouncedSearchTerm)
+        .then(setSearchResults)
+        .catch((error) =>
+          parseErrorAndNotify(error, 'failed to search cities')
+        );
     } else {
       setSearchResults([]);
     }
@@ -55,11 +65,11 @@ const HomeLocationContent = () => {
       </Button>
 
       <div className="flex items-center gap-2 mb-3">
-        <div className="flex-1 h-px bg-white/10" />
+        <div className="flex-1 h-px" style={{ background: glass.divider }} />
         <Text size="xs" c="dimmed">
           OR
         </Text>
-        <div className="flex-1 h-px bg-white/10" />
+        <div className="flex-1 h-px" style={{ background: glass.divider }} />
       </div>
 
       <TextInput

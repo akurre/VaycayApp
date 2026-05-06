@@ -1,7 +1,7 @@
 import { Loader, Text } from '@mantine/core';
 import type { SearchCitiesResult } from '@/types/userLocationType';
 import { MIN_CITY_SEARCH_LENGTH } from '@/const';
-import HomeLocationSearchResult from './HomeLocationSearchResult';
+import HomeLocationSearchResult from '@/components/Navigation/HomeLocationSearchResult';
 
 interface HomeLocationSearchResultsProps {
   results: SearchCitiesResult[];

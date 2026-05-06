@@ -53,10 +53,19 @@ export const POPOVER_OFFSET_Y = 8;
 export const HOME_POPOVER_WIDTH_PX = 320;
 export const DATE_POPOVER_WIDTH_PX = 720;
 
+// Date popover slide-in animation: duration of the fade/slide and the
+// off-screen vertical offset (px) when hidden.
+export const DATE_POPOVER_TRANSITION_MS = 250;
+export const DATE_POPOVER_HIDDEN_OFFSET_PX = -10;
+
 // Minimum characters typed before kicking off a city-search request.
 // Used by the search hook and any UI that gates "no results" messaging on
 // whether a real query has been issued.
 export const MIN_CITY_SEARCH_LENGTH = 2;
+
+// Debounce window for the city-search TextInput. Long enough to skip
+// mid-word typing churn, short enough to feel responsive.
+export const CITY_SEARCH_DEBOUNCE_MS = 300;
 
 // map style urls for light and dark themes
 // Carto basemaps - using direct CDN URLs (no proxy needed, CORS-enabled)
@@ -207,23 +216,6 @@ export const MONTH_NAMES = [
   'November',
   'December',
 ];
-
-// Three-letter month abbreviations indexed 0–11, no trailing period.
-// Use this for compact UI labels (e.g. "Nov 30" in the date picker trigger).
-export const MONTH_NAMES_SHORT = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-] as const;
 
 export const MONTH_ABBREVIATIONS: Record<string, string> = {
   '01': 'Jan.',
