@@ -129,8 +129,14 @@ const TopCommandBar = ({
 
         <CommandBarDivider color={glass.divider} />
 
-        <MapViewToggle viewMode={viewMode} onViewModeChange={onViewModeChange} />
-        <MapDataToggle dataType={dataType} onDataTypeChange={onDataTypeChange} />
+        <MapViewToggle
+          viewMode={viewMode}
+          onViewModeChange={onViewModeChange}
+        />
+        <MapDataToggle
+          dataType={dataType}
+          onDataTypeChange={onDataTypeChange}
+        />
         <TemperatureUnitToggle
           temperatureUnit={temperatureUnit}
           onTemperatureUnitChange={onTemperatureUnitChange}

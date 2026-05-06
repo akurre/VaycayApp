@@ -17,9 +17,7 @@ describe('HomeLocationSearchResult', () => {
   it('renders city name, state, and country', () => {
     render(<HomeLocationSearchResult city={baseCity} onSelect={vi.fn()} />);
     expect(screen.getByText('New York')).toBeInTheDocument();
-    expect(
-      screen.getByText(/New York, United States/)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/New York, United States/)).toBeInTheDocument();
   });
 
   it('renders population in millions when present', () => {

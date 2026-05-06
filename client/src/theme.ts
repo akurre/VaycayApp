@@ -162,7 +162,7 @@ export const appColors = {
   // Pick the active set with `useGlassTokens()` based on color scheme.
   glass: {
     dark: {
-      bg: 'rgba(30, 36, 46, 0.55)', // lower alpha so the blurred map shows through
+      bg: 'rgba(30, 36, 46, 0.25)', // lower alpha so the blurred map shows through
       bgStrong: 'rgba(30, 36, 46, 0.78)',
       border: 'rgba(255, 255, 255, 0.08)',
       borderLight: 'rgba(255, 255, 255, 0.10)',
@@ -177,7 +177,7 @@ export const appColors = {
       text: '#E8DFD0',
     },
     light: {
-      bg: 'rgba(252, 246, 230, 0.55)', // lower alpha so the blurred map shows through
+      bg: 'rgba(252, 246, 230, 0.25)', // lower alpha so the blurred map shows through
       bgStrong: 'rgba(252, 246, 230, 0.80)',
       border: 'rgba(200, 179, 135, 0.50)', // sand @ 50%
       borderLight: 'rgba(200, 179, 135, 0.55)', // sand @ 55%

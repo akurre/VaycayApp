@@ -34,9 +34,7 @@ describe('HomeLocationSearchResults', () => {
         onSelect={vi.fn()}
       />
     );
-    expect(
-      container.querySelector('.mantine-Loader-root')
-    ).toBeInTheDocument();
+    expect(container.querySelector('.mantine-Loader-root')).toBeInTheDocument();
   });
 
   it('renders results when present', () => {

@@ -36,9 +36,7 @@ describe('CustomDateSlider', () => {
       />
     );
 
-    const trackContainer = container.querySelector(
-      '.relative.cursor-pointer'
-    );
+    const trackContainer = container.querySelector('.relative.cursor-pointer');
     expect(trackContainer).toBeInTheDocument();
 
     const thumb = container.querySelector('.cursor-grab');

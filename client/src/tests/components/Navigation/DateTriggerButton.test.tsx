@@ -14,7 +14,9 @@ describe('DateTriggerButton', () => {
     );
     expect(screen.getByRole('button')).toHaveTextContent('Jan. 1');
 
-    rerender(<DateTriggerButton isOpen={false} date="1231" isMonthly={false} />);
+    rerender(
+      <DateTriggerButton isOpen={false} date="1231" isMonthly={false} />
+    );
     expect(screen.getByRole('button')).toHaveTextContent('Dec. 31');
   });
 

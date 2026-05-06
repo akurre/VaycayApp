@@ -3,13 +3,9 @@ import { Button, useMantineColorScheme } from '@mantine/core';
 import { TOGGLE_ICON_SIZE } from '@/const';
 import { secondaryOceanShades } from '@/theme';
 
-interface IconProps {
-  size?: number;
-}
-
 interface CommandBarTriggerButtonProps {
   isOpen: boolean;
-  icon: ComponentType<IconProps>;
+  icon: ComponentType<{ size?: number }>;
   children: ReactNode;
 }
 

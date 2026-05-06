@@ -67,7 +67,7 @@ const MapColorLegend: FC<MapColorLegendProps> = ({ dataType }) => {
 
   return (
     <div
-      className="rounded-xl px-3.5 py-3 min-w-[170px]"
+      className="rounded-xl px-3.5 py-3 min-w-[120px]"
       style={{
         background: glass.bg,
         backdropFilter: glass.blur,

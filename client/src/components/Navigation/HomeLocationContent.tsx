@@ -9,7 +9,6 @@ import type { SearchCitiesResult } from '@/types/userLocationType';
 import { CITY_SEARCH_DEBOUNCE_MS, MIN_CITY_SEARCH_LENGTH } from '@/const';
 import HomeLocationSearchResults from '@/components/Navigation/HomeLocationSearchResults';
 import { secondaryOceanShades } from '@/theme';
-import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
 
 const HomeLocationContent = () => {
   const glass = useGlassTokens();
@@ -29,11 +28,7 @@ const HomeLocationContent = () => {
 
   useEffect(() => {
     if (debouncedSearchTerm.trim().length >= MIN_CITY_SEARCH_LENGTH) {
-      searchCities(debouncedSearchTerm)
-        .then(setSearchResults)
-        .catch((error) =>
-          parseErrorAndNotify(error, 'failed to search cities')
-        );
+      searchCities(debouncedSearchTerm).then(setSearchResults);
     } else {
       setSearchResults([]);
     }
