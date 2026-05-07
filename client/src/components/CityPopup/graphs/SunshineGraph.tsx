@@ -6,11 +6,12 @@ import { transformSunshineDataForChart } from '@/utils/dataFormatting/transformS
 import { generateTheoreticalMaxSunshineData } from '@/utils/dataFormatting/generateTheoreticalMaxSunshineData';
 import { formatSunshinePercentage } from '@/utils/dataFormatting/formatSunshinePercentage';
 import { formatHours } from '@/utils/dataFormatting/formatHours';
-import RechartsLineGraph, {
-  type LineConfig,
-  type AreaConfig,
-  type ReferenceLineConfig,
-} from './RechartsLineGraph';
+import RechartsLineGraph from './RechartsLineGraph';
+import type {
+  AreaConfig,
+  LineConfig,
+  ReferenceLineConfig,
+} from '@/types/chartTypes';
 import SunshineLegend from './SunshineLegend';
 import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
 

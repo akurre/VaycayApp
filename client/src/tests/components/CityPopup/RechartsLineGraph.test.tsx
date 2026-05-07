@@ -1,9 +1,10 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@/test-utils';
-import RechartsLineGraph, {
-  type LineConfig,
-  type ReferenceLineConfig,
-} from '@/components/CityPopup/graphs/RechartsLineGraph';
+import RechartsLineGraph from '@/components/CityPopup/graphs/RechartsLineGraph';
+import type {
+  LineConfig,
+  ReferenceLineConfig,
+} from '@/types/chartTypes';
 
 describe('RechartsLineGraph', () => {
   const mockData = [

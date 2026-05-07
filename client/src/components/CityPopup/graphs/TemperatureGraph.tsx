@@ -1,13 +1,15 @@
 import { useMemo, memo, useCallback } from 'react';
 import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
-import type { ChartHoverState } from '@/types/chartTypes';
+import type {
+  AreaConfig,
+  ChartHoverState,
+  LineConfig,
+  ReferenceLineConfig,
+  TemperatureChartRow,
+} from '@/types/chartTypes';
 import type { RibbonHoverPayload } from '@/types/cityPopupTypes';
 
-import RechartsLineGraph, {
-  type LineConfig,
-  type AreaConfig,
-} from './RechartsLineGraph';
-import type { ReferenceLineConfig } from '@/types/chartTypes';
+import RechartsLineGraph from './RechartsLineGraph';
 import { useAppStore } from '@/stores/useAppStore';
 import { formatTemperature } from '@/utils/tempFormatting/formatTemperature';
 import { weekRangeLabel } from '@/utils/dateFormatting/weekRangeLabel';
@@ -19,19 +21,6 @@ interface TemperatureGraphProps {
   comparisonWeeklyWeatherData?: CityWeeklyWeather | null;
   selectedDate?: string;
   onHover?: (payload: RibbonHoverPayload | null) => void;
-}
-
-interface TemperatureChartRow {
-  week: number;
-  avgTemp: number | null;
-  maxTemp: number | null;
-  minTemp: number | null;
-  tempRange: [number, number] | null;
-  compAvgTemp: number | null;
-  compMaxTemp: number | null;
-  compMinTemp: number | null;
-  compTempRange: [number, number] | null;
-  [key: string]: string | number | [number, number] | null | undefined;
 }
 
 const TemperatureGraph = ({

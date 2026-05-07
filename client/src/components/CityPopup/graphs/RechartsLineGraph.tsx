@@ -16,37 +16,12 @@ import type { ReactNode } from 'react';
 
 import { useChartColors } from '@/hooks/useChartColors';
 import type {
+  AreaConfig,
   ChartDataPoint,
-  LineConfig,
-  ReferenceLineConfig,
+  ReferenceDotConfig,
   RechartsLineGraphProps,
 } from '@/types/chartTypes';
 import RechartsLineTooltip from './RechartsLineTooltip';
-
-export type { ChartDataPoint, LineConfig, ReferenceLineConfig };
-
-// Extra series config used by graphs that need filled envelopes (temp band,
-// sun-vs-ceiling). Kept narrow on purpose — anything fancier should go inline
-// via a children render prop, not through here. For min/max bands, set
-// dataKey to a tuple field on the data row (e.g. tempRange: [min, max]).
-export interface AreaConfig {
-  dataKey: string;
-  fill: string;
-  fillOpacity?: number;
-  stroke?: string;
-  strokeWidth?: number;
-  strokeOpacity?: number;
-  strokeDasharray?: string;
-}
-
-export interface ReferenceDotConfig {
-  x: string | number;
-  y: number;
-  fill: string;
-  stroke?: string;
-  strokeWidth?: number;
-  r?: number;
-}
 
 type YDomainBound =
   | number

@@ -1,4 +1,4 @@
-import { MONTH_FIELDS } from '@/constants';
+import { MONTH_FIELDS } from '@/const';
 import type { SunshineData } from '@/types/sunshineDataType';
 
 /**

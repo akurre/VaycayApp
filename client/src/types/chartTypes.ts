@@ -37,6 +37,45 @@ export interface ReferenceLineConfig {
   label?: string;
 }
 
+// Extra series config used by graphs that need filled envelopes (temp band,
+// sun-vs-ceiling). Kept narrow on purpose — anything fancier should go inline
+// via a children render prop, not through here. For min/max bands, set
+// dataKey to a tuple field on the data row (e.g. tempRange: [min, max]).
+export interface AreaConfig {
+  dataKey: string;
+  fill: string;
+  fillOpacity?: number;
+  stroke?: string;
+  strokeWidth?: number;
+  strokeOpacity?: number;
+  strokeDasharray?: string;
+}
+
+export interface ReferenceDotConfig {
+  x: string | number;
+  y: number;
+  fill: string;
+  stroke?: string;
+  strokeWidth?: number;
+  r?: number;
+}
+
+// Row shape for the temperature graph's transformed weekly data. Index
+// signature is required because the graph passes rows through generic
+// recharts components that look up dataKeys at runtime.
+export interface TemperatureChartRow {
+  week: number;
+  avgTemp: number | null;
+  maxTemp: number | null;
+  minTemp: number | null;
+  tempRange: [number, number] | null;
+  compAvgTemp: number | null;
+  compMaxTemp: number | null;
+  compMinTemp: number | null;
+  compTempRange: [number, number] | null;
+  [key: string]: string | number | [number, number] | null | undefined;
+}
+
 export interface RechartsLineGraphProps<T extends ChartDataPoint> {
   data: T[];
   xAxisDataKey: string;

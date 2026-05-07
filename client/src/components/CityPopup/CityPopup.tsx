@@ -128,7 +128,7 @@ const CityPopup = ({
             country: city.country ?? null,
           }
         : undefined,
-    [city]
+    [city?.city, city?.state, city?.country]
   );
 
   const stats = useRibbonStats({
@@ -156,6 +156,9 @@ const CityPopup = ({
         ? null
         : (data?.weeklyData.find((w) => w.week === selectedWeek) ?? null);
 
+    const w1 = findWeek(weeklyWeatherData);
+    const w2 = findWeek(comparisonWeeklyWeatherData);
+
     return {
       [DataType.Temperature]: {
         c1: displayWeatherData?.avgTemperature ?? null,
@@ -169,16 +172,12 @@ const CityPopup = ({
           comparisonCity?.lat
         ),
       },
-      [DataType.Precip]: (() => {
-        const w1 = findWeek(weeklyWeatherData);
-        const w2 = findWeek(comparisonWeeklyWeatherData);
-        return {
-          c1: normalizeWeekPrecip(w1),
-          c2: normalizeWeekPrecip(w2),
-          subC1: normalizeRainyDays(w1),
-          subC2: normalizeRainyDays(w2),
-        };
-      })(),
+      [DataType.Precip]: {
+        c1: normalizeWeekPrecip(w1),
+        c2: normalizeWeekPrecip(w2),
+        subC1: normalizeRainyDays(w1),
+        subC2: normalizeRainyDays(w2),
+      },
     };
   }, [
     dateToUse,
