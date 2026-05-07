@@ -163,7 +163,9 @@ const ComparisonCitySelector = ({
               className="w-2.5 h-2.5 rounded-full shrink-0 opacity-60"
               style={{ background: CITY2_PRIMARY_COLOR }}
             />
-            <span className="text-[17px] font-bold font-[Outfit_Variable]">Compare</span>
+            <span className="text-[17px] font-bold font-[Outfit_Variable]">
+              Compare
+            </span>
             <IconPlus size={14} className="opacity-70 shrink-0" />
           </button>
         )}
