@@ -6,6 +6,7 @@ import { CITY1_PRIMARY_COLOR } from '@/const';
 interface IconTabsProps {
   tab: DataType;
   onTab: (next: DataType) => void;
+  availableTabs?: ReadonlyArray<DataType>;
 }
 
 interface TabItem {
@@ -24,10 +25,13 @@ const TABS: ReadonlyArray<TabItem> = [
   { id: DataType.Precip, label: 'Precip', icon: <IconDroplet size={16} /> },
 ];
 
-const IconTabs = ({ tab, onTab }: IconTabsProps) => {
+const IconTabs = ({ tab, onTab, availableTabs }: IconTabsProps) => {
+  const visible = availableTabs
+    ? TABS.filter((t) => availableTabs.includes(t.id))
+    : TABS;
   return (
     <div className="flex gap-1">
-      {TABS.map((t) => {
+      {visible.map((t) => {
         const active = t.id === tab;
         return (
           <button

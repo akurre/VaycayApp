@@ -44,4 +44,18 @@ describe('IconTabs', () => {
     fireEvent.click(screen.getByRole('button', { name: /temp/i }));
     expect(onTab).toHaveBeenCalledWith(DataType.Temperature);
   });
+
+  it('hides tabs not present in availableTabs', () => {
+    render(
+      <IconTabs
+        tab={DataType.Temperature}
+        onTab={vi.fn()}
+        availableTabs={[DataType.Temperature, DataType.Precip]}
+      />
+    );
+
+    expect(screen.getByRole('button', { name: /temp/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /precip/i })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /sun/i })).toBeNull();
+  });
 });

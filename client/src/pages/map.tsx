@@ -16,6 +16,7 @@ import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
 import { INITIAL_VIEW_STATE, ZOOM_THRESHOLD } from '@/const';
 import ComponentErrorBoundary from '../components/ErrorBoundary/ComponentErrorBoundary';
 import MapColorLegend from '../components/Map/MapColorLegend';
+import MapDataLoader from '../components/Map/MapDataLoader';
 import { consolidateWeatherByCity } from '@/utils/data/consolidateWeatherByCity';
 import { consolidateSunshineByCity } from '@/utils/data/consolidateSunshineByCity';
 
@@ -89,6 +90,7 @@ const MapPage: FC = () => {
   );
   const temperatureUnit = useAppStore((state) => state.temperatureUnit);
   const setTemperatureUnit = useAppStore((state) => state.setTemperatureUnit);
+  const isGesturing = useAppStore((state) => state.isGesturing);
 
   // Get the appropriate data based on the selected data type
   const displayedData = isSunshineSelected
@@ -100,20 +102,20 @@ const MapPage: FC = () => {
     setSearchParams({ date: selectedDate }, { replace: true });
   }, [selectedDate, setSearchParams]);
 
-  // update store when data changes based on selected data type
-  // consolidate multi-station cities to prevent duplicate markers
+  // Defer displayed-data writes while gesturing so the layer rebuild can't
+  // stall the pan; loading flags pass through for accurate tier detection.
   useEffect(() => {
     if (isSunshineSelected) {
       setIsLoadingSunshine(isSunshineLoading);
 
-      if (sunshineData && !isSunshineLoading) {
+      if (sunshineData && !isSunshineLoading && !isGesturing) {
         const consolidated = consolidateSunshineByCity(sunshineData);
         setDisplayedSunshineData(consolidated);
       }
     } else {
       setIsLoadingWeather(isLoading);
 
-      if (weatherData && !isLoading) {
+      if (weatherData && !isLoading && !isGesturing) {
         const consolidated = consolidateWeatherByCity(weatherData);
         setDisplayedWeatherData(consolidated);
       }
@@ -124,6 +126,7 @@ const MapPage: FC = () => {
     isLoading,
     isSunshineLoading,
     isSunshineSelected,
+    isGesturing,
     setDisplayedWeatherData,
     setDisplayedSunshineData,
     setIsLoadingWeather,
@@ -159,6 +162,8 @@ const MapPage: FC = () => {
       <div className="absolute top-4 left-4 z-20">
         <MapColorLegend dataType={dataType} />
       </div>
+
+      <MapDataLoader dataType={dataType} />
 
       <TopCommandBar
         selectedDate={selectedDate}

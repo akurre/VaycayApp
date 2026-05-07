@@ -11,45 +11,16 @@ class PerformanceMonitor {
   private metrics: PerformanceMetric[] = [];
   private marks: Map<string, number> = new Map();
 
+  // One-time cleanup of leftover persisted metrics from the previous build.
+  // The key won't reappear since the store no longer uses zustand/persist.
   constructor() {
-    // Load persisted metrics on startup (non-blocking)
     if (typeof globalThis.window !== 'undefined' && import.meta.env.DEV) {
-      this.clearCorruptedStorage();
-      this.loadPersistedMetrics();
-    }
-  }
-
-  private clearCorruptedStorage(): void {
-    // Clear corrupted storage if it exists and is causing issues
-    try {
-      const stored = localStorage.getItem('performance-dashboard-storage');
-      if (stored && stored.length > 500000) {
-        // > 500KB is suspicious
-        console.warn('Detected large performance storage, clearing...');
-        localStorage.removeItem('performance-dashboard-storage');
-      }
-    } catch (err) {
-      // If we can't even check, just clear it
       try {
         localStorage.removeItem('performance-dashboard-storage');
-      } catch {
-        // Give up silently
+      } catch (err) {
+        console.warn('perf storage cleanup skipped:', err);
       }
     }
-  }
-
-  private loadPersistedMetrics(): void {
-    // Async load without blocking constructor
-    import('@/stores/usePerformanceStore')
-      .then(({ usePerformanceStore }) => {
-        const persistedMetrics = usePerformanceStore.getState().metrics;
-        if (persistedMetrics.length > 0) {
-          this.metrics = [...persistedMetrics];
-        }
-      })
-      .catch((err) => {
-        console.warn('Failed to load persisted metrics:', err);
-      });
   }
 
   start(name: string): void {
@@ -99,41 +70,16 @@ class PerformanceMonitor {
   }
 
   private syncToStore(metric: PerformanceMetric): void {
-    if (typeof globalThis.window !== 'undefined') {
-      // Use try-catch to prevent infinite loops on quota errors
-      try {
-        import('@/stores/usePerformanceStore')
-          .then(({ usePerformanceStore }) => {
-            try {
-              usePerformanceStore.getState().addMetric(metric);
-            } catch (storageError) {
-              // If we hit quota, clear old metrics and try once more
-              if (
-                storageError instanceof Error &&
-                storageError.name === 'QuotaExceededError'
-              ) {
-                console.warn(
-                  'localStorage quota exceeded, clearing old metrics'
-                );
-                usePerformanceStore.getState().clearMetrics();
-              } else {
-                throw storageError;
-              }
-            }
-          })
-          .catch((err) => {
-            // Silent fail - don't let monitoring break the app
-            if (import.meta.env.DEV) {
-              console.warn('Failed to sync metric to store:', err);
-            }
-          });
-      } catch (err) {
-        // Catch any synchronous errors
+    if (typeof globalThis.window === 'undefined') return;
+    import('@/stores/usePerformanceStore')
+      .then(({ usePerformanceStore }) => {
+        usePerformanceStore.getState().addMetric(metric);
+      })
+      .catch((err) => {
         if (import.meta.env.DEV) {
-          console.warn('Error in syncToStore:', err);
+          console.warn('Failed to sync metric to store:', err);
         }
-      }
-    }
+      });
   }
 
   private getThreshold(name: string): number {

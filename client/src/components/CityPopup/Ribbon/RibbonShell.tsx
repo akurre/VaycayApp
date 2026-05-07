@@ -5,7 +5,7 @@ import type {
   TodayValuesByTab,
 } from '@/types/cityPopupTypes';
 import type { SearchCitiesResult } from '@/types/userLocationType';
-import type { DataType } from '@/types/mapTypes';
+import { DataType } from '@/types/mapTypes';
 import { RIBBON_HEADER_RIGHT_RESERVE_PX } from '@/const';
 import CityNamesHeader from './CityNamesHeader';
 import TodayReadout from './TodayReadout';
@@ -22,6 +22,8 @@ interface RibbonShellProps {
   selectedDate: string;
   stats: ReadonlyArray<RibbonStat>;
   comparisonNode?: ReactNode;
+  availableTabs?: ReadonlyArray<DataType>;
+  notesByTab?: Partial<Record<DataType, ReactNode>>;
   renderChart: (
     tab: DataType,
     onHover: (payload: RibbonHoverPayload | null) => void
@@ -37,10 +39,20 @@ const RibbonShell = ({
   selectedDate,
   stats,
   comparisonNode,
+  availableTabs,
+  notesByTab,
   renderChart,
 }: RibbonShellProps) => {
   const [tab, setTab] = useState<DataType>(initialTab);
   const [hover, setHover] = useState<RibbonHoverPayload | null>(null);
+
+  // If the user's intent tab disappeared (e.g. comparison city removed and it
+  // was the only city with sunshine), fall back to the first available tab.
+  // The intent stays in `tab` so it returns when the data comes back.
+  const visibleTab =
+    availableTabs && !availableTabs.includes(tab)
+      ? (availableTabs[0] ?? DataType.Temperature)
+      : tab;
 
   const hasComparison = !!comparisonCity;
   const {
@@ -48,7 +60,9 @@ const RibbonShell = ({
     c2: todayC2,
     subC1: todaySubC1,
     subC2: todaySubC2,
-  } = todayValuesByTab[tab];
+  } = todayValuesByTab[visibleTab];
+
+  const footerNote = notesByTab?.[visibleTab] ?? null;
 
   const handleHover = useCallback((payload: RibbonHoverPayload | null) => {
     setHover(payload);
@@ -67,7 +81,7 @@ const RibbonShell = ({
             comparisonNode={comparisonNode}
           />
           <TodayReadout
-            tab={tab}
+            tab={visibleTab}
             c1Value={todayC1}
             c2Value={todayC2}
             subC1Value={todaySubC1 ?? null}
@@ -78,12 +92,19 @@ const RibbonShell = ({
           />
         </header>
 
-        <main className="flex-1 min-h-0">{renderChart(tab, handleHover)}</main>
+        <main className="flex-1 min-h-0">
+          {renderChart(visibleTab, handleHover)}
+        </main>
 
         <MonthLabels />
 
-        <footer className="mt-2">
-          <IconTabs tab={tab} onTab={setTab} />
+        <footer className="mt-2 flex items-center justify-between gap-3">
+          <IconTabs
+            tab={visibleTab}
+            onTab={setTab}
+            availableTabs={availableTabs}
+          />
+          {footerNote}
         </footer>
       </div>
 

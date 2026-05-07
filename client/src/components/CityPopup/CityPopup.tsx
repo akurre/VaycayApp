@@ -1,6 +1,6 @@
-import { ActionIcon, useMantineColorScheme } from '@mantine/core';
+import { ActionIcon, Text, useMantineColorScheme } from '@mantine/core';
 import { useMemo, useState } from 'react';
-import { IconX } from '@tabler/icons-react';
+import { IconAlertCircle, IconX } from '@tabler/icons-react';
 
 import useWeatherDataForCity from '@/api/dates/useWeatherDataForCity';
 import useSunshineDataForCity from '@/api/dates/useSunshineDataForCity';
@@ -11,6 +11,7 @@ import RibbonShell from '@/components/CityPopup/Ribbon/RibbonShell';
 import { useRibbonStats } from '@/components/CityPopup/hooks/useRibbonStats';
 import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
 import { getSunshinePercent } from '@/utils/dataFormatting/getSunshinePercent';
+import { hasSunshineData } from '@/utils/dataFormatting/hasSunshineData';
 import { normalizeRainyDays } from '@/utils/dataFormatting/normalizeRainyDays';
 import { normalizeWeekPrecip } from '@/utils/dataFormatting/normalizeWeekPrecip';
 import { dateToWeekOfYear } from '@/utils/dateFormatting/dateToWeekOfYear';
@@ -123,6 +124,37 @@ const CityPopup = ({
   }, [weatherData, cityAsWeather, dataType]);
 
   const displaySunshineData = cityAsSunshine ?? sunshineData;
+
+  const primaryHasSunshine = hasSunshineData(displaySunshineData);
+  const comparisonHasSunshine = hasSunshineData(comparisonSunshineData);
+
+  // While sunshine is loading we keep the tab present so the user sees the
+  // loader rather than a tab popping in/out.
+  const sunshineTabAvailable =
+    sunshineLoading || primaryHasSunshine || comparisonHasSunshine;
+
+  const availableTabs = useMemo<ReadonlyArray<DataType>>(
+    () =>
+      sunshineTabAvailable
+        ? [DataType.Temperature, DataType.Sunshine, DataType.Precip]
+        : [DataType.Temperature, DataType.Precip],
+    [sunshineTabAvailable]
+  );
+
+  const notesByTab = useMemo(
+    () => ({
+      [DataType.Sunshine]:
+        !primaryHasSunshine && comparisonHasSunshine ? (
+          <div className="flex gap-1 mr-4 items-center">
+            <IconAlertCircle size={15} color={appColors.error} />
+            <Text fz="sm" fs="italic" c="dimmed">
+              No sunshine data for {toTitleCase(city?.city ?? '')}
+            </Text>
+          </div>
+        ) : null,
+    }),
+    [primaryHasSunshine, comparisonHasSunshine, city?.city]
+  );
 
   const excludeCity = useMemo(
     () =>
@@ -237,6 +269,8 @@ const CityPopup = ({
         todayValuesByTab={todayValuesByTab}
         selectedDate={dateToUse}
         stats={stats}
+        availableTabs={availableTabs}
+        notesByTab={notesByTab}
         comparisonNode={
           <ComparisonCitySelector
             onCitySelect={setComparisonCity}

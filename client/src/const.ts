@@ -19,9 +19,29 @@ export const CITY_CACHE_MAX_SIZE = 30;
 
 // zoom-based loading thresholds
 export const ZOOM_THRESHOLD = 2; // switch to bounds query at zoom level 2+ (continental view)
-export const DEBOUNCE_DELAY = 200; // ms - debounce delay for zoom/pan events (reduced for more responsive feel)
+export const DEBOUNCE_DELAY = 300; // ms — bounds-query debounce: how long the viewport must be idle before we fire a new bounds query
+
+// Holds isGesturing true after the last viewState change. Longer than
+// DEBOUNCE_DELAY so a quick follow-up pan isn't blocked by the post-load transition.
+export const GESTURE_GRACE_MS = 800;
 export const BOUNDS_BUFFER_PERCENT = 0.3; // add 30% buffer to viewport bounds to pre-fetch dots before they're visible
-export const ZOOM_AMPLIFICATION_FACTOR = 1.5; // amplify zoom changes for more sensitive pinch/scroll zoom
+
+// deck.gl scrollZoom speed. 3× default (0.01) for responsiveness without
+// the overshoot the previous 15× value caused.
+export const MAP_SCROLL_ZOOM_SPEED = 0.03;
+
+// Cap deck.gl drawing-buffer ratio. Full devicePixelRatio on 2×/3× displays
+// rasterises 4×/9× more fragments per frame for an imperceptible visual gain.
+export const MAP_MAX_DEVICE_PIXEL_RATIO = 1.5;
+
+// Marker fade-in durations (ms). Long transitions on 300 markers stalled
+// gestures started during the layer rebuild; 80 ms still reads intentional.
+export const MARKER_COLOR_TRANSITION_MS = 80;
+export const MARKER_OPACITY_TRANSITION_MS = 80;
+export const MARKER_RADIUS_TRANSITION_MS = 80;
+
+// Mantine Transition duration (ms) for the small map data-loading spinner.
+export const MAP_DATA_LOADER_FADE_MS = 150;
 
 // initial map view state
 export const INITIAL_VIEW_STATE = {

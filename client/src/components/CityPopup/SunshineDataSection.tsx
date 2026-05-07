@@ -29,8 +29,7 @@ const SunshineDataSection = ({
       isLoading={isLoading}
       hasError={hasError}
       errorMessage="Failed to load sunshine data for this city."
-      showNoDataBadge={true}
-      noDataMessage="No sunshine data available"
+      showNoDataBadge={false}
     >
       {(data) => (
         <ComponentErrorBoundary componentName="SunshineGraph">
