@@ -11,15 +11,14 @@ class PerformanceMonitor {
   private metrics: PerformanceMetric[] = [];
   private marks: Map<string, number> = new Map();
 
-  // One-time cleanup of any leftover persisted metrics from a previous build
-  // that wrote to localStorage. After this runs once, the key never reappears
-  // because the store no longer uses zustand/persist.
+  // One-time cleanup of leftover persisted metrics from the previous build.
+  // The key won't reappear since the store no longer uses zustand/persist.
   constructor() {
     if (typeof globalThis.window !== 'undefined' && import.meta.env.DEV) {
       try {
         localStorage.removeItem('performance-dashboard-storage');
-      } catch {
-        // Ignore — storage may be disabled or unavailable.
+      } catch (err) {
+        console.warn('perf storage cleanup skipped:', err);
       }
     }
   }

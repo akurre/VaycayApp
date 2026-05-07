@@ -102,12 +102,8 @@ const MapPage: FC = () => {
     setSearchParams({ date: selectedDate }, { replace: true });
   }, [selectedDate, setSearchParams]);
 
-  // update store when data changes based on selected data type. Loading
-  // flags pass through unconditionally so tier detection stays accurate;
-  // the displayed-data writes are deferred while a pan/zoom gesture is
-  // active so the layer rebuild + transition can't stall the next frame.
-  // When isGesturing flips back to false this effect re-runs and the
-  // pending data flushes in a single shot.
+  // Defer displayed-data writes while gesturing so the layer rebuild can't
+  // stall the pan; loading flags pass through for accurate tier detection.
   useEffect(() => {
     if (isSunshineSelected) {
       setIsLoadingSunshine(isSunshineLoading);

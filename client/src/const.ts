@@ -21,30 +21,27 @@ export const CITY_CACHE_MAX_SIZE = 30;
 export const ZOOM_THRESHOLD = 2; // switch to bounds query at zoom level 2+ (continental view)
 export const DEBOUNCE_DELAY = 300; // ms — bounds-query debounce: how long the viewport must be idle before we fire a new bounds query
 
-// How long isGesturing stays true after the last viewState change. Longer
-// than DEBOUNCE_DELAY on purpose: even after the bounds query fires and
-// data lands, we want to keep gating layer flushes for a bit so a quick
-// follow-up pan isn't blocked by the post-load 80 ms transition.
+// Holds isGesturing true after the last viewState change. Longer than
+// DEBOUNCE_DELAY so a quick follow-up pan isn't blocked by the post-load transition.
 export const GESTURE_GRACE_MS = 800;
 export const BOUNDS_BUFFER_PERCENT = 0.3; // add 30% buffer to viewport bounds to pre-fetch dots before they're visible
 
-// deck.gl scrollZoom speed. Default is 0.01; we use 3× default for a slightly
-// more responsive feel without the overshoot the previous 15× value caused.
+// deck.gl scrollZoom speed. 3× default (0.01) for responsiveness without
+// the overshoot the previous 15× value caused.
 export const MAP_SCROLL_ZOOM_SPEED = 0.03;
 
-// Cap deck.gl's drawing-buffer ratio at 1.5×. On 2× and 3× displays the
-// default (full devicePixelRatio) makes the GPU rasterise 4× / 9× more
-// fragments per frame; the visual diff at marker scales is imperceptible.
+// Cap deck.gl drawing-buffer ratio. Full devicePixelRatio on 2×/3× displays
+// rasterises 4×/9× more fragments per frame for an imperceptible visual gain.
 export const MAP_MAX_DEVICE_PIXEL_RATIO = 1.5;
 
-// Marker transition durations (ms). Previously 400-600 ms, which meant
-// every layer rebuild kicked off ~600 ms of GPU-bound color/opacity/radius
-// animations on 300 markers — and any pan gesture started during that
-// window stalled. 80 ms still reads as an intentional fade-in but doesn't
-// hold the next gesture hostage.
+// Marker fade-in durations (ms). Long transitions on 300 markers stalled
+// gestures started during the layer rebuild; 80 ms still reads intentional.
 export const MARKER_COLOR_TRANSITION_MS = 80;
 export const MARKER_OPACITY_TRANSITION_MS = 80;
 export const MARKER_RADIUS_TRANSITION_MS = 80;
+
+// Mantine Transition duration (ms) for the small map data-loading spinner.
+export const MAP_DATA_LOADER_FADE_MS = 150;
 
 // initial map view state
 export const INITIAL_VIEW_STATE = {
