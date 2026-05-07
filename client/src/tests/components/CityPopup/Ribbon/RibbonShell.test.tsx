@@ -108,6 +108,60 @@ describe('RibbonShell', () => {
     expect(firstHoverFn).toBe(lastHoverFn);
   });
 
+  it('hides tabs not in availableTabs and falls back to the first available tab', () => {
+    const renderChart = vi.fn(
+      (
+        _tab: DataType,
+        _onHover: (
+          payload: {
+            label: string;
+            v1: string | null;
+            v2: string | null;
+          } | null
+        ) => void
+      ) => <div data-testid="chart-slot">chart</div>
+    );
+    render(
+      <RibbonShell
+        {...baseProps}
+        initialTab={DataType.Sunshine}
+        availableTabs={[DataType.Temperature, DataType.Precip]}
+        renderChart={renderChart}
+      />
+    );
+
+    expect(screen.queryByRole('button', { name: /sun/i })).toBeNull();
+    expect(screen.getByRole('button', { name: /temp/i })).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
+    expect(renderChart.mock.calls[0][0]).toBe(DataType.Temperature);
+  });
+
+  it('renders the active tab note from notesByTab next to the tabs', () => {
+    render(
+      <RibbonShell
+        {...baseProps}
+        initialTab={DataType.Sunshine}
+        availableTabs={[
+          DataType.Temperature,
+          DataType.Sunshine,
+          DataType.Precip,
+        ]}
+        notesByTab={{
+          [DataType.Sunshine]: (
+            <span data-testid="sun-note">No sunshine data for Berlin</span>
+          ),
+        }}
+      />
+    );
+
+    expect(screen.getByTestId('sun-note')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /temp/i }));
+    expect(screen.queryByTestId('sun-note')).toBeNull();
+  });
+
   it('shows comparison row only when comparisonCity is provided', () => {
     const comparisonCity: SearchCitiesResult = {
       id: 2,
