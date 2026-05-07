@@ -15,9 +15,7 @@ import { isWeatherData } from '@/utils/typeGuards';
 import ComparisonCitySelector from './ComparisonCitySelector';
 import type { SearchCitiesResult } from '@/types/userLocationType';
 import { appColors } from '@/theme';
-import RibbonShell, {
-  type TodayValuesByTab,
-} from './Ribbon/RibbonShell';
+import RibbonShell, { type TodayValuesByTab } from './Ribbon/RibbonShell';
 import { useRibbonStats } from './hooks/useRibbonStats';
 import { getSunshinePercent } from '@/utils/dataFormatting/getSunshinePercent';
 import { normalizeWeekPrecip } from '@/utils/dataFormatting/normalizeWeekPrecip';

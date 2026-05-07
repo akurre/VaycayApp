@@ -1,10 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@/test-utils';
 import RechartsLineGraph from '@/components/CityPopup/graphs/RechartsLineGraph';
-import type {
-  LineConfig,
-  ReferenceLineConfig,
-} from '@/types/chartTypes';
+import type { LineConfig, ReferenceLineConfig } from '@/types/chartTypes';
 
 describe('RechartsLineGraph', () => {
   const mockData = [
@@ -104,11 +101,7 @@ describe('RechartsLineGraph', () => {
 
   it('handles empty data array', () => {
     const { container } = render(
-      <RechartsLineGraph
-        data={[]}
-        xAxisDataKey="month"
-        lines={basicLines}
-      />
+      <RechartsLineGraph data={[]} xAxisDataKey="month" lines={basicLines} />
     );
 
     expect(

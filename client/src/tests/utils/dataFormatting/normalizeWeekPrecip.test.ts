@@ -32,9 +32,7 @@ describe('normalizeWeekPrecip', () => {
   });
 
   it('returns null when totalPrecip is missing', () => {
-    expect(
-      normalizeWeekPrecip({ ...baseWeek, totalPrecip: null })
-    ).toBeNull();
+    expect(normalizeWeekPrecip({ ...baseWeek, totalPrecip: null })).toBeNull();
   });
 
   it('returns null when daysWithData is zero (avoids divide-by-zero)', () => {

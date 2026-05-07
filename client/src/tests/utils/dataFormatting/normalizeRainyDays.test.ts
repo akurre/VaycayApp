@@ -32,9 +32,7 @@ describe('normalizeRainyDays', () => {
   });
 
   it('returns null when daysWithRain is missing', () => {
-    expect(
-      normalizeRainyDays({ ...baseWeek, daysWithRain: null })
-    ).toBeNull();
+    expect(normalizeRainyDays({ ...baseWeek, daysWithRain: null })).toBeNull();
   });
 
   it('returns null when daysWithData is zero (avoids divide-by-zero)', () => {

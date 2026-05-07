@@ -66,12 +66,8 @@ const TodayReadout = ({
 
   const v1 = hover ? hover.v1 : formatHeadline(tab, c1Value, temperatureUnit);
   const v2 = hover ? hover.v2 : formatHeadline(tab, c2Value, temperatureUnit);
-  const subV1 = hover
-    ? (hover.subV1 ?? null)
-    : formatSub(tab, subC1Value);
-  const subV2 = hover
-    ? (hover.subV2 ?? null)
-    : formatSub(tab, subC2Value);
+  const subV1 = hover ? (hover.subV1 ?? null) : formatSub(tab, subC1Value);
+  const subV2 = hover ? (hover.subV2 ?? null) : formatSub(tab, subC2Value);
 
   const baseLabel = hover
     ? hover.label

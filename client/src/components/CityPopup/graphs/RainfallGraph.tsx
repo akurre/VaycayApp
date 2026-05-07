@@ -115,9 +115,7 @@ const RainfallGraph = ({
       const days1 =
         'daysWithRain' in point ? (point.daysWithRain ?? null) : null;
       const days2 =
-        'compDaysWithRain' in point
-          ? (point.compDaysWithRain ?? null)
-          : null;
+        'compDaysWithRain' in point ? (point.compDaysWithRain ?? null) : null;
       onHover({
         label: `Week ${point.week}`,
         v1: c1 === null ? null : formatMm(c1),

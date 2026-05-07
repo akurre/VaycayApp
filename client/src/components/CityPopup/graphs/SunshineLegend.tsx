@@ -4,10 +4,7 @@ interface SunshineLegendProps {
 }
 
 const Swatch = ({ color }: { color: string }) => (
-  <span
-    className="inline-block w-3"
-    style={{ height: 2, background: color }}
-  />
+  <span className="inline-block w-3" style={{ height: 2, background: color }} />
 );
 
 const Dash = ({ color }: { color: string }) => (
@@ -17,7 +14,10 @@ const Dash = ({ color }: { color: string }) => (
   />
 );
 
-const SunshineLegend = ({ mainColor, comparisonColor }: SunshineLegendProps) => (
+const SunshineLegend = ({
+  mainColor,
+  comparisonColor,
+}: SunshineLegendProps) => (
   <div
     className="flex flex-col gap-0.5 text-[9px] uppercase tracking-[0.08em]"
     style={{ color: 'var(--mantine-color-dimmed)' }}
