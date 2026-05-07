@@ -14,7 +14,9 @@
 
 import { PrismaClient } from '@prisma/client';
 import queryCityIds from '../src/utils/weatherQueries';
-import { quantizeBoundsForCacheKey } from '../src/utils/quantizeBoundsForCacheKey';
+import quantizeBoundsForCacheKey from '../src/utils/quantizeBoundsForCacheKey';
+import { BOUNDS_QUANTIZATION_STEP_DENOMINATOR } from '../src/const';
+import type { Bounds } from '../src/types/boundsTypes';
 
 async function main() {
   const prisma = new PrismaClient();
@@ -27,15 +29,23 @@ async function main() {
   // for the natural span/20 step. This is the meaningful "worst-case shift
   // inside the same cache bucket" test — both views must share a cache key.
   const region = process.env.REGION ?? 'europe';
-  const REGION_PRESETS: Record<string, { minLat: number; maxLat: number; minLong: number; maxLong: number }> = {
+  const REGION_PRESETS: Record<string, Bounds> = {
     europe: { minLat: 36, maxLat: 64, minLong: 0, maxLong: 40 }, // span=40, step=2, all multiples of 2
     usa: { minLat: 27, maxLat: 48, minLong: -126, maxLong: -66 }, // span=60, step=3, all multiples of 3
     global: { minLat: -68, maxLat: 68, minLong: -170, maxLong: 170 }, // span=340, step=17, all multiples of 17
   };
   const baseBounds = REGION_PRESETS[region] ?? REGION_PRESETS.europe;
   console.log(`region = ${region}`);
-  // Step is span/STEP_DENOMINATOR; worst-case shift before quantum boundary = 0.49 * step.
-  const stepDenominator = Number(process.env.STEP_DENOMINATOR ?? 20);
+  // Step is span/N; worst-case shift before quantum boundary = 0.49 * step.
+  // STEP_DENOMINATOR env override for tuning experiments — must be a finite positive number.
+  const stepDenominator = process.env.STEP_DENOMINATOR
+    ? Number.parseFloat(process.env.STEP_DENOMINATOR)
+    : BOUNDS_QUANTIZATION_STEP_DENOMINATOR;
+  if (!Number.isFinite(stepDenominator) || stepDenominator <= 0) {
+    throw new Error(
+      `STEP_DENOMINATOR must be a positive number, got: ${process.env.STEP_DENOMINATOR}`
+    );
+  }
   const span = Math.max(baseBounds.maxLat - baseBounds.minLat, baseBounds.maxLong - baseBounds.minLong);
   const step = span / stepDenominator;
   const shift = Number((0.49 * step).toFixed(4));

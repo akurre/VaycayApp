@@ -3,7 +3,8 @@ import type { City, MonthlySunshine, PrismaClient } from '@prisma/client';
 import { MONTH_FIELDS } from '../const';
 import { getCachedWeatherData } from '../utils/cache';
 import querySunshineCityIds from '../utils/sunshineQueries';
-import { quantizeBoundsForCacheKey } from '../utils/quantizeBoundsForCacheKey';
+import quantizeBoundsForCacheKey from '../utils/quantizeBoundsForCacheKey';
+import type { Bounds } from '../types/boundsTypes';
 import { titleCaseCityName, findClosestCity } from '../utils/cityHelpers';
 
 // helper type combining monthly sunshine with related city data
@@ -76,7 +77,7 @@ function logQueryStats(
   month: number,
   records: MonthlySunshineWithRelations[],
   queryTime: number,
-  bounds?: { minLat: number; maxLat: number; minLong: number; maxLong: number }
+  bounds?: Bounds
 ) {
   const countryDistribution = records.reduce(
     (acc: Record<string, number>, record) => {
@@ -115,7 +116,7 @@ function logQueryStats(
 async function fetchSunshineByMonth(
   prisma: PrismaClient,
   month: number,
-  bounds?: { minLat: number; maxLat: number; minLong: number; maxLong: number }
+  bounds?: Bounds
 ) {
   const monthIndex = month - 1;
   const monthField = MONTH_FIELDS[monthIndex];
