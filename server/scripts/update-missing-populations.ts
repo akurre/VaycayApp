@@ -207,7 +207,9 @@ function resolveMatch(
  */
 async function main() {
   console.log('='.repeat(80));
-  console.log(REPAIR_MODE ? 'repairing wrong population data' : 'updating cities with missing population data');
+  console.log(
+    REPAIR_MODE ? 'repairing wrong population data' : 'updating cities with missing population data'
+  );
   console.log('='.repeat(80));
 
   if (DRY_RUN) {
@@ -233,7 +235,15 @@ async function runFill(worldCities: WorldCity[], worldCitiesById: Map<string, Wo
   console.log('\nquerying cities with null population...');
   const cities = await prisma.city.findMany({
     where: { population: null },
-    select: { id: true, name: true, country: true, state: true, lat: true, long: true, worldcitiesId: true },
+    select: {
+      id: true,
+      name: true,
+      country: true,
+      state: true,
+      lat: true,
+      long: true,
+      worldcitiesId: true,
+    },
   });
 
   console.log(`found ${cities.length} cities without population\n`);
@@ -270,7 +280,10 @@ async function runFill(worldCities: WorldCity[], worldCitiesById: Map<string, Wo
         matchMethod: result.method,
       });
       if (!DRY_RUN) {
-        await prisma.city.update({ where: { id: city.id }, data: { population: result.match.population } });
+        await prisma.city.update({
+          where: { id: city.id },
+          data: { population: result.match.population },
+        });
       }
     } else {
       noMatches.push(city);
@@ -290,12 +303,29 @@ async function runRepair(worldCities: WorldCity[], worldCitiesById: Map<string, 
   console.log('\nquerying all cities with non-null population...');
   const cities = await prisma.city.findMany({
     where: { population: { not: null } },
-    select: { id: true, name: true, country: true, state: true, lat: true, long: true, worldcitiesId: true, population: true },
+    select: {
+      id: true,
+      name: true,
+      country: true,
+      state: true,
+      lat: true,
+      long: true,
+      worldcitiesId: true,
+      population: true,
+    },
   });
 
   console.log(`found ${cities.length} cities with population to verify\n`);
 
-  const fixes: Array<{ id: number; name: string; country: string; state: string | null; oldPop: number; newPop: number | null; reason: string }> = [];
+  const fixes: Array<{
+    id: number;
+    name: string;
+    country: string;
+    state: string | null;
+    oldPop: number;
+    newPop: number | null;
+    reason: string;
+  }> = [];
 
   for (let i = 0; i < cities.length; i++) {
     const city = cities[i];
@@ -311,7 +341,15 @@ async function runRepair(worldCities: WorldCity[], worldCitiesById: Map<string, 
       const reason = result
         ? `${result.method} match gives ${result.match.population.toLocaleString()} (was ${dbPop.toLocaleString()})`
         : `no match found — resetting to null (was ${dbPop.toLocaleString()})`;
-      fixes.push({ id: city.id, name: city.name, country: city.country, state: city.state, oldPop: dbPop, newPop: correctPop, reason });
+      fixes.push({
+        id: city.id,
+        name: city.name,
+        country: city.country,
+        state: city.state,
+        oldPop: dbPop,
+        newPop: correctPop,
+        reason,
+      });
 
       if (!DRY_RUN) {
         await prisma.city.update({ where: { id: city.id }, data: { population: correctPop } });
@@ -357,7 +395,8 @@ function printFillSummary(matches: MatchResult[], noMatchCount: number, total: n
 
     const fuzzyMatches = matches.filter((m) => m.matchMethod === 'fuzzy');
     if (fuzzyMatches.length > 0) {
-      const avgDistance = fuzzyMatches.reduce((sum, m) => sum + m.distance, 0) / fuzzyMatches.length;
+      const avgDistance =
+        fuzzyMatches.reduce((sum, m) => sum + m.distance, 0) / fuzzyMatches.length;
       const maxDistance = Math.max(...fuzzyMatches.map((m) => m.distance));
       const minDistance = Math.min(...fuzzyMatches.map((m) => m.distance));
       console.log(`\nfuzzy match distance statistics:`);
