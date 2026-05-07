@@ -46,7 +46,10 @@ async function main() {
       `STEP_DENOMINATOR must be a positive number, got: ${process.env.STEP_DENOMINATOR}`
     );
   }
-  const span = Math.max(baseBounds.maxLat - baseBounds.minLat, baseBounds.maxLong - baseBounds.minLong);
+  const span = Math.max(
+    baseBounds.maxLat - baseBounds.minLat,
+    baseBounds.maxLong - baseBounds.minLong
+  );
   const step = span / stepDenominator;
   const shift = Number((0.49 * step).toFixed(4));
   const shiftedBounds = {
@@ -62,9 +65,7 @@ async function main() {
   const quantizedB = quantizeBoundsForCacheKey(shiftedBounds);
   console.log(`quantizedA: ${JSON.stringify(quantizedA)}`);
   console.log(`quantizedB: ${JSON.stringify(quantizedB)}`);
-  console.log(
-    `same cache bucket: ${JSON.stringify(quantizedA) === JSON.stringify(quantizedB)}`
-  );
+  console.log(`same cache bucket: ${JSON.stringify(quantizedA) === JSON.stringify(quantizedB)}`);
 
   const setA = new Set(await queryCityIds({ prisma, dateStr, bounds: quantizedA }));
   const setB = new Set(await queryCityIds({ prisma, dateStr, bounds: quantizedB }));
@@ -75,7 +76,9 @@ async function main() {
   const smaller = Math.min(setA.size, setB.size);
   const churnPct = smaller === 0 ? 0 : (symDiff / smaller) * 100;
 
-  console.log(`stepDenominator = ${stepDenominator} → step = ${step.toFixed(4)}° → shift = 0.49*step = ${shift}°`);
+  console.log(
+    `stepDenominator = ${stepDenominator} → step = ${step.toFixed(4)}° → shift = 0.49*step = ${shift}°`
+  );
   console.log(`baseBounds: ${JSON.stringify(baseBounds)}`);
   console.log(`shiftedBounds (+${shift}° on all four edges): ${JSON.stringify(shiftedBounds)}`);
   console.log(`|A| = ${setA.size}`);
@@ -83,7 +86,9 @@ async function main() {
   console.log(`|A △ B| = ${symDiff}`);
   console.log(`smaller set = ${smaller}`);
   console.log(`boundary churn = ${churnPct.toFixed(2)}%`);
-  console.log(`acceptance threshold ≤5%: ${churnPct <= 5 ? 'PASS' : 'FAIL — raise step to span/30 and rerun'}`);
+  console.log(
+    `acceptance threshold ≤5%: ${churnPct <= 5 ? 'PASS' : 'FAIL — raise step to span/30 and rerun'}`
+  );
 
   await prisma.$disconnect();
 }

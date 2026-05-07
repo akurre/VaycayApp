@@ -113,11 +113,7 @@ function logQueryStats(
 }
 
 // Shared function to fetch sunshine data by month with optional bounds
-async function fetchSunshineByMonth(
-  prisma: PrismaClient,
-  month: number,
-  bounds?: Bounds
-) {
+async function fetchSunshineByMonth(prisma: PrismaClient, month: number, bounds?: Bounds) {
   const monthIndex = month - 1;
   const monthField = MONTH_FIELDS[monthIndex];
 
