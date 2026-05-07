@@ -15,6 +15,7 @@ import {
   MAP_FADE_IN_DELAY_MS,
   MAP_LOADED_OPACITY,
   MAP_LOADING_OPACITY,
+  MAP_MAX_DEVICE_PIXEL_RATIO,
   MAP_SCROLL_ZOOM_SPEED,
   MAP_STYLES,
 } from '@/const';
@@ -229,6 +230,10 @@ const WorldMap = ({
           getTooltip={() => null}
           getCursor={getCursor}
           style={deckGLStyle}
+          useDevicePixels={Math.min(
+            window.devicePixelRatio,
+            MAP_MAX_DEVICE_PIXEL_RATIO
+          )}
         >
           <Map
             mapStyle={MAP_STYLES[colorScheme]}

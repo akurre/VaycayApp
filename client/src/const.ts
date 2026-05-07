@@ -26,6 +26,11 @@ export const BOUNDS_BUFFER_PERCENT = 0.3; // add 30% buffer to viewport bounds t
 // more responsive feel without the overshoot the previous 15× value caused.
 export const MAP_SCROLL_ZOOM_SPEED = 0.03;
 
+// Cap deck.gl's drawing-buffer ratio at 1.5×. On 2× and 3× displays the
+// default (full devicePixelRatio) makes the GPU rasterise 4× / 9× more
+// fragments per frame; the visual diff at marker scales is imperceptible.
+export const MAP_MAX_DEVICE_PIXEL_RATIO = 1.5;
+
 // initial map view state
 export const INITIAL_VIEW_STATE = {
   longitude: 0,
