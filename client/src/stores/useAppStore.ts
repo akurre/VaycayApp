@@ -19,6 +19,11 @@ interface AppState {
   setTemperatureUnit: (unit: TemperatureUnit) => void;
   mapViewport: MapViewport | null;
   setMapViewport: (viewport: MapViewport) => void;
+  // True while the user is actively panning/zooming the map. Map data
+  // updates skip the displayed-data Zustand stores while this is true so
+  // the gesture isn't blocked by a layer rebuild + transition.
+  isGesturing: boolean;
+  setIsGesturing: (gesturing: boolean) => void;
   resetHomeLocation: () => void;
 }
 
@@ -40,6 +45,8 @@ export const useAppStore = create<AppState>()(
       setTemperatureUnit: (temperatureUnit) => set({ temperatureUnit }),
       mapViewport: null,
       setMapViewport: (mapViewport) => set({ mapViewport }),
+      isGesturing: false,
+      setIsGesturing: (isGesturing) => set({ isGesturing }),
       resetHomeLocation: () =>
         set({
           homeLocation: null,

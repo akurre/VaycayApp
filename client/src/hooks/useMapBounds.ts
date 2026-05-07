@@ -66,6 +66,7 @@ export const useMapBounds = (
   // subscribing to it is fine.
   const initialMapViewportRef = useRef(useAppStore.getState().mapViewport);
   const setMapViewport = useAppStore((state) => state.setMapViewport);
+  const setIsGesturing = useAppStore((state) => state.setIsGesturing);
 
   const [viewState, setViewState] = useState<MapViewState>(
     initialMapViewportRef.current
@@ -79,7 +80,7 @@ export const useMapBounds = (
   );
   const [bounds, setBounds] = useState<MapBounds | null>(null);
   const [shouldUseBounds, setShouldUseBounds] = useState(false);
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const onViewStateChange = useCallback(
     ({ viewState: newViewState }: { viewState: MapViewState }) => {
@@ -104,6 +105,10 @@ export const useMapBounds = (
         zoom: newViewState.zoom,
       });
 
+      // Mark a gesture as active. Repeated true→true sets are deduped at the
+      // selector level so map.tsx doesn't re-render on every frame.
+      setIsGesturing(true);
+
       // clear existing debounce timer
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
@@ -111,6 +116,10 @@ export const useMapBounds = (
 
       // debounce bounds calculation and query trigger
       debounceTimerRef.current = setTimeout(() => {
+        // Gesture has been idle for DEBOUNCE_DELAY — flush deferred data and
+        // fire the bounds query.
+        setIsGesturing(false);
+
         const useBounds = newViewState.zoom >= ZOOM_THRESHOLD;
         setShouldUseBounds(useBounds);
 
@@ -124,7 +133,7 @@ export const useMapBounds = (
         }
       }, DEBOUNCE_DELAY);
     },
-    [onBoundsChange, setMapViewport]
+    [onBoundsChange, setMapViewport, setIsGesturing]
   );
 
   // cleanup debounce timer on unmount
