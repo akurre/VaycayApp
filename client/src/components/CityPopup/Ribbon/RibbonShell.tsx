@@ -1,4 +1,4 @@
-import { useCallback, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import type {
   RibbonHoverPayload,
   RibbonStat,
@@ -45,6 +45,14 @@ const RibbonShell = ({
 }: RibbonShellProps) => {
   const [tab, setTab] = useState<DataType>(initialTab);
   const [hover, setHover] = useState<RibbonHoverPayload | null>(null);
+
+  // Sync the active tab whenever the parent's chosen default changes (e.g. the
+  // user flips MapDataToggle). The popup may be re-used across opens or kept
+  // mounted during Mantine's exit transition, so a one-shot useState init
+  // isn't enough — this guarantees first-view always matches MapDataToggle.
+  useEffect(() => {
+    setTab(initialTab);
+  }, [initialTab]);
 
   // If the user's intent tab disappeared (e.g. comparison city removed and it
   // was the only city with sunshine), fall back to the first available tab.

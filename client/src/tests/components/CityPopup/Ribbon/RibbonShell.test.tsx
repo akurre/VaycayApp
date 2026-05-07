@@ -162,6 +162,24 @@ describe('RibbonShell', () => {
     expect(screen.queryByTestId('sun-note')).toBeNull();
   });
 
+  it('updates the active tab when initialTab changes (e.g. MapDataToggle flips)', () => {
+    const { rerender } = render(
+      <RibbonShell {...baseProps} initialTab={DataType.Temperature} />
+    );
+
+    expect(screen.getByRole('button', { name: /temp/i })).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
+
+    rerender(<RibbonShell {...baseProps} initialTab={DataType.Sunshine} />);
+
+    expect(screen.getByRole('button', { name: /sun/i })).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
+  });
+
   it('shows comparison row only when comparisonCity is provided', () => {
     const comparisonCity: SearchCitiesResult = {
       id: 2,
