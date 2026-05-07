@@ -26,6 +26,9 @@ interface TooltipItem {
   formatted: string;
 }
 
+const formatValue = (v: unknown, unit: TemperatureUnit): string =>
+  typeof v === 'number' ? formatPrecipitation(v, unit) : String(v);
+
 const RainfallGraphTooltip = ({
   active,
   payload,
@@ -36,8 +39,6 @@ const RainfallGraphTooltip = ({
   rainyDays1,
   rainyDays2,
 }: RainfallGraphTooltipProps) => {
-  const formatValue = (v: unknown): string =>
-    typeof v === 'number' ? formatPrecipitation(v, temperatureUnit) : String(v);
   if (!active || !payload || payload.length === 0) return null;
 
   const items: TooltipItem[] = [];
@@ -50,7 +51,7 @@ const RainfallGraphTooltip = ({
     items.push({
       cityRole: isComp ? 'comparison' : 'main',
       color: p.color ?? (isComp ? CITY2_PRIMARY_COLOR : CITY1_PRIMARY_COLOR),
-      formatted: formatValue(p.value),
+      formatted: formatValue(p.value, temperatureUnit),
     });
   }
   if (items.length === 0) return null;

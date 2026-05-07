@@ -46,10 +46,8 @@ const RibbonShell = ({
   const [tab, setTab] = useState<DataType>(initialTab);
   const [hover, setHover] = useState<RibbonHoverPayload | null>(null);
 
-  // Sync the active tab whenever the parent's chosen default changes (e.g. the
-  // user flips MapDataToggle). The popup may be re-used across opens or kept
-  // mounted during Mantine's exit transition, so a one-shot useState init
-  // isn't enough — this guarantees first-view always matches MapDataToggle.
+  // Sync tab when initialTab changes — popup stays mounted during Mantine's
+  // exit transition, so useState init alone misses MapDataToggle flips.
   useEffect(() => {
     setTab(initialTab);
   }, [initialTab]);
