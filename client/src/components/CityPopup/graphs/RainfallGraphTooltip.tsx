@@ -1,6 +1,7 @@
 import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
 import { weekRangeLabel } from '@/utils/dateFormatting/weekRangeLabel';
-import { formatMm } from '@/utils/dataFormatting/formatMm';
+import { formatPrecipitation } from '@/utils/dataFormatting/formatPrecipitation';
+import type { TemperatureUnit } from '@/types/mapTypes';
 
 interface TooltipPayloadEntry {
   dataKey?: string | number;
@@ -14,6 +15,7 @@ interface RainfallGraphTooltipProps {
   label?: string | number;
   hasMainData: boolean;
   hasCompData: boolean;
+  temperatureUnit: TemperatureUnit;
 }
 
 interface TooltipItem {
@@ -22,16 +24,16 @@ interface TooltipItem {
   formatted: string;
 }
 
-const formatValue = (v: unknown): string =>
-  typeof v === 'number' ? formatMm(v) : String(v);
-
 const RainfallGraphTooltip = ({
   active,
   payload,
   label,
   hasMainData,
   hasCompData,
+  temperatureUnit,
 }: RainfallGraphTooltipProps) => {
+  const formatValue = (v: unknown): string =>
+    typeof v === 'number' ? formatPrecipitation(v, temperatureUnit) : String(v);
   if (!active || !payload || payload.length === 0) return null;
 
   const items: TooltipItem[] = [];

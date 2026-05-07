@@ -14,10 +14,11 @@ import type { CategoricalChartFunc } from 'recharts/types/chart/types';
 import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
 import type { RibbonHoverPayload } from '@/types/cityPopupTypes';
 import { useChartColors } from '@/hooks/useChartColors';
+import { useAppStore } from '@/stores/useAppStore';
 import { dateToWeekOfYear } from '@/utils/dateFormatting/dateToWeekOfYear';
 import { normalizeWeekPrecip } from '@/utils/dataFormatting/normalizeWeekPrecip';
 import { normalizeRainyDays } from '@/utils/dataFormatting/normalizeRainyDays';
-import { formatMm } from '@/utils/dataFormatting/formatMm';
+import { formatPrecipitation } from '@/utils/dataFormatting/formatPrecipitation';
 import { formatRainyDays } from '@/utils/dataFormatting/formatRainyDays';
 import {
   CITY1_PRIMARY_COLOR,
@@ -42,6 +43,7 @@ const RainfallGraph = ({
   onHover,
 }: RainfallGraphProps) => {
   const chartColors = useChartColors();
+  const temperatureUnit = useAppStore((s) => s.temperatureUnit);
   const selectedWeek = useMemo(
     () => dateToWeekOfYear(selectedDate),
     [selectedDate]
@@ -160,13 +162,13 @@ const RainfallGraph = ({
         'compDaysWithRain' in point ? (point.compDaysWithRain ?? null) : null;
       onHover({
         label: `Week ${point.week}`,
-        v1: c1 === null ? null : formatMm(c1),
-        v2: c2 === null ? null : formatMm(c2),
+        v1: c1 === null ? null : formatPrecipitation(c1, temperatureUnit),
+        v2: c2 === null ? null : formatPrecipitation(c2, temperatureUnit),
         subV1: formatRainyDays(days1),
         subV2: formatRainyDays(days2),
       });
     },
-    [chartData, onHover]
+    [chartData, onHover, temperatureUnit]
   );
 
   const handleMouseLeave = useCallback(() => {
@@ -208,7 +210,7 @@ const RainfallGraph = ({
             axisLine={false}
             tickLine={false}
             width={28}
-            tickFormatter={(v) => `${v}mm`}
+            tickFormatter={(v) => formatPrecipitation(v, temperatureUnit)}
           />
 
           <Tooltip
@@ -228,6 +230,7 @@ const RainfallGraph = ({
                 }
                 hasMainData={hasMainData}
                 hasCompData={hasCompData}
+                temperatureUnit={temperatureUnit}
               />
             )}
           />

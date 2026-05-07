@@ -177,10 +177,10 @@ export const COLOR_RANGE: [number, number, number][] = TEMP_THRESHOLDS.map(
 // wider single buckets; the 40-70% prime range where most cities cluster gets
 // finer 5-10% buckets for visual contrast.
 export const SUNSHINE_THRESHOLDS = [
-  { percent: 0, color: [100, 20, 150] as const }, // brighter purple (very cloudy: 0-20%)
-  { percent: 20, color: [70, 40, 190] as const }, // lighter purple-blue
-  { percent: 30, color: [0, 120, 200] as const }, // bright blue
-  { percent: 40, color: [0, 180, 180] as const }, // cyan/turquoise
+  { percent: 0, color: [100, 20, 150] as const }, // brighter purple (very cloudy: 0-15%)
+  { percent: 15, color: [70, 40, 190] as const }, // lighter purple-blue
+  { percent: 25, color: [0, 120, 200] as const }, // bright blue
+  { percent: 35, color: [0, 180, 180] as const }, // cyan/turquoise
   { percent: 45, color: [60, 140, 40] as const }, // olive green
   { percent: 50, color: [100, 200, 0] as const }, // lime green (average)
   { percent: 55, color: [173, 255, 47] as const }, // green-yellow
@@ -188,7 +188,7 @@ export const SUNSHINE_THRESHOLDS = [
   { percent: 65, color: [255, 165, 0] as const }, // orange
   { percent: 70, color: [255, 69, 0] as const }, // orange-red
   { percent: 80, color: [255, 20, 0] as const }, // bright red
-  { percent: 90, color: [220, 0, 0] as const }, // deep red (very sunny: 90%+)
+  { percent: 85, color: [220, 0, 0] as const }, // deep red (very sunny: 85%+)
 ];
 
 // extract color range from sunshine thresholds for heatmap layer

@@ -248,7 +248,7 @@ const TemperatureGraph = ({
       areas={areas}
       referenceLines={referenceLines}
       referenceDots={referenceDots}
-      yTickFormatter={(v) => `${v}°`}
+      yTickFormatter={(v) => formatTemperature(v, temperatureUnit) ?? `${v}°`}
       yDomain={[
         (dataMin: number) => Math.floor(dataMin) - 1,
         (dataMax: number) => Math.ceil(dataMax) + 1,

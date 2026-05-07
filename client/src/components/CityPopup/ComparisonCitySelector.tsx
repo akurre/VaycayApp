@@ -11,9 +11,8 @@ import {
   COMPARISON_INPUT_FOCUS_DELAY_MS,
   MIN_CITY_SEARCH_LENGTH,
 } from '@/const';
-import { getClimateZoneFromLat } from '@/utils/climate/getClimateZoneFromLat';
 import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
-import LatBadge from '@/components/CityPopup/Ribbon/LatBadge';
+import CityNameRow from '@/components/CityPopup/Ribbon/CityNameRow';
 
 interface ComparisonCitySelectorProps {
   onCitySelect: (city: SearchCitiesResult) => void;
@@ -107,9 +106,6 @@ const ComparisonCitySelector = ({
       .join(', ');
   }, [selectedCity]);
 
-  const latLabel =
-    selectedCity !== null ? getClimateZoneFromLat(selectedCity.lat) : null;
-
   return (
     <Popover
       opened={opened}
@@ -140,33 +136,22 @@ const ComparisonCitySelector = ({
             style={{ borderBottomColor: CITY2_PRIMARY_COLOR }}
           />
         ) : selectedCity ? (
-          <div className="flex items-center gap-2 min-w-0">
-            <span
-              className="w-2.5 h-2.5 rounded-full shrink-0"
-              style={{ background: CITY2_PRIMARY_COLOR }}
-            />
-            <h2
-              className="text-[17px] font-bold font-[Outfit] text-[var(--mantine-color-text)] truncate min-w-0 cursor-pointer hover:opacity-80"
-              title={fullName}
-              onClick={() => setOpened(true)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') setOpened(true);
-              }}
-            >
-              {fullName}
-            </h2>
-            {latLabel && <LatBadge label={latLabel} />}
-            <button
-              type="button"
-              onClick={handleRemoveCity}
-              aria-label="Remove comparison city"
-              className="ml-0.5 text-[var(--mantine-color-dimmed)] hover:text-[var(--mantine-color-text)] cursor-pointer shrink-0"
-            >
-              <IconX size={14} />
-            </button>
-          </div>
+          <CityNameRow
+            color={CITY2_PRIMARY_COLOR}
+            name={fullName}
+            lat={selectedCity.lat}
+            onClick={() => setOpened(true)}
+            actions={
+              <button
+                type="button"
+                onClick={handleRemoveCity}
+                aria-label="Remove comparison city"
+                className="ml-0.5 text-[var(--mantine-color-dimmed)] hover:text-[var(--mantine-color-text)] cursor-pointer shrink-0"
+              >
+                <IconX size={14} />
+              </button>
+            }
+          />
         ) : (
           <button
             type="button"
