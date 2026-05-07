@@ -18,6 +18,9 @@ import {
   TEMPERATURE_LOADING_COLOR,
   GHOST_DOT_OPACITY,
   INITIAL_VIEW_STATE,
+  MARKER_COLOR_TRANSITION_MS,
+  MARKER_OPACITY_TRANSITION_MS,
+  MARKER_RADIUS_TRANSITION_MS,
 } from '@/const';
 import { useGhostDots, type GhostDot } from './useGhostDots';
 import { useWeatherStore } from '@/stores/useWeatherStore';
@@ -205,15 +208,15 @@ function useMapLayers({
           lineWidthMaxPixels: 1.5,
           transitions: {
             getFillColor: {
-              duration: 600,
+              duration: MARKER_COLOR_TRANSITION_MS,
               easing: (t: number) => t * (2 - t),
             },
             opacity: {
-              duration: 550,
+              duration: MARKER_OPACITY_TRANSITION_MS,
               easing: (t: number) => t * (2 - t),
             },
             getRadius: {
-              duration: 400,
+              duration: MARKER_RADIUS_TRANSITION_MS,
               easing: (t: number) => t * (2 - t),
               enter: () => [0],
             },
@@ -248,15 +251,15 @@ function useMapLayers({
           lineWidthMaxPixels: 1.5,
           transitions: {
             getFillColor: {
-              duration: 600,
+              duration: MARKER_COLOR_TRANSITION_MS,
               easing: (t: number) => t * (2 - t),
             },
             opacity: {
-              duration: 550,
+              duration: MARKER_OPACITY_TRANSITION_MS,
               easing: (t: number) => t * (2 - t),
             },
             getRadius: {
-              duration: 400,
+              duration: MARKER_RADIUS_TRANSITION_MS,
               easing: (t: number) => t * (2 - t),
               enter: () => [0],
             },

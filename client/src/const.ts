@@ -31,6 +31,15 @@ export const MAP_SCROLL_ZOOM_SPEED = 0.03;
 // fragments per frame; the visual diff at marker scales is imperceptible.
 export const MAP_MAX_DEVICE_PIXEL_RATIO = 1.5;
 
+// Marker transition durations (ms). Previously 400-600 ms, which meant
+// every layer rebuild kicked off ~600 ms of GPU-bound color/opacity/radius
+// animations on 300 markers — and any pan gesture started during that
+// window stalled. 80 ms still reads as an intentional fade-in but doesn't
+// hold the next gesture hostage.
+export const MARKER_COLOR_TRANSITION_MS = 80;
+export const MARKER_OPACITY_TRANSITION_MS = 80;
+export const MARKER_RADIUS_TRANSITION_MS = 80;
+
 // initial map view state
 export const INITIAL_VIEW_STATE = {
   longitude: 0,
