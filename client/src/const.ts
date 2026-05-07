@@ -4,11 +4,11 @@
 
 import {
   AMBER_BRAND_SHADE,
-  OCEAN_BRAND_SHADE,
   primaryAmberShades,
   secondaryOceanShades,
 } from '@/theme';
 import type { SunshineData } from '@/types/sunshineDataType';
+import { DataType } from '@/types/mapTypes';
 
 export const KM_TO_MILES = 0.621371;
 
@@ -16,9 +16,6 @@ export const MAX_CITIES_SHOWN = 300;
 
 // LRU cache size for city-specific data
 export const CITY_CACHE_MAX_SIZE = 30;
-
-// locales that use miles instead of kilometers
-export const MILES_LOCALES = ['en-US', 'en-GB', 'en-LR', 'en-MM'];
 
 // zoom-based loading thresholds
 export const ZOOM_THRESHOLD = 2; // switch to bounds query at zoom level 2+ (continental view)
@@ -294,6 +291,73 @@ export const monthlyMarks = [
 ] as const;
 
 // ============================================================================
+// CITY POPUP RIBBON CONSTANTS
+// ============================================================================
+
+// Fixed width of the right-side stat-card rail in the CityPopup ribbon. Used
+// in both width and flex-basis calculations, so it lives as a named constant.
+export const RIBBON_STAT_RAIL_WIDTH_PX = 158;
+
+// Right-side padding budget reserved in the ribbon header row for the popup's
+// absolute-positioned close button.
+export const RIBBON_HEADER_RIGHT_RESERVE_PX = 40;
+
+// Em-dash placeholder shown in stat cells / readouts when a value is missing.
+export const EM_DASH_PLACEHOLDER = '—';
+
+// Day-of-year of the first of each month (non-leap year). Index 0 = Jan 1.
+export const MONTH_DAY_OF_YEAR_STARTS = [
+  0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334,
+];
+
+// Total days in a non-leap year. Used as the x-axis denominator for the
+// month-label rail so labels align with day-of-year positions.
+export const DAYS_IN_YEAR_NON_LEAP = 365;
+
+// Three-letter month abbreviations without trailing punctuation. Distinct
+// from MONTH_ABBREVIATIONS, which carries periods (e.g. "Jan.").
+export const MONTH_ABBREVIATIONS_SHORT = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
+// Wait one tick before focusing the comparison-city input — Popover mounts the
+// target lazily and the focus would otherwise race the mount.
+export const COMPARISON_INPUT_FOCUS_DELAY_MS = 10;
+
+// Max characters to keep verbatim in the ribbon's state segment before
+// truncating with a trailing period (e.g. "California" → "Californ.").
+export const STATE_ABBREVIATION_MAX_LENGTH = 8;
+
+// Day-of-month used as the default when only a month is known (e.g. sunshine
+// rows have no specific date). 15 lands roughly on the climatological mean.
+export const MONTH_MIDPOINT_DAY = 15;
+
+// Today-readout label prefix per active tab. Fixed map of UI strings keyed by
+// the active DataType so the readout component stays declarative.
+export const TODAY_READOUT_PREFIX_BY_TAB: Record<DataType, string> = {
+  [DataType.Temperature]: 'On this day',
+  [DataType.Sunshine]: 'In this month',
+  [DataType.Precip]: 'In this week',
+};
+
+// Optional secondary descriptor appended to the today-readout label for tabs
+// that need extra context (e.g. sunshine renders "% sun" + "daylight" hint).
+export const TODAY_READOUT_VALUE_LABEL: Partial<Record<DataType, string>> = {
+  [DataType.Sunshine]: 'daylight',
+};
+
+// ============================================================================
 // GRAPH COLOR CONSTANTS
 // ============================================================================
 
@@ -303,8 +367,6 @@ export const monthlyMarks = [
 // dark blues; the extra spread keeps min/avg/max distinguishable at a glance.
 const CITY1_MAX_OFFSET = -1;
 const CITY1_MIN_OFFSET = 2;
-const CITY2_MAX_OFFSET = -3;
-const CITY2_MIN_OFFSET = 3;
 
 // City 1 (main / warmest destination) — Amber family
 export const CITY1_PRIMARY_COLOR = primaryAmberShades[AMBER_BRAND_SHADE];
@@ -318,6 +380,12 @@ export const CITY2_PRIMARY_COLOR = secondaryOceanShades[3]; // #6E9DB6
 export const CITY2_MAX_COLOR = secondaryOceanShades[2]; // #9DBED1
 export const CITY2_MIN_COLOR = secondaryOceanShades[4]; // #487D99
 export const CITY2_BADGE_BACKGROUND = `${CITY2_PRIMARY_COLOR}26`; // 15% opacity (0x26 = 38 ≈ 0.15 * 255)
+
+// Today-marker shades — distinctly deeper than the hover/primary swatch so
+// today dots stay readable when comparison is active without doubling up
+// the brand color.
+export const CITY1_TODAY_COLOR = primaryAmberShades[AMBER_BRAND_SHADE + 1]; // #C97A24
+export const CITY2_TODAY_COLOR = secondaryOceanShades[5]; // #2E627F
 
 // ============================================================================
 // WORLD MAP BIG LOADER CONSTANTS

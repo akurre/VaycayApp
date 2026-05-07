@@ -1,178 +1,262 @@
-import { useMemo, memo } from 'react';
+import { useMemo, memo, useCallback } from 'react';
 import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
+import type {
+  AreaConfig,
+  ChartHoverState,
+  LineConfig,
+  ReferenceDotConfig,
+  ReferenceLineConfig,
+  TemperatureChartRow,
+} from '@/types/chartTypes';
+import type { RibbonHoverPayload } from '@/types/cityPopupTypes';
 
-import RechartsLineGraph, { type LineConfig } from './RechartsLineGraph';
-import TemperatureGraphTooltip from './TemperatureGraphTooltip';
-import { useChartColors } from '@/hooks/useChartColors';
+import RechartsLineGraph from './RechartsLineGraph';
+import { buildTodayDot } from './utils/buildTodayDot';
 import { useAppStore } from '@/stores/useAppStore';
-import { getTemperatureUnitSymbol } from '@/utils/tempFormatting/convertTemperature';
+import { formatTemperature } from '@/utils/tempFormatting/formatTemperature';
+import { weekRangeLabel } from '@/utils/dateFormatting/weekRangeLabel';
+import { dateToWeekOfYear } from '@/utils/dateFormatting/dateToWeekOfYear';
 import {
   CITY1_PRIMARY_COLOR,
-  CITY1_MAX_COLOR,
-  CITY1_MIN_COLOR,
+  CITY1_TODAY_COLOR,
   CITY2_PRIMARY_COLOR,
-  CITY2_MAX_COLOR,
-  CITY2_MIN_COLOR,
+  CITY2_TODAY_COLOR,
 } from '@/const';
 
 interface TemperatureGraphProps {
   weeklyWeatherData: CityWeeklyWeather;
   comparisonWeeklyWeatherData?: CityWeeklyWeather | null;
+  selectedDate?: string;
+  onHover?: (payload: RibbonHoverPayload | null) => void;
 }
 
 const TemperatureGraph = ({
   weeklyWeatherData,
   comparisonWeeklyWeatherData,
+  selectedDate,
+  onHover,
 }: TemperatureGraphProps) => {
-  // Get theme-aware colors
   const temperatureUnit = useAppStore((state) => state.temperatureUnit);
-  const unitSymbol = getTemperatureUnitSymbol(temperatureUnit);
 
-  // Create a wrapper component for the tooltip that has access to city names
-  const TooltipWrapper = (props: {
-    active?: boolean;
-    payload?: ReadonlyArray<{
-      payload: {
-        week: number;
-        avgTemp: number | null;
-        maxTemp: number | null;
-        minTemp: number | null;
-        compAvgTemp?: number | null;
-        compMaxTemp?: number | null;
-        compMinTemp?: number | null;
-        daysWithData: number;
-      };
-    }>;
-  }) => (
-    <TemperatureGraphTooltip
-      {...props}
-      cityName={weeklyWeatherData.city}
-      comparisonCityName={comparisonWeeklyWeatherData?.city}
-    />
-  );
+  const chartData = useMemo<TemperatureChartRow[]>(() => {
+    const toRange = (
+      minTemp: number | null,
+      maxTemp: number | null
+    ): [number, number] | null =>
+      minTemp !== null && maxTemp !== null ? [minTemp, maxTemp] : null;
 
-  // Generate unique city key for animation control
-  const cityKey = `${weeklyWeatherData.city}-${weeklyWeatherData.lat}-${weeklyWeatherData.long}`;
-
-  // Transform weekly weather data for chart - filter out weeks with no temperature data
-  // Merge main city data with comparison city data
-  const chartData = useMemo(() => {
-    const mainData = weeklyWeatherData.weeklyData
+    return weeklyWeatherData.weeklyData
       .filter(
-        (week) =>
-          week.avgTemp !== null ||
-          week.maxTemp !== null ||
-          week.minTemp !== null
+        (w) => w.avgTemp !== null || w.maxTemp !== null || w.minTemp !== null
       )
-      .map((week) => ({
-        week: week.week,
-        avgTemp: week.avgTemp,
-        maxTemp: week.maxTemp,
-        minTemp: week.minTemp,
-        daysWithData: week.daysWithData,
-      }));
-
-    // If we have comparison data, merge it
-    if (comparisonWeeklyWeatherData) {
-      return mainData.map((mainWeek) => {
-        const compWeek = comparisonWeeklyWeatherData.weeklyData.find(
-          (w) => w.week === mainWeek.week
+      .map((w) => {
+        const c = comparisonWeeklyWeatherData?.weeklyData.find(
+          (cc) => cc.week === w.week
         );
+        const compMin = c?.minTemp ?? null;
+        const compMax = c?.maxTemp ?? null;
         return {
-          ...mainWeek,
-          compAvgTemp: compWeek?.avgTemp ?? null,
-          compMaxTemp: compWeek?.maxTemp ?? null,
-          compMinTemp: compWeek?.minTemp ?? null,
+          week: w.week,
+          avgTemp: w.avgTemp,
+          maxTemp: w.maxTemp,
+          minTemp: w.minTemp,
+          tempRange: toRange(w.minTemp, w.maxTemp),
+          compAvgTemp: c?.avgTemp ?? null,
+          compMaxTemp: compMax,
+          compMinTemp: compMin,
+          compTempRange: toRange(compMin, compMax),
         };
       });
-    }
-
-    return mainData;
   }, [weeklyWeatherData.weeklyData, comparisonWeeklyWeatherData]);
 
-  // Configure temperature lines
-  const lines: LineConfig[] = useMemo(() => {
-    // Truncate city names to 3 chars when comparing to save legend space
-    const mainCityName = comparisonWeeklyWeatherData
-      ? weeklyWeatherData.city.substring(0, 3) + '.'
-      : weeklyWeatherData.city;
-    const compCityName =
-      comparisonWeeklyWeatherData?.city.substring(0, 3) + '.';
+  // Areas: subtle filled envelope per city under the max/min strokes. Uses
+  // tuple-valued data fields so recharts draws baseline=min, top=max natively.
+  const areas: AreaConfig[] = useMemo(() => {
+    const list: AreaConfig[] = [
+      {
+        dataKey: 'tempRange',
+        fill: CITY1_PRIMARY_COLOR,
+        fillOpacity: 0.12,
+      },
+    ];
+    if (comparisonWeeklyWeatherData) {
+      list.push({
+        dataKey: 'compTempRange',
+        fill: CITY2_PRIMARY_COLOR,
+        fillOpacity: 0.12,
+      });
+    }
+    return list;
+  }, [comparisonWeeklyWeatherData]);
 
-    const baseLines: LineConfig[] = [
+  // Three lines per city — max and min as thin envelope strokes, avg as the
+  // heavier focal line. All three populate the hover popover, ordered
+  // Max -> Avg -> Min so the popover rows render top-down high-to-low.
+  const lines: LineConfig[] = useMemo(() => {
+    const cityName = weeklyWeatherData.city;
+    const list: LineConfig[] = [
       {
         dataKey: 'maxTemp',
-        name: `${mainCityName} Max`,
-        stroke: CITY1_MAX_COLOR,
-        strokeWidth: 2,
+        name: cityName,
+        stroke: CITY1_PRIMARY_COLOR,
+        strokeWidth: 1,
+        strokeOpacity: 0.55,
         dot: false,
         connectNulls: true,
+        cityRole: 'main',
+        metricLabel: 'Max',
       },
       {
         dataKey: 'avgTemp',
-        name: `${mainCityName} Avg`,
+        name: cityName,
         stroke: CITY1_PRIMARY_COLOR,
-        strokeWidth: 2.5,
-        dot: false,
-        connectNulls: true,
-      },
-      {
-        dataKey: 'minTemp',
-        name: `${mainCityName} Min`,
-        stroke: CITY1_MIN_COLOR,
         strokeWidth: 2,
         dot: false,
         connectNulls: true,
+        cityRole: 'main',
+        metricLabel: 'Avg',
+      },
+      {
+        dataKey: 'minTemp',
+        name: cityName,
+        stroke: CITY1_PRIMARY_COLOR,
+        strokeWidth: 1,
+        strokeOpacity: 0.55,
+        dot: false,
+        connectNulls: true,
+        cityRole: 'main',
+        metricLabel: 'Min',
       },
     ];
-
     if (comparisonWeeklyWeatherData) {
-      baseLines.push(
+      const compName = comparisonWeeklyWeatherData.city;
+      list.push(
         {
           dataKey: 'compMaxTemp',
-          name: `${compCityName} Max`,
-          stroke: CITY2_MAX_COLOR,
-          strokeWidth: 2,
+          name: compName,
+          stroke: CITY2_PRIMARY_COLOR,
+          strokeWidth: 1,
+          strokeOpacity: 0.55,
           dot: false,
           connectNulls: true,
+          cityRole: 'comparison',
+          metricLabel: 'Max',
         },
         {
           dataKey: 'compAvgTemp',
-          name: `${compCityName} Avg`,
+          name: compName,
           stroke: CITY2_PRIMARY_COLOR,
-          strokeWidth: 2.5,
-          dot: false,
-          connectNulls: true,
-        },
-        {
-          dataKey: 'compMinTemp',
-          name: `${compCityName} Min`,
-          stroke: CITY2_MIN_COLOR,
           strokeWidth: 2,
           dot: false,
           connectNulls: true,
+          cityRole: 'comparison',
+          metricLabel: 'Avg',
+        },
+        {
+          dataKey: 'compMinTemp',
+          name: compName,
+          stroke: CITY2_PRIMARY_COLOR,
+          strokeWidth: 1,
+          strokeOpacity: 0.55,
+          dot: false,
+          connectNulls: true,
+          cityRole: 'comparison',
+          metricLabel: 'Min',
         }
       );
     }
-
-    return baseLines;
+    return list;
   }, [weeklyWeatherData.city, comparisonWeeklyWeatherData]);
+
+  const referenceLines: ReferenceLineConfig[] = useMemo(() => {
+    const week = dateToWeekOfYear(selectedDate);
+    if (week === null) return [];
+    return [
+      {
+        x: week,
+        stroke: 'var(--mantine-color-dimmed)',
+        strokeWidth: 1,
+        strokeDasharray: '3 3',
+      },
+    ];
+  }, [selectedDate]);
+
+  const referenceDots: ReferenceDotConfig[] = useMemo(() => {
+    const week = dateToWeekOfYear(selectedDate);
+    if (week === null) return [];
+    const point = chartData.find((p) => p.week === week);
+    if (!point) return [];
+    const isComparing = !!comparisonWeeklyWeatherData;
+    const c1Fill = isComparing ? CITY1_TODAY_COLOR : undefined;
+    const dots: ReferenceDotConfig[] = [];
+    if (point.maxTemp != null) {
+      dots.push(buildTodayDot(week, point.maxTemp, c1Fill));
+    }
+    if (point.avgTemp != null) {
+      dots.push(buildTodayDot(week, point.avgTemp, c1Fill));
+    }
+    if (point.minTemp != null) {
+      dots.push(buildTodayDot(week, point.minTemp, c1Fill));
+    }
+    if (isComparing) {
+      if (point.compMaxTemp != null) {
+        dots.push(buildTodayDot(week, point.compMaxTemp, CITY2_TODAY_COLOR));
+      }
+      if (point.compAvgTemp != null) {
+        dots.push(buildTodayDot(week, point.compAvgTemp, CITY2_TODAY_COLOR));
+      }
+      if (point.compMinTemp != null) {
+        dots.push(buildTodayDot(week, point.compMinTemp, CITY2_TODAY_COLOR));
+      }
+    }
+    return dots;
+  }, [selectedDate, chartData, comparisonWeeklyWeatherData]);
+
+  const handleHover = useCallback(
+    (state: ChartHoverState | null) => {
+      if (!onHover) return;
+      if (!state) {
+        onHover(null);
+        return;
+      }
+      const point = chartData[state.activeIndex];
+      if (!point) {
+        onHover(null);
+        return;
+      }
+      const compAvg = point.compAvgTemp;
+      onHover({
+        label: weekRangeLabel(point.week),
+        v1:
+          point.avgTemp == null
+            ? null
+            : (formatTemperature(point.avgTemp, temperatureUnit) ?? null),
+        v2:
+          compAvg == null
+            ? null
+            : (formatTemperature(compAvg, temperatureUnit) ?? null),
+      });
+    },
+    [chartData, onHover, temperatureUnit]
+  );
 
   return (
     <RechartsLineGraph
       data={chartData}
-      cityKey={cityKey}
       xAxisDataKey="week"
-      xAxisLabel="Week of Year"
-      yAxisLabel={`Temperature (${unitSymbol})`}
       lines={lines}
-      referenceLines={[]}
-      showLegend={true}
-      legendLayout="horizontal"
-      legendVerticalAlign="top"
-      legendAlign="center"
-      tooltipContent={<TooltipWrapper />}
-      margin={{ left: 0, bottom: 5 }}
+      areas={areas}
+      referenceLines={referenceLines}
+      referenceDots={referenceDots}
+      yTickFormatter={(v) => `${v}°`}
+      yDomain={[
+        (dataMin: number) => Math.floor(dataMin) - 1,
+        (dataMax: number) => Math.ceil(dataMax) + 1,
+      ]}
+      formatTooltipLabel={(raw) =>
+        typeof raw === 'number' ? weekRangeLabel(raw) : String(raw)
+      }
+      onHover={handleHover}
     />
   );
 };

@@ -1,37 +1,44 @@
 import { useMemo, memo, useCallback } from 'react';
 import type { SunshineData } from '@/types/sunshineDataType';
+import type { ChartHoverState } from '@/types/chartTypes';
+import type { RibbonHoverPayload } from '@/types/cityPopupTypes';
 import { transformSunshineDataForChart } from '@/utils/dataFormatting/transformSunshineDataForChart';
 import { generateTheoreticalMaxSunshineData } from '@/utils/dataFormatting/generateTheoreticalMaxSunshineData';
-import SunshineGraphTooltipWrapper from './SunshineGraphTooltipWrapper';
-import SunshineGraphDot from './SunshineGraphDot';
-import RechartsLineGraph, {
-  type LineConfig,
-  type ReferenceLineConfig,
-} from './RechartsLineGraph';
-import { useChartColors } from '@/hooks/useChartColors';
-import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
+import { formatSunshinePercentage } from '@/utils/dataFormatting/formatSunshinePercentage';
+import { formatHours } from '@/utils/dataFormatting/formatHours';
+import RechartsLineGraph from './RechartsLineGraph';
+import type {
+  AreaConfig,
+  LineConfig,
+  ReferenceDotConfig,
+  ReferenceLineConfig,
+} from '@/types/chartTypes';
+import SunshineLegend from './SunshineLegend';
+import { buildTodayDot } from './utils/buildTodayDot';
+import {
+  CITY1_PRIMARY_COLOR,
+  CITY1_TODAY_COLOR,
+  CITY2_PRIMARY_COLOR,
+  CITY2_TODAY_COLOR,
+} from '@/const';
 
 interface SunshineGraphProps {
   sunshineData: SunshineData | null;
   selectedMonth?: number;
   comparisonSunshineData?: SunshineData | null;
+  onHover?: (payload: RibbonHoverPayload | null) => void;
 }
 
 const SunshineGraph = ({
   sunshineData,
   selectedMonth,
   comparisonSunshineData,
+  onHover,
 }: SunshineGraphProps) => {
-  // Get theme-aware colors
-  const chartColors = useChartColors();
-
-  // Transform sunshine data for chart
   const chartData = useMemo(
     () => (sunshineData ? transformSunshineDataForChart(sunshineData) : null),
     [sunshineData]
   );
-
-  // Transform comparison sunshine data if available
   const comparisonChartData = useMemo(
     () =>
       comparisonSunshineData
@@ -40,170 +47,242 @@ const SunshineGraph = ({
     [comparisonSunshineData]
   );
 
-  // use whichever data is available for the base chart structure
   const baseData = sunshineData ?? comparisonSunshineData;
+  const mainLat = sunshineData?.lat ?? null;
+  const compLat = comparisonSunshineData?.lat ?? null;
 
-  // Calculate theoretical maximum sunshine for both cities (memoized per city)
-  const mainCityLatitude = sunshineData?.lat ?? null;
-  const comparisonCityLatitude = comparisonSunshineData?.lat ?? null;
-
-  const theoreticalMaxData = useMemo(
+  const theoreticalMax = useMemo(
     () =>
-      mainCityLatitude === null
-        ? null
-        : generateTheoreticalMaxSunshineData(mainCityLatitude),
-    [mainCityLatitude]
+      mainLat === null ? null : generateTheoreticalMaxSunshineData(mainLat),
+    [mainLat]
+  );
+  const compTheoreticalMax = useMemo(
+    () =>
+      compLat === null ? null : generateTheoreticalMaxSunshineData(compLat),
+    [compLat]
   );
 
-  const comparisonTheoreticalMaxData = useMemo(
-    () =>
-      comparisonCityLatitude === null
-        ? null
-        : generateTheoreticalMaxSunshineData(comparisonCityLatitude),
-    [comparisonCityLatitude]
-  );
+  const baseStructure = chartData ?? comparisonChartData;
 
-  // use base chart structure from whichever city has data
-  const baseChartStructure = chartData ?? comparisonChartData;
-
-  // Combine actual data with theoretical max and comparison data for chart (memoized)
-  const combinedChartData = useMemo(
+  const combined = useMemo(
     () =>
-      baseChartStructure
-        ? baseChartStructure.map((point, index) => ({
+      baseStructure
+        ? baseStructure.map((point, index) => ({
             ...point,
             hours: chartData ? chartData[index]?.hours : null,
-            theoreticalMax: theoreticalMaxData
-              ? theoreticalMaxData[index]
+            theoreticalMax: theoreticalMax ? theoreticalMax[index] : null,
+            comparisonTheoreticalMax: compTheoreticalMax
+              ? compTheoreticalMax[index]
               : null,
-            comparisonTheoreticalMax: comparisonTheoreticalMaxData
-              ? comparisonTheoreticalMaxData[index]
-              : null,
-            baseline: 0, // 0% sunshine baseline
             comparisonHours: comparisonChartData
               ? comparisonChartData[index]?.hours
               : null,
           }))
         : [],
     [
-      baseChartStructure,
+      baseStructure,
       chartData,
-      theoreticalMaxData,
-      comparisonTheoreticalMaxData,
+      theoreticalMax,
+      compTheoreticalMax,
       comparisonChartData,
     ]
   );
 
-  // Memoize custom dot render function
-  const renderCustomDot = useCallback(
-    (props: Record<string, unknown>) => (
-      <SunshineGraphDot {...props} selectedMonth={selectedMonth} />
-    ),
-    [selectedMonth]
-  );
-
-  // Configure lines
-  const lines: LineConfig[] = useMemo(() => {
-    const mainCityName = sunshineData?.city;
-    const compCityName = comparisonSunshineData?.city;
-    const lineConfigs: LineConfig[] = [];
-
-    // Add theoretical maximum line for main city if data exists
-    if (theoreticalMaxData) {
-      lineConfigs.push({
-        dataKey: 'theoreticalMax',
-        name: comparisonTheoreticalMaxData
-          ? `${mainCityName} 100% Sun`
-          : '100% Sun',
-        stroke: CITY1_PRIMARY_COLOR,
-        strokeWidth: 1.5,
-        strokeDasharray: '5 5',
-        dot: false,
-      });
-    }
-
-    // Add theoretical maximum line for comparison city if data exists
-    if (comparisonTheoreticalMaxData) {
-      lineConfigs.push({
-        dataKey: 'comparisonTheoreticalMax',
-        name: `${compCityName} 100% Sun`,
-        stroke: sunshineData ? CITY2_PRIMARY_COLOR : CITY1_PRIMARY_COLOR,
-        strokeWidth: 1.5,
-        strokeDasharray: '5 5',
-        dot: false,
-      });
-    }
-
+  // Filled areas for actual sun
+  const areas: AreaConfig[] = useMemo(() => {
+    const list: AreaConfig[] = [];
     if (sunshineData) {
-      lineConfigs.push({
+      list.push({
         dataKey: 'hours',
-        name: mainCityName ?? '',
+        fill: CITY1_PRIMARY_COLOR,
+        fillOpacity: 0.28,
+      });
+    }
+    if (comparisonSunshineData) {
+      list.push({
+        dataKey: 'comparisonHours',
+        fill: sunshineData ? CITY2_PRIMARY_COLOR : CITY1_PRIMARY_COLOR,
+        fillOpacity: 0.24,
+      });
+    }
+    return list;
+  }, [sunshineData, comparisonSunshineData]);
+
+  // Lines: the dashed ceilings, then the solid actual on top
+  const lines: LineConfig[] = useMemo(() => {
+    const list: LineConfig[] = [];
+    if (theoreticalMax) {
+      list.push({
+        dataKey: 'theoreticalMax',
+        name: '100% ceiling',
+        stroke: CITY1_PRIMARY_COLOR,
+        strokeWidth: 1.2,
+        strokeDasharray: '4 3',
+        dot: false,
+      });
+    }
+    if (compTheoreticalMax) {
+      list.push({
+        dataKey: 'comparisonTheoreticalMax',
+        name: 'comparison ceiling',
+        stroke: sunshineData ? CITY2_PRIMARY_COLOR : CITY1_PRIMARY_COLOR,
+        strokeWidth: 1.2,
+        strokeDasharray: '4 3',
+        dot: false,
+      });
+    }
+    if (sunshineData) {
+      list.push({
+        dataKey: 'hours',
+        name: sunshineData.city ?? '',
         stroke: CITY1_PRIMARY_COLOR,
         strokeWidth: 2,
-        dot: renderCustomDot,
+        dot: false,
         connectNulls: true,
+        cityRole: 'main',
       });
     }
-
     if (comparisonSunshineData) {
-      lineConfigs.push({
+      list.push({
         dataKey: 'comparisonHours',
-        name: `${compCityName}`,
+        name: comparisonSunshineData.city ?? '',
         stroke: sunshineData ? CITY2_PRIMARY_COLOR : CITY1_PRIMARY_COLOR,
         strokeWidth: 2,
-        dot: sunshineData ? false : renderCustomDot,
+        dot: false,
         connectNulls: true,
+        cityRole: 'comparison',
       });
     }
-
-    return lineConfigs;
+    return list;
   }, [
-    theoreticalMaxData,
-    comparisonTheoreticalMaxData,
-    renderCustomDot,
-    chartColors,
+    theoreticalMax,
+    compTheoreticalMax,
     sunshineData,
     comparisonSunshineData,
   ]);
 
-  // Configure reference line for selected month
   const referenceLines: ReferenceLineConfig[] = useMemo(() => {
     if (!selectedMonth) return [];
-
+    const x = combined[selectedMonth - 1]?.month;
+    if (typeof x !== 'string' && typeof x !== 'number') return [];
     return [
       {
-        x: combinedChartData[selectedMonth - 1]?.month,
-        stroke: chartColors.lineColor,
-        strokeWidth: 2,
-        strokeDasharray: '5 5',
+        x,
+        stroke: 'var(--mantine-color-dimmed)',
+        strokeWidth: 1,
+        strokeDasharray: '3 3',
       },
     ];
-  }, [selectedMonth, combinedChartData, chartColors]);
+  }, [selectedMonth, combined]);
 
-  // if neither city has data, return null (shouldn't happen due to WeatherDataSection check)
-  if (!baseData || !baseChartStructure) return null;
+  const referenceDots: ReferenceDotConfig[] = useMemo(() => {
+    if (!selectedMonth) return [];
+    const point = combined[selectedMonth - 1];
+    if (!point) return [];
+    const x = point.month;
+    if (typeof x !== 'string' && typeof x !== 'number') return [];
+    const isComparing = !!sunshineData && !!comparisonSunshineData;
+    const dots: ReferenceDotConfig[] = [];
+    if (sunshineData && point.hours != null) {
+      dots.push(
+        buildTodayDot(
+          x,
+          point.hours,
+          isComparing ? CITY1_TODAY_COLOR : undefined
+        )
+      );
+    }
+    if (comparisonSunshineData && point.comparisonHours != null) {
+      dots.push(
+        buildTodayDot(
+          x,
+          point.comparisonHours,
+          isComparing ? CITY2_TODAY_COLOR : undefined
+        )
+      );
+    }
+    return dots;
+  }, [selectedMonth, combined, sunshineData, comparisonSunshineData]);
 
-  // Generate unique city key for animation control
-  const cityKey = `${baseData.city}-${baseData.lat}-${baseData.long}`;
+  const handleHover = useCallback(
+    (state: ChartHoverState | null) => {
+      if (!onHover) return;
+      if (!state) {
+        onHover(null);
+        return;
+      }
+      const point = combined[state.activeIndex];
+      if (!point) {
+        onHover(null);
+        return;
+      }
+      const c1 = point.hours ?? null;
+      const c2 = point.comparisonHours ?? null;
+      const max1 = point.theoreticalMax ?? null;
+      const max2 = point.comparisonTheoreticalMax ?? null;
+      onHover({
+        label: point.month,
+        v1: formatSunshinePercentage(c1, max1),
+        v2: formatSunshinePercentage(c2, max2),
+        subV1: c1 === null ? null : formatHours(c1),
+        subV2: c2 === null ? null : formatHours(c2),
+      });
+    },
+    [combined, onHover]
+  );
+
+  const renderTooltipExtras = useCallback(
+    (row: (typeof combined)[number]) => {
+      const c1 = row.hours ?? null;
+      const c2 = row.comparisonHours ?? null;
+      const max1 = row.theoreticalMax ?? null;
+      const max2 = row.comparisonTheoreticalMax ?? null;
+      const sub1 = formatSunshinePercentage(c1, max1);
+      const sub2 = formatSunshinePercentage(c2, max2);
+      if (!sub1 && !sub2) return null;
+      const hasComp = !!comparisonSunshineData;
+      return (
+        <div className="flex justify-end gap-3 text-[10px] font-semibold">
+          {sub1 && <span style={{ color: CITY1_PRIMARY_COLOR }}>{sub1}</span>}
+          {hasComp && sub2 && (
+            <span
+              style={{
+                color: sunshineData ? CITY2_PRIMARY_COLOR : CITY1_PRIMARY_COLOR,
+              }}
+            >
+              {sub2}
+            </span>
+          )}
+        </div>
+      );
+    },
+    [sunshineData, comparisonSunshineData]
+  );
+
+  if (!baseData || !baseStructure) return null;
+
+  const legendComparisonColor =
+    sunshineData && comparisonSunshineData ? CITY2_PRIMARY_COLOR : null;
 
   return (
     <RechartsLineGraph
-      data={combinedChartData}
-      cityKey={cityKey}
+      data={combined}
       xAxisDataKey="month"
-      yAxisLabel="Hours"
       lines={lines}
-      legendLayout="horizontal"
-      legendVerticalAlign="top"
-      legendAlign="center"
+      areas={areas}
       referenceLines={referenceLines}
-      tooltipContent={
-        <SunshineGraphTooltipWrapper
-          cityName={sunshineData?.city}
-          comparisonCityName={comparisonSunshineData?.city}
+      referenceDots={referenceDots}
+      yTickFormatter={(v) => `${v}h`}
+      yAxisOrientation="left"
+      margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
+      overlay={
+        <SunshineLegend
+          mainColor={CITY1_PRIMARY_COLOR}
+          comparisonColor={legendComparisonColor}
         />
       }
-      margin={{ left: 0 }}
+      onHover={handleHover}
+      renderTooltipExtras={renderTooltipExtras}
     />
   );
 };

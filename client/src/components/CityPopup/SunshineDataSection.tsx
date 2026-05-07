@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import type { SunshineData } from '@/types/sunshineDataType';
+import type { RibbonHoverPayload } from '@/types/cityPopupTypes';
 import SunshineGraph from './graphs/SunshineGraph';
 import WeatherDataSection from './WeatherDataSection';
 import ComponentErrorBoundary from '../ErrorBoundary/ComponentErrorBoundary';
@@ -10,6 +11,7 @@ interface SunshineDataSectionProps {
   hasError: boolean;
   selectedMonth: number;
   comparisonSunshineData?: SunshineData | null;
+  onHover?: (payload: RibbonHoverPayload | null) => void;
 }
 
 const SunshineDataSection = ({
@@ -18,6 +20,7 @@ const SunshineDataSection = ({
   hasError,
   selectedMonth,
   comparisonSunshineData,
+  onHover,
 }: SunshineDataSectionProps) => {
   return (
     <WeatherDataSection
@@ -35,6 +38,7 @@ const SunshineDataSection = ({
             sunshineData={data}
             selectedMonth={selectedMonth}
             comparisonSunshineData={comparisonSunshineData}
+            onHover={onHover}
           />
         </ComponentErrorBoundary>
       )}

@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
+import type { RibbonHoverPayload } from '@/types/cityPopupTypes';
 import RainfallGraph from './graphs/RainfallGraph';
 import WeatherDataSection from './WeatherDataSection';
 import ComponentErrorBoundary from '../ErrorBoundary/ComponentErrorBoundary';
@@ -10,6 +11,8 @@ interface RainfallDataSectionProps {
   isLoading: boolean;
   hasError: boolean;
   comparisonWeeklyWeatherData?: CityWeeklyWeather | null;
+  selectedDate?: string;
+  onHover?: (payload: RibbonHoverPayload | null) => void;
 }
 
 const RainfallDataSection = ({
@@ -17,6 +20,8 @@ const RainfallDataSection = ({
   isLoading,
   hasError,
   comparisonWeeklyWeatherData,
+  selectedDate,
+  onHover,
 }: RainfallDataSectionProps) => {
   // check if there's actual precipitation data (not just empty objects)
   const hasMainPrecipData = hasPrecipitationData(weeklyWeatherData);
@@ -38,9 +43,14 @@ const RainfallDataSection = ({
     >
       {(data) => (
         <ComponentErrorBoundary componentName="RainfallGraph">
+          {/* Pass the unfiltered comparison data — the graph filters
+              empty rows internally, and the no-data badge is driven from
+              the section-level `compDataToPass` instead. */}
           <RainfallGraph
             weeklyWeatherData={data}
             comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
+            selectedDate={selectedDate}
+            onHover={onHover}
           />
         </ComponentErrorBoundary>
       )}

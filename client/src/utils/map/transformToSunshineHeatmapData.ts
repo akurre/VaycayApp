@@ -1,3 +1,4 @@
+import { MONTH_FIELDS } from '@/const';
 import type { SunshineData } from '@/types/sunshineDataType';
 
 /**
@@ -8,25 +9,7 @@ export const transformToSunshineHeatmapData = (
   cities: SunshineData[],
   month: number
 ): { position: [number, number]; weight: number }[] => {
-  // Map of month numbers to property names
-  const monthFields: Record<number, keyof SunshineData> = {
-    // todo move to const
-    1: 'jan',
-    2: 'feb',
-    3: 'mar',
-    4: 'apr',
-    5: 'may',
-    6: 'jun',
-    7: 'jul',
-    8: 'aug',
-    9: 'sep',
-    10: 'oct',
-    11: 'nov',
-    12: 'dec',
-  };
-
-  // Get the property name for the selected month
-  const monthField = monthFields[month];
+  const monthField = MONTH_FIELDS[month];
 
   if (!monthField) {
     console.warn(`Invalid month: ${month}`);
