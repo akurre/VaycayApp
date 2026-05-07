@@ -20,6 +20,12 @@ export const CACHE_CONFIG = {
   CHECK_PERIOD: 600,
 };
 
+// step denominator for cache-key bounds quantization. step = span / N gives
+// ~5% relative error per edge at any zoom while preserving street-level
+// resolution. Do not flatten to a constant degree value — see the
+// "preserves resolution at deep zoom" test in quantizeBoundsForCacheKey.test.ts.
+export const BOUNDS_QUANTIZATION_STEP_DENOMINATOR = 20;
+
 // zoom-based loading thresholds (for future Phase 2)
 export const ZOOM_THRESHOLDS = {
   // use global query (no bounds) for zoom levels 1-3
