@@ -192,7 +192,7 @@ function resolveMatch(
   worldCities: WorldCity[],
   worldCitiesById: Map<string, WorldCity>
 ): { match: WorldCity; method: MatchResult['matchMethod'] } | null {
-  if (city.worldcitiesId != null) {
+  if (city.worldcitiesId !== null) {
     const direct = worldCitiesById.get(String(Math.round(city.worldcitiesId)));
     if (direct && direct.population > 0) {
       return { match: direct, method: 'worldcities-id' };
@@ -202,30 +202,40 @@ function resolveMatch(
   return fuzzy ? { match: fuzzy, method: 'fuzzy' } : null;
 }
 
-/**
- * main execution
- */
-async function main() {
+function printFillSummary(matches: MatchResult[], noMatchCount: number, total: number) {
+  console.log(`\n${'='.repeat(80)}`);
+  console.log('summary');
   console.log('='.repeat(80));
-  console.log(
-    REPAIR_MODE ? 'repairing wrong population data' : 'updating cities with missing population data'
-  );
-  console.log('='.repeat(80));
+  console.log(`total cities without population: ${total}`);
+  console.log(`successfully matched: ${matches.length}`);
+  console.log(`no matches found: ${noMatchCount}`);
+
+  if (matches.length > 0) {
+    const byId = matches.filter((m) => m.matchMethod === 'worldcities-id').length;
+    const byFuzzy = matches.filter((m) => m.matchMethod === 'fuzzy').length;
+    console.log(`\nmatch method breakdown:`);
+    console.log(`  direct id lookup: ${byId}`);
+    console.log(`  fuzzy name+state: ${byFuzzy}`);
+
+    const fuzzyMatches = matches.filter((m) => m.matchMethod === 'fuzzy');
+    if (fuzzyMatches.length > 0) {
+      const avgDistance =
+        fuzzyMatches.reduce((sum, m) => sum + m.distance, 0) / fuzzyMatches.length;
+      const maxDistance = Math.max(...fuzzyMatches.map((m) => m.distance));
+      const minDistance = Math.min(...fuzzyMatches.map((m) => m.distance));
+      console.log(`\nfuzzy match distance statistics:`);
+      console.log(`  min: ${minDistance.toFixed(3)}°`);
+      console.log(`  avg: ${avgDistance.toFixed(3)}°`);
+      console.log(`  max: ${maxDistance.toFixed(3)}°`);
+    }
+  }
 
   if (DRY_RUN) {
-    console.log('\n⚠️  DRY RUN MODE - no changes will be made to database\n');
-  }
-
-  const worldCities = loadWorldCities();
-  const worldCitiesById = indexWorldCitiesById(worldCities);
-
-  if (REPAIR_MODE) {
-    await runRepair(worldCities, worldCitiesById);
+    console.log('\n⚠️  DRY RUN MODE - no changes were made to database');
+    console.log('run without --dry-run flag to apply changes');
   } else {
-    await runFill(worldCities, worldCitiesById);
+    console.log(`\n✓ successfully updated ${matches.length} cities with population data`);
   }
-
-  await prisma.$disconnect();
 }
 
 /**
@@ -378,40 +388,30 @@ async function runRepair(worldCities: WorldCity[], worldCitiesById: Map<string, 
   }
 }
 
-function printFillSummary(matches: MatchResult[], noMatchCount: number, total: number) {
-  console.log(`\n${'='.repeat(80)}`);
-  console.log('summary');
+/**
+ * main execution
+ */
+async function main() {
   console.log('='.repeat(80));
-  console.log(`total cities without population: ${total}`);
-  console.log(`successfully matched: ${matches.length}`);
-  console.log(`no matches found: ${noMatchCount}`);
-
-  if (matches.length > 0) {
-    const byId = matches.filter((m) => m.matchMethod === 'worldcities-id').length;
-    const byFuzzy = matches.filter((m) => m.matchMethod === 'fuzzy').length;
-    console.log(`\nmatch method breakdown:`);
-    console.log(`  direct id lookup: ${byId}`);
-    console.log(`  fuzzy name+state: ${byFuzzy}`);
-
-    const fuzzyMatches = matches.filter((m) => m.matchMethod === 'fuzzy');
-    if (fuzzyMatches.length > 0) {
-      const avgDistance =
-        fuzzyMatches.reduce((sum, m) => sum + m.distance, 0) / fuzzyMatches.length;
-      const maxDistance = Math.max(...fuzzyMatches.map((m) => m.distance));
-      const minDistance = Math.min(...fuzzyMatches.map((m) => m.distance));
-      console.log(`\nfuzzy match distance statistics:`);
-      console.log(`  min: ${minDistance.toFixed(3)}°`);
-      console.log(`  avg: ${avgDistance.toFixed(3)}°`);
-      console.log(`  max: ${maxDistance.toFixed(3)}°`);
-    }
-  }
+  console.log(
+    REPAIR_MODE ? 'repairing wrong population data' : 'updating cities with missing population data'
+  );
+  console.log('='.repeat(80));
 
   if (DRY_RUN) {
-    console.log('\n⚠️  DRY RUN MODE - no changes were made to database');
-    console.log('run without --dry-run flag to apply changes');
-  } else {
-    console.log(`\n✓ successfully updated ${matches.length} cities with population data`);
+    console.log('\n⚠️  DRY RUN MODE - no changes will be made to database\n');
   }
+
+  const worldCities = loadWorldCities();
+  const worldCitiesById = indexWorldCitiesById(worldCities);
+
+  if (REPAIR_MODE) {
+    await runRepair(worldCities, worldCitiesById);
+  } else {
+    await runFill(worldCities, worldCitiesById);
+  }
+
+  await prisma.$disconnect();
 }
 
 main().catch((e) => {
