@@ -3,6 +3,7 @@ import type { City, MonthlySunshine, PrismaClient } from '@prisma/client';
 import { MONTH_FIELDS } from '../const';
 import { getCachedWeatherData } from '../utils/cache';
 import querySunshineCityIds from '../utils/sunshineQueries';
+import { quantizeBoundsForCacheKey } from '../utils/quantizeBoundsForCacheKey';
 import { titleCaseCityName, findClosestCity } from '../utils/cityHelpers';
 
 // helper type combining monthly sunshine with related city data
@@ -95,7 +96,7 @@ function logQueryStats(
   console.log(`\n📊 Sunshine query${bounds ? ' (BOUNDS)' : ''} for month ${month}:`);
   if (bounds) {
     console.log(
-      `  📍 Bounds: lat[${bounds.minLat}, ${bounds.maxLat}], long[${bounds.minLong}, ${bounds.maxLong}]`
+      `  📍 Quantized bounds (SQL + cache key): lat[${bounds.minLat}, ${bounds.maxLat}], long[${bounds.minLong}, ${bounds.maxLong}]`
     );
   }
   console.log(`  ⏱️  Query time: ${queryTime}ms`);
@@ -176,15 +177,23 @@ export const sunshineByMonthAndBoundsQuery = queryField('sunshineByMonthAndBound
     maxLong: nonNull(floatArg({ description: 'maximum longitude' })),
   },
   async resolve(_parent, args, context) {
-    const cacheKey = `sunshine:month:${args.month}:bounds:${args.minLat}-${args.maxLat}:${args.minLong}-${args.maxLong}`;
+    // Quantize bounds once; same object drives the cache key AND SQL inputs
+    // so views in the same bucket return identical city sets (no churn).
+    const cacheBounds = quantizeBoundsForCacheKey({
+      minLat: args.minLat,
+      maxLat: args.maxLat,
+      minLong: args.minLong,
+      maxLong: args.maxLong,
+    });
+    const cacheKey = `sunshine:month:${args.month}:bounds:${cacheBounds.minLat}-${cacheBounds.maxLat}:${cacheBounds.minLong}-${cacheBounds.maxLong}`;
 
     return getCachedWeatherData(cacheKey, async () => {
-      return fetchSunshineByMonth(context.prisma, args.month, {
-        minLat: args.minLat,
-        maxLat: args.maxLat,
-        minLong: args.minLong,
-        maxLong: args.maxLong,
-      });
+      console.log(
+        `\n📍 Sunshine raw bounds (request): lat[${args.minLat}, ${args.maxLat}], long[${args.minLong}, ${args.maxLong}]`
+      );
+      // SQL gets quantized bounds so cache hits + fresh misses in the same
+      // quantum return identical city sets. Edge clip is bounded to step/2.
+      return fetchSunshineByMonth(context.prisma, args.month, cacheBounds);
     });
   },
 });

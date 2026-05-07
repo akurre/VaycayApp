@@ -2,6 +2,7 @@ import { objectType, queryField, nonNull, stringArg, intArg, floatArg, list } fr
 import type { City } from '@prisma/client';
 import { getCachedWeatherData } from '../utils/cache';
 import queryCityIds from '../utils/weatherQueries';
+import { quantizeBoundsForCacheKey } from '../utils/quantizeBoundsForCacheKey';
 import calculateDistance from '../utils/calculateDistance';
 import {
   mapWeatherRecord,
@@ -159,22 +160,29 @@ export const weatherByDateAndBoundsQuery = queryField('weatherByDateAndBounds', 
     const day = args.monthDay.slice(2);
     const dateStr = `2020-${month}-${day}`;
 
-    // create cache key including bounds
-    const cacheKey = `weather:${dateStr}:bounds:${args.minLat}-${args.maxLat}:${args.minLong}-${args.maxLong}`;
+    // Quantize bounds once; the same quantized object drives the cache key
+    // AND the SQL inputs below, so views in the same cache bucket return
+    // identical city sets (no churn).
+    const cacheBounds = quantizeBoundsForCacheKey({
+      minLat: args.minLat,
+      maxLat: args.maxLat,
+      minLong: args.minLong,
+      maxLong: args.maxLong,
+    });
+    const cacheKey = `weather:${dateStr}:bounds:${cacheBounds.minLat}-${cacheBounds.maxLat}:${cacheBounds.minLong}-${cacheBounds.maxLong}`;
 
     return getCachedWeatherData(cacheKey, async () => {
       const startTime = Date.now();
 
-      // use shared query logic with bounds filtering
+      // SQL receives quantized (cacheBounds) so two raw-bounds queries that
+      // share a cache key also produce identical SQL inputs → identical city
+      // sets. Trade-off: cities up to step/2 outside the user's viewport may
+      // be returned (rendered off-screen by deck.gl) and cities up to step/2
+      // inside the user's viewport but outside the quantum may be excluded.
       const selectedCityIds = await queryCityIds({
         prisma: context.prisma,
         dateStr,
-        bounds: {
-          minLat: args.minLat,
-          maxLat: args.maxLat,
-          minLong: args.minLong,
-          maxLong: args.maxLong,
-        },
+        bounds: cacheBounds,
       });
 
       // fetch weather records for selected cities
@@ -206,7 +214,10 @@ export const weatherByDateAndBoundsQuery = queryField('weatherByDateAndBounds', 
 
       console.log(`\n📊 Weather query (BOUNDS) for ${dateStr}:`);
       console.log(
-        `  📍 Bounds: lat[${args.minLat}, ${args.maxLat}], long[${args.minLong}, ${args.maxLong}]`
+        `  📍 Raw bounds (request): lat[${args.minLat}, ${args.maxLat}], long[${args.minLong}, ${args.maxLong}]`
+      );
+      console.log(
+        `  📍 Quantized bounds (SQL + cache key): lat[${cacheBounds.minLat}, ${cacheBounds.maxLat}], long[${cacheBounds.minLong}, ${cacheBounds.maxLong}]`
       );
       console.log(`  ⏱️  Query time: ${queryTime}ms`);
       console.log(`  🌍 Countries: ${countriesCount}`);
