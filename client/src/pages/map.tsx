@@ -16,6 +16,7 @@ import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
 import { INITIAL_VIEW_STATE, ZOOM_THRESHOLD } from '@/const';
 import ComponentErrorBoundary from '../components/ErrorBoundary/ComponentErrorBoundary';
 import MapColorLegend from '../components/Map/MapColorLegend';
+import MapDataLoader from '../components/Map/MapDataLoader';
 import { consolidateWeatherByCity } from '@/utils/data/consolidateWeatherByCity';
 import { consolidateSunshineByCity } from '@/utils/data/consolidateSunshineByCity';
 
@@ -165,6 +166,8 @@ const MapPage: FC = () => {
       <div className="absolute top-4 left-4 z-20">
         <MapColorLegend dataType={dataType} />
       </div>
+
+      <MapDataLoader dataType={dataType} />
 
       <TopCommandBar
         selectedDate={selectedDate}
