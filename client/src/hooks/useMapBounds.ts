@@ -1,7 +1,12 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import type { MapViewState, ViewStateChangeParameters } from '@deck.gl/core';
 import { WebMercatorViewport } from '@deck.gl/core';
-import { ZOOM_THRESHOLD, DEBOUNCE_DELAY, BOUNDS_BUFFER_PERCENT } from '@/const';
+import {
+  ZOOM_THRESHOLD,
+  DEBOUNCE_DELAY,
+  BOUNDS_BUFFER_PERCENT,
+  GESTURE_GRACE_MS,
+} from '@/const';
 import { useAppStore } from '@/stores/useAppStore';
 import type { MapBounds } from '@/types/mapTypes';
 
@@ -80,7 +85,16 @@ export const useMapBounds = (
   );
   const [bounds, setBounds] = useState<MapBounds | null>(null);
   const [shouldUseBounds, setShouldUseBounds] = useState(false);
-  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Two separate timers so the bounds query can fire promptly (DEBOUNCE_DELAY)
+  // while the gesture flag stays held longer (GESTURE_GRACE_MS) — that grace
+  // window absorbs rapid pan-pause-pan sequences whose gap would otherwise
+  // straddle the query-firing moment and let a layer flush land mid-stream.
+  const boundsQueryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+  const gestureGraceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
 
   const onViewStateChange = useCallback(
     ({ viewState: newViewState }: { viewState: MapViewState }) => {
@@ -109,17 +123,11 @@ export const useMapBounds = (
       // selector level so map.tsx doesn't re-render on every frame.
       setIsGesturing(true);
 
-      // clear existing debounce timer
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
+      // (Re)arm the bounds-query timer.
+      if (boundsQueryTimerRef.current) {
+        clearTimeout(boundsQueryTimerRef.current);
       }
-
-      // debounce bounds calculation and query trigger
-      debounceTimerRef.current = setTimeout(() => {
-        // Gesture has been idle for DEBOUNCE_DELAY — flush deferred data and
-        // fire the bounds query.
-        setIsGesturing(false);
-
+      boundsQueryTimerRef.current = setTimeout(() => {
         const useBounds = newViewState.zoom >= ZOOM_THRESHOLD;
         setShouldUseBounds(useBounds);
 
@@ -132,15 +140,26 @@ export const useMapBounds = (
           onBoundsChange?.(null, false);
         }
       }, DEBOUNCE_DELAY);
+
+      // (Re)arm the gesture-flag timer with a longer grace window.
+      if (gestureGraceTimerRef.current) {
+        clearTimeout(gestureGraceTimerRef.current);
+      }
+      gestureGraceTimerRef.current = setTimeout(() => {
+        setIsGesturing(false);
+      }, GESTURE_GRACE_MS);
     },
     [onBoundsChange, setMapViewport, setIsGesturing]
   );
 
-  // cleanup debounce timer on unmount
+  // cleanup timers on unmount
   useEffect(() => {
     return () => {
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
+      if (boundsQueryTimerRef.current) {
+        clearTimeout(boundsQueryTimerRef.current);
+      }
+      if (gestureGraceTimerRef.current) {
+        clearTimeout(gestureGraceTimerRef.current);
       }
     };
   }, []);

@@ -19,7 +19,13 @@ export const CITY_CACHE_MAX_SIZE = 30;
 
 // zoom-based loading thresholds
 export const ZOOM_THRESHOLD = 2; // switch to bounds query at zoom level 2+ (continental view)
-export const DEBOUNCE_DELAY = 200; // ms - debounce delay for zoom/pan events (reduced for more responsive feel)
+export const DEBOUNCE_DELAY = 300; // ms — bounds-query debounce: how long the viewport must be idle before we fire a new bounds query
+
+// How long isGesturing stays true after the last viewState change. Longer
+// than DEBOUNCE_DELAY on purpose: even after the bounds query fires and
+// data lands, we want to keep gating layer flushes for a bit so a quick
+// follow-up pan isn't blocked by the post-load 80 ms transition.
+export const GESTURE_GRACE_MS = 700;
 export const BOUNDS_BUFFER_PERCENT = 0.3; // add 30% buffer to viewport bounds to pre-fetch dots before they're visible
 
 // deck.gl scrollZoom speed. Default is 0.01; we use 3× default for a slightly
