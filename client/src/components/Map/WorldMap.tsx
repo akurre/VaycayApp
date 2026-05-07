@@ -145,7 +145,7 @@ const WorldMap = ({
     () => ({
       dragPan: true,
       dragRotate: false,
-      scrollZoom: { speed: MAP_SCROLL_ZOOM_SPEED, smooth: true },
+      scrollZoom: { speed: MAP_SCROLL_ZOOM_SPEED },
       touchZoom: true,
       touchRotate: false,
       keyboard: true,
