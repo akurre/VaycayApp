@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { MAX_CITIES_GLOBAL_VIEW } from '../const';
+import type { Bounds } from '../types/boundsTypes';
 
 // grid configuration for zoomed views
 const GRID_SIZE = 10; // 10x10 = 100 cells for spatial distribution
@@ -8,12 +9,7 @@ const MIN_CITIES_PER_CELL = 1; // ensure at least 1 city per populated cell
 interface QueryCityIdsParams {
   prisma: PrismaClient;
   dateStr: string;
-  bounds?: {
-    minLat: number;
-    maxLat: number;
-    minLong: number;
-    maxLong: number;
-  };
+  bounds?: Bounds;
 }
 
 /**
