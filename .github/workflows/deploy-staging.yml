@@ -34,15 +34,8 @@ jobs:
           railway link ${{ secrets.RAILWAY_PROJECT_ID }} --environment staging
           railway up --service frontend --detach
 
-      - name: Run Database Migrations
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: |
-          railway link ${{ secrets.RAILWAY_PROJECT_ID }} --environment staging
-          railway run --service backend npx prisma migrate deploy
-
       - name: Deployment Summary
         run: |
           echo "✅ Backend and Frontend deployed to staging"
-          echo "✅ Database migrations completed"
+          echo "✅ Migrations run inside Railway on backend startup"
           echo "🚀 Staging deployment successful!"

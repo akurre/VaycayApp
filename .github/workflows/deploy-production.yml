@@ -46,15 +46,8 @@ jobs:
         run: |
           railway up --service=frontend --detach
 
-      - name: Run Database Migrations
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: |
-          cd server
-          railway run --service=backend npx prisma migrate deploy
-
       - name: Deployment Summary
         run: |
           echo "✅ Backend and Frontend deployed to production"
-          echo "✅ Database migrations completed"
+          echo "✅ Migrations run inside Railway on backend startup"
           echo "🚀 Deployment successful!"
