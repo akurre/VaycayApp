@@ -35,8 +35,12 @@ const TodayReadout = ({
 }: TodayReadoutProps) => {
   const temperatureUnit = useAppStore((s) => s.temperatureUnit);
 
-  const v1 = hover ? hover.v1 : formatTodayHeadline(tab, c1Value, temperatureUnit);
-  const v2 = hover ? hover.v2 : formatTodayHeadline(tab, c2Value, temperatureUnit);
+  const v1 = hover
+    ? hover.v1
+    : formatTodayHeadline(tab, c1Value, temperatureUnit);
+  const v2 = hover
+    ? hover.v2
+    : formatTodayHeadline(tab, c2Value, temperatureUnit);
   const subV1 = hover ? (hover.subV1 ?? null) : formatTodaySub(tab, subC1Value);
   const subV2 = hover ? (hover.subV2 ?? null) : formatTodaySub(tab, subC2Value);
 

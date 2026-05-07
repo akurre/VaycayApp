@@ -10,10 +10,17 @@ import RechartsLineGraph from './RechartsLineGraph';
 import type {
   AreaConfig,
   LineConfig,
+  ReferenceDotConfig,
   ReferenceLineConfig,
 } from '@/types/chartTypes';
 import SunshineLegend from './SunshineLegend';
-import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
+import { buildTodayDot } from './utils/buildTodayDot';
+import {
+  CITY1_PRIMARY_COLOR,
+  CITY1_TODAY_COLOR,
+  CITY2_PRIMARY_COLOR,
+  CITY2_TODAY_COLOR,
+} from '@/const';
 
 interface SunshineGraphProps {
   sunshineData: SunshineData | null;
@@ -168,6 +175,35 @@ const SunshineGraph = ({
     ];
   }, [selectedMonth, combined]);
 
+  const referenceDots: ReferenceDotConfig[] = useMemo(() => {
+    if (!selectedMonth) return [];
+    const point = combined[selectedMonth - 1];
+    if (!point) return [];
+    const x = point.month;
+    if (typeof x !== 'string' && typeof x !== 'number') return [];
+    const isComparing = !!sunshineData && !!comparisonSunshineData;
+    const dots: ReferenceDotConfig[] = [];
+    if (sunshineData && point.hours != null) {
+      dots.push(
+        buildTodayDot(
+          x,
+          point.hours,
+          isComparing ? CITY1_TODAY_COLOR : undefined
+        )
+      );
+    }
+    if (comparisonSunshineData && point.comparisonHours != null) {
+      dots.push(
+        buildTodayDot(
+          x,
+          point.comparisonHours,
+          isComparing ? CITY2_TODAY_COLOR : undefined
+        )
+      );
+    }
+    return dots;
+  }, [selectedMonth, combined, sunshineData, comparisonSunshineData]);
+
   const handleHover = useCallback(
     (state: ChartHoverState | null) => {
       if (!onHover) return;
@@ -235,6 +271,7 @@ const SunshineGraph = ({
       lines={lines}
       areas={areas}
       referenceLines={referenceLines}
+      referenceDots={referenceDots}
       yTickFormatter={(v) => `${v}h`}
       yAxisOrientation="left"
       margin={{ top: 8, right: 8, left: 0, bottom: 0 }}

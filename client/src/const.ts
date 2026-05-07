@@ -4,7 +4,6 @@
 
 import {
   AMBER_BRAND_SHADE,
-  OCEAN_BRAND_SHADE,
   primaryAmberShades,
   secondaryOceanShades,
 } from '@/theme';
@@ -368,8 +367,6 @@ export const TODAY_READOUT_VALUE_LABEL: Partial<Record<DataType, string>> = {
 // dark blues; the extra spread keeps min/avg/max distinguishable at a glance.
 const CITY1_MAX_OFFSET = -1;
 const CITY1_MIN_OFFSET = 2;
-const CITY2_MAX_OFFSET = -3;
-const CITY2_MIN_OFFSET = 3;
 
 // City 1 (main / warmest destination) — Amber family
 export const CITY1_PRIMARY_COLOR = primaryAmberShades[AMBER_BRAND_SHADE];
@@ -383,6 +380,12 @@ export const CITY2_PRIMARY_COLOR = secondaryOceanShades[3]; // #6E9DB6
 export const CITY2_MAX_COLOR = secondaryOceanShades[2]; // #9DBED1
 export const CITY2_MIN_COLOR = secondaryOceanShades[4]; // #487D99
 export const CITY2_BADGE_BACKGROUND = `${CITY2_PRIMARY_COLOR}26`; // 15% opacity (0x26 = 38 ≈ 0.15 * 255)
+
+// Today-marker shades — distinctly deeper than the hover/primary swatch so
+// today dots stay readable when comparison is active without doubling up
+// the brand color.
+export const CITY1_TODAY_COLOR = primaryAmberShades[AMBER_BRAND_SHADE + 1]; // #C97A24
+export const CITY2_TODAY_COLOR = secondaryOceanShades[5]; // #2E627F
 
 // ============================================================================
 // WORLD MAP BIG LOADER CONSTANTS

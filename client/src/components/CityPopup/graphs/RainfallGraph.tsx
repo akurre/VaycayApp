@@ -5,6 +5,7 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
+  ReferenceDot,
   ReferenceLine,
   ResponsiveContainer,
   Tooltip,
@@ -18,8 +19,14 @@ import { normalizeWeekPrecip } from '@/utils/dataFormatting/normalizeWeekPrecip'
 import { normalizeRainyDays } from '@/utils/dataFormatting/normalizeRainyDays';
 import { formatMm } from '@/utils/dataFormatting/formatMm';
 import { formatRainyDays } from '@/utils/dataFormatting/formatRainyDays';
-import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
+import {
+  CITY1_PRIMARY_COLOR,
+  CITY1_TODAY_COLOR,
+  CITY2_PRIMARY_COLOR,
+  CITY2_TODAY_COLOR,
+} from '@/const';
 import RainfallGraphTooltip from './RainfallGraphTooltip';
+import { buildTodayDot } from './utils/buildTodayDot';
 
 interface RainfallGraphProps {
   weeklyWeatherData: CityWeeklyWeather | null;
@@ -95,6 +102,41 @@ const RainfallGraph = ({
   }, [weeklyWeatherData, comparisonWeeklyWeatherData]);
 
   const baseData = weeklyWeatherData ?? comparisonWeeklyWeatherData;
+
+  const todayDots = useMemo(() => {
+    if (selectedWeek === null) return [];
+    const point = chartData.find((p) => p.week === selectedWeek);
+    if (!point) return [];
+    const dots = [];
+    const main =
+      'totalPrecip' in point && point.totalPrecip != null
+        ? point.totalPrecip
+        : null;
+    const comp =
+      'compTotalPrecip' in point && point.compTotalPrecip != null
+        ? point.compTotalPrecip
+        : null;
+    const isComparing = hasMainData && hasCompData;
+    if (hasMainData && main !== null) {
+      dots.push(
+        buildTodayDot(
+          selectedWeek,
+          main,
+          isComparing ? CITY1_TODAY_COLOR : undefined
+        )
+      );
+    }
+    if (hasCompData && comp !== null) {
+      dots.push(
+        buildTodayDot(
+          selectedWeek,
+          comp,
+          isComparing ? CITY2_TODAY_COLOR : undefined
+        )
+      );
+    }
+    return dots;
+  }, [selectedWeek, chartData, hasMainData, hasCompData]);
 
   const handleMouseMove: CategoricalChartFunc = useCallback(
     (state) => {
@@ -217,6 +259,18 @@ const RainfallGraph = ({
               isAnimationActive={false}
             />
           )}
+
+          {todayDots.map((d) => (
+            <ReferenceDot
+              key={`today-${d.x}-${d.stroke}`}
+              x={d.x}
+              y={d.y}
+              r={d.r}
+              fill={d.fill}
+              stroke={d.stroke}
+              strokeWidth={d.strokeWidth}
+            />
+          ))}
         </BarChart>
       </ResponsiveContainer>
     </div>

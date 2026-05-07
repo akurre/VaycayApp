@@ -143,7 +143,7 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
           {areas.map((a) => (
             <Area
               key={`area-${a.dataKey}`}
-              type="basis"
+              type="monotone"
               dataKey={a.dataKey}
               fill={a.fill}
               fillOpacity={a.fillOpacity ?? 0.2}
@@ -211,7 +211,7 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
             return (
               <Line
                 key={lineConfig.dataKey}
-                type="basis"
+                type="monotone"
                 dataKey={lineConfig.dataKey}
                 name={lineConfig.name}
                 stroke={lineConfig.stroke}
@@ -228,7 +228,8 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
             );
           })}
 
-          {/* Today / hover dots */}
+          {/* Today dots — Recharts' default ReferenceDot zIndex (600) already
+              beats Line (400) and ReferenceLine (400). */}
           {referenceDots.map((d) => (
             <ReferenceDot
               key={`dot-${d.x}-${d.y}-${d.fill}`}
@@ -238,7 +239,6 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
               fill={d.fill}
               stroke={d.stroke ?? 'transparent'}
               strokeWidth={d.strokeWidth ?? 1.5}
-              zIndex={1}
             />
           ))}
         </ComposedChart>

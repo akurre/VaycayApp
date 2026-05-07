@@ -4,7 +4,9 @@ import { TemperatureUnit } from '@/types/mapTypes';
 
 describe('formatTempRange', () => {
   it('formats a min/max pair with the user’s temperature unit (Celsius)', () => {
-    expect(formatTempRange(5, 17, TemperatureUnit.Celsius)).toBe('5.0°C–17.0°C');
+    expect(formatTempRange(5, 17, TemperatureUnit.Celsius)).toBe(
+      '5.0°C–17.0°C'
+    );
   });
 
   it('converts to Fahrenheit when the unit is Fahrenheit', () => {

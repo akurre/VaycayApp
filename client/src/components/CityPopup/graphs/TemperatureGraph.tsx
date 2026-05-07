@@ -4,17 +4,24 @@ import type {
   AreaConfig,
   ChartHoverState,
   LineConfig,
+  ReferenceDotConfig,
   ReferenceLineConfig,
   TemperatureChartRow,
 } from '@/types/chartTypes';
 import type { RibbonHoverPayload } from '@/types/cityPopupTypes';
 
 import RechartsLineGraph from './RechartsLineGraph';
+import { buildTodayDot } from './utils/buildTodayDot';
 import { useAppStore } from '@/stores/useAppStore';
 import { formatTemperature } from '@/utils/tempFormatting/formatTemperature';
 import { weekRangeLabel } from '@/utils/dateFormatting/weekRangeLabel';
 import { dateToWeekOfYear } from '@/utils/dateFormatting/dateToWeekOfYear';
-import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
+import {
+  CITY1_PRIMARY_COLOR,
+  CITY1_TODAY_COLOR,
+  CITY2_PRIMARY_COLOR,
+  CITY2_TODAY_COLOR,
+} from '@/const';
 
 interface TemperatureGraphProps {
   weeklyWeatherData: CityWeeklyWeather;
@@ -174,6 +181,37 @@ const TemperatureGraph = ({
     ];
   }, [selectedDate]);
 
+  const referenceDots: ReferenceDotConfig[] = useMemo(() => {
+    const week = dateToWeekOfYear(selectedDate);
+    if (week === null) return [];
+    const point = chartData.find((p) => p.week === week);
+    if (!point) return [];
+    const isComparing = !!comparisonWeeklyWeatherData;
+    const c1Fill = isComparing ? CITY1_TODAY_COLOR : undefined;
+    const dots: ReferenceDotConfig[] = [];
+    if (point.maxTemp != null) {
+      dots.push(buildTodayDot(week, point.maxTemp, c1Fill));
+    }
+    if (point.avgTemp != null) {
+      dots.push(buildTodayDot(week, point.avgTemp, c1Fill));
+    }
+    if (point.minTemp != null) {
+      dots.push(buildTodayDot(week, point.minTemp, c1Fill));
+    }
+    if (isComparing) {
+      if (point.compMaxTemp != null) {
+        dots.push(buildTodayDot(week, point.compMaxTemp, CITY2_TODAY_COLOR));
+      }
+      if (point.compAvgTemp != null) {
+        dots.push(buildTodayDot(week, point.compAvgTemp, CITY2_TODAY_COLOR));
+      }
+      if (point.compMinTemp != null) {
+        dots.push(buildTodayDot(week, point.compMinTemp, CITY2_TODAY_COLOR));
+      }
+    }
+    return dots;
+  }, [selectedDate, chartData, comparisonWeeklyWeatherData]);
+
   const handleHover = useCallback(
     (state: ChartHoverState | null) => {
       if (!onHover) return;
@@ -209,6 +247,7 @@ const TemperatureGraph = ({
       lines={lines}
       areas={areas}
       referenceLines={referenceLines}
+      referenceDots={referenceDots}
       yTickFormatter={(v) => `${v}°`}
       yDomain={[
         (dataMin: number) => Math.floor(dataMin) - 1,

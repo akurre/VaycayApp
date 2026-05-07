@@ -1,30 +1,29 @@
 import { ActionIcon, useMantineColorScheme } from '@mantine/core';
 import { useMemo, useState } from 'react';
 import { IconX } from '@tabler/icons-react';
-import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
-import type { CityPopupProps } from '@/types/mapTypes';
-import { DataType } from '@/types/mapTypes';
+
 import useWeatherDataForCity from '@/api/dates/useWeatherDataForCity';
 import useSunshineDataForCity from '@/api/dates/useSunshineDataForCity';
 import useWeeklyWeatherForCity from '@/api/dates/useWeeklyWeatherForCity';
-import DataChartTabs from '@/components/CityPopup/DataChartTabs';
-import { extractMonthFromDate } from '@/utils/dateFormatting/extractMonthFromDate';
-import { extractMonthDay } from '@/utils/dateFormatting/extractMonthDay';
-import { dateToWeekOfYear } from '@/utils/dateFormatting/dateToWeekOfYear';
-import { isWeatherData } from '@/utils/typeGuards';
 import ComparisonCitySelector from '@/components/CityPopup/ComparisonCitySelector';
-import type { SearchCitiesResult } from '@/types/userLocationType';
-import type { TodayValuesByTab } from '@/types/cityPopupTypes';
-import { appColors } from '@/theme';
+import DataChartTabs from '@/components/CityPopup/DataChartTabs';
 import RibbonShell from '@/components/CityPopup/Ribbon/RibbonShell';
 import { useRibbonStats } from '@/components/CityPopup/hooks/useRibbonStats';
+import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
 import { getSunshinePercent } from '@/utils/dataFormatting/getSunshinePercent';
-import { normalizeWeekPrecip } from '@/utils/dataFormatting/normalizeWeekPrecip';
 import { normalizeRainyDays } from '@/utils/dataFormatting/normalizeRainyDays';
-import {
-  MONTH_MIDPOINT_DAY,
-  STATE_ABBREVIATION_MAX_LENGTH,
-} from '@/const';
+import { normalizeWeekPrecip } from '@/utils/dataFormatting/normalizeWeekPrecip';
+import { dateToWeekOfYear } from '@/utils/dateFormatting/dateToWeekOfYear';
+import { extractMonthDay } from '@/utils/dateFormatting/extractMonthDay';
+import { extractMonthFromDate } from '@/utils/dateFormatting/extractMonthFromDate';
+import { isWeatherData } from '@/utils/typeGuards';
+import { DataType } from '@/types/mapTypes';
+import { MONTH_MIDPOINT_DAY, STATE_ABBREVIATION_MAX_LENGTH } from '@/const';
+import { appColors } from '@/theme';
+
+import type { CityPopupProps } from '@/types/mapTypes';
+import type { SearchCitiesResult } from '@/types/userLocationType';
+import type { TodayValuesByTab } from '@/types/cityPopupTypes';
 
 const CityPopup = ({
   city,
@@ -53,9 +52,10 @@ const CityPopup = ({
     if (cityAsWeather?.date && !selectedDate) {
       return cityAsWeather.date;
     }
-    return `${monthToUse.toString().padStart(2, '0')}-${MONTH_MIDPOINT_DAY
-      .toString()
-      .padStart(2, '0')}`;
+    return `${monthToUse.toString().padStart(2, '0')}-${MONTH_MIDPOINT_DAY.toString().padStart(
+      2,
+      '0'
+    )}`;
   }, [selectedDate, dataType, cityAsWeather, monthToUse]);
 
   const shouldFetchWeather = !!city && dataType === DataType.Temperature;
