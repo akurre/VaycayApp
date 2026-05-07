@@ -185,8 +185,6 @@ const TemperatureGraph = ({
     ];
   }, [selectedDate]);
 
-  const cityKey = `${weeklyWeatherData.city}-${weeklyWeatherData.lat}-${weeklyWeatherData.long}`;
-
   const handleHover = useCallback(
     (state: ChartHoverState | null) => {
       if (!onHover) return;
@@ -218,12 +216,10 @@ const TemperatureGraph = ({
   return (
     <RechartsLineGraph
       data={chartData}
-      cityKey={cityKey}
       xAxisDataKey="week"
       lines={lines}
       areas={areas}
       referenceLines={referenceLines}
-      showLegend={false}
       yTickFormatter={(v) => `${v}°`}
       yDomain={[
         (dataMin: number) => Math.floor(dataMin) - 1,

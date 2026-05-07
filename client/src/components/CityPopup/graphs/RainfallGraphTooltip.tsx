@@ -1,5 +1,6 @@
 import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
 import { weekRangeLabel } from '@/utils/dateFormatting/weekRangeLabel';
+import { formatMm } from '@/utils/dataFormatting/formatMm';
 
 interface TooltipPayloadEntry {
   dataKey?: string | number;
@@ -22,7 +23,7 @@ interface TooltipItem {
 }
 
 const formatValue = (v: unknown): string =>
-  typeof v === 'number' ? `${Math.round(v)}mm` : String(v);
+  typeof v === 'number' ? formatMm(v) : String(v);
 
 const RainfallGraphTooltip = ({
   active,

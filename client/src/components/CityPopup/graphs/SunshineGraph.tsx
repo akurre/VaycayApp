@@ -5,6 +5,7 @@ import type { RibbonHoverPayload } from '@/types/cityPopupTypes';
 import { transformSunshineDataForChart } from '@/utils/dataFormatting/transformSunshineDataForChart';
 import { generateTheoreticalMaxSunshineData } from '@/utils/dataFormatting/generateTheoreticalMaxSunshineData';
 import { formatSunshinePercentage } from '@/utils/dataFormatting/formatSunshinePercentage';
+import { formatHours } from '@/utils/dataFormatting/formatHours';
 import RechartsLineGraph, {
   type LineConfig,
   type AreaConfig,
@@ -184,10 +185,10 @@ const SunshineGraph = ({
       const max2 = point.comparisonTheoreticalMax ?? null;
       onHover({
         label: point.month,
-        v1: c1 === null ? null : `${c1.toFixed(1)}h`,
-        v2: c2 === null ? null : `${c2.toFixed(1)}h`,
-        subV1: formatSunshinePercentage(c1, max1),
-        subV2: formatSunshinePercentage(c2, max2),
+        v1: formatSunshinePercentage(c1, max1),
+        v2: formatSunshinePercentage(c2, max2),
+        subV1: c1 === null ? null : formatHours(c1),
+        subV2: c2 === null ? null : formatHours(c2),
       });
     },
     [combined, onHover]
@@ -223,21 +224,25 @@ const SunshineGraph = ({
 
   if (!baseData || !baseStructure) return null;
 
-  const cityKey = `${baseData.city}-${baseData.lat}-${baseData.long}`;
+  const legendComparisonColor =
+    sunshineData && comparisonSunshineData ? CITY2_PRIMARY_COLOR : null;
 
   return (
     <RechartsLineGraph
       data={combined}
-      cityKey={cityKey}
       xAxisDataKey="month"
       lines={lines}
       areas={areas}
       referenceLines={referenceLines}
-      showLegend={false}
       yTickFormatter={(v) => `${v}h`}
       yAxisOrientation="left"
       margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
-      overlay={<SunshineLegend />}
+      overlay={
+        <SunshineLegend
+          mainColor={CITY1_PRIMARY_COLOR}
+          comparisonColor={legendComparisonColor}
+        />
+      }
       onHover={handleHover}
       renderTooltipExtras={renderTooltipExtras}
     />

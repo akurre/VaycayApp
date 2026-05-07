@@ -10,12 +10,18 @@ import useWeeklyWeatherForCity from '@/api/dates/useWeeklyWeatherForCity';
 import DataChartTabs from './DataChartTabs';
 import { extractMonthFromDate } from '@/utils/dateFormatting/extractMonthFromDate';
 import { extractMonthDay } from '@/utils/dateFormatting/extractMonthDay';
+import { dateToWeekOfYear } from '@/utils/dateFormatting/dateToWeekOfYear';
 import { isWeatherData } from '@/utils/typeGuards';
 import ComparisonCitySelector from './ComparisonCitySelector';
 import type { SearchCitiesResult } from '@/types/userLocationType';
 import { appColors } from '@/theme';
-import RibbonShell from './Ribbon/RibbonShell';
+import RibbonShell, {
+  type TodayValuesByTab,
+} from './Ribbon/RibbonShell';
 import { useRibbonStats } from './hooks/useRibbonStats';
+import { getSunshinePercent } from '@/utils/dataFormatting/getSunshinePercent';
+import { normalizeWeekPrecip } from '@/utils/dataFormatting/normalizeWeekPrecip';
+import { normalizeRainyDays } from '@/utils/dataFormatting/normalizeRainyDays';
 
 const CityPopup = ({
   city,
@@ -29,11 +35,8 @@ const CityPopup = ({
   const [comparisonCity, setComparisonCity] =
     useState<SearchCitiesResult | null>(null);
 
-  const hasWeatherData = city && isWeatherData(city);
-  const hasSunshineData = city && !isWeatherData(city);
-
-  const cityAsWeather = hasWeatherData ? city : null;
-  const cityAsSunshine = hasSunshineData ? city : null;
+  const cityAsWeather = city && isWeatherData(city) ? city : null;
+  const cityAsSunshine = city && !isWeatherData(city) ? city : null;
 
   const monthToUse =
     selectedMonth ??
@@ -61,7 +64,7 @@ const CityPopup = ({
   });
 
   const shouldFetchSunshine =
-    !hasSunshineData && monthToUse >= 1 && monthToUse <= 12;
+    !cityAsSunshine && monthToUse >= 1 && monthToUse <= 12;
 
   const { sunshineData, sunshineLoading, sunshineError } =
     useSunshineDataForCity({
@@ -125,7 +128,7 @@ const CityPopup = ({
             country: city.country ?? null,
           }
         : undefined,
-    [city?.city, city?.state, city?.country]
+    [city]
   );
 
   const stats = useRibbonStats({
@@ -143,6 +146,53 @@ const CityPopup = ({
     comparisonWeeklyWeatherData,
   });
 
+  // Per-tab "today" values for the readout. Each tab needs a value at the
+  // grain it can actually display: temperature is daily, sunshine is monthly,
+  // precip is weekly (matching the chart's normalized 7-day mm).
+  const todayValuesByTab = useMemo<TodayValuesByTab>(() => {
+    const selectedWeek = dateToWeekOfYear(dateToUse);
+    const findWeek = (data: typeof weeklyWeatherData) =>
+      selectedWeek === null
+        ? null
+        : (data?.weeklyData.find((w) => w.week === selectedWeek) ?? null);
+
+    return {
+      [DataType.Temperature]: {
+        c1: displayWeatherData?.avgTemperature ?? null,
+        c2: comparisonWeatherData?.avgTemperature ?? null,
+      },
+      [DataType.Sunshine]: {
+        c1: getSunshinePercent(displaySunshineData, monthToUse, city?.lat),
+        c2: getSunshinePercent(
+          comparisonSunshineData,
+          monthToUse,
+          comparisonCity?.lat
+        ),
+      },
+      [DataType.Precip]: (() => {
+        const w1 = findWeek(weeklyWeatherData);
+        const w2 = findWeek(comparisonWeeklyWeatherData);
+        return {
+          c1: normalizeWeekPrecip(w1),
+          c2: normalizeWeekPrecip(w2),
+          subC1: normalizeRainyDays(w1),
+          subC2: normalizeRainyDays(w2),
+        };
+      })(),
+    };
+  }, [
+    dateToUse,
+    monthToUse,
+    city?.lat,
+    comparisonCity?.lat,
+    displayWeatherData,
+    comparisonWeatherData,
+    displaySunshineData,
+    comparisonSunshineData,
+    weeklyWeatherData,
+    comparisonWeeklyWeatherData,
+  ]);
+
   if (!city) return null;
 
   let cityAndCountry = city.city ? toTitleCase(city.city) : 'Unknown City';
@@ -154,9 +204,6 @@ const CityPopup = ({
   if (city.country) {
     cityAndCountry += `, ${city.country}`;
   }
-
-  const todayC1 = displayWeatherData?.avgTemperature ?? null;
-  const todayC2 = comparisonWeatherData?.avgTemperature ?? null;
 
   return (
     <div
@@ -181,8 +228,7 @@ const CityPopup = ({
         baseCityLat={city.lat ?? null}
         comparisonCity={comparisonCity}
         initialTab={dataType}
-        todayC1={todayC1}
-        todayC2={todayC2}
+        todayValuesByTab={todayValuesByTab}
         selectedDate={dateToUse}
         stats={stats}
         comparisonNode={

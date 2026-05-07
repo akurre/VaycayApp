@@ -1,6 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@/test-utils';
-import RibbonShell from '@/components/CityPopup/Ribbon/RibbonShell';
+import RibbonShell, {
+  type TodayValuesByTab,
+} from '@/components/CityPopup/Ribbon/RibbonShell';
 import { DataType } from '@/types/mapTypes';
 import type { RibbonStat } from '@/types/cityPopupTypes';
 import type { SearchCitiesResult } from '@/types/userLocationType';
@@ -13,13 +15,21 @@ const STATS: RibbonStat[] = [
   { label: 'Population', v1: '3.5M', v2: '—' },
 ];
 
+const buildTodayValues = (
+  overrides: Partial<TodayValuesByTab> = {}
+): TodayValuesByTab => ({
+  [DataType.Temperature]: { c1: 12.9, c2: null },
+  [DataType.Sunshine]: { c1: null, c2: null },
+  [DataType.Precip]: { c1: null, c2: null },
+  ...overrides,
+});
+
 const baseProps = {
   baseCityName: 'Berlin',
   baseCityLat: 52.5,
   comparisonCity: null,
   initialTab: DataType.Temperature,
-  todayC1: 12.9,
-  todayC2: null,
+  todayValuesByTab: buildTodayValues(),
   selectedDate: '2026-05-06',
   stats: STATS,
   renderChart: () => <div data-testid="chart-slot">chart</div>,
@@ -45,6 +55,27 @@ describe('RibbonShell', () => {
       'aria-pressed',
       'true'
     );
+  });
+
+  it('shows the per-tab today value after switching tabs (sunshine → % sun, precip → mm + rainy days)', () => {
+    render(
+      <RibbonShell
+        {...baseProps}
+        todayValuesByTab={buildTodayValues({
+          [DataType.Sunshine]: { c1: 42.7, c2: null },
+          [DataType.Precip]: { c1: 18, c2: null, subC1: 3, subC2: null },
+        })}
+      />
+    );
+
+    expect(screen.getByText('12.9°C')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /sun/i }));
+    expect(screen.getByText('43% sun')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /precip/i }));
+    expect(screen.getByText('18mm')).toBeInTheDocument();
+    expect(screen.getByText('3 rainy days')).toBeInTheDocument();
   });
 
   it('forwards a stable onHover into renderChart and updates the readout when called', () => {
@@ -73,8 +104,6 @@ describe('RibbonShell', () => {
     fireEvent.click(screen.getByTestId('emit-hover'));
     expect(screen.getByText('Week 22')).toBeInTheDocument();
     expect(screen.getByText('14.0°C')).toBeInTheDocument();
-    // onHover identity should be stable across renders (useCallback) — verify by
-    // capturing first arg from first render and comparing to subsequent render
     const firstHoverFn = renderChart.mock.calls[0][1];
     const lastHoverFn =
       renderChart.mock.calls[renderChart.mock.calls.length - 1][1];
@@ -96,7 +125,9 @@ describe('RibbonShell', () => {
         {...baseProps}
         comparisonCity={comparisonCity}
         comparisonNode={<div>Birmingham, UK</div>}
-        todayC2={17.6}
+        todayValuesByTab={buildTodayValues({
+          [DataType.Temperature]: { c1: 12.9, c2: 17.6 },
+        })}
       />
     );
     expect(screen.getByText(/Birmingham/)).toBeInTheDocument();

@@ -1,15 +1,12 @@
 import { useMemo } from 'react';
 import { generateTheoreticalMaxSunshineData } from '@/utils/dataFormatting/generateTheoreticalMaxSunshineData';
 import { formatSunshinePercentage } from '@/utils/dataFormatting/formatSunshinePercentage';
-import { EM_DASH_PLACEHOLDER } from '@/const';
+import { formatHours } from '@/utils/dataFormatting/formatHours';
 
 interface SunStatValueProps {
   averageMonthlyHours: number | null;
   latitude: number | null;
 }
-
-const formatHours = (n: number | null): string =>
-  n === null ? EM_DASH_PLACEHOLDER : `${n.toFixed(0)}h`;
 
 /**
  * Stacked "Sun / yr" value: average monthly sunshine hours on top, share of
@@ -17,7 +14,7 @@ const formatHours = (n: number | null): string =>
  * latitude or hours are missing.
  */
 const SunStatValue = ({ averageMonthlyHours, latitude }: SunStatValueProps) => {
-  const hoursLabel = formatHours(averageMonthlyHours);
+  const hoursLabel = formatHours(averageMonthlyHours, 0);
 
   const avgMaxMonthlyHours = useMemo(() => {
     if (latitude === null) return null;

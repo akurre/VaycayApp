@@ -9,13 +9,24 @@ import IconTabs from './IconTabs';
 import MonthLabels from './MonthLabels';
 import StatStack from './StatStack';
 
+export interface TodayValuePair {
+  c1: number | null;
+  c2: number | null;
+  // Tab-specific secondary value that renders below the headline (e.g. rainy
+  // days under the weekly mm). Only present for tabs that have a sub-line;
+  // null/undefined means "no sub-line".
+  subC1?: number | null;
+  subC2?: number | null;
+}
+
+export type TodayValuesByTab = Readonly<Record<DataType, TodayValuePair>>;
+
 interface RibbonShellProps {
   baseCityName: string;
   baseCityLat: number | null;
   comparisonCity: SearchCitiesResult | null;
   initialTab: DataType;
-  todayC1: number | null;
-  todayC2: number | null;
+  todayValuesByTab: TodayValuesByTab;
   selectedDate: string;
   stats: ReadonlyArray<RibbonStat>;
   comparisonNode?: ReactNode;
@@ -30,8 +41,7 @@ const RibbonShell = ({
   baseCityLat,
   comparisonCity,
   initialTab,
-  todayC1,
-  todayC2,
+  todayValuesByTab,
   selectedDate,
   stats,
   comparisonNode,
@@ -41,6 +51,12 @@ const RibbonShell = ({
   const [hover, setHover] = useState<RibbonHoverPayload | null>(null);
 
   const hasComparison = !!comparisonCity;
+  const {
+    c1: todayC1,
+    c2: todayC2,
+    subC1: todaySubC1,
+    subC2: todaySubC2,
+  } = todayValuesByTab[tab];
 
   const handleHover = useCallback((payload: RibbonHoverPayload | null) => {
     setHover(payload);
@@ -62,6 +78,8 @@ const RibbonShell = ({
             tab={tab}
             c1Value={todayC1}
             c2Value={todayC2}
+            subC1Value={todaySubC1 ?? null}
+            subC2Value={todaySubC2 ?? null}
             hasComparison={hasComparison}
             selectedDate={selectedDate}
             hover={hover}

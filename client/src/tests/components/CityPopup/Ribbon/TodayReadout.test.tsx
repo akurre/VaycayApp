@@ -16,6 +16,8 @@ describe('TodayReadout', () => {
           tab={DataType.Temperature}
           c1Value={12.9}
           c2Value={null}
+          subC1Value={null}
+          subC2Value={null}
           hasComparison={false}
           selectedDate="2026-05-06"
           hover={null}
@@ -25,19 +27,21 @@ describe('TodayReadout', () => {
       expect(screen.getByText('12.9°C')).toBeInTheDocument();
     });
 
-    it('formats sunshine values to one decimal place with an h suffix', () => {
+    it('formats sunshine values as a "% sun" headline (rounded)', () => {
       render(
         <TodayReadout
           tab={DataType.Sunshine}
-          c1Value={15.1}
+          c1Value={42.7}
           c2Value={null}
+          subC1Value={null}
+          subC2Value={null}
           hasComparison={false}
           selectedDate="2026-05-06"
           hover={null}
         />
       );
 
-      expect(screen.getByText('15.1h')).toBeInTheDocument();
+      expect(screen.getByText('43% sun')).toBeInTheDocument();
     });
 
     it('rounds precip values to the nearest mm', () => {
@@ -46,6 +50,8 @@ describe('TodayReadout', () => {
           tab={DataType.Precip}
           c1Value={40.4}
           c2Value={null}
+          subC1Value={null}
+          subC2Value={null}
           hasComparison={false}
           selectedDate="2026-05-06"
           hover={null}
@@ -53,6 +59,114 @@ describe('TodayReadout', () => {
       );
 
       expect(screen.getByText('40mm')).toBeInTheDocument();
+    });
+
+    it('renders a "X rainy days" sub-line under the precip headline', () => {
+      render(
+        <TodayReadout
+          tab={DataType.Precip}
+          c1Value={12}
+          c2Value={null}
+          subC1Value={3}
+          subC2Value={null}
+          hasComparison={false}
+          selectedDate="2026-05-06"
+          hover={null}
+        />
+      );
+
+      expect(screen.getByText('12mm')).toBeInTheDocument();
+      expect(screen.getByText('3 rainy days')).toBeInTheDocument();
+    });
+
+    it('uses the singular "1 rainy day" form when only one day rained', () => {
+      render(
+        <TodayReadout
+          tab={DataType.Precip}
+          c1Value={4}
+          c2Value={null}
+          subC1Value={1}
+          subC2Value={null}
+          hasComparison={false}
+          selectedDate="2026-05-06"
+          hover={null}
+        />
+      );
+
+      expect(screen.getByText('1 rainy day')).toBeInTheDocument();
+    });
+
+    it('does not render a sub-line for tabs without one (sunshine static)', () => {
+      render(
+        <TodayReadout
+          tab={DataType.Sunshine}
+          c1Value={42}
+          c2Value={null}
+          subC1Value={5}
+          subC2Value={null}
+          hasComparison={false}
+          selectedDate="2026-05-06"
+          hover={null}
+        />
+      );
+
+      expect(screen.queryByText('5')).not.toBeInTheDocument();
+      expect(screen.queryByText(/rainy day/)).not.toBeInTheDocument();
+    });
+  });
+
+  describe('label prefix per tab', () => {
+    it('uses "On this day" for the temperature tab', () => {
+      render(
+        <TodayReadout
+          tab={DataType.Temperature}
+          c1Value={12.9}
+          c2Value={null}
+          subC1Value={null}
+          subC2Value={null}
+          hasComparison={false}
+          selectedDate="2026-05-06"
+          hover={null}
+        />
+      );
+
+      expect(screen.getByText(/On this day · May 6/)).toBeInTheDocument();
+    });
+
+    it('uses "In this month" + "daylight" suffix for the sunshine tab', () => {
+      render(
+        <TodayReadout
+          tab={DataType.Sunshine}
+          c1Value={42}
+          c2Value={null}
+          subC1Value={null}
+          subC2Value={null}
+          hasComparison={false}
+          selectedDate="2026-05-06"
+          hover={null}
+        />
+      );
+
+      expect(
+        screen.getByText('In this month · May 6 · daylight')
+      ).toBeInTheDocument();
+    });
+
+    it('uses "In this week" for the precip tab', () => {
+      render(
+        <TodayReadout
+          tab={DataType.Precip}
+          c1Value={12}
+          c2Value={null}
+          subC1Value={null}
+          subC2Value={null}
+          hasComparison={false}
+          selectedDate="2026-05-06"
+          hover={null}
+        />
+      );
+
+      expect(screen.getByText('In this week · May 6')).toBeInTheDocument();
     });
   });
 
@@ -63,6 +177,8 @@ describe('TodayReadout', () => {
           tab={DataType.Temperature}
           c1Value={null}
           c2Value={null}
+          subC1Value={null}
+          subC2Value={null}
           hasComparison={false}
           selectedDate="2026-05-06"
           hover={null}
@@ -80,6 +196,8 @@ describe('TodayReadout', () => {
           tab={DataType.Temperature}
           c1Value={12.9}
           c2Value={17.6}
+          subC1Value={null}
+          subC2Value={null}
           hasComparison={true}
           selectedDate="2026-05-06"
           hover={null}
@@ -96,6 +214,8 @@ describe('TodayReadout', () => {
           tab={DataType.Temperature}
           c1Value={12.9}
           c2Value={17.6}
+          subC1Value={null}
+          subC2Value={null}
           hasComparison={false}
           selectedDate="2026-05-06"
           hover={null}
@@ -104,6 +224,24 @@ describe('TodayReadout', () => {
 
       expect(screen.queryByText('17.6°C')).not.toBeInTheDocument();
     });
+
+    it('renders both rainy-day sub-lines in precip comparison mode', () => {
+      render(
+        <TodayReadout
+          tab={DataType.Precip}
+          c1Value={12}
+          c2Value={4}
+          subC1Value={3}
+          subC2Value={1}
+          hasComparison={true}
+          selectedDate="2026-05-06"
+          hover={null}
+        />
+      );
+
+      expect(screen.getByText('3 rainy days')).toBeInTheDocument();
+      expect(screen.getByText('1 rainy day')).toBeInTheDocument();
+    });
   });
 
   describe('hover override', () => {
@@ -111,38 +249,23 @@ describe('TodayReadout', () => {
       render(
         <TodayReadout
           tab={DataType.Sunshine}
-          c1Value={15.1}
-          c2Value={9.0}
+          c1Value={42}
+          c2Value={31}
+          subC1Value={null}
+          subC2Value={null}
           hasComparison={true}
           selectedDate="2026-05-06"
           hover={{
-            label: 'Week 22',
-            v1: '14.0h',
-            v2: '8.5h',
+            label: 'May',
+            v1: '43% sun',
+            v2: '28% sun',
           }}
         />
       );
 
-      expect(screen.getByText('Week 22 · daylight')).toBeInTheDocument();
-      expect(screen.getByText('14.0h')).toBeInTheDocument();
-      expect(screen.getByText('8.5h')).toBeInTheDocument();
-      // not the today values
-      expect(screen.queryByText('15.1h')).not.toBeInTheDocument();
-    });
-
-    it('appends the per-tab valueLabel when present (sunshine → daylight)', () => {
-      render(
-        <TodayReadout
-          tab={DataType.Sunshine}
-          c1Value={15.1}
-          c2Value={null}
-          hasComparison={false}
-          selectedDate="2026-05-06"
-          hover={null}
-        />
-      );
-
-      expect(screen.getByText(/daylight/)).toBeInTheDocument();
+      expect(screen.getByText('May · daylight')).toBeInTheDocument();
+      expect(screen.getByText('43% sun')).toBeInTheDocument();
+      expect(screen.getByText('28% sun')).toBeInTheDocument();
     });
 
     it('does not append a valueLabel for tabs without one (temperature)', () => {
@@ -151,6 +274,8 @@ describe('TodayReadout', () => {
           tab={DataType.Temperature}
           c1Value={12.9}
           c2Value={null}
+          subC1Value={null}
+          subC2Value={null}
           hasComparison={false}
           selectedDate="2026-05-06"
           hover={null}
@@ -161,48 +286,28 @@ describe('TodayReadout', () => {
     });
   });
 
-  describe('sub values (sunshine percentage)', () => {
+  describe('hover sub values', () => {
     it('renders subV1 stacked under v1 when provided', () => {
       render(
         <TodayReadout
           tab={DataType.Sunshine}
           c1Value={null}
           c2Value={null}
+          subC1Value={null}
+          subC2Value={null}
           hasComparison={false}
           selectedDate="2026-05-06"
           hover={{
             label: 'Jul',
-            v1: '14.0h',
+            v1: '32% sun',
             v2: null,
-            subV1: '32% sun',
-          }}
-        />
-      );
-
-      expect(screen.getByText('14.0h')).toBeInTheDocument();
-      expect(screen.getByText('32% sun')).toBeInTheDocument();
-    });
-
-    it('renders subV2 only when hasComparison is true', () => {
-      render(
-        <TodayReadout
-          tab={DataType.Sunshine}
-          c1Value={null}
-          c2Value={null}
-          hasComparison={true}
-          selectedDate="2026-05-06"
-          hover={{
-            label: 'Jul',
-            v1: '14.0h',
-            v2: '8.5h',
-            subV1: '32% sun',
-            subV2: '28% sun',
+            subV1: '187h',
           }}
         />
       );
 
       expect(screen.getByText('32% sun')).toBeInTheDocument();
-      expect(screen.getByText('28% sun')).toBeInTheDocument();
+      expect(screen.getByText('187h')).toBeInTheDocument();
     });
 
     it('hides subV2 when hasComparison is false even if provided', () => {
@@ -211,39 +316,22 @@ describe('TodayReadout', () => {
           tab={DataType.Sunshine}
           c1Value={null}
           c2Value={null}
+          subC1Value={null}
+          subC2Value={null}
           hasComparison={false}
           selectedDate="2026-05-06"
           hover={{
             label: 'Jul',
-            v1: '14.0h',
-            v2: '8.5h',
-            subV1: '32% sun',
-            subV2: '28% sun',
+            v1: '32% sun',
+            v2: '28% sun',
+            subV1: '187h',
+            subV2: '160h',
           }}
         />
       );
 
-      expect(screen.getByText('32% sun')).toBeInTheDocument();
-      expect(screen.queryByText('28% sun')).not.toBeInTheDocument();
-    });
-
-    it('does not render a sub line when subV1/subV2 are absent', () => {
-      render(
-        <TodayReadout
-          tab={DataType.Sunshine}
-          c1Value={null}
-          c2Value={null}
-          hasComparison={true}
-          selectedDate="2026-05-06"
-          hover={{
-            label: 'Jul',
-            v1: '14.0h',
-            v2: '8.5h',
-          }}
-        />
-      );
-
-      expect(screen.queryByText(/% sun/)).not.toBeInTheDocument();
+      expect(screen.getByText('187h')).toBeInTheDocument();
+      expect(screen.queryByText('160h')).not.toBeInTheDocument();
     });
   });
 });

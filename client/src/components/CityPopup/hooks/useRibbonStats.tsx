@@ -8,6 +8,7 @@ import { useAppStore } from '@/stores/useAppStore';
 import { formatTemperature } from '@/utils/tempFormatting/formatTemperature';
 import { calculateDistance } from '@/utils/location/calculateDistance';
 import { formatDistance } from '@/utils/location/formatDistance';
+import { formatMm } from '@/utils/dataFormatting/formatMm';
 import { EM_DASH_PLACEHOLDER } from '@/const';
 import SunStatValue from '../Ribbon/SunStatValue';
 import { useSunshineAndRainfallData } from './useSunshineAndRainfallData';
@@ -43,9 +44,6 @@ const formatTempRange = (
   if (minLabel === null || maxLabel === null) return EM_DASH_PLACEHOLDER;
   return `${minLabel}–${maxLabel}`;
 };
-
-const formatMm = (n: number | null): string =>
-  n === null ? EM_DASH_PLACEHOLDER : `${n.toFixed(0)}mm`;
 
 const formatDistanceFromHome = (
   homeLat: number | null,

@@ -14,6 +14,10 @@ import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
 import type { RibbonHoverPayload } from '@/types/cityPopupTypes';
 import { useChartColors } from '@/hooks/useChartColors';
 import { dateToWeekOfYear } from '@/utils/dateFormatting/dateToWeekOfYear';
+import { normalizeWeekPrecip } from '@/utils/dataFormatting/normalizeWeekPrecip';
+import { normalizeRainyDays } from '@/utils/dataFormatting/normalizeRainyDays';
+import { formatMm } from '@/utils/dataFormatting/formatMm';
+import { formatRainyDays } from '@/utils/dataFormatting/formatRainyDays';
 import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
 import RainfallGraphTooltip from './RainfallGraphTooltip';
 
@@ -37,21 +41,14 @@ const RainfallGraph = ({
   );
 
   const { chartData, hasMainData, hasCompData } = useMemo(() => {
-    const normalize = (w: {
-      totalPrecip: number | null;
-      daysWithData: number;
-    }) =>
-      w.totalPrecip !== null && w.daysWithData > 0
-        ? (w.totalPrecip / w.daysWithData) * 7
-        : null;
-
     const mainData = weeklyWeatherData
       ? weeklyWeatherData.weeklyData
           .filter((w) => w.totalPrecip !== null || w.avgPrecip !== null)
           .map((w) => ({
             week: w.week,
-            totalPrecip: normalize(w),
+            totalPrecip: normalizeWeekPrecip(w),
             avgPrecip: w.avgPrecip,
+            daysWithRain: normalizeRainyDays(w),
           }))
       : [];
 
@@ -60,8 +57,9 @@ const RainfallGraph = ({
           .filter((w) => w.totalPrecip !== null || w.avgPrecip !== null)
           .map((w) => ({
             week: w.week,
-            totalPrecip: normalize(w),
+            totalPrecip: normalizeWeekPrecip(w),
             avgPrecip: w.avgPrecip,
+            daysWithRain: normalizeRainyDays(w),
           }))
       : [];
 
@@ -75,6 +73,7 @@ const RainfallGraph = ({
           ...b,
           compTotalPrecip: c?.totalPrecip ?? null,
           compAvgPrecip: c?.avgPrecip ?? null,
+          compDaysWithRain: c?.daysWithRain ?? null,
         };
       });
     } else if (mainData.length === 0 && compData.length > 0) {
@@ -82,6 +81,7 @@ const RainfallGraph = ({
         week: w.week,
         compTotalPrecip: w.totalPrecip,
         compAvgPrecip: w.avgPrecip,
+        compDaysWithRain: w.daysWithRain,
       }));
     } else {
       finalChartData = baseStructure;
@@ -112,10 +112,18 @@ const RainfallGraph = ({
       const c1 = 'totalPrecip' in point ? (point.totalPrecip ?? null) : null;
       const c2 =
         'compTotalPrecip' in point ? (point.compTotalPrecip ?? null) : null;
+      const days1 =
+        'daysWithRain' in point ? (point.daysWithRain ?? null) : null;
+      const days2 =
+        'compDaysWithRain' in point
+          ? (point.compDaysWithRain ?? null)
+          : null;
       onHover({
         label: `Week ${point.week}`,
-        v1: c1 === null ? null : `${Math.round(c1)}mm`,
-        v2: c2 === null ? null : `${Math.round(c2)}mm`,
+        v1: c1 === null ? null : formatMm(c1),
+        v2: c2 === null ? null : formatMm(c2),
+        subV1: formatRainyDays(days1),
+        subV2: formatRainyDays(days2),
       });
     },
     [chartData, onHover]

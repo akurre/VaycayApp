@@ -26,14 +26,11 @@ describe('RechartsLineGraph', () => {
     const { container } = render(
       <RechartsLineGraph
         data={mockData}
-        cityKey="test-city"
         xAxisDataKey="month"
-        yAxisLabel="Value"
         lines={basicLines}
       />
     );
 
-    // should render the responsive container
     expect(
       container.querySelector('.recharts-responsive-container')
     ).toBeInTheDocument();
@@ -43,33 +40,12 @@ describe('RechartsLineGraph', () => {
     const { container } = render(
       <RechartsLineGraph
         data={mockData}
-        cityKey="test-city"
         xAxisDataKey="month"
-        yAxisLabel="Value"
         lines={basicLines}
         margin={{ top: 10, right: 20, bottom: 10, left: 0 }}
       />
     );
 
-    // should render the component
-    expect(
-      container.querySelector('.recharts-responsive-container')
-    ).toBeInTheDocument();
-  });
-
-  it('renders with x-axis label when provided', () => {
-    const { container } = render(
-      <RechartsLineGraph
-        data={mockData}
-        cityKey="test-city"
-        xAxisDataKey="month"
-        xAxisLabel="Months"
-        yAxisLabel="Value"
-        lines={basicLines}
-      />
-    );
-
-    // should render the component
     expect(
       container.querySelector('.recharts-responsive-container')
     ).toBeInTheDocument();
@@ -92,32 +68,11 @@ describe('RechartsLineGraph', () => {
     const { container } = render(
       <RechartsLineGraph
         data={mockData}
-        cityKey="test-city"
         xAxisDataKey="month"
-        yAxisLabel="Value"
         lines={multipleLines}
       />
     );
 
-    // should render the component
-    expect(
-      container.querySelector('.recharts-responsive-container')
-    ).toBeInTheDocument();
-  });
-
-  it('renders without legend when showLegend is false', () => {
-    const { container } = render(
-      <RechartsLineGraph
-        data={mockData}
-        cityKey="test-city"
-        xAxisDataKey="month"
-        yAxisLabel="Value"
-        lines={basicLines}
-        showLegend={false}
-      />
-    );
-
-    // should render the component
     expect(
       container.querySelector('.recharts-responsive-container')
     ).toBeInTheDocument();
@@ -135,15 +90,12 @@ describe('RechartsLineGraph', () => {
     const { container } = render(
       <RechartsLineGraph
         data={mockData}
-        cityKey="test-city"
         xAxisDataKey="month"
-        yAxisLabel="Value"
         lines={basicLines}
         referenceLines={referenceLines}
       />
     );
 
-    // should render the component
     expect(
       container.querySelector('.recharts-responsive-container')
     ).toBeInTheDocument();
@@ -153,24 +105,6 @@ describe('RechartsLineGraph', () => {
     const { container } = render(
       <RechartsLineGraph
         data={[]}
-        cityKey="test-city"
-        xAxisDataKey="month"
-        yAxisLabel="Value"
-        lines={basicLines}
-      />
-    );
-
-    // should still render the component
-    expect(
-      container.querySelector('.recharts-responsive-container')
-    ).toBeInTheDocument();
-  });
-
-  it('renders without a yAxisLabel (now optional)', () => {
-    const { container } = render(
-      <RechartsLineGraph
-        data={mockData}
-        cityKey="test-city"
         xAxisDataKey="month"
         lines={basicLines}
       />
@@ -186,7 +120,6 @@ describe('RechartsLineGraph', () => {
     const { container } = render(
       <RechartsLineGraph
         data={mockData}
-        cityKey="test-city"
         xAxisDataKey="month"
         lines={basicLines}
         onHover={onHover}
@@ -220,14 +153,11 @@ describe('RechartsLineGraph', () => {
     const { container } = render(
       <RechartsLineGraph
         data={mockData}
-        cityKey="test-city"
         xAxisDataKey="month"
-        yAxisLabel="Value"
         lines={complexLines}
       />
     );
 
-    // should render the component
     expect(
       container.querySelector('.recharts-responsive-container')
     ).toBeInTheDocument();

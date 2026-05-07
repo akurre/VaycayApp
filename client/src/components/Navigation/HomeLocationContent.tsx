@@ -51,7 +51,7 @@ const HomeLocationContent = () => {
         leftSection={<IconMapPin size={16} />}
         variant="light"
         fullWidth
-        color={secondaryOceanShades[2]}
+        color={secondaryOceanShades[3]}
         size="xs"
         loading={isGeoLoading}
         className="mb-3"
