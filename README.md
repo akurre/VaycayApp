@@ -393,4 +393,4 @@ This project is licensed under "n" (as specified in pyproject.toml).
 
 Ashlen Kurre
 # trigger deploy Thu May  7 17:26:16 CEST 2026
-# trigger deploy Thu May  7 17:30:58 CEST 2026
+
