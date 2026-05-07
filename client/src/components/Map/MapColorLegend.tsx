@@ -41,9 +41,9 @@ const MapColorLegend: FC<MapColorLegendProps> = ({ dataType }) => {
       const threshold = SUNSHINE_THRESHOLDS[index];
       const nextThreshold = SUNSHINE_THRESHOLDS[index + 1];
       if (nextThreshold) {
-        return `${threshold.hours}-${nextThreshold.hours}h`;
+        return `${threshold.percent}-${nextThreshold.percent}%`;
       }
-      return `${threshold.hours}h+`;
+      return `${threshold.percent}%+`;
     } else {
       const threshold = TEMP_THRESHOLDS[index];
       const nextThreshold = TEMP_THRESHOLDS[index + 1];
@@ -110,7 +110,7 @@ const MapColorLegend: FC<MapColorLegendProps> = ({ dataType }) => {
           {displayedIndices.map((index) => {
             const threshold = thresholds[index];
             const keyValue =
-              'temp' in threshold ? threshold.temp : threshold.hours;
+              'temp' in threshold ? threshold.temp : threshold.percent;
 
             return (
               <Group key={keyValue} gap="xs" wrap="nowrap">

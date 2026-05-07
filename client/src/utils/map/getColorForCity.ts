@@ -3,6 +3,7 @@ import { MONTH_FIELDS } from '@/const';
 import { DataType } from '@/types/mapTypes';
 import type { ValidMarkerData } from '@/types/cityWeatherDataType';
 import type { ValidSunshineMarkerData } from '@/utils/typeGuards';
+import { calculateTheoreticalMaxSunshine } from '@/utils/dataFormatting/calculateTheoreticalMaxSunshine';
 import { getMarkerColor } from './getMarkerColor';
 import getSunshineMarkerColor from './getSunshineMarkerColor';
 
@@ -11,7 +12,9 @@ import getSunshineMarkerColor from './getSunshineMarkerColor';
  * This is a shared utility to avoid duplication across useColorCache and useHomeLocationLayers.
  *
  * For temperature data, the selectedMonth parameter is optional and unused.
- * For sunshine data, selectedMonth is required to determine which month's data to use.
+ * For sunshine data, selectedMonth is required to determine which month's data
+ * to use; the city's latitude is used to convert raw monthly hours into a
+ * percent-of-theoretical-max so high-latitude cities aren't favored in summer.
  *
  * @param city - The city data with valid coordinates and data values
  * @param dataType - Whether to show temperature or sunshine data
@@ -24,21 +27,21 @@ export function getColorForCity(
   selectedMonth?: number
 ): ColorCacheEntry {
   if (dataType === DataType.Temperature) {
-    // Temperature data: avgTemperature is guaranteed non-null via ValidMarkerData type
     const weatherCity = city as ValidMarkerData;
     const [r, g, b] = getMarkerColor(weatherCity.avgTemperature);
     return [r, g, b, 255];
   }
 
   if (dataType === DataType.Sunshine) {
-    // Sunshine data: month field value is guaranteed non-null via ValidSunshineMarkerData type
     const sunshineCity = city as ValidSunshineMarkerData;
-    const monthField = MONTH_FIELDS[selectedMonth ?? 1];
+    const month = selectedMonth ?? 1;
+    const monthField = MONTH_FIELDS[month];
     const sunshineHours = sunshineCity[monthField] as number;
-    const [r, g, b] = getSunshineMarkerColor(sunshineHours);
+    const max = calculateTheoreticalMaxSunshine(sunshineCity.lat, month);
+    const percent = max > 0 ? (sunshineHours / max) * 100 : 0;
+    const [r, g, b] = getSunshineMarkerColor(percent);
     return [r, g, b, 255];
   }
 
-  // Fallback: white color (should never happen with typed inputs)
   return [255, 255, 255, 255];
 }

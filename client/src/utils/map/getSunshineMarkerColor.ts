@@ -1,46 +1,39 @@
 import { SUNSHINE_THRESHOLDS } from '@/const';
 
-/**
- * Determines the color for a marker based on sunshine hours
- * Uses a gradient scale defined in constants
- */
+// Maps a sunshine percent (0-100, actual hours / theoretical max for that
+// lat+month) to an RGB color via the SUNSHINE_THRESHOLDS gradient. Returns
+// gray for null. Caller is expected to have already lat-corrected the input —
+// passing raw monthly hours here will misrepresent high-latitude cities.
 const getSunshineMarkerColor = (
-  sunshineHours: number | null
+  sunshinePercent: number | null
 ): [number, number, number] => {
-  if (sunshineHours === null) {
-    // Default color for null values (gray)
+  if (sunshinePercent === null) {
     return [150, 150, 150];
   }
 
-  // Handle values below the first threshold
-  if (sunshineHours < SUNSHINE_THRESHOLDS[0].hours) {
-    // Use the first threshold color for values below the first threshold
+  if (sunshinePercent < SUNSHINE_THRESHOLDS[0].percent) {
     return [...SUNSHINE_THRESHOLDS[0].color];
   }
 
-  // Handle values above the last threshold
   if (
-    sunshineHours >= SUNSHINE_THRESHOLDS[SUNSHINE_THRESHOLDS.length - 1].hours
+    sunshinePercent >=
+    SUNSHINE_THRESHOLDS[SUNSHINE_THRESHOLDS.length - 1].percent
   ) {
-    // Use the last threshold color for values above the last threshold
     return [...SUNSHINE_THRESHOLDS[SUNSHINE_THRESHOLDS.length - 1].color];
   }
 
-  // Find the appropriate color threshold
   for (let i = 1; i < SUNSHINE_THRESHOLDS.length; i++) {
     const prevThreshold = SUNSHINE_THRESHOLDS[i - 1];
     const currThreshold = SUNSHINE_THRESHOLDS[i];
 
     if (
-      sunshineHours >= prevThreshold.hours &&
-      sunshineHours < currThreshold.hours
+      sunshinePercent >= prevThreshold.percent &&
+      sunshinePercent < currThreshold.percent
     ) {
-      // Calculate interpolation factor between the two threshold colors
-      const range = currThreshold.hours - prevThreshold.hours;
+      const range = currThreshold.percent - prevThreshold.percent;
       const factor =
-        range > 0 ? (sunshineHours - prevThreshold.hours) / range : 0;
+        range > 0 ? (sunshinePercent - prevThreshold.percent) / range : 0;
 
-      // Interpolate between colors
       return [
         Math.round(
           prevThreshold.color[0] +
@@ -58,8 +51,6 @@ const getSunshineMarkerColor = (
     }
   }
 
-  // This should never happen due to the checks above, but as a fallback
-  // use the middle threshold color
   const middleIndex = Math.floor(SUNSHINE_THRESHOLDS.length / 2);
   return [...SUNSHINE_THRESHOLDS[middleIndex].color];
 };
