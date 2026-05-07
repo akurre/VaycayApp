@@ -208,9 +208,9 @@ export const theme: MantineThemeOverride = createTheme({
   defaultRadius: 'md',
 
   // Font configurations
-  fontFamily: 'Inter, system-ui, sans-serif',
-  fontFamilyMonospace: '"JetBrains Mono", Monaco, Courier, monospace',
-  headings: { fontFamily: 'Outfit, sans-serif' },
+  fontFamily: '"Inter Variable", Inter, system-ui, sans-serif',
+  fontFamilyMonospace: '"JetBrains Mono Variable", "JetBrains Mono", Monaco, Courier, monospace',
+  headings: { fontFamily: '"Outfit Variable", Outfit, sans-serif' },
 
   // Define custom colors as proper Mantine color arrays
   colors: {

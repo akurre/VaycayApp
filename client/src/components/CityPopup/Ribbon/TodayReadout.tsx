@@ -59,14 +59,14 @@ const TodayReadout = ({
         <div className="flex flex-col items-end">
           <span
             style={{ color: CITY1_PRIMARY_COLOR }}
-            className="text-[24px] font-bold font-[Outfit] tabular-nums leading-none"
+            className="text-[24px] font-bold font-[Outfit_Variable] tabular-nums leading-none"
           >
             {v1 ?? EM_DASH_PLACEHOLDER}
           </span>
           {subV1 && (
             <span
               style={{ color: CITY1_PRIMARY_COLOR }}
-              className="text-[10px] font-semibold font-[Outfit] tabular-nums leading-none mt-1 opacity-80"
+              className="text-[10px] font-semibold font-[Outfit_Variable] tabular-nums leading-none mt-1 opacity-80"
             >
               {subV1}
             </span>
@@ -76,14 +76,14 @@ const TodayReadout = ({
           <div className="flex flex-col items-end">
             <span
               style={{ color: CITY2_PRIMARY_COLOR }}
-              className="text-[18px] font-bold font-[Outfit] tabular-nums leading-none"
+              className="text-[18px] font-bold font-[Outfit_Variable] tabular-nums leading-none"
             >
               {v2 ?? EM_DASH_PLACEHOLDER}
             </span>
             {subV2 && (
               <span
                 style={{ color: CITY2_PRIMARY_COLOR }}
-                className="text-[10px] font-semibold font-[Outfit] tabular-nums leading-none mt-1 opacity-80"
+                className="text-[10px] font-semibold font-[Outfit_Variable] tabular-nums leading-none mt-1 opacity-80"
               >
                 {subV2}
               </span>

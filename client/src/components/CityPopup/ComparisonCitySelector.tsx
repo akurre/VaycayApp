@@ -132,7 +132,7 @@ const ComparisonCitySelector = ({
             }}
             placeholder="Compare a city…"
             aria-label="Search comparison city"
-            className="w-56 px-1 py-0.5 text-[15px] font-bold font-[Outfit] bg-transparent border-0 border-b text-[var(--mantine-color-text)] placeholder:text-[var(--mantine-color-dimmed)] placeholder:font-normal focus:outline-none"
+            className="w-56 px-1 py-0.5 text-[15px] font-bold font-[Outfit_Variable] bg-transparent border-0 border-b text-[var(--mantine-color-text)] placeholder:text-[var(--mantine-color-dimmed)] placeholder:font-normal focus:outline-none"
             style={{ borderBottomColor: CITY2_PRIMARY_COLOR }}
           />
         ) : selectedCity ? (
@@ -163,7 +163,7 @@ const ComparisonCitySelector = ({
               className="w-2.5 h-2.5 rounded-full shrink-0 opacity-60"
               style={{ background: CITY2_PRIMARY_COLOR }}
             />
-            <span className="text-[17px] font-bold font-[Outfit]">Compare</span>
+            <span className="text-[17px] font-bold font-[Outfit_Variable]">Compare</span>
             <IconPlus size={14} className="opacity-70 shrink-0" />
           </button>
         )}
