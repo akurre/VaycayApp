@@ -1,0 +1,10 @@
+name: Gate test trigger
+on:
+  push:
+    branches: [main, develop, staging]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - run: echo "gate test"
