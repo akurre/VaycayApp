@@ -7,19 +7,24 @@ import { DataType } from '@/types/mapTypes';
 import useWeatherDataForCity from '@/api/dates/useWeatherDataForCity';
 import useSunshineDataForCity from '@/api/dates/useSunshineDataForCity';
 import useWeeklyWeatherForCity from '@/api/dates/useWeeklyWeatherForCity';
-import DataChartTabs from './DataChartTabs';
+import DataChartTabs from '@/components/CityPopup/DataChartTabs';
 import { extractMonthFromDate } from '@/utils/dateFormatting/extractMonthFromDate';
 import { extractMonthDay } from '@/utils/dateFormatting/extractMonthDay';
 import { dateToWeekOfYear } from '@/utils/dateFormatting/dateToWeekOfYear';
 import { isWeatherData } from '@/utils/typeGuards';
-import ComparisonCitySelector from './ComparisonCitySelector';
+import ComparisonCitySelector from '@/components/CityPopup/ComparisonCitySelector';
 import type { SearchCitiesResult } from '@/types/userLocationType';
+import type { TodayValuesByTab } from '@/types/cityPopupTypes';
 import { appColors } from '@/theme';
-import RibbonShell, { type TodayValuesByTab } from './Ribbon/RibbonShell';
-import { useRibbonStats } from './hooks/useRibbonStats';
+import RibbonShell from '@/components/CityPopup/Ribbon/RibbonShell';
+import { useRibbonStats } from '@/components/CityPopup/hooks/useRibbonStats';
 import { getSunshinePercent } from '@/utils/dataFormatting/getSunshinePercent';
 import { normalizeWeekPrecip } from '@/utils/dataFormatting/normalizeWeekPrecip';
 import { normalizeRainyDays } from '@/utils/dataFormatting/normalizeRainyDays';
+import {
+  MONTH_MIDPOINT_DAY,
+  STATE_ABBREVIATION_MAX_LENGTH,
+} from '@/const';
 
 const CityPopup = ({
   city,
@@ -48,7 +53,9 @@ const CityPopup = ({
     if (cityAsWeather?.date && !selectedDate) {
       return cityAsWeather.date;
     }
-    return `${monthToUse.toString().padStart(2, '0')}-15`;
+    return `${monthToUse.toString().padStart(2, '0')}-${MONTH_MIDPOINT_DAY
+      .toString()
+      .padStart(2, '0')}`;
   }, [selectedDate, dataType, cityAsWeather, monthToUse]);
 
   const shouldFetchWeather = !!city && dataType === DataType.Temperature;
@@ -195,7 +202,9 @@ const CityPopup = ({
   let cityAndCountry = city.city ? toTitleCase(city.city) : 'Unknown City';
   if (city.state) {
     const state =
-      city.state.length > 8 ? city.state.substring(0, 8) + '.' : city.state;
+      city.state.length > STATE_ABBREVIATION_MAX_LENGTH
+        ? city.state.substring(0, STATE_ABBREVIATION_MAX_LENGTH) + '.'
+        : city.state;
     cityAndCountry += `, ${toTitleCase(state)}`;
   }
   if (city.country) {

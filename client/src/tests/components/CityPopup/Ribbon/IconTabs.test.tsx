@@ -37,11 +37,10 @@ describe('IconTabs', () => {
     expect(onTab).toHaveBeenCalledWith(DataType.Precip);
   });
 
-  it('does not call onTab when the same active tab is clicked is harmless', () => {
+  it('still fires onTab when the active tab is clicked (parent decides whether to no-op)', () => {
     const onTab = vi.fn();
     render(<IconTabs tab={DataType.Temperature} onTab={onTab} />);
 
-    // clicking the active tab still fires — parent decides whether to no-op
     fireEvent.click(screen.getByRole('button', { name: /temp/i }));
     expect(onTab).toHaveBeenCalledWith(DataType.Temperature);
   });

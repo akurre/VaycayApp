@@ -1,5 +1,9 @@
 import { useCallback, useState, type ReactNode } from 'react';
-import type { RibbonHoverPayload, RibbonStat } from '@/types/cityPopupTypes';
+import type {
+  RibbonHoverPayload,
+  RibbonStat,
+  TodayValuesByTab,
+} from '@/types/cityPopupTypes';
 import type { SearchCitiesResult } from '@/types/userLocationType';
 import type { DataType } from '@/types/mapTypes';
 import { RIBBON_HEADER_RIGHT_RESERVE_PX } from '@/const';
@@ -8,18 +12,6 @@ import TodayReadout from './TodayReadout';
 import IconTabs from './IconTabs';
 import MonthLabels from './MonthLabels';
 import StatStack from './StatStack';
-
-export interface TodayValuePair {
-  c1: number | null;
-  c2: number | null;
-  // Tab-specific secondary value that renders below the headline (e.g. rainy
-  // days under the weekly mm). Only present for tabs that have a sub-line;
-  // null/undefined means "no sub-line".
-  subC1?: number | null;
-  subC2?: number | null;
-}
-
-export type TodayValuesByTab = Readonly<Record<DataType, TodayValuePair>>;
 
 interface RibbonShellProps {
   baseCityName: string;

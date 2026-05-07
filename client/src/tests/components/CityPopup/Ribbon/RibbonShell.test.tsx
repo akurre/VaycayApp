@@ -1,10 +1,11 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@/test-utils';
-import RibbonShell, {
-  type TodayValuesByTab,
-} from '@/components/CityPopup/Ribbon/RibbonShell';
+import RibbonShell from '@/components/CityPopup/Ribbon/RibbonShell';
 import { DataType } from '@/types/mapTypes';
-import type { RibbonStat } from '@/types/cityPopupTypes';
+import type {
+  RibbonStat,
+  TodayValuesByTab,
+} from '@/types/cityPopupTypes';
 import type { SearchCitiesResult } from '@/types/userLocationType';
 
 const STATS: RibbonStat[] = [

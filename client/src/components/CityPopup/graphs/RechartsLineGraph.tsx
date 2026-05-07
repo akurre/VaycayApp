@@ -139,9 +139,7 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
             />
           )}
 
-          {/* Filled areas (drawn under lines). For min/max envelopes, dataKey
-              points to a tuple field on the data row — recharts renders the
-              area between the two y values natively. */}
+          {/* Filled areas (drawn under lines); tuple dataKeys render as min/max bands. */}
           {areas.map((a) => (
             <Area
               key={`area-${a.dataKey}`}
@@ -159,9 +157,7 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
             />
           ))}
 
-          {/* Hover affordance: vertical hairline + grid-laid-out value
-              popover. Areas duplicating a Line's dataKey are deduped; dashed
-              reference lines (sun ceilings) are dropped. */}
+          {/* Hairline + value popover; dedupes Area/Line on shared dataKeys, drops dashed refs. */}
           <Tooltip
             cursor={{
               stroke: 'var(--mantine-color-dimmed)',
@@ -202,9 +198,7 @@ const RechartsLineGraphComponent = <T extends ChartDataPoint>({
 
           {/* Lines */}
           {lines.map((lineConfig) => {
-            // Reference lines (dashed ceilings, etc.) shouldn't get an
-            // active hover dot — those aren't data points the readout cares
-            // about. Solid lines do.
+            // Dashed reference lines (ceilings, etc.) skip the active hover dot.
             const isDashed = !!lineConfig.strokeDasharray;
             const activeDot = isDashed
               ? false

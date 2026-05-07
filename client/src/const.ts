@@ -9,6 +9,7 @@ import {
   secondaryOceanShades,
 } from '@/theme';
 import type { SunshineData } from '@/types/sunshineDataType';
+import { DataType } from '@/types/mapTypes';
 
 export const KM_TO_MILES = 0.621371;
 
@@ -334,6 +335,28 @@ export const MONTH_ABBREVIATIONS_SHORT = [
 // Wait one tick before focusing the comparison-city input — Popover mounts the
 // target lazily and the focus would otherwise race the mount.
 export const COMPARISON_INPUT_FOCUS_DELAY_MS = 10;
+
+// Max characters to keep verbatim in the ribbon's state segment before
+// truncating with a trailing period (e.g. "California" → "Californ.").
+export const STATE_ABBREVIATION_MAX_LENGTH = 8;
+
+// Day-of-month used as the default when only a month is known (e.g. sunshine
+// rows have no specific date). 15 lands roughly on the climatological mean.
+export const MONTH_MIDPOINT_DAY = 15;
+
+// Today-readout label prefix per active tab. Fixed map of UI strings keyed by
+// the active DataType so the readout component stays declarative.
+export const TODAY_READOUT_PREFIX_BY_TAB: Record<DataType, string> = {
+  [DataType.Temperature]: 'On this day',
+  [DataType.Sunshine]: 'In this month',
+  [DataType.Precip]: 'In this week',
+};
+
+// Optional secondary descriptor appended to the today-readout label for tabs
+// that need extra context (e.g. sunshine renders "% sun" + "daylight" hint).
+export const TODAY_READOUT_VALUE_LABEL: Partial<Record<DataType, string>> = {
+  [DataType.Sunshine]: 'daylight',
+};
 
 // ============================================================================
 // GRAPH COLOR CONSTANTS

@@ -4,16 +4,16 @@ import { useDebouncedValue } from '@mantine/hooks';
 import { IconPlus, IconX } from '@tabler/icons-react';
 import useCitySearch from '@/hooks/useCitySearch';
 import type { SearchCitiesResult } from '@/types/userLocationType';
-import { CITY2_PRIMARY_COLOR, COMPARISON_INPUT_FOCUS_DELAY_MS } from '@/const';
+import type { ExcludeCity } from '@/types/cityPopupTypes';
+import {
+  CITY2_PRIMARY_COLOR,
+  CITY_SEARCH_DEBOUNCE_MS,
+  COMPARISON_INPUT_FOCUS_DELAY_MS,
+  MIN_CITY_SEARCH_LENGTH,
+} from '@/const';
 import { getClimateZoneFromLat } from '@/utils/climate/getClimateZoneFromLat';
 import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
-import LatBadge from './Ribbon/LatBadge';
-
-interface ExcludeCity {
-  name: string;
-  state: string | null;
-  country: string | null;
-}
+import LatBadge from '@/components/CityPopup/Ribbon/LatBadge';
 
 interface ComparisonCitySelectorProps {
   onCitySelect: (city: SearchCitiesResult) => void;
@@ -31,36 +31,47 @@ const ComparisonCitySelector = ({
   const [opened, setOpened] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<SearchCitiesResult[]>([]);
-  const [debouncedSearchTerm] = useDebouncedValue(searchTerm, 300);
+  const [debouncedSearchTerm] = useDebouncedValue(
+    searchTerm,
+    CITY_SEARCH_DEBOUNCE_MS
+  );
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { searchCities, isLoading: isSearchLoading } = useCitySearch();
 
   useEffect(() => {
-    if (debouncedSearchTerm.trim().length >= 2) {
-      searchCities(debouncedSearchTerm)
-        .then((results) => {
-          const filtered = excludeCity
-            ? results.filter(
-                (city) =>
-                  !(
-                    city.name === excludeCity.name &&
-                    city.state === excludeCity.state &&
-                    city.country === excludeCity.country
-                  )
-              )
-            : results;
-          setSearchResults(filtered);
-        })
-        .catch((error) =>
-          parseErrorAndNotify(
-            error,
-            `failed to search cities for "${debouncedSearchTerm}"`
-          )
-        );
-    } else {
+    if (debouncedSearchTerm.trim().length < MIN_CITY_SEARCH_LENGTH) {
       setSearchResults([]);
+      return undefined;
     }
+
+    let cancelled = false;
+    searchCities(debouncedSearchTerm)
+      .then((results) => {
+        if (cancelled) return;
+        const filtered = excludeCity
+          ? results.filter(
+              (city) =>
+                !(
+                  city.name === excludeCity.name &&
+                  city.state === excludeCity.state &&
+                  city.country === excludeCity.country
+                )
+            )
+          : results;
+        setSearchResults(filtered);
+      })
+      .catch((error) => {
+        if (cancelled) return;
+        parseErrorAndNotify(
+          error,
+          `failed to search cities for "${debouncedSearchTerm}"`
+        );
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [debouncedSearchTerm, searchCities, excludeCity]);
 
   useEffect(() => {
@@ -217,16 +228,16 @@ const ComparisonCitySelector = ({
           )}
 
           {!isSearchLoading &&
-            searchTerm.trim().length >= 2 &&
+            searchTerm.trim().length >= MIN_CITY_SEARCH_LENGTH &&
             searchResults.length === 0 && (
               <div className="text-center py-3 text-xs text-[var(--mantine-color-dimmed)]">
                 No cities found
               </div>
             )}
 
-          {searchTerm.trim().length < 2 && (
+          {searchTerm.trim().length < MIN_CITY_SEARCH_LENGTH && (
             <div className="text-center py-3 text-xs text-[var(--mantine-color-dimmed)]">
-              Type at least 2 characters
+              Type at least {MIN_CITY_SEARCH_LENGTH} characters
             </div>
           )}
         </div>

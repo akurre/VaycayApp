@@ -10,8 +10,6 @@ interface TemperatureDataSectionProps {
   isLoading: boolean;
   hasError: boolean;
   comparisonWeeklyWeatherData?: CityWeeklyWeather | null;
-  comparisonIsLoading?: boolean;
-  comparisonHasError?: boolean;
   selectedDate?: string;
   onHover?: (payload: RibbonHoverPayload | null) => void;
 }

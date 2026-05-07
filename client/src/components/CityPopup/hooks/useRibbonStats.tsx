@@ -3,14 +3,12 @@ import type { WeatherData } from '@/types/cityWeatherDataType';
 import type { SunshineData } from '@/types/sunshineDataType';
 import type { CityWeeklyWeather } from '@/types/weeklyWeatherDataType';
 import type { RibbonStat } from '@/types/cityPopupTypes';
-import type { TemperatureUnit } from '@/types/mapTypes';
 import { useAppStore } from '@/stores/useAppStore';
-import { formatTemperature } from '@/utils/tempFormatting/formatTemperature';
-import { calculateDistance } from '@/utils/location/calculateDistance';
-import { formatDistance } from '@/utils/location/formatDistance';
 import { formatMm } from '@/utils/dataFormatting/formatMm';
-import { EM_DASH_PLACEHOLDER } from '@/const';
-import SunStatValue from '../Ribbon/SunStatValue';
+import { formatPopulation } from '@/utils/dataFormatting/formatPopulation';
+import { formatTempRange } from '@/utils/dataFormatting/formatTempRange';
+import { formatDistanceFromHome } from '@/utils/location/formatDistanceFromHome';
+import SunStatValue from '@/components/CityPopup/Ribbon/SunStatValue';
 import { useSunshineAndRainfallData } from './useSunshineAndRainfallData';
 
 interface UseRibbonStatsProps {
@@ -28,44 +26,6 @@ interface UseRibbonStatsProps {
   comparisonWeeklyWeatherData: CityWeeklyWeather | null;
 }
 
-const formatPopulation = (pop: number | null): string => {
-  if (pop === null) return EM_DASH_PLACEHOLDER;
-  return pop.toLocaleString();
-};
-
-const formatTempRange = (
-  min: number | null,
-  max: number | null,
-  unit: TemperatureUnit
-): string => {
-  if (min === null || max === null) return EM_DASH_PLACEHOLDER;
-  const minLabel = formatTemperature(min, unit);
-  const maxLabel = formatTemperature(max, unit);
-  if (minLabel === null || maxLabel === null) return EM_DASH_PLACEHOLDER;
-  return `${minLabel}–${maxLabel}`;
-};
-
-const formatDistanceFromHome = (
-  homeLat: number | null,
-  homeLong: number | null,
-  cityLat: number | null,
-  cityLong: number | null,
-  temperatureUnit: TemperatureUnit
-): string => {
-  if (
-    homeLat === null ||
-    homeLong === null ||
-    cityLat === null ||
-    cityLong === null
-  ) {
-    return EM_DASH_PLACEHOLDER;
-  }
-  return formatDistance(
-    calculateDistance(homeLat, homeLong, cityLat, cityLong),
-    temperatureUnit
-  );
-};
-
 export const useRibbonStats = ({
   basePopulation,
   comparisonPopulation,
@@ -81,9 +41,8 @@ export const useRibbonStats = ({
   comparisonWeeklyWeatherData,
 }: UseRibbonStatsProps): ReadonlyArray<RibbonStat> => {
   const temperatureUnit = useAppStore((s) => s.temperatureUnit);
-  const homeLocation = useAppStore((s) => s.homeLocation);
-  const homeLat = homeLocation?.coordinates.lat ?? null;
-  const homeLong = homeLocation?.coordinates.long ?? null;
+  const homeLat = useAppStore((s) => s.homeLocation?.coordinates.lat ?? null);
+  const homeLong = useAppStore((s) => s.homeLocation?.coordinates.long ?? null);
 
   const {
     averageSunshine,

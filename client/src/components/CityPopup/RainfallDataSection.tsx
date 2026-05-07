@@ -43,6 +43,9 @@ const RainfallDataSection = ({
     >
       {(data) => (
         <ComponentErrorBoundary componentName="RainfallGraph">
+          {/* Pass the unfiltered comparison data — the graph filters
+              empty rows internally, and the no-data badge is driven from
+              the section-level `compDataToPass` instead. */}
           <RainfallGraph
             weeklyWeatherData={data}
             comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}

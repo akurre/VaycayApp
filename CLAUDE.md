@@ -31,9 +31,9 @@ server/src/
 
 ## Code organization
 
-### One function per file
+### One function per file (HARD RULE)
 
-Each top-level function gets its own file, named after the function (`hasCoords` → `hasCoords.ts`). Do not export multiple functions from the same file. Index files that only re-export are fine.
+Each top-level function gets its own file, named after the function (`hasCoords` → `hasCoords.ts`). Do not export multiple functions from the same file. Index files that only re-export are fine. This is non-negotiable — if a file has two top-level exports, split it.
 
 - Utilities live in the nearest relevant `utils/` (e.g. map utilities in `client/src/components/Map/utils/`).
 - React components: one component per file, PascalCase filename matching the component (`CityPopup.tsx`). Default export. No additional exported helpers in component files — extract them.
@@ -133,6 +133,21 @@ minLat: bounds?.minLat ?? 0,
 // Good — explicit conditional
 variables: bounds ? { minLat: bounds.minLat, maxLat: bounds.maxLat } : defaultBounds,
 ```
+
+### Effects: clean up subscriptions
+
+Any `useEffect` that adds an event listener, MapLibre handler, timer, interval, or external subscription must return a cleanup function. Stale handlers cause memory leaks and ghost re-renders.
+
+```typescript
+// Good
+useEffect(() => {
+  const onResize = () => setWidth(window.innerWidth);
+  window.addEventListener('resize', onResize);
+  return () => window.removeEventListener('resize', onResize);
+}, []);
+```
+
+Also: dependency arrays must be complete. Don't suppress the lint warning to avoid a re-render — fix the dep, memoize the value, or move the work out of the effect.
 
 ## Mantine + Tailwind
 
@@ -273,7 +288,8 @@ Pure type definitions, config files, files that only re-export.
 ## Comments
 
 - Default to none — code should be self-documenting.
-- Explain *why*, not *what*. JSDoc for public APIs only.
+- **One line preferred. Two lines max** for genuinely complex logic. If you need more, the code is too clever — refactor.
+- Explain *why*, not *what*. JSDoc for public APIs only, never internal helpers.
 - Delete outdated or commented-out code.
 
 ## Accessibility
@@ -283,8 +299,16 @@ Pure type definitions, config files, files that only re-export.
 - Keyboard navigation works.
 - Test with a screen reader when shipping new UI.
 
+## Security
+
+- No secrets, API keys, or server-only env vars imported into `client/`. Anything in client code ships in the bundle and is publicly visible.
+- `process.env.X` in client code only when prefixed `VITE_` (publicly exposable by design).
+- Validate / sanitize user input before SQL queries and HTML rendering.
+- Avoid `dangerouslySetInnerHTML` unless the content is trusted and sanitized.
+
 ## Pre-PR checklist
 
+- [ ] One function/component per file. Filename matches.
 - [ ] No duplicate code (type guards, utilities, constants).
 - [ ] Constants used instead of magic numbers; enums used instead of string-literal unions.
 - [ ] All async paths handled via `parseErrorAndNotify` with specific context.
@@ -292,9 +316,13 @@ Pure type definitions, config files, files that only re-export.
 - [ ] No unnecessary state, no redundant memoization.
 - [ ] `import type` used for type-only imports.
 - [ ] No hardcoded colors — `appColors` only.
+- [ ] No Mantine layout primitives (`Group`/`Stack`/`Container`/`Grid`/`Flex`/`Center`/`Box`/`Space`).
 - [ ] No `any`, no casting workarounds.
 - [ ] No `key={index}` in `.map()`.
+- [ ] Effects clean up listeners/subscriptions/handlers.
+- [ ] Comments are one line (max two for complex logic) and explain *why*.
 - [ ] No commented-out code.
+- [ ] No secrets / server-only env vars in client code.
 - [ ] ESLint and TypeScript checks pass.
 - [ ] Tests written and passing for new functionality.
 

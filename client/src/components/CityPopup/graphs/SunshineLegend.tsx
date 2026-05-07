@@ -1,18 +1,10 @@
+import LegendSwatch from './legend/LegendSwatch';
+import LegendDash from './legend/LegendDash';
+
 interface SunshineLegendProps {
   mainColor: string;
   comparisonColor?: string | null;
 }
-
-const Swatch = ({ color }: { color: string }) => (
-  <span className="inline-block w-3" style={{ height: 2, background: color }} />
-);
-
-const Dash = ({ color }: { color: string }) => (
-  <span
-    className="inline-block w-3 border-t border-dashed"
-    style={{ borderColor: color, height: 0 }}
-  />
-);
 
 const SunshineLegend = ({
   mainColor,
@@ -23,13 +15,13 @@ const SunshineLegend = ({
     style={{ color: 'var(--mantine-color-dimmed)' }}
   >
     <span className="flex items-center gap-1">
-      <Swatch color={mainColor} />
-      {comparisonColor && <Swatch color={comparisonColor} />}
+      <LegendSwatch color={mainColor} />
+      {comparisonColor && <LegendSwatch color={comparisonColor} />}
       actual sun
     </span>
     <span className="flex items-center gap-1">
-      <Dash color={mainColor} />
-      {comparisonColor && <Dash color={comparisonColor} />}
+      <LegendDash color={mainColor} />
+      {comparisonColor && <LegendDash color={comparisonColor} />}
       100% ceiling
     </span>
   </div>

@@ -101,6 +101,9 @@ const RechartsLineTooltip = <T extends ChartDataPoint>({
         ? formatTooltipLabel(label)
         : String(label);
 
+  // recharts hands us the raw chart row through `payload[0].payload` as
+  // `unknown`. The graph that owns this tooltip controls T's shape, so we
+  // accept the cast at this boundary rather than re-validating every field.
   const firstPayload = payload[0]?.payload;
   const activeRow =
     firstPayload && typeof firstPayload === 'object'
