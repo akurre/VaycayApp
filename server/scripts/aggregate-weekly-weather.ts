@@ -69,7 +69,10 @@ function getISOWeek(dateStr: string): number {
  * numYears * 7 is the correct total-possible-days denominator regardless of
  * whether the station logs zero-precipitation days.
  */
-function calculateWeekStats(records: WeatherRecordInput[], numYears: number): Omit<WeekData, 'week'> {
+function calculateWeekStats(
+  records: WeatherRecordInput[],
+  numYears: number
+): Omit<WeekData, 'week'> {
   const validTemps = records.filter(
     (r): r is WeatherRecordInput & { TAVG: number } => r.TAVG !== null
   );
@@ -153,6 +156,12 @@ async function aggregateWeeklyWeather() {
         continue;
       }
 
+      // Count total years of data for this city across all records.
+      // Used as the denominator for rainy-day normalization so that weeks
+      // with no rain in some years still divide by the full year count,
+      // rather than only the years that happened to have rain that week.
+      const totalYears = new Set(records.map((r) => new Date(r.date).getFullYear())).size;
+
       // Group records by ISO week
       const weeklyRecords: Record<number, any[]> = {};
 
@@ -169,8 +178,7 @@ async function aggregateWeeklyWeather() {
 
       for (let week = 1; week <= 52; week++) {
         const weekRecords = weeklyRecords[week] || [];
-        const numYears = new Set(weekRecords.map((r) => new Date(r.date).getFullYear())).size;
-        const stats = calculateWeekStats(weekRecords, numYears);
+        const stats = calculateWeekStats(weekRecords, totalYears);
         weeklyData.push({
           week,
           ...stats,

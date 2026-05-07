@@ -73,7 +73,10 @@ const RainfallGraphTooltip = ({
               {main.formatted}
             </span>
             {rainyDays1 && (
-              <span className="text-[9px] opacity-70" style={{ color: main.color }}>
+              <span
+                className="text-[9px] opacity-70"
+                style={{ color: main.color }}
+              >
                 {rainyDays1}
               </span>
             )}
@@ -85,7 +88,10 @@ const RainfallGraphTooltip = ({
               {comp.formatted}
             </span>
             {rainyDays2 && (
-              <span className="text-[9px] opacity-70" style={{ color: comp.color }}>
+              <span
+                className="text-[9px] opacity-70"
+                style={{ color: comp.color }}
+              >
                 {rainyDays2}
               </span>
             )}

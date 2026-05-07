@@ -17,9 +17,15 @@ describe('formatPrecipitation', () => {
 
   describe('Fahrenheit (imperial)', () => {
     it('converts mm to inches with one decimal place', () => {
-      expect(formatPrecipitation(25.4, TemperatureUnit.Fahrenheit)).toBe('1.0in');
-      expect(formatPrecipitation(50.8, TemperatureUnit.Fahrenheit)).toBe('2.0in');
-      expect(formatPrecipitation(12.7, TemperatureUnit.Fahrenheit)).toBe('0.5in');
+      expect(formatPrecipitation(25.4, TemperatureUnit.Fahrenheit)).toBe(
+        '1.0in'
+      );
+      expect(formatPrecipitation(50.8, TemperatureUnit.Fahrenheit)).toBe(
+        '2.0in'
+      );
+      expect(formatPrecipitation(12.7, TemperatureUnit.Fahrenheit)).toBe(
+        '0.5in'
+      );
     });
 
     it('formats zero as "0.0in"', () => {

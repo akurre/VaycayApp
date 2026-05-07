@@ -62,7 +62,10 @@ export function useHomeCityData(dataType: DataType, selectedDate?: string) {
         weatherData?.city !== prevWeatherDataRef.current?.city ||
         weatherData?.date !== prevWeatherDataRef.current?.date;
 
-      if (weatherData && (isFirstRender || dataTypeChanged || dataContentChanged)) {
+      if (
+        weatherData &&
+        (isFirstRender || dataTypeChanged || dataContentChanged)
+      ) {
         setHomeCityData(weatherData);
       } else if ((isFirstRender || dataTypeChanged) && !weatherData) {
         setHomeCityData(null);
@@ -73,7 +76,10 @@ export function useHomeCityData(dataType: DataType, selectedDate?: string) {
         sunshineData?.city !== prevSunshineDataRef.current?.city ||
         sunshineData?.jan !== prevSunshineDataRef.current?.jan;
 
-      if (sunshineData && (isFirstRender || dataTypeChanged || dataContentChanged)) {
+      if (
+        sunshineData &&
+        (isFirstRender || dataTypeChanged || dataContentChanged)
+      ) {
         setHomeCityData(sunshineData);
       } else if ((isFirstRender || dataTypeChanged) && !sunshineData) {
         setHomeCityData(null);

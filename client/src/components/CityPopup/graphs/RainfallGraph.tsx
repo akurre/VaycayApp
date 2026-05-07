@@ -221,9 +221,18 @@ const RainfallGraph = ({
             wrapperStyle={{ outline: 'none' }}
             content={({ active, payload, label }) => {
               const weekNum = typeof label === 'number' ? label : undefined;
-              const point = weekNum !== undefined ? chartData.find((p) => p.week === weekNum) : undefined;
-              const days1 = point && 'daysWithRain' in point ? (point.daysWithRain ?? null) : null;
-              const days2 = point && 'compDaysWithRain' in point ? (point.compDaysWithRain ?? null) : null;
+              const point =
+                weekNum !== undefined
+                  ? chartData.find((p) => p.week === weekNum)
+                  : undefined;
+              const days1 =
+                point && 'daysWithRain' in point
+                  ? (point.daysWithRain ?? null)
+                  : null;
+              const days2 =
+                point && 'compDaysWithRain' in point
+                  ? (point.compDaysWithRain ?? null)
+                  : null;
               return (
                 <RainfallGraphTooltip
                   active={active}

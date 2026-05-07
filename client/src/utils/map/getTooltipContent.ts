@@ -74,8 +74,14 @@ ${formatTemperature(city.avgTemperature, temperatureUnit)}`;
     }
     const hoursLine = formatSunshineHours(sunshineHours);
     if (city.lat !== null) {
-      const theoreticalMax = calculateTheoreticalMaxSunshine(city.lat, selectedMonth);
-      const percentLine = formatSunshinePercentage(sunshineHours, theoreticalMax);
+      const theoreticalMax = calculateTheoreticalMaxSunshine(
+        city.lat,
+        selectedMonth
+      );
+      const percentLine = formatSunshinePercentage(
+        sunshineHours,
+        theoreticalMax
+      );
       if (percentLine) {
         return `${locationInfo}
 ${hoursLine}
