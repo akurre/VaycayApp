@@ -1,4 +1,4 @@
-name: Gate test trigger
+name: Deploy gate test
 on:
   push:
     branches: [main, develop, staging, little-fixes-to-sunshine]
