@@ -1,7 +1,7 @@
 name: Gate test trigger
 on:
   push:
-    branches: [main, develop, staging]
+    branches: [main, develop, staging, little-fixes-to-sunshine]
 jobs:
   deploy:
     runs-on: ubuntu-latest
