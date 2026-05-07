@@ -59,17 +59,21 @@ export const useMapBounds = (
   initialViewState: MapViewState,
   onBoundsChange?: (bounds: MapBounds | null, shouldUseBounds: boolean) => void
 ): UseMapBoundsReturn => {
-  const mapViewport = useAppStore((state) => state.mapViewport);
+  // Read mapViewport once at mount via getState() instead of subscribing —
+  // this hook also writes to mapViewport on every onViewStateChange (~60/sec
+  // during a pan), and a selector subscription would cause WorldMap to
+  // re-render on every write. The setter is a stable Zustand reference so
+  // subscribing to it is fine.
+  const initialMapViewportRef = useRef(useAppStore.getState().mapViewport);
   const setMapViewport = useAppStore((state) => state.setMapViewport);
 
-  // use stored viewport if available, otherwise use initial view state
   const [viewState, setViewState] = useState<MapViewState>(
-    mapViewport
+    initialMapViewportRef.current
       ? {
           ...initialViewState,
-          latitude: mapViewport.latitude,
-          longitude: mapViewport.longitude,
-          zoom: mapViewport.zoom,
+          latitude: initialMapViewportRef.current.latitude,
+          longitude: initialMapViewportRef.current.longitude,
+          zoom: initialMapViewportRef.current.zoom,
         }
       : initialViewState
   );
