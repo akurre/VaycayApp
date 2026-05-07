@@ -15,8 +15,8 @@ import {
   MAP_FADE_IN_DELAY_MS,
   MAP_LOADED_OPACITY,
   MAP_LOADING_OPACITY,
+  MAP_SCROLL_ZOOM_SPEED,
   MAP_STYLES,
-  ZOOM_AMPLIFICATION_FACTOR,
 } from '@/const';
 import CityPopup from '../CityPopup/CityPopup';
 import MapTooltip from './MapTooltip';
@@ -145,7 +145,7 @@ const WorldMap = ({
     () => ({
       dragPan: true,
       dragRotate: false,
-      scrollZoom: { speed: ZOOM_AMPLIFICATION_FACTOR / 10 },
+      scrollZoom: { speed: MAP_SCROLL_ZOOM_SPEED, smooth: true },
       touchZoom: true,
       touchRotate: false,
       keyboard: true,

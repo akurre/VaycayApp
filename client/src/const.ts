@@ -21,7 +21,10 @@ export const CITY_CACHE_MAX_SIZE = 30;
 export const ZOOM_THRESHOLD = 2; // switch to bounds query at zoom level 2+ (continental view)
 export const DEBOUNCE_DELAY = 200; // ms - debounce delay for zoom/pan events (reduced for more responsive feel)
 export const BOUNDS_BUFFER_PERCENT = 0.3; // add 30% buffer to viewport bounds to pre-fetch dots before they're visible
-export const ZOOM_AMPLIFICATION_FACTOR = 1.5; // amplify zoom changes for more sensitive pinch/scroll zoom
+
+// deck.gl scrollZoom speed. Default is 0.01; we use 3× default for a slightly
+// more responsive feel without the overshoot the previous 15× value caused.
+export const MAP_SCROLL_ZOOM_SPEED = 0.03;
 
 // initial map view state
 export const INITIAL_VIEW_STATE = {
