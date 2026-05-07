@@ -145,9 +145,9 @@ const CityPopup = ({
     () => ({
       [DataType.Sunshine]:
         !primaryHasSunshine && comparisonHasSunshine ? (
-          <div className='flex gap-1 mr-4 items-center'>
-            <IconAlertCircle size={15} color={appColors.error}/>
-            <Text fz='sm' fs='italic' c="dimmed">
+          <div className="flex gap-1 mr-4 items-center">
+            <IconAlertCircle size={15} color={appColors.error} />
+            <Text fz="sm" fs="italic" c="dimmed">
               No sunshine data for {toTitleCase(city?.city ?? '')}
             </Text>
           </div>
