@@ -24,6 +24,7 @@ import MapTooltip from './MapTooltip';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useWeatherStore } from '@/stores/useWeatherStore';
 import { useSunshineStore } from '@/stores/useSunshineStore';
+import { useAppStore } from '@/stores/useAppStore';
 import { DataType } from '@/types/mapTypes';
 import type { ViewMode, WeatherDataUnion } from '@/types/mapTypes';
 import { perfMonitor } from '@/utils/performance/performanceMonitor';
@@ -73,6 +74,7 @@ const WorldMap = ({
   const isLoadingSunshine = useSunshineStore(
     (state) => state.isLoadingSunshine
   );
+  const isGesturing = useAppStore((state) => state.isGesturing);
   const { viewState, onViewStateChange } = useMapBounds(
     INITIAL_VIEW_STATE,
     onBoundsChange
@@ -94,9 +96,15 @@ const WorldMap = ({
     isBasemapLoaded,
   });
 
-  // Breathe animation — only active during Tier 2 (pan/zoom) loads
+  // Breathe animation + ghost dots only fire during tier2 AND only while
+  // the user isn't actively gesturing. The MapDataLoader spinner is the
+  // single source of "loading is happening" feedback during a pan; both
+  // the breathe pulse and the placeholder ghost-dot grid are visual noise
+  // that competes with the (gated) real markers and adds GPU work.
+  const showLoadingDecorations = tier === 'tier2' && !isGesturing;
+
   const { opacity: breatheOpacity } = useBreatheAnimation({
-    isActive: tier === 'tier2',
+    isActive: showLoadingDecorations,
   });
 
   // Get city layers (heatmap + markers) - these are expensive to recreate
@@ -105,8 +113,8 @@ const WorldMap = ({
     viewMode,
     dataType,
     selectedMonth,
-    breatheOpacity: tier === 'tier2' ? breatheOpacity : undefined,
-    isGhostDotsActive: tier === 'tier2',
+    breatheOpacity: showLoadingDecorations ? breatheOpacity : undefined,
+    isGhostDotsActive: showLoadingDecorations,
     viewState,
   });
 
