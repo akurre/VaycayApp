@@ -60,8 +60,16 @@ function getISOWeek(dateStr: string): number {
 /**
  * Calculate statistical aggregations for a week's worth of weather records
  * Requires at least 2 days of data per week for valid statistics
+ *
+ * numYears: the number of distinct calendar years represented in these records.
+ * We use numYears * 7 as the daysWithData denominator instead of records.length
+ * because some NOAA stations only log a row when precipitation occurred — dry
+ * days have no record at all. Using records.length in that case makes
+ * daysWithRain ≈ daysWithData, so the rainy-day normalizer always returns 7.
+ * numYears * 7 is the correct total-possible-days denominator regardless of
+ * whether the station logs zero-precipitation days.
  */
-function calculateWeekStats(records: WeatherRecordInput[]): Omit<WeekData, 'week'> {
+function calculateWeekStats(records: WeatherRecordInput[], numYears: number): Omit<WeekData, 'week'> {
   const validTemps = records.filter(
     (r): r is WeatherRecordInput & { TAVG: number } => r.TAVG !== null
   );
@@ -75,6 +83,7 @@ function calculateWeekStats(records: WeatherRecordInput[]): Omit<WeekData, 'week
     (r): r is WeatherRecordInput & { PRCP: number } => r.PRCP !== null
   );
 
+  const totalCalendarDays = Math.max(numYears * 7, records.length);
   // Require at least MIN_DAYS_FOR_VALID_STATS days of data per week for statistical validity
   const hasEnoughData = records.length >= MIN_DAYS_FOR_VALID_STATS;
 
@@ -100,7 +109,7 @@ function calculateWeekStats(records: WeatherRecordInput[]): Omit<WeekData, 'week
         ? validPrecip.reduce((sum, r) => sum + r.PRCP, 0) / validPrecip.length
         : null,
     daysWithRain: hasEnoughData ? validPrecip.filter((r) => r.PRCP > 0).length : null,
-    daysWithData: records.length,
+    daysWithData: totalCalendarDays,
   };
 }
 
@@ -160,7 +169,8 @@ async function aggregateWeeklyWeather() {
 
       for (let week = 1; week <= 52; week++) {
         const weekRecords = weeklyRecords[week] || [];
-        const stats = calculateWeekStats(weekRecords);
+        const numYears = new Set(weekRecords.map((r) => new Date(r.date).getFullYear())).size;
+        const stats = calculateWeekStats(weekRecords, numYears);
         weeklyData.push({
           week,
           ...stats,

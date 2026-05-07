@@ -219,20 +219,28 @@ const RainfallGraph = ({
               fillOpacity: 0.08,
             }}
             wrapperStyle={{ outline: 'none' }}
-            content={({ active, payload, label }) => (
-              <RainfallGraphTooltip
-                active={active}
-                payload={payload}
-                label={
-                  typeof label === 'string' || typeof label === 'number'
-                    ? label
-                    : undefined
-                }
-                hasMainData={hasMainData}
-                hasCompData={hasCompData}
-                temperatureUnit={temperatureUnit}
-              />
-            )}
+            content={({ active, payload, label }) => {
+              const weekNum = typeof label === 'number' ? label : undefined;
+              const point = weekNum !== undefined ? chartData.find((p) => p.week === weekNum) : undefined;
+              const days1 = point && 'daysWithRain' in point ? (point.daysWithRain ?? null) : null;
+              const days2 = point && 'compDaysWithRain' in point ? (point.compDaysWithRain ?? null) : null;
+              return (
+                <RainfallGraphTooltip
+                  active={active}
+                  payload={payload}
+                  label={
+                    typeof label === 'string' || typeof label === 'number'
+                      ? label
+                      : undefined
+                  }
+                  hasMainData={hasMainData}
+                  hasCompData={hasCompData}
+                  temperatureUnit={temperatureUnit}
+                  rainyDays1={formatRainyDays(days1)}
+                  rainyDays2={formatRainyDays(days2)}
+                />
+              );
+            }}
           />
 
           {selectedWeek !== null && (

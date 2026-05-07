@@ -53,6 +53,8 @@ export function useHomeCityData(dataType: DataType, selectedDate?: string) {
     // 2. Data type changed (user toggled)
     // 3. Actual data content changed (compare by city name to avoid object reference issues)
     const isFirstRender = prevDataTypeRef.current === undefined;
+    const dataTypeChanged =
+      !isFirstRender && prevDataTypeRef.current !== dataType;
 
     if (dataType === DataType.Temperature) {
       // Check if the actual data content is different (not just object reference)
@@ -60,9 +62,9 @@ export function useHomeCityData(dataType: DataType, selectedDate?: string) {
         weatherData?.city !== prevWeatherDataRef.current?.city ||
         weatherData?.date !== prevWeatherDataRef.current?.date;
 
-      if (weatherData && (isFirstRender || dataContentChanged)) {
+      if (weatherData && (isFirstRender || dataTypeChanged || dataContentChanged)) {
         setHomeCityData(weatherData);
-      } else if (isFirstRender && !weatherData) {
+      } else if ((isFirstRender || dataTypeChanged) && !weatherData) {
         setHomeCityData(null);
       }
     } else if (dataType === DataType.Sunshine) {
@@ -71,9 +73,9 @@ export function useHomeCityData(dataType: DataType, selectedDate?: string) {
         sunshineData?.city !== prevSunshineDataRef.current?.city ||
         sunshineData?.jan !== prevSunshineDataRef.current?.jan;
 
-      if (sunshineData && (isFirstRender || dataContentChanged)) {
+      if (sunshineData && (isFirstRender || dataTypeChanged || dataContentChanged)) {
         setHomeCityData(sunshineData);
-      } else if (isFirstRender && !sunshineData) {
+      } else if ((isFirstRender || dataTypeChanged) && !sunshineData) {
         setHomeCityData(null);
       }
     }

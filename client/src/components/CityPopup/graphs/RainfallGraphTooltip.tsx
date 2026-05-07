@@ -16,6 +16,8 @@ interface RainfallGraphTooltipProps {
   hasMainData: boolean;
   hasCompData: boolean;
   temperatureUnit: TemperatureUnit;
+  rainyDays1?: string | null;
+  rainyDays2?: string | null;
 }
 
 interface TooltipItem {
@@ -31,6 +33,8 @@ const RainfallGraphTooltip = ({
   hasMainData,
   hasCompData,
   temperatureUnit,
+  rainyDays1,
+  rainyDays2,
 }: RainfallGraphTooltipProps) => {
   const formatValue = (v: unknown): string =>
     typeof v === 'number' ? formatPrecipitation(v, temperatureUnit) : String(v);
@@ -62,16 +66,30 @@ const RainfallGraphTooltip = ({
           {headerLabel}
         </div>
       )}
-      <div className="flex items-baseline gap-3">
+      <div className="flex items-start gap-3">
         {main && (
-          <span className="font-semibold" style={{ color: main.color }}>
-            {main.formatted}
-          </span>
+          <div className="flex flex-col items-start">
+            <span className="font-semibold" style={{ color: main.color }}>
+              {main.formatted}
+            </span>
+            {rainyDays1 && (
+              <span className="text-[9px] opacity-70" style={{ color: main.color }}>
+                {rainyDays1}
+              </span>
+            )}
+          </div>
         )}
         {comp && (
-          <span className="font-semibold" style={{ color: comp.color }}>
-            {comp.formatted}
-          </span>
+          <div className="flex flex-col items-start">
+            <span className="font-semibold" style={{ color: comp.color }}>
+              {comp.formatted}
+            </span>
+            {rainyDays2 && (
+              <span className="text-[9px] opacity-70" style={{ color: comp.color }}>
+                {rainyDays2}
+              </span>
+            )}
+          </div>
         )}
       </div>
     </div>
