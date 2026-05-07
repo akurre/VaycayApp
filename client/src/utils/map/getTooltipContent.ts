@@ -1,9 +1,11 @@
 import type { SunshineData } from '@/types/sunshineDataType';
-import { formatTemperature } from '../tempFormatting/formatTemperature';
+import { formatTemperature } from '@/utils/tempFormatting/formatTemperature';
 import type { WeatherDataUnion } from '@/types/mapTypes';
 import { DataType, TemperatureUnit } from '@/types/mapTypes';
 import { MONTH_FIELDS } from '@/const';
 import { isWeatherData, isSunshineData } from '@/utils/typeGuards';
+import { calculateTheoreticalMaxSunshine } from '@/utils/dataFormatting/calculateTheoreticalMaxSunshine';
+import { formatSunshinePercentage } from '@/utils/dataFormatting/formatSunshinePercentage';
 
 /**
  * Gets the sunshine hours value for a specific month from SunshineData
@@ -70,8 +72,24 @@ ${formatTemperature(city.avgTemperature, temperatureUnit)}`;
     if (sunshineHours === null) {
       return null;
     }
+    const hoursLine = formatSunshineHours(sunshineHours);
+    if (city.lat !== null) {
+      const theoreticalMax = calculateTheoreticalMaxSunshine(
+        city.lat,
+        selectedMonth
+      );
+      const percentLine = formatSunshinePercentage(
+        sunshineHours,
+        theoreticalMax
+      );
+      if (percentLine) {
+        return `${locationInfo}
+${hoursLine}
+${percentLine}`;
+      }
+    }
     return `${locationInfo}
-${formatSunshineHours(sunshineHours)}`;
+${hoursLine}`;
   }
 
   return null;

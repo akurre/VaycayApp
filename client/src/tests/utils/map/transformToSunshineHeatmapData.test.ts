@@ -1,6 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { transformToSunshineHeatmapData } from '@/utils/map/transformToSunshineHeatmapData';
+import { calculateTheoreticalMaxSunshine } from '@/utils/dataFormatting/calculateTheoreticalMaxSunshine';
 import type { SunshineData } from '@/types/sunshineDataType';
+
+const expectedPercent = (hours: number, lat: number, month: number) => {
+  const max = calculateTheoreticalMaxSunshine(lat, month);
+  return max > 0 ? (hours / max) * 100 : 0;
+};
 
 describe('transformToSunshineHeatmapData', () => {
   const mockSunshineData: SunshineData[] = [
@@ -90,41 +96,86 @@ describe('transformToSunshineHeatmapData', () => {
     },
   ];
 
-  it('transforms sunshine data for January correctly', () => {
+  it('transforms sunshine data for January as percent of theoretical max', () => {
     const result = transformToSunshineHeatmapData(mockSunshineData, 1);
 
-    // Should only include cities with valid lat/long and January data
     expect(result).toHaveLength(2);
 
-    // Check first city
     expect(result[0]).toEqual({
-      position: [20, 10], // [long, lat]
-      weight: 100, // January sunshine hours
+      position: [20, 10],
+      weight: expectedPercent(100, 10, 1),
     });
 
-    // Check second city
     expect(result[1]).toEqual({
       position: [40, 30],
-      weight: 50,
+      weight: expectedPercent(50, 30, 1),
     });
   });
 
   it('transforms sunshine data for June correctly', () => {
     const result = transformToSunshineHeatmapData(mockSunshineData, 6);
 
-    // Should include 3 cities (all except City3 which has null lat)
     expect(result).toHaveLength(3);
 
-    // Check values for June
-    expect(result[0].weight).toBe(220); // City1 June
-    expect(result[1].weight).toBe(140); // City2 June
-    expect(result[2].weight).toBe(190); // City4 June
+    expect(result[0].weight).toBeCloseTo(expectedPercent(220, 10, 6), 6);
+    expect(result[1].weight).toBeCloseTo(expectedPercent(140, 30, 6), 6);
+    expect(result[2].weight).toBeCloseTo(expectedPercent(190, 50, 6), 6);
+  });
+
+  it('lat-corrects so a high-latitude city does not outscore a lower one with the same hours', () => {
+    // Both cities log 200 hours in June; the 60° latitude city has a much
+    // longer theoretical day length, so it should produce a *smaller* percent.
+    const cities: SunshineData[] = [
+      {
+        cityId: 1,
+        city: 'Low',
+        country: 'X',
+        lat: 20,
+        long: 0,
+        population: null,
+        jan: null,
+        feb: null,
+        mar: null,
+        apr: null,
+        may: null,
+        jun: 200,
+        jul: null,
+        aug: null,
+        sep: null,
+        oct: null,
+        nov: null,
+        dec: null,
+      },
+      {
+        cityId: 2,
+        city: 'High',
+        country: 'X',
+        lat: 60,
+        long: 0,
+        population: null,
+        jan: null,
+        feb: null,
+        mar: null,
+        apr: null,
+        may: null,
+        jun: 200,
+        jul: null,
+        aug: null,
+        sep: null,
+        oct: null,
+        nov: null,
+        dec: null,
+      },
+    ];
+
+    const result = transformToSunshineHeatmapData(cities, 6);
+    const [low, high] = result;
+    expect(low.weight).toBeGreaterThan(high.weight);
   });
 
   it('filters out cities with null coordinates', () => {
     const result = transformToSunshineHeatmapData(mockSunshineData, 12);
 
-    // Should not include City3 (null lat)
     const city3Included = result.some(
       (item) => item.position[0] === 60 && item.position[1] === null
     );
@@ -135,7 +186,6 @@ describe('transformToSunshineHeatmapData', () => {
   it('filters out cities with null sunshine data for the selected month', () => {
     const result = transformToSunshineHeatmapData(mockSunshineData, 1);
 
-    // Should not include City4 (null January data)
     const city4Included = result.some(
       (item) => item.position[0] === 60 && item.position[1] === 50
     );

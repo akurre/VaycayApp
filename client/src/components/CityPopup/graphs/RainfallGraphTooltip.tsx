@@ -1,6 +1,7 @@
 import { CITY1_PRIMARY_COLOR, CITY2_PRIMARY_COLOR } from '@/const';
 import { weekRangeLabel } from '@/utils/dateFormatting/weekRangeLabel';
-import { formatMm } from '@/utils/dataFormatting/formatMm';
+import { formatPrecipitation } from '@/utils/dataFormatting/formatPrecipitation';
+import type { TemperatureUnit } from '@/types/mapTypes';
 
 interface TooltipPayloadEntry {
   dataKey?: string | number;
@@ -14,6 +15,9 @@ interface RainfallGraphTooltipProps {
   label?: string | number;
   hasMainData: boolean;
   hasCompData: boolean;
+  temperatureUnit: TemperatureUnit;
+  rainyDays1?: string | null;
+  rainyDays2?: string | null;
 }
 
 interface TooltipItem {
@@ -22,8 +26,8 @@ interface TooltipItem {
   formatted: string;
 }
 
-const formatValue = (v: unknown): string =>
-  typeof v === 'number' ? formatMm(v) : String(v);
+const formatValue = (v: unknown, unit: TemperatureUnit): string =>
+  typeof v === 'number' ? formatPrecipitation(v, unit) : String(v);
 
 const RainfallGraphTooltip = ({
   active,
@@ -31,6 +35,9 @@ const RainfallGraphTooltip = ({
   label,
   hasMainData,
   hasCompData,
+  temperatureUnit,
+  rainyDays1,
+  rainyDays2,
 }: RainfallGraphTooltipProps) => {
   if (!active || !payload || payload.length === 0) return null;
 
@@ -44,7 +51,7 @@ const RainfallGraphTooltip = ({
     items.push({
       cityRole: isComp ? 'comparison' : 'main',
       color: p.color ?? (isComp ? CITY2_PRIMARY_COLOR : CITY1_PRIMARY_COLOR),
-      formatted: formatValue(p.value),
+      formatted: formatValue(p.value, temperatureUnit),
     });
   }
   if (items.length === 0) return null;
@@ -60,16 +67,36 @@ const RainfallGraphTooltip = ({
           {headerLabel}
         </div>
       )}
-      <div className="flex items-baseline gap-3">
+      <div className="flex items-start gap-3">
         {main && (
-          <span className="font-semibold" style={{ color: main.color }}>
-            {main.formatted}
-          </span>
+          <div className="flex flex-col items-start">
+            <span className="font-semibold" style={{ color: main.color }}>
+              {main.formatted}
+            </span>
+            {rainyDays1 && (
+              <span
+                className="text-[9px] opacity-70"
+                style={{ color: main.color }}
+              >
+                {rainyDays1}
+              </span>
+            )}
+          </div>
         )}
         {comp && (
-          <span className="font-semibold" style={{ color: comp.color }}>
-            {comp.formatted}
-          </span>
+          <div className="flex flex-col items-start">
+            <span className="font-semibold" style={{ color: comp.color }}>
+              {comp.formatted}
+            </span>
+            {rainyDays2 && (
+              <span
+                className="text-[9px] opacity-70"
+                style={{ color: comp.color }}
+              >
+                {rainyDays2}
+              </span>
+            )}
+          </div>
         )}
       </div>
     </div>

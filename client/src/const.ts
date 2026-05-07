@@ -170,21 +170,25 @@ export const COLOR_RANGE: [number, number, number][] = TEMP_THRESHOLDS.map(
   (t) => t.color
 );
 
-// sunshine hours color thresholds for heatmap visualization
-// ranges from low sunshine (dark/cool colors) to high sunshine (bright/warm colors)
+// Sunshine percent color thresholds for heatmap + marker visualization. We use
+// percent-of-theoretical-max (actual hours / astronomical max for that
+// lat+month) so high-latitude cities aren't unfairly favored in summer just
+// for having more daylight. Extremes (0-20% very cloudy, 90%+ desert) get
+// wider single buckets; the 40-70% prime range where most cities cluster gets
+// finer 5-10% buckets for visual contrast.
 export const SUNSHINE_THRESHOLDS = [
-  { hours: 0, color: [100, 20, 150] as const }, // brighter purple (very low sunshine)
-  { hours: 25, color: [70, 40, 190] as const }, // lighter purple-blue (very low sunshine)
-  { hours: 50, color: [0, 120, 200] as const }, // bright blue (low sunshine)
-  { hours: 80, color: [0, 180, 180] as const }, // cyan/turquoise (below average sunshine)
-  { hours: 110, color: [60, 140, 40] as const }, // olive green (transitional sunshine)
-  { hours: 140, color: [100, 200, 0] as const }, // lime green (average sunshine)
-  { hours: 180, color: [173, 255, 47] as const }, // green-yellow (good sunshine)
-  { hours: 220, color: [255, 255, 0] as const }, // yellow (very good sunshine)
-  { hours: 260, color: [255, 165, 0] as const }, // orange (excellent sunshine)
-  { hours: 300, color: [255, 69, 0] as const }, // orange-red (extreme sunshine)
-  { hours: 340, color: [255, 20, 0] as const }, // bright red (near maximum sunshine)
-  { hours: 380, color: [220, 0, 0] as const }, // deep red (maximum sunshine)
+  { percent: 0, color: [100, 20, 150] as const }, // brighter purple (very cloudy: 0-15%)
+  { percent: 15, color: [70, 40, 190] as const }, // lighter purple-blue
+  { percent: 25, color: [0, 120, 200] as const }, // bright blue
+  { percent: 35, color: [0, 180, 180] as const }, // cyan/turquoise
+  { percent: 45, color: [60, 140, 40] as const }, // olive green
+  { percent: 50, color: [100, 200, 0] as const }, // lime green (average)
+  { percent: 55, color: [173, 255, 47] as const }, // green-yellow
+  { percent: 60, color: [255, 255, 0] as const }, // yellow
+  { percent: 65, color: [255, 165, 0] as const }, // orange
+  { percent: 70, color: [255, 69, 0] as const }, // orange-red
+  { percent: 80, color: [255, 20, 0] as const }, // bright red
+  { percent: 85, color: [220, 0, 0] as const }, // deep red (very sunny: 85%+)
 ];
 
 // extract color range from sunshine thresholds for heatmap layer

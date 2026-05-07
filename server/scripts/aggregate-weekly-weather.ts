@@ -40,6 +40,52 @@ interface WeatherRecordInput {
   PRCP: number | null;
 }
 
+interface DailyRecord {
+  date: string;
+  TAVG: number | null;
+  TMAX: number | null;
+  TMIN: number | null;
+  PRCP: number | null;
+}
+
+/**
+ * Collapse multiple station readings on the same date into one row.
+ * Cities can have 2+ stations; without this, each calendar day appears multiple
+ * times and rainy-day counts inflate (a storm day counted once per station).
+ * PRCP/TAVG: cross-station mean. TMAX: max across stations. TMIN: min.
+ */
+function collapseStationsByDate(
+  records: ReadonlyArray<{ date: string } & WeatherRecordInput>
+): DailyRecord[] {
+  const byDate = new Map<
+    string,
+    { TAVG: number[]; TMAX: number[]; TMIN: number[]; PRCP: number[] }
+  >();
+  for (const r of records) {
+    const entry = byDate.get(r.date) ?? { TAVG: [], TMAX: [], TMIN: [], PRCP: [] };
+    if (r.TAVG !== null && !Number.isNaN(r.TAVG)) entry.TAVG.push(r.TAVG);
+    if (r.TMAX !== null && !Number.isNaN(r.TMAX)) entry.TMAX.push(r.TMAX);
+    if (r.TMIN !== null && !Number.isNaN(r.TMIN)) entry.TMIN.push(r.TMIN);
+    if (r.PRCP !== null && !Number.isNaN(r.PRCP)) entry.PRCP.push(r.PRCP);
+    byDate.set(r.date, entry);
+  }
+
+  const mean = (arr: number[]): number | null =>
+    arr.length ? arr.reduce((s, v) => s + v, 0) / arr.length : null;
+
+  const dailyRecords: DailyRecord[] = [];
+  for (const [date, m] of byDate) {
+    dailyRecords.push({
+      date,
+      TAVG: mean(m.TAVG),
+      TMAX: m.TMAX.length ? Math.max(...m.TMAX) : null,
+      TMIN: m.TMIN.length ? Math.min(...m.TMIN) : null,
+      PRCP: mean(m.PRCP),
+    });
+  }
+  return dailyRecords;
+}
+
 /**
  * Calculate ISO week number from date string (1-52)
  * Uses ISO 8601 week date system where week 1 is the first week with a Thursday.
@@ -58,10 +104,14 @@ function getISOWeek(dateStr: string): number {
 }
 
 /**
- * Calculate statistical aggregations for a week's worth of weather records
- * Requires at least 2 days of data per week for valid statistics
+ * Calculate statistical aggregations for a week's worth of weather records.
+ * numYears * 7 is the daysWithData denominator (not records.length) because
+ * NOAA stations that only log precipitation days otherwise produce 7/7 rainy.
  */
-function calculateWeekStats(records: WeatherRecordInput[]): Omit<WeekData, 'week'> {
+function calculateWeekStats(
+  records: WeatherRecordInput[],
+  numYears: number
+): Omit<WeekData, 'week'> {
   const validTemps = records.filter(
     (r): r is WeatherRecordInput & { TAVG: number } => r.TAVG !== null
   );
@@ -75,6 +125,7 @@ function calculateWeekStats(records: WeatherRecordInput[]): Omit<WeekData, 'week
     (r): r is WeatherRecordInput & { PRCP: number } => r.PRCP !== null
   );
 
+  const totalCalendarDays = Math.max(numYears * 7, records.length);
   // Require at least MIN_DAYS_FOR_VALID_STATS days of data per week for statistical validity
   const hasEnoughData = records.length >= MIN_DAYS_FOR_VALID_STATS;
 
@@ -99,8 +150,11 @@ function calculateWeekStats(records: WeatherRecordInput[]): Omit<WeekData, 'week
       hasEnoughData && validPrecip.length >= MIN_DAYS_FOR_VALID_STATS
         ? validPrecip.reduce((sum, r) => sum + r.PRCP, 0) / validPrecip.length
         : null,
-    daysWithRain: hasEnoughData ? validPrecip.filter((r) => r.PRCP > 0).length : null,
-    daysWithData: records.length,
+    // Use 1mm threshold (meteorological standard for a "rain day") rather than
+    // > 0, so trace precipitation (dew, condensation, station noise) doesn't
+    // count. Some NOAA stations log 0.1mm on otherwise dry days.
+    daysWithRain: hasEnoughData ? validPrecip.filter((r) => r.PRCP >= 1).length : null,
+    daysWithData: totalCalendarDays,
   };
 }
 
@@ -144,10 +198,19 @@ async function aggregateWeeklyWeather() {
         continue;
       }
 
-      // Group records by ISO week
-      const weeklyRecords: Record<number, any[]> = {};
+      // Collapse multi-station rows into one row per calendar date before any
+      // week-level math, so rainy-day counts don't double-count two stations
+      // both logging the same storm day.
+      const dailyRecords = collapseStationsByDate(records);
 
-      for (const record of records) {
+      // Used as the rainy-day normalization denominator so weeks with no rain
+      // in some years still divide by the full year count.
+      const totalYears = new Set(dailyRecords.map((r) => new Date(r.date).getFullYear())).size;
+
+      // Group daily records by ISO week
+      const weeklyRecords: Record<number, DailyRecord[]> = {};
+
+      for (const record of dailyRecords) {
         const week = getISOWeek(record.date);
         if (!weeklyRecords[week]) {
           weeklyRecords[week] = [];
@@ -160,7 +223,7 @@ async function aggregateWeeklyWeather() {
 
       for (let week = 1; week <= 52; week++) {
         const weekRecords = weeklyRecords[week] || [];
-        const stats = calculateWeekStats(weekRecords);
+        const stats = calculateWeekStats(weekRecords, totalYears);
         weeklyData.push({
           week,
           ...stats,

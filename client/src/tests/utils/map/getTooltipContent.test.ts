@@ -200,7 +200,7 @@ describe('getTooltipContent', () => {
         7
       );
 
-      expect(result).toBe('Barcelona, Spain\n310.0 hours');
+      expect(result).toBe('Barcelona, Spain\n310.0 hours\n70% sun');
     });
 
     it('returns null when selectedMonth is not provided for sunshine data', () => {
@@ -264,11 +264,11 @@ describe('getTooltipContent', () => {
         DataType.Sunshine,
         1
       );
-      expect(result).toBe('Barcelona, Spain\n149.0 hours');
+      expect(result).toBe('Barcelona, Spain\n149.0 hours\n52% sun');
 
       // Test July
       result = getTooltipContent(cities, 2.1734, 41.3851, DataType.Sunshine, 7);
-      expect(result).toBe('Barcelona, Spain\n310.0 hours');
+      expect(result).toBe('Barcelona, Spain\n310.0 hours\n70% sun');
     });
 
     it('returns null when month is out of range', () => {
@@ -307,7 +307,7 @@ describe('getTooltipContent', () => {
         7
       );
 
-      expect(result).toBe('Barcelona, Spain\n310.6 hours');
+      expect(result).toBe('Barcelona, Spain\n310.6 hours\n70% sun');
     });
 
     it('finds sunshine city within tolerance', () => {
@@ -323,7 +323,7 @@ describe('getTooltipContent', () => {
 
       const result = getTooltipContent(cities, 2.2, 41.4, DataType.Sunshine, 7);
 
-      expect(result).toBe('Barcelona, Spain\n310.0 hours');
+      expect(result).toBe('Barcelona, Spain\n310.0 hours\n70% sun');
     });
   });
 });

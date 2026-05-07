@@ -177,6 +177,34 @@ describe('CityPopup', () => {
       expect(screen.getByText('Population')).toBeInTheDocument();
     });
 
+    it('opens with the temperature tab active when dataType is Temperature', () => {
+      render(
+        <CityPopup
+          city={weatherData}
+          onClose={mockOnClose}
+          selectedMonth={1}
+          selectedDate="01-15"
+          dataType={DataType.Temperature}
+        />
+      );
+
+      expect(screen.getByText('tab:temperature')).toBeInTheDocument();
+    });
+
+    it('opens with the sunshine tab active when dataType is Sunshine', () => {
+      render(
+        <CityPopup
+          city={sunshineData}
+          onClose={mockOnClose}
+          selectedMonth={6}
+          selectedDate={undefined}
+          dataType={DataType.Sunshine}
+        />
+      );
+
+      expect(screen.getByText('tab:sunshine')).toBeInTheDocument();
+    });
+
     it('returns null when no city is provided', () => {
       const { container } = render(
         <CityPopup
