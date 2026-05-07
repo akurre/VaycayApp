@@ -254,7 +254,7 @@ const WorldMap = ({
         {(transitionStyle) => (
           <div
             style={transitionStyle}
-            className="absolute inset-0 flex items-center justify-center bg-background/70 backdrop-blur-sm z-10"
+            className="absolute inset-0 flex items-center justify-center bg-background/70 backdrop-blur-sm z-10 pointer-events-none"
           >
             <Loader size="lg" />
           </div>
