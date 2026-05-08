@@ -59,7 +59,7 @@ const CityPopup = ({
     )}`;
   }, [selectedDate, dataType, cityAsWeather, monthToUse]);
 
-  const shouldFetchWeather = !!city && dataType === DataType.Temperature;
+  const shouldFetchWeather = !!city;
 
   const { weatherData } = useWeatherDataForCity({
     cityName: city?.city ?? null,
@@ -116,12 +116,10 @@ const CityPopup = ({
     skipFetch: !comparisonCity,
   });
 
-  const displayWeatherData = useMemo(() => {
-    if (weatherData && dataType === DataType.Temperature) {
-      return weatherData;
-    }
-    return cityAsWeather;
-  }, [weatherData, cityAsWeather, dataType]);
+  const displayWeatherData = useMemo(
+    () => weatherData ?? cityAsWeather,
+    [weatherData, cityAsWeather]
+  );
 
   const displaySunshineData = cityAsSunshine ?? sunshineData;
 

@@ -129,18 +129,20 @@ const TopCommandBar = ({
 
         <CommandBarDivider color={glass.divider} />
 
-        <MapViewToggle
-          viewMode={viewMode}
-          onViewModeChange={onViewModeChange}
-        />
-        <MapDataToggle
-          dataType={dataType}
-          onDataTypeChange={onDataTypeChange}
-        />
-        <TemperatureUnitToggle
-          temperatureUnit={temperatureUnit}
-          onTemperatureUnitChange={onTemperatureUnitChange}
-        />
+        <div className="flex items-center gap-0">
+          <MapViewToggle
+            viewMode={viewMode}
+            onViewModeChange={onViewModeChange}
+          />
+          <MapDataToggle
+            dataType={dataType}
+            onDataTypeChange={onDataTypeChange}
+          />
+          <TemperatureUnitToggle
+            temperatureUnit={temperatureUnit}
+            onTemperatureUnitChange={onTemperatureUnitChange}
+          />
+        </div>
 
         <CommandBarDivider color={glass.divider} />
 

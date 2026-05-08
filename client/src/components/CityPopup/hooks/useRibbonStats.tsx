@@ -85,7 +85,7 @@ export const useRibbonStats = ({
         v2: formatMm(comparisonAverageRainfall),
       },
       {
-        label: "Today's range",
+        label: "This day's range",
         v1: formatTempRange(baseMinTemp, baseMaxTemp, temperatureUnit),
         v2: formatTempRange(compMinTemp, compMaxTemp, temperatureUnit),
       },
