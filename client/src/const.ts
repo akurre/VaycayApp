@@ -177,18 +177,18 @@ export const COLOR_RANGE: [number, number, number][] = TEMP_THRESHOLDS.map(
 // wider single buckets; the 40-70% prime range where most cities cluster gets
 // finer 5-10% buckets for visual contrast.
 export const SUNSHINE_THRESHOLDS = [
-  { percent: 0, color: [100, 20, 150] as const },   // Purple
-  { percent: 8, color: [50, 60, 190] as const },    // Deep Blue
-  { percent: 16, color: [0, 120, 220] as const },   // Bright Blue
-  { percent: 24, color: [0, 190, 190] as const },   // Cyan
-  { percent: 32, color: [0, 180, 120] as const },   // Seafoam/Teal
-  { percent: 40, color: [40, 180, 60] as const },   // Emerald Green
-  { percent: 48, color: [160, 215, 0] as const },  // Lime Green
-  { percent: 56, color: [235, 255, 0] as const },  // Yellow
-  { percent: 64, color: [255, 200, 0] as const },  // Amber
-  { percent: 72, color: [255, 120, 0] as const },  // Orange
-  { percent: 80, color: [230, 60, 0] as const },   // Red-Orange
-  { percent: 88, color: [220, 0, 10] as const },    // Deep Red
+  { percent: 0, color: [100, 20, 150] as const }, // Purple
+  { percent: 8, color: [50, 60, 190] as const }, // Deep Blue
+  { percent: 16, color: [0, 120, 220] as const }, // Bright Blue
+  { percent: 24, color: [0, 190, 190] as const }, // Cyan
+  { percent: 32, color: [0, 180, 120] as const }, // Seafoam/Teal
+  { percent: 40, color: [40, 180, 60] as const }, // Emerald Green
+  { percent: 48, color: [160, 215, 0] as const }, // Lime Green
+  { percent: 56, color: [235, 255, 0] as const }, // Yellow
+  { percent: 64, color: [255, 200, 0] as const }, // Amber
+  { percent: 72, color: [255, 120, 0] as const }, // Orange
+  { percent: 80, color: [230, 60, 0] as const }, // Red-Orange
+  { percent: 88, color: [220, 0, 10] as const }, // Deep Red
 ];
 
 // extract color range from sunshine thresholds for heatmap layer
