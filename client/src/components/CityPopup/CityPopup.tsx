@@ -47,17 +47,10 @@ const CityPopup = ({
     new Date().getMonth() + 1;
 
   const dateToUse = useMemo(() => {
-    if (selectedDate && dataType === DataType.Temperature) {
-      return selectedDate;
-    }
-    if (cityAsWeather?.date && !selectedDate) {
-      return cityAsWeather.date;
-    }
-    return `${monthToUse.toString().padStart(2, '0')}-${MONTH_MIDPOINT_DAY.toString().padStart(
-      2,
-      '0'
-    )}`;
-  }, [selectedDate, dataType, cityAsWeather, monthToUse]);
+    if (selectedDate) return selectedDate;
+    if (cityAsWeather?.date) return cityAsWeather.date;
+    return `${monthToUse.toString().padStart(2, '0')}-${MONTH_MIDPOINT_DAY.toString().padStart(2, '0')}`;
+  }, [selectedDate, cityAsWeather, monthToUse]);
 
   const shouldFetchWeather = !!city;
 
