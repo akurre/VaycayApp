@@ -16,25 +16,21 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
+      - name: Install PostgreSQL client
+        run: sudo apt-get install -y postgresql-client
 
       - name: Create Database Backup
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
-          railway link ${{ secrets.RAILWAY_PROJECT_ID }} --environment production
-
           # Create backup directory
           mkdir -p backups
 
           # Generate backup filename with timestamp
           BACKUP_FILE="backups/backup-$(date +%Y-%m-%d-%H%M%S).sql"
 
-          # Create database dump
-          railway run --service backend bash -c 'pg_dump $DATABASE_URL' > "$BACKUP_FILE"
+          # Create database dump using public URL (internal URL not reachable from GitHub Actions)
+          pg_dump "${{ secrets.DATABASE_PUBLIC_URL }}" > "$BACKUP_FILE"
 
           # Compress the backup
           gzip "$BACKUP_FILE"
