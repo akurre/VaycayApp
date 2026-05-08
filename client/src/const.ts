@@ -153,16 +153,18 @@ export const HOME_RING_STROKE_WIDTH = 2;
 // the interpolation function in getMarkerColor.ts creates smooth gradients between these points
 // so we only need key transition points, not every degree
 export const TEMP_THRESHOLDS = [
-  { temp: -20, color: [75, 0, 130] as [number, number, number] }, // deep purple (-20 or below)
-  { temp: -10, color: [0, 0, 255] as [number, number, number] }, // blue (-20 to -10)
-  { temp: 0, color: [135, 206, 250] as [number, number, number] }, // light blue (-10 to 0)
-  { temp: 8, color: [64, 224, 208] as [number, number, number] }, // greenish blue (0 to 8)
-  { temp: 13, color: [34, 139, 34] as [number, number, number] }, // green with a little yellow (8 to 13)
-  { temp: 19, color: [255, 255, 0] as [number, number, number] }, // mostly yellow (13 to 19)
-  { temp: 24, color: [255, 180, 0] as [number, number, number] }, // yellow-y orange (19 to 24)
-  { temp: 29, color: [255, 100, 0] as [number, number, number] }, // orange (24 to 29)
-  { temp: 34, color: [255, 69, 0] as [number, number, number] }, // orange-red (29 to 34)
-  { temp: 45, color: [255, 0, 0] as [number, number, number] }, // red (34+)
+  { temp: -25, color: [100, 20, 150] as [number, number, number] }, // purple (-20 or below)
+  { temp: -15, color: [50, 60, 190] as [number, number, number] }, // deep blue (-20 to -14)
+  { temp: -9, color: [0, 120, 220] as [number, number, number] }, // bright blue (-14 to -8)
+  { temp: -3, color: [0, 190, 190] as [number, number, number] }, // cyan (-8 to -2)
+  { temp: 3, color: [0, 180, 120] as [number, number, number] }, // seafoam (-2 to 4)
+  { temp: 9, color: [40, 180, 60] as [number, number, number] }, // emerald green (4 to 10)
+  { temp: 15, color: [160, 215, 0] as [number, number, number] }, // lime green (10 to 16)
+  { temp: 21, color: [235, 255, 0] as [number, number, number] }, // yellow (16 to 22)
+  { temp: 27, color: [255, 200, 0] as [number, number, number] }, // amber (22 to 28)
+  { temp: 33, color: [255, 120, 0] as [number, number, number] }, // orange (28 to 34)
+  { temp: 49, color: [230, 60, 0] as [number, number, number] }, // red-orange (34 to 40)
+  { temp: 45, color: [220, 0, 40] as [number, number, number] }, // deep red (40+)
 ];
 
 // color range for heatmap layer (extracted from thresholds)
@@ -188,7 +190,7 @@ export const SUNSHINE_THRESHOLDS = [
   { percent: 64, color: [255, 200, 0] as const }, // Amber
   { percent: 72, color: [255, 120, 0] as const }, // Orange
   { percent: 80, color: [230, 60, 0] as const }, // Red-Orange
-  { percent: 88, color: [220, 0, 10] as const }, // Deep Red
+  { percent: 88, color: [220, 0, 40] as const }, // Deep Red
 ];
 
 // extract color range from sunshine thresholds for heatmap layer

@@ -41,7 +41,7 @@ const MapColorLegend: FC<MapColorLegendProps> = ({ dataType }) => {
       const threshold = SUNSHINE_THRESHOLDS[index];
       const nextThreshold = SUNSHINE_THRESHOLDS[index + 1];
       if (nextThreshold) {
-        return `${threshold.percent}-${nextThreshold.percent}%`;
+        return `${threshold.percent} → ${nextThreshold.percent}%`;
       }
       return `${threshold.percent}%+`;
     } else {
@@ -56,7 +56,7 @@ const MapColorLegend: FC<MapColorLegendProps> = ({ dataType }) => {
         const convertedNextTemp = Math.round(
           convertTemperature(nextThreshold.temp, temperatureUnit)
         );
-        return `${convertedTemp}-${convertedNextTemp}${unitSymbol}`;
+        return `${convertedTemp} → ${convertedNextTemp}${unitSymbol}`;
       }
       return `${convertedTemp}${unitSymbol}+`;
     }
