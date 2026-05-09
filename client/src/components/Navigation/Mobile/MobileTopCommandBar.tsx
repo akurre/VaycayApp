@@ -70,8 +70,14 @@ const MobileTopCommandBar = ({
 
         <CommandBarDivider color={glass.divider} />
 
-        <MapViewToggle viewMode={viewMode} onViewModeChange={onViewModeChange} />
-        <MapDataToggle dataType={dataType} onDataTypeChange={onDataTypeChange} />
+        <MapViewToggle
+          viewMode={viewMode}
+          onViewModeChange={onViewModeChange}
+        />
+        <MapDataToggle
+          dataType={dataType}
+          onDataTypeChange={onDataTypeChange}
+        />
 
         <CommandBarDivider color={glass.divider} />
 

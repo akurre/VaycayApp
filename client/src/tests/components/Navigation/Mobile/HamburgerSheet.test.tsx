@@ -6,7 +6,9 @@ import { LocationSource } from '@/types/userLocationType';
 
 // Avoid real Apollo / geolocation dependencies in subcomponents.
 vi.mock('@/components/Navigation/HomeLocationContent', () => ({
-  default: () => <div data-testid="home-location-content">HomeLocationContent</div>,
+  default: () => (
+    <div data-testid="home-location-content">HomeLocationContent</div>
+  ),
 }));
 vi.mock('@/components/Navigation/FeedbackButton', () => ({
   default: () => <button>About &amp; feedback</button>,
@@ -79,7 +81,9 @@ describe('HamburgerSheet', () => {
   describe('home sub-view', () => {
     it('clicking Home location row shows HomeLocationContent', () => {
       render(<HamburgerSheet opened onClose={vi.fn()} />);
-      expect(screen.queryByTestId('home-location-content')).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId('home-location-content')
+      ).not.toBeInTheDocument();
       fireEvent.click(screen.getByText('Home location'));
       expect(screen.getByTestId('home-location-content')).toBeInTheDocument();
     });
@@ -89,7 +93,9 @@ describe('HamburgerSheet', () => {
       fireEvent.click(screen.getByText('Home location'));
       expect(screen.getByTestId('home-location-content')).toBeInTheDocument();
       fireEvent.click(screen.getByRole('button', { name: /back to menu/i }));
-      expect(screen.queryByTestId('home-location-content')).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId('home-location-content')
+      ).not.toBeInTheDocument();
       expect(screen.getByText('Theme')).toBeInTheDocument();
     });
 

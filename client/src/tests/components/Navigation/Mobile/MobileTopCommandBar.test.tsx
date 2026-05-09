@@ -68,7 +68,9 @@ describe('MobileTopCommandBar', () => {
 
   it('opens HamburgerSheet when hamburger button is clicked', () => {
     render(<MobileTopCommandBar {...defaultProps} />);
-    expect(screen.queryByTestId('hamburger-sheet-open')).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId('hamburger-sheet-open')
+    ).not.toBeInTheDocument();
     fireEvent.click(screen.getByTestId('hamburger-button'));
     expect(screen.getByTestId('hamburger-sheet-open')).toBeInTheDocument();
   });
