@@ -474,7 +474,7 @@ describe('useMapLayers', () => {
     const markerLayer = result.current.find(
       (l) => l.id === 'temperature-markers'
     );
-    expect(markerLayer?.props.stroked).toBe(true);
+    expect((markerLayer?.props as LayerPropsWithFillColor).stroked).toBe(true);
   });
 
   it('sets stroked to false on markers in dark mode', () => {
@@ -490,7 +490,7 @@ describe('useMapLayers', () => {
     const markerLayer = result.current.find(
       (l) => l.id === 'temperature-markers'
     );
-    expect(markerLayer?.props.stroked).toBe(false);
+    expect((markerLayer?.props as LayerPropsWithFillColor).stroked).toBe(false);
   });
 
   it('sets stroked to true on sunshine markers in light mode', () => {
@@ -506,7 +506,7 @@ describe('useMapLayers', () => {
     );
 
     const markerLayer = result.current.find((l) => l.id === 'sunshine-markers');
-    expect(markerLayer?.props.stroked).toBe(true);
+    expect((markerLayer?.props as LayerPropsWithFillColor).stroked).toBe(true);
   });
 
   it('uses temperature loading color when no color is cached', () => {
