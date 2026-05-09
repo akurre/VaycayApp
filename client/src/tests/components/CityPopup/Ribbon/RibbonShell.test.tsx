@@ -162,6 +162,22 @@ describe('RibbonShell', () => {
     expect(screen.queryByTestId('sun-note')).toBeNull();
   });
 
+  it('falls back to Temperature when availableTabs is an empty array', () => {
+    const renderChart = vi.fn((_tab: DataType, _onHover: unknown) => (
+      <div data-testid="chart-slot">chart</div>
+    ));
+    render(
+      <RibbonShell
+        {...baseProps}
+        initialTab={DataType.Sunshine}
+        availableTabs={[]}
+        renderChart={renderChart}
+      />
+    );
+
+    expect(renderChart.mock.calls[0][0]).toBe(DataType.Temperature);
+  });
+
   it('updates the active tab when initialTab changes (e.g. MapDataToggle flips)', () => {
     const { rerender } = render(
       <RibbonShell {...baseProps} initialTab={DataType.Temperature} />

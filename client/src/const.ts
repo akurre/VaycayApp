@@ -432,3 +432,18 @@ export const GHOST_DOT_ALPHA = 40; // Per-vertex color alpha channel (0-255)
 export const GHOST_DOT_MAX_COUNT = 50;
 export const GHOST_DOT_GRID_SPACING_DEG = 2;
 export const GHOST_DOT_EXCLUSION_RADIUS_DEG = 1;
+
+// ============================================================================
+// MOBILE LAYOUT CONSTANTS
+// ============================================================================
+// Below this viewport width OR if the user is on a mobile UA, we render mobile
+// chrome (slim top bar, persistent bottom date scrubber, content-sized city
+// drawer). 932px = iPhone 16 Pro Max landscape. iPad mini portrait (744) and
+// small laptop windows will also get mobile chrome — accepted because mobile
+// chrome is a deliberate design, not a degraded desktop.
+export const MOBILE_BREAKPOINT_PX = 932;
+
+// UA regex for detecting mobile devices. Matches phones, tablets, and the
+// in-app browsers shipped with most mobile OSes (CriOS = Chrome on iOS).
+export const MOBILE_USER_AGENT_REGEX =
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i;

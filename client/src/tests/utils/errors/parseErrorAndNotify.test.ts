@@ -101,6 +101,21 @@ describe('parseError', () => {
     expect(result.message).toContain('timed out');
   });
 
+  it('parses geolocation errors with unknown code (default case)', () => {
+    const geoError = {
+      code: 999,
+      message: 'unknown geolocation error',
+      PERMISSION_DENIED: 1,
+      POSITION_UNAVAILABLE: 2,
+      TIMEOUT: 3,
+    } as GeolocationPositionError;
+
+    const result = parseError(geoError);
+
+    expect(result.category).toBe(ErrorCategory.Geolocation);
+    expect(result.message).toContain('failed to get location');
+  });
+
   it('parses standard error objects', () => {
     const error = new Error('something went wrong');
 

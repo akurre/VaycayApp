@@ -286,6 +286,46 @@ describe('TodayReadout', () => {
     });
   });
 
+  describe('label date fallback', () => {
+    it('falls back to the raw selectedDate string when it is not a recognised date format', () => {
+      render(
+        <TodayReadout
+          tab={DataType.Temperature}
+          c1Value={20}
+          c2Value={null}
+          subC1Value={null}
+          subC2Value={null}
+          hasComparison={false}
+          selectedDate="W22"
+          hover={null}
+        />
+      );
+
+      expect(screen.getByText(/W22/)).toBeInTheDocument();
+    });
+  });
+
+  describe('comparison mode with null city 2 value', () => {
+    it('renders em-dash for city 2 when hasComparison is true but c2Value is null', () => {
+      render(
+        <TodayReadout
+          tab={DataType.Temperature}
+          c1Value={12.9}
+          c2Value={null}
+          subC1Value={null}
+          subC2Value={null}
+          hasComparison={true}
+          selectedDate="2026-05-06"
+          hover={null}
+        />
+      );
+
+      expect(screen.getByText('12.9°C')).toBeInTheDocument();
+      const emDashes = screen.getAllByText('—');
+      expect(emDashes.length).toBeGreaterThanOrEqual(1);
+    });
+  });
+
   describe('hover sub values', () => {
     it('renders subV1 stacked under v1 when provided', () => {
       render(

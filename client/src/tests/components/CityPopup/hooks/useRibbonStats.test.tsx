@@ -53,7 +53,7 @@ describe('useRibbonStats', () => {
     expect(labels).toEqual([
       'Sun / yr',
       'Rain / yr',
-      "Today's range",
+      "This day's range",
       'From home',
       'Population',
     ]);
@@ -149,7 +149,7 @@ describe('useRibbonStats', () => {
       })
     );
 
-    const range = result.current.find((s) => s.label === "Today's range");
+    const range = result.current.find((s) => s.label === "This day's range");
     // 0°C → 32°F, 10°C → 50°F
     expect(range?.v1).toBe('32.0°F–50.0°F');
   });

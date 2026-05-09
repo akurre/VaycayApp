@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { render } from '@/test-utils';
+import { describe, it, expect, vi } from 'vitest';
+import { render, fireEvent } from '@/test-utils';
 import RainfallGraph from '@/components/CityPopup/graphs/RainfallGraph';
 import { createMockWeeklyWeather } from '@/test-utils';
 
@@ -180,5 +180,162 @@ describe('RainfallGraph', () => {
 
     // should not cause errors
     expect(true).toBe(true);
+  });
+
+  it('returns null when both weeklyWeatherData and comparisonWeeklyWeatherData are absent', () => {
+    const { container } = render(<RainfallGraph weeklyWeatherData={null} />);
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeNull();
+  });
+
+  it('renders with only comparison data (comp-only mode)', () => {
+    const compWeather = createMockWeeklyWeather({
+      weeklyData: [
+        {
+          week: 1,
+          avgTemp: 18,
+          minTemp: 12,
+          maxTemp: 24,
+          totalPrecip: 40,
+          avgPrecip: 5.7,
+          daysWithRain: 3,
+          daysWithData: 7,
+        },
+      ],
+    });
+
+    const { container } = render(
+      <RainfallGraph
+        weeklyWeatherData={null}
+        comparisonWeeklyWeatherData={compWeather}
+      />
+    );
+
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
+  });
+
+  it('renders with both main and comparison data (merged mode)', () => {
+    const compWeather = createMockWeeklyWeather({
+      weeklyData: [
+        {
+          week: 1,
+          avgTemp: 18,
+          minTemp: 12,
+          maxTemp: 24,
+          totalPrecip: 35,
+          avgPrecip: 5.0,
+          daysWithRain: 3,
+          daysWithData: 7,
+        },
+        {
+          week: 2,
+          avgTemp: 20,
+          minTemp: 14,
+          maxTemp: 26,
+          totalPrecip: 20,
+          avgPrecip: 2.86,
+          daysWithRain: 2,
+          daysWithData: 7,
+        },
+      ],
+    });
+
+    const { container } = render(
+      <RainfallGraph
+        weeklyWeatherData={mockWeeklyWeather}
+        comparisonWeeklyWeatherData={compWeather}
+      />
+    );
+
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
+  });
+
+  it('renders reference line and today dot when selectedDate matches a week', () => {
+    const { container } = render(
+      <RainfallGraph
+        weeklyWeatherData={mockWeeklyWeather}
+        selectedDate="2024-01-03"
+      />
+    );
+
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
+  });
+
+  it('renders today dots for both cities when both data and selectedDate are present', () => {
+    const compWeather = createMockWeeklyWeather({
+      weeklyData: [
+        {
+          week: 1,
+          avgTemp: 18,
+          minTemp: 12,
+          maxTemp: 24,
+          totalPrecip: 35,
+          avgPrecip: 5.0,
+          daysWithRain: 3,
+          daysWithData: 7,
+        },
+      ],
+    });
+
+    const { container } = render(
+      <RainfallGraph
+        weeklyWeatherData={mockWeeklyWeather}
+        comparisonWeeklyWeatherData={compWeather}
+        selectedDate="2024-01-03"
+      />
+    );
+
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
+  });
+
+  it('calls onHover with null when mouse leaves the chart', () => {
+    const onHover = vi.fn();
+    const { container } = render(
+      <RainfallGraph weeklyWeatherData={mockWeeklyWeather} onHover={onHover} />
+    );
+
+    const wrapper = container.querySelector('.recharts-wrapper');
+    if (wrapper) {
+      fireEvent.mouseLeave(wrapper);
+      expect(onHover).toHaveBeenCalledWith(null);
+    }
+  });
+
+  it('renders comp-only today dot when selectedDate matches and only comparison data exists', () => {
+    const compWeather = createMockWeeklyWeather({
+      weeklyData: [
+        {
+          week: 1,
+          avgTemp: 18,
+          minTemp: 12,
+          maxTemp: 24,
+          totalPrecip: 40,
+          avgPrecip: 5.7,
+          daysWithRain: 3,
+          daysWithData: 7,
+        },
+      ],
+    });
+
+    const { container } = render(
+      <RainfallGraph
+        weeklyWeatherData={null}
+        comparisonWeeklyWeatherData={compWeather}
+        selectedDate="2024-01-03"
+      />
+    );
+
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
   });
 });

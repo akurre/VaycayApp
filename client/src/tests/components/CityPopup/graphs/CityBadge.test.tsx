@@ -28,4 +28,9 @@ describe('CityBadge', () => {
     render(<CityBadge cityName="Tokyo" mb={10} />);
     expect(screen.getByText('Tokyo')).toBeInTheDocument();
   });
+
+  it('renders with xl size when isLarge is true', () => {
+    render(<CityBadge cityName="Berlin" isLarge={true} />);
+    expect(screen.getByText('Berlin')).toBeInTheDocument();
+  });
 });

@@ -25,9 +25,15 @@ describe('weekRangeLabel', () => {
     expect(weekRangeLabel(53)).toBe('Dec 31');
   });
 
+  it('returns Dec 24–30 for week 52', () => {
+    // startDay = 358 = Dec 24; endDay = 364 = Dec 30
+    expect(weekRangeLabel(52)).toBe('Dec 24–30');
+  });
+
   it('returns an empty string for invalid input', () => {
     expect(weekRangeLabel(0)).toBe('');
     expect(weekRangeLabel(-1)).toBe('');
     expect(weekRangeLabel(Number.NaN)).toBe('');
+    expect(weekRangeLabel(Number.POSITIVE_INFINITY)).toBe('');
   });
 });

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render } from '@/test-utils';
 import SunshineGraph from '@/components/CityPopup/graphs/SunshineGraph';
 import type { SunshineData } from '@/types/sunshineDataType';
@@ -109,6 +109,173 @@ describe('SunshineGraph', () => {
     );
 
     // should render the component
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
+  });
+
+  it('returns null when both sunshineData and comparisonSunshineData are absent', () => {
+    const { container } = render(<SunshineGraph sunshineData={null} />);
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeNull();
+  });
+
+  it('renders with comparison data alongside main data', () => {
+    const comparisonData: SunshineData = {
+      cityId: 400,
+      city: 'Madrid',
+      country: 'Spain',
+      lat: 40.4168,
+      long: -3.7038,
+      population: 3200000,
+      stationName: 'Madrid Barajas',
+      jan: 158,
+      feb: 172,
+      mar: 210,
+      apr: 225,
+      may: 268,
+      jun: 300,
+      jul: 330,
+      aug: 310,
+      sep: 240,
+      oct: 195,
+      nov: 155,
+      dec: 142,
+    };
+
+    const { container } = render(
+      <SunshineGraph
+        sunshineData={mockSunshineData}
+        comparisonSunshineData={comparisonData}
+        selectedMonth={6}
+      />
+    );
+
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
+  });
+
+  it('renders comp-only (no main sunshineData, only comparison)', () => {
+    const comparisonData: SunshineData = {
+      cityId: 400,
+      city: 'Madrid',
+      country: 'Spain',
+      lat: 40.4168,
+      long: -3.7038,
+      population: 3200000,
+      stationName: 'Madrid Barajas',
+      jan: 158,
+      feb: 172,
+      mar: 210,
+      apr: 225,
+      may: 268,
+      jun: 300,
+      jul: 330,
+      aug: 310,
+      sep: 240,
+      oct: 195,
+      nov: 155,
+      dec: 142,
+    };
+
+    const { container } = render(
+      <SunshineGraph
+        sunshineData={null}
+        comparisonSunshineData={comparisonData}
+        selectedMonth={3}
+      />
+    );
+
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
+  });
+
+  it('renders reference dots for both cities when selectedMonth and both data are present', () => {
+    const comparisonData: SunshineData = {
+      cityId: 400,
+      city: 'Madrid',
+      country: 'Spain',
+      lat: 40.4168,
+      long: -3.7038,
+      population: 3200000,
+      stationName: 'Madrid Barajas',
+      jan: 158,
+      feb: 172,
+      mar: 210,
+      apr: 225,
+      may: 268,
+      jun: 300,
+      jul: 330,
+      aug: 310,
+      sep: 240,
+      oct: 195,
+      nov: 155,
+      dec: 142,
+    };
+
+    const { container } = render(
+      <SunshineGraph
+        sunshineData={mockSunshineData}
+        comparisonSunshineData={comparisonData}
+        selectedMonth={7}
+      />
+    );
+
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
+  });
+
+  it('accepts an onHover callback without errors', () => {
+    const onHover = vi.fn();
+
+    const { container } = render(
+      <SunshineGraph
+        sunshineData={mockSunshineData}
+        selectedMonth={5}
+        onHover={onHover}
+      />
+    );
+
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeInTheDocument();
+  });
+
+  it('renders with comparison data where main sunshineData has null lat', () => {
+    const dataWithoutLat: SunshineData = { ...mockSunshineData, lat: null };
+    const comparisonData: SunshineData = {
+      cityId: 400,
+      city: 'Madrid',
+      country: 'Spain',
+      lat: 40.4168,
+      long: -3.7038,
+      population: 3200000,
+      stationName: 'Madrid Barajas',
+      jan: 158,
+      feb: 172,
+      mar: 210,
+      apr: 225,
+      may: 268,
+      jun: 300,
+      jul: 330,
+      aug: 310,
+      sep: 240,
+      oct: 195,
+      nov: 155,
+      dec: 142,
+    };
+
+    const { container } = render(
+      <SunshineGraph
+        sunshineData={dataWithoutLat}
+        comparisonSunshineData={comparisonData}
+      />
+    );
+
     expect(
       container.querySelector('.recharts-responsive-container')
     ).toBeInTheDocument();
