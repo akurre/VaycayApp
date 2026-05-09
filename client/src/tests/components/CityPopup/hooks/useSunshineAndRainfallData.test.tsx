@@ -20,9 +20,18 @@ describe('useSunshineAndRainfallData', () => {
 
   it('returns averageSunshine when displaySunshineData is provided', () => {
     const sunshineData = createMockSunshineData({
-      jan: 120, feb: 140, mar: 180, apr: 220,
-      may: 270, jun: 310, jul: 340, aug: 320,
-      sep: 260, oct: 200, nov: 140, dec: 110,
+      jan: 120,
+      feb: 140,
+      mar: 180,
+      apr: 220,
+      may: 270,
+      jun: 310,
+      jul: 340,
+      aug: 320,
+      sep: 260,
+      oct: 200,
+      nov: 140,
+      dec: 110,
     });
 
     const { result } = renderHook(() =>
@@ -38,9 +47,18 @@ describe('useSunshineAndRainfallData', () => {
 
   it('returns comparisonAverageSunshine when comparisonSunshineData is provided', () => {
     const comparisonData = createMockSunshineData({
-      jan: 100, feb: 120, mar: 160, apr: 200,
-      may: 250, jun: 290, jul: 320, aug: 300,
-      sep: 240, oct: 180, nov: 120, dec: 90,
+      jan: 100,
+      feb: 120,
+      mar: 160,
+      apr: 200,
+      may: 250,
+      jun: 290,
+      jul: 320,
+      aug: 300,
+      sep: 240,
+      oct: 180,
+      nov: 120,
+      dec: 90,
     });
 
     const { result } = renderHook(() =>

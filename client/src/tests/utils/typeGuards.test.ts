@@ -33,9 +33,18 @@ const sunshineData: WeatherDataUnion = {
   lat: 41.38,
   long: 2.17,
   population: 1620000,
-  jan: 149, feb: 163, mar: 200, apr: 220,
-  may: 258, jun: 285, jul: 310, aug: 282,
-  sep: 219, oct: 180, nov: 146, dec: 138,
+  jan: 149,
+  feb: 163,
+  mar: 200,
+  apr: 220,
+  may: 258,
+  jun: 285,
+  jul: 310,
+  aug: 282,
+  sep: 219,
+  oct: 180,
+  nov: 146,
+  dec: 138,
 };
 
 describe('isWeatherData', () => {
@@ -78,7 +87,10 @@ describe('isValidWeatherMarkerData', () => {
   });
 
   it('should return false when avgTemperature is null', () => {
-    const city = { ...weatherData, avgTemperature: null } as unknown as WeatherDataUnion;
+    const city = {
+      ...weatherData,
+      avgTemperature: null,
+    } as unknown as WeatherDataUnion;
     expect(isValidWeatherMarkerData(city)).toBe(false);
   });
 });

@@ -61,7 +61,9 @@ describe('parseApolloError', () => {
 
     const result = parseApolloError(error, 'loading weather data failed');
 
-    expect(result.message).toBe('loading weather data failed: something went wrong');
+    expect(result.message).toBe(
+      'loading weather data failed: something went wrong'
+    );
   });
 
   it('should use fallback message when graphQL error has no message', () => {

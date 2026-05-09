@@ -38,8 +38,14 @@ describe('calculateDayLength', () => {
 
   it('should return a value between 0 and 24', () => {
     const testCases = [
-      [45, 1], [45, 91], [45, 182], [45, 274],
-      [-45, 1], [-45, 91], [-45, 182], [-45, 274],
+      [45, 1],
+      [45, 91],
+      [45, 182],
+      [45, 274],
+      [-45, 1],
+      [-45, 91],
+      [-45, 182],
+      [-45, 274],
     ] as [number, number][];
 
     testCases.forEach(([lat, day]) => {

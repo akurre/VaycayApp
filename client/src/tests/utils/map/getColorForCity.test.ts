@@ -31,9 +31,18 @@ describe('getColorForCity', () => {
     lat: 38.71,
     long: -9.14,
     population: 500000,
-    jan: 120, feb: 140, mar: 180, apr: 220,
-    may: 270, jun: 310, jul: 340, aug: 320,
-    sep: 260, oct: 200, nov: 140, dec: 110,
+    jan: 120,
+    feb: 140,
+    mar: 180,
+    apr: 220,
+    may: 270,
+    jun: 310,
+    jul: 340,
+    aug: 320,
+    sep: 260,
+    oct: 200,
+    nov: 140,
+    dec: 110,
   };
 
   it('should return a 4-element RGBA array for temperature data', () => {

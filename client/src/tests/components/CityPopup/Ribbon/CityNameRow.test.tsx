@@ -37,7 +37,14 @@ describe('CityNameRow', () => {
 
   it('adds cursor-pointer class and role=button when onClick is provided', () => {
     const handleClick = vi.fn();
-    render(<CityNameRow color="#000" name="Berlin" lat={null} onClick={handleClick} />);
+    render(
+      <CityNameRow
+        color="#000"
+        name="Berlin"
+        lat={null}
+        onClick={handleClick}
+      />
+    );
 
     const heading = screen.getByRole('button', { name: 'Berlin' });
     expect(heading).toBeInTheDocument();
@@ -45,7 +52,14 @@ describe('CityNameRow', () => {
 
   it('calls onClick when Enter is pressed on the heading', () => {
     const handleClick = vi.fn();
-    render(<CityNameRow color="#000" name="Berlin" lat={null} onClick={handleClick} />);
+    render(
+      <CityNameRow
+        color="#000"
+        name="Berlin"
+        lat={null}
+        onClick={handleClick}
+      />
+    );
 
     const heading = screen.getByRole('button', { name: 'Berlin' });
     fireEvent.keyDown(heading, { key: 'Enter' });
@@ -54,7 +68,14 @@ describe('CityNameRow', () => {
 
   it('calls onClick when Space is pressed on the heading', () => {
     const handleClick = vi.fn();
-    render(<CityNameRow color="#000" name="Berlin" lat={null} onClick={handleClick} />);
+    render(
+      <CityNameRow
+        color="#000"
+        name="Berlin"
+        lat={null}
+        onClick={handleClick}
+      />
+    );
 
     const heading = screen.getByRole('button', { name: 'Berlin' });
     fireEvent.keyDown(heading, { key: ' ' });
@@ -63,7 +84,14 @@ describe('CityNameRow', () => {
 
   it('does not call onClick when other keys are pressed', () => {
     const handleClick = vi.fn();
-    render(<CityNameRow color="#000" name="Berlin" lat={null} onClick={handleClick} />);
+    render(
+      <CityNameRow
+        color="#000"
+        name="Berlin"
+        lat={null}
+        onClick={handleClick}
+      />
+    );
 
     const heading = screen.getByRole('button', { name: 'Berlin' });
     fireEvent.keyDown(heading, { key: 'Escape' });

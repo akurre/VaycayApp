@@ -163,9 +163,9 @@ describe('RibbonShell', () => {
   });
 
   it('falls back to Temperature when availableTabs is an empty array', () => {
-    const renderChart = vi.fn(
-      (_tab: DataType, _onHover: unknown) => <div data-testid="chart-slot">chart</div>
-    );
+    const renderChart = vi.fn((_tab: DataType, _onHover: unknown) => (
+      <div data-testid="chart-slot">chart</div>
+    ));
     render(
       <RibbonShell
         {...baseProps}
