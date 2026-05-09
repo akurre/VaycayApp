@@ -1,19 +1,26 @@
-import { describe, it, expect, vi, assert } from 'vitest';
+import { describe, it, expect, vi, assert, afterEach } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import type * as MantineCore from '@mantine/core';
 import useMapLayers from '@/hooks/useMapLayers';
+import { useGhostDots } from '@/hooks/useGhostDots';
 import type { WeatherData } from '@/types/cityWeatherDataType';
 import type { SunshineData } from '@/types/sunshineDataType';
 import { DataType, ViewMode } from '@/types/mapTypes';
 import { TEMPERATURE_LOADING_COLOR, SUNSHINE_LOADING_COLOR } from '@/const';
 
+let mockColorScheme: 'dark' | 'light' = 'dark';
+
 vi.mock('@mantine/core', async () => {
   const actual = await vi.importActual<typeof MantineCore>('@mantine/core');
   return {
     ...actual,
-    useComputedColorScheme: () => 'dark',
+    useComputedColorScheme: () => mockColorScheme,
   };
 });
+
+vi.mock('@/hooks/useGhostDots', () => ({
+  useGhostDots: vi.fn(() => []),
+}));
 
 // Define a type for layer props with getFillColor function
 interface LayerPropsWithFillColor {
@@ -50,6 +57,10 @@ vi.mock('@/stores/useAppStore', () => ({
 }));
 
 describe('useMapLayers', () => {
+  afterEach(() => {
+    mockColorScheme = 'dark';
+    vi.mocked(useGhostDots).mockReturnValue([]);
+  });
   const mockWeatherCities: WeatherData[] = [
     {
       cityId: 213,
@@ -344,7 +355,153 @@ describe('useMapLayers', () => {
     }
   });
 
-  it('uses sunshine loading color when no color is cached', () => {
+  it('creates ghost-heatmap and ghost-markers layers when ghost dots are present', () => {
+    vi.mocked(useGhostDots).mockReturnValue([
+      { lat: 40, long: -74, color: [200, 100, 50, 128] },
+    ]);
+
+    const { result } = renderHook(() =>
+      useMapLayers({
+        cities: mockWeatherCities,
+        viewMode: ViewMode.Heatmap,
+        dataType: DataType.Temperature,
+        selectedMonth: 1,
+        isGhostDotsActive: true,
+      })
+    );
+
+    expect(result.current).toHaveLength(4);
+    expect(result.current.find((l) => l.id === 'ghost-heatmap')).toBeDefined();
+    expect(result.current.find((l) => l.id === 'ghost-markers')).toBeDefined();
+  });
+
+  it('uses sunshine color range for ghost heatmap when dataType is Sunshine', () => {
+    vi.mocked(useGhostDots).mockReturnValue([
+      { lat: 40, long: -74, color: [255, 200, 0, 128] },
+    ]);
+
+    const { result } = renderHook(() =>
+      useMapLayers({
+        cities: mockSunshineCities,
+        viewMode: ViewMode.Heatmap,
+        dataType: DataType.Sunshine,
+        selectedMonth: 1,
+        isGhostDotsActive: true,
+      })
+    );
+
+    expect(result.current).toHaveLength(4);
+    expect(result.current.find((l) => l.id === 'ghost-heatmap')).toBeDefined();
+    expect(result.current.find((l) => l.id === 'ghost-markers')).toBeDefined();
+  });
+
+  it('ghost markers are visible only in markers view mode', () => {
+    vi.mocked(useGhostDots).mockReturnValue([
+      { lat: 40, long: -74, color: [200, 100, 50, 128] },
+    ]);
+
+    const { result } = renderHook(() =>
+      useMapLayers({
+        cities: mockWeatherCities,
+        viewMode: ViewMode.Markers,
+        dataType: DataType.Temperature,
+        selectedMonth: 1,
+        isGhostDotsActive: true,
+      })
+    );
+
+    expect(result.current.find((l) => l.id === 'ghost-markers')?.props.visible).toBe(true);
+    expect(result.current.find((l) => l.id === 'ghost-heatmap')?.props.visible).toBe(false);
+  });
+
+  it('caps heatmap opacity at 0.6 when breatheOpacity exceeds it', () => {
+    const { result } = renderHook(() =>
+      useMapLayers({
+        cities: mockWeatherCities,
+        viewMode: ViewMode.Heatmap,
+        dataType: DataType.Temperature,
+        breatheOpacity: 0.9,
+      })
+    );
+
+    const heatmapLayer = result.current.find((l) => l.id === 'data-heatmap');
+    expect(heatmapLayer?.props.opacity).toBe(0.6);
+  });
+
+  it('uses breatheOpacity directly for heatmap when below 0.6', () => {
+    const { result } = renderHook(() =>
+      useMapLayers({
+        cities: mockWeatherCities,
+        viewMode: ViewMode.Heatmap,
+        dataType: DataType.Temperature,
+        breatheOpacity: 0.3,
+      })
+    );
+
+    const heatmapLayer = result.current.find((l) => l.id === 'data-heatmap');
+    expect(heatmapLayer?.props.opacity).toBe(0.3);
+  });
+
+  it('defaults heatmap opacity to 0.6 when breatheOpacity is not provided', () => {
+    const { result } = renderHook(() =>
+      useMapLayers({
+        cities: mockWeatherCities,
+        viewMode: ViewMode.Heatmap,
+        dataType: DataType.Temperature,
+      })
+    );
+
+    const heatmapLayer = result.current.find((l) => l.id === 'data-heatmap');
+    expect(heatmapLayer?.props.opacity).toBe(0.6);
+  });
+
+  it('sets stroked to true on markers in light mode', () => {
+    mockColorScheme = 'light';
+
+    const { result } = renderHook(() =>
+      useMapLayers({
+        cities: mockWeatherCities,
+        viewMode: ViewMode.Markers,
+        dataType: DataType.Temperature,
+        selectedMonth: 1,
+      })
+    );
+
+    const markerLayer = result.current.find((l) => l.id === 'temperature-markers');
+    expect(markerLayer?.props.stroked).toBe(true);
+  });
+
+  it('sets stroked to false on markers in dark mode', () => {
+    const { result } = renderHook(() =>
+      useMapLayers({
+        cities: mockWeatherCities,
+        viewMode: ViewMode.Markers,
+        dataType: DataType.Temperature,
+        selectedMonth: 1,
+      })
+    );
+
+    const markerLayer = result.current.find((l) => l.id === 'temperature-markers');
+    expect(markerLayer?.props.stroked).toBe(false);
+  });
+
+  it('sets stroked to true on sunshine markers in light mode', () => {
+    mockColorScheme = 'light';
+
+    const { result } = renderHook(() =>
+      useMapLayers({
+        cities: mockSunshineCities,
+        viewMode: ViewMode.Markers,
+        dataType: DataType.Sunshine,
+        selectedMonth: 1,
+      })
+    );
+
+    const markerLayer = result.current.find((l) => l.id === 'sunshine-markers');
+    expect(markerLayer?.props.stroked).toBe(true);
+  });
+
+  it('uses temperature loading color when no color is cached', () => {
     // Create a city without valid sunshine data for the selected month
     const invalidCity: SunshineData = {
       ...mockSunshineCities[0],
