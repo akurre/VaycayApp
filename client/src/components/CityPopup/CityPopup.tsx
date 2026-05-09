@@ -47,19 +47,12 @@ const CityPopup = ({
     new Date().getMonth() + 1;
 
   const dateToUse = useMemo(() => {
-    if (selectedDate && dataType === DataType.Temperature) {
-      return selectedDate;
-    }
-    if (cityAsWeather?.date && !selectedDate) {
-      return cityAsWeather.date;
-    }
-    return `${monthToUse.toString().padStart(2, '0')}-${MONTH_MIDPOINT_DAY.toString().padStart(
-      2,
-      '0'
-    )}`;
-  }, [selectedDate, dataType, cityAsWeather, monthToUse]);
+    if (selectedDate) return selectedDate;
+    if (cityAsWeather?.date) return cityAsWeather.date;
+    return `${monthToUse.toString().padStart(2, '0')}-${MONTH_MIDPOINT_DAY.toString().padStart(2, '0')}`;
+  }, [selectedDate, cityAsWeather, monthToUse]);
 
-  const shouldFetchWeather = !!city && dataType === DataType.Temperature;
+  const shouldFetchWeather = !!city;
 
   const { weatherData } = useWeatherDataForCity({
     cityName: city?.city ?? null,
@@ -116,12 +109,7 @@ const CityPopup = ({
     skipFetch: !comparisonCity,
   });
 
-  const displayWeatherData = useMemo(() => {
-    if (weatherData && dataType === DataType.Temperature) {
-      return weatherData;
-    }
-    return cityAsWeather;
-  }, [weatherData, cityAsWeather, dataType]);
+  const displayWeatherData = weatherData ?? cityAsWeather;
 
   const displaySunshineData = cityAsSunshine ?? sunshineData;
 
