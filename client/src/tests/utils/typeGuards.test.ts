@@ -5,9 +5,10 @@ import {
   isValidWeatherMarkerData,
   isValidSunshineMarkerData,
 } from '@/utils/typeGuards';
-import type { WeatherDataUnion } from '@/types/mapTypes';
+import type { WeatherData } from '@/types/cityWeatherDataType';
+import type { SunshineData } from '@/types/sunshineDataType';
 
-const weatherData: WeatherDataUnion = {
+const weatherData: WeatherData = {
   cityId: 1,
   city: 'Berlin',
   country: 'Germany',
@@ -26,7 +27,7 @@ const weatherData: WeatherDataUnion = {
   submitterId: 'test-1',
 };
 
-const sunshineData: WeatherDataUnion = {
+const sunshineData: SunshineData = {
   cityId: 2,
   city: 'Barcelona',
   country: 'Spain',
@@ -77,20 +78,17 @@ describe('isValidWeatherMarkerData', () => {
   });
 
   it('should return false when lat is null', () => {
-    const city = { ...weatherData, lat: null } as unknown as WeatherDataUnion;
+    const city: WeatherData = { ...weatherData, lat: null };
     expect(isValidWeatherMarkerData(city)).toBe(false);
   });
 
   it('should return false when long is null', () => {
-    const city = { ...weatherData, long: null } as unknown as WeatherDataUnion;
+    const city: WeatherData = { ...weatherData, long: null };
     expect(isValidWeatherMarkerData(city)).toBe(false);
   });
 
   it('should return false when avgTemperature is null', () => {
-    const city = {
-      ...weatherData,
-      avgTemperature: null,
-    } as unknown as WeatherDataUnion;
+    const city: WeatherData = { ...weatherData, avgTemperature: null };
     expect(isValidWeatherMarkerData(city)).toBe(false);
   });
 });
@@ -105,12 +103,12 @@ describe('isValidSunshineMarkerData', () => {
   });
 
   it('should return false when lat is null', () => {
-    const city = { ...sunshineData, lat: null } as unknown as WeatherDataUnion;
+    const city: SunshineData = { ...sunshineData, lat: null };
     expect(isValidSunshineMarkerData(city)).toBe(false);
   });
 
   it('should return false when long is null', () => {
-    const city = { ...sunshineData, long: null } as unknown as WeatherDataUnion;
+    const city: SunshineData = { ...sunshineData, long: null };
     expect(isValidSunshineMarkerData(city)).toBe(false);
   });
 });
