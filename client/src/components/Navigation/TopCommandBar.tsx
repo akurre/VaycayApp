@@ -129,7 +129,7 @@ const TopCommandBar = ({
 
         <CommandBarDivider color={glass.divider} />
 
-        <div className="flex items-center gap-0">
+        <div className="flex items-center">
           <MapViewToggle
             viewMode={viewMode}
             onViewModeChange={onViewModeChange}

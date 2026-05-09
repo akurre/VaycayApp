@@ -109,10 +109,7 @@ const CityPopup = ({
     skipFetch: !comparisonCity,
   });
 
-  const displayWeatherData = useMemo(
-    () => weatherData ?? cityAsWeather,
-    [weatherData, cityAsWeather]
-  );
+  const displayWeatherData = weatherData ?? cityAsWeather;
 
   const displaySunshineData = cityAsSunshine ?? sunshineData;
 
