@@ -7,6 +7,9 @@ import useSunshineByMonthAndBounds from '../api/dates/useSunshineByMonthAndBound
 import WorldMap from '../components/Map/WorldMap';
 import FeedbackButton from '../components/Navigation/FeedbackButton';
 import TopCommandBar from '../components/Navigation/TopCommandBar';
+import MobileTopCommandBar from '../components/Navigation/Mobile/MobileTopCommandBar';
+import MobileDateScrubber from '../components/Navigation/Mobile/MobileDateScrubber';
+import useIsMobileOrSmall from '@/hooks/useIsMobileOrSmall';
 import { getTodayAsMMDD } from '@/utils/dateFormatting/getTodayAsMMDD';
 import { useWeatherStore } from '../stores/useWeatherStore';
 import { useSunshineStore } from '../stores/useSunshineStore';
@@ -91,6 +94,9 @@ const MapPage: FC = () => {
   const temperatureUnit = useAppStore((state) => state.temperatureUnit);
   const setTemperatureUnit = useAppStore((state) => state.setTemperatureUnit);
   const isGesturing = useAppStore((state) => state.isGesturing);
+  const legendVisible = useAppStore((state) => state.legendVisible);
+
+  const isMobileOrSmall = useIsMobileOrSmall();
 
   // Get the appropriate data based on the selected data type
   const displayedData = isSunshineSelected
@@ -159,27 +165,52 @@ const MapPage: FC = () => {
 
   return (
     <div className="relative w-full h-screen">
-      <div className="absolute top-4 left-4 z-20">
-        <MapColorLegend dataType={dataType} />
-      </div>
+      {legendVisible && (
+        <div className="absolute top-4 left-4 z-20">
+          <MapColorLegend dataType={dataType} />
+        </div>
+      )}
 
       <MapDataLoader dataType={dataType} />
 
-      <TopCommandBar
-        selectedDate={selectedDate}
-        onDateChange={handleDateChange}
-        viewMode={viewMode}
-        onViewModeChange={setViewMode}
-        dataType={dataType}
-        onDataTypeChange={setDataType}
-        temperatureUnit={temperatureUnit}
-        onTemperatureUnitChange={setTemperatureUnit}
-        isMonthly={dataType === DataType.Sunshine}
-      />
+      {isMobileOrSmall ? (
+        <MobileTopCommandBar
+          selectedDate={selectedDate}
+          onDateChange={handleDateChange}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+          dataType={dataType}
+          onDataTypeChange={setDataType}
+          temperatureUnit={temperatureUnit}
+          onTemperatureUnitChange={setTemperatureUnit}
+          isMonthly={dataType === DataType.Sunshine}
+        />
+      ) : (
+        <TopCommandBar
+          selectedDate={selectedDate}
+          onDateChange={handleDateChange}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+          dataType={dataType}
+          onDataTypeChange={setDataType}
+          temperatureUnit={temperatureUnit}
+          onTemperatureUnitChange={setTemperatureUnit}
+          isMonthly={dataType === DataType.Sunshine}
+        />
+      )}
 
-      <div className="absolute bottom-4 right-4 z-20">
-        <FeedbackButton />
-      </div>
+      {isMobileOrSmall && (
+        <MobileDateScrubber
+          selectedDate={selectedDate}
+          onDateChange={handleDateChange}
+        />
+      )}
+
+      {!isMobileOrSmall && (
+        <div className="absolute bottom-4 right-4 z-20">
+          <FeedbackButton />
+        </div>
+      )}
 
       {/* map */}
       <div className="h-full w-full">

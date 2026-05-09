@@ -23,6 +23,8 @@ interface AppState {
   // the gesture isn't blocked by a layer rebuild + transition.
   isGesturing: boolean;
   setIsGesturing: (gesturing: boolean) => void;
+  legendVisible: boolean;
+  setLegendVisible: (value: boolean) => void;
   resetHomeLocation: () => void;
 }
 
@@ -46,6 +48,8 @@ export const useAppStore = create<AppState>()(
       setMapViewport: (mapViewport) => set({ mapViewport }),
       isGesturing: false,
       setIsGesturing: (isGesturing) => set({ isGesturing }),
+      legendVisible: true,
+      setLegendVisible: (legendVisible) => set({ legendVisible }),
       resetHomeLocation: () =>
         set({
           homeLocation: null,
@@ -61,6 +65,7 @@ export const useAppStore = create<AppState>()(
         homeLocation: state.homeLocation,
         hasSeenWelcomeModal: state.hasSeenWelcomeModal,
         temperatureUnit: state.temperatureUnit,
+        legendVisible: state.legendVisible,
       }),
     }
   )
