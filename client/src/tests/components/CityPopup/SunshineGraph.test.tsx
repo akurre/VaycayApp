@@ -116,7 +116,9 @@ describe('SunshineGraph', () => {
 
   it('returns null when both sunshineData and comparisonSunshineData are absent', () => {
     const { container } = render(<SunshineGraph sunshineData={null} />);
-    expect(container.querySelector('.recharts-responsive-container')).toBeNull();
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeNull();
   });
 
   it('renders with comparison data alongside main data', () => {

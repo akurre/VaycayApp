@@ -184,7 +184,9 @@ describe('RainfallGraph', () => {
 
   it('returns null when both weeklyWeatherData and comparisonWeeklyWeatherData are absent', () => {
     const { container } = render(<RainfallGraph weeklyWeatherData={null} />);
-    expect(container.querySelector('.recharts-responsive-container')).toBeNull();
+    expect(
+      container.querySelector('.recharts-responsive-container')
+    ).toBeNull();
   });
 
   it('renders with only comparison data (comp-only mode)', () => {

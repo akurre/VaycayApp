@@ -410,8 +410,12 @@ describe('useMapLayers', () => {
       })
     );
 
-    expect(result.current.find((l) => l.id === 'ghost-markers')?.props.visible).toBe(true);
-    expect(result.current.find((l) => l.id === 'ghost-heatmap')?.props.visible).toBe(false);
+    expect(
+      result.current.find((l) => l.id === 'ghost-markers')?.props.visible
+    ).toBe(true);
+    expect(
+      result.current.find((l) => l.id === 'ghost-heatmap')?.props.visible
+    ).toBe(false);
   });
 
   it('caps heatmap opacity at 0.6 when breatheOpacity exceeds it', () => {
@@ -467,7 +471,9 @@ describe('useMapLayers', () => {
       })
     );
 
-    const markerLayer = result.current.find((l) => l.id === 'temperature-markers');
+    const markerLayer = result.current.find(
+      (l) => l.id === 'temperature-markers'
+    );
     expect(markerLayer?.props.stroked).toBe(true);
   });
 
@@ -481,7 +487,9 @@ describe('useMapLayers', () => {
       })
     );
 
-    const markerLayer = result.current.find((l) => l.id === 'temperature-markers');
+    const markerLayer = result.current.find(
+      (l) => l.id === 'temperature-markers'
+    );
     expect(markerLayer?.props.stroked).toBe(false);
   });
 
