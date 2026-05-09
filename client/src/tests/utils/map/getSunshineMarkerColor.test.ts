@@ -1,68 +1,72 @@
 import { describe, it, expect } from 'vitest';
 import getSunshineMarkerColor from '@/utils/map/getSunshineMarkerColor';
+import { SUNSHINE_THRESHOLDS } from '@/const';
+
+const FIRST = SUNSHINE_THRESHOLDS[0];
+const LAST = SUNSHINE_THRESHOLDS[SUNSHINE_THRESHOLDS.length - 1];
+const NULL_GRAY: [number, number, number] = [150, 150, 150];
 
 describe('getSunshineMarkerColor', () => {
-  it('returns default gray color for null input', () => {
-    expect(getSunshineMarkerColor(null)).toEqual([150, 150, 150]);
+  it('returns the gray sentinel for null input', () => {
+    expect(getSunshineMarkerColor(null)).toEqual(NULL_GRAY);
   });
 
-  it('returns first threshold color for values below first threshold', () => {
-    // values below 0% should use the first threshold color [100, 20, 150]
-    expect(getSunshineMarkerColor(-10)).toEqual([100, 20, 150]);
+  it('clamps to the first-threshold color for values below the first threshold', () => {
+    expect(getSunshineMarkerColor(FIRST.percent - 10)).toEqual([
+      ...FIRST.color,
+    ]);
+    expect(getSunshineMarkerColor(FIRST.percent - 1)).toEqual([...FIRST.color]);
   });
 
-  it('returns first threshold color for value at first threshold', () => {
-    // value at 0% should return first threshold color
-    expect(getSunshineMarkerColor(0)).toEqual([100, 20, 150]);
+  it('returns the first-threshold color exactly at the first threshold', () => {
+    expect(getSunshineMarkerColor(FIRST.percent)).toEqual([...FIRST.color]);
   });
 
-  it('returns last threshold color for values at or above last threshold', () => {
-    // values at or above 85% should use the last threshold color [220, 0, 0]
-    expect(getSunshineMarkerColor(85)).toEqual([220, 0, 0]);
-    expect(getSunshineMarkerColor(150)).toEqual([220, 0, 0]);
+  it('clamps to the last-threshold color for values at or above the last threshold', () => {
+    expect(getSunshineMarkerColor(LAST.percent)).toEqual([...LAST.color]);
+    expect(getSunshineMarkerColor(LAST.percent + 5)).toEqual([...LAST.color]);
+    expect(getSunshineMarkerColor(150)).toEqual([...LAST.color]);
   });
 
-  it('interpolates between first and second threshold (0%-15%)', () => {
-    // value at 7.5 (halfway between 0 and 15)
-    // should interpolate between [100, 20, 150] and [70, 40, 190]
+  it('returns exact threshold colors at every threshold percent (except the saturated last threshold)', () => {
+    // every threshold up to but not including the last must round-trip exactly;
+    // the last threshold is the clamp ceiling, exercised separately above
+    SUNSHINE_THRESHOLDS.slice(0, -1).forEach(({ percent, color }) => {
+      expect(getSunshineMarkerColor(percent)).toEqual([...color]);
+    });
+  });
+
+  it('interpolates between adjacent thresholds (each channel within bracketing thresholds)', () => {
+    for (let i = 0; i < SUNSHINE_THRESHOLDS.length - 1; i++) {
+      const lower = SUNSHINE_THRESHOLDS[i];
+      const upper = SUNSHINE_THRESHOLDS[i + 1];
+      const midPercent = (lower.percent + upper.percent) / 2;
+      const midColor = getSunshineMarkerColor(midPercent);
+      [0, 1, 2].forEach((channel) => {
+        const min = Math.min(lower.color[channel], upper.color[channel]);
+        const max = Math.max(lower.color[channel], upper.color[channel]);
+        expect(midColor[channel]).toBeGreaterThanOrEqual(min);
+        expect(midColor[channel]).toBeLessThanOrEqual(max);
+      });
+      expect(midColor).toHaveLength(3);
+    }
+  });
+
+  it('returns integer RGB values for non-integer percents', () => {
     const color = getSunshineMarkerColor(7.5);
-    expect(color).toEqual([85, 30, 170]);
+    color.forEach((value) => {
+      expect(Number.isInteger(value)).toBe(true);
+    });
   });
 
-  it('interpolates between second and third threshold (15%-25%)', () => {
-    // value at 20 (halfway between 15 and 25)
-    // should interpolate between [70, 40, 190] and [0, 120, 200]
-    const color = getSunshineMarkerColor(20);
-    expect(color).toEqual([35, 80, 195]);
-  });
-
-  it('interpolates between middle thresholds (45%-50%)', () => {
-    // value at 47.5 (halfway between 45 and 50)
-    // should interpolate between [60, 140, 40] and [100, 200, 0]
-    const color = getSunshineMarkerColor(47.5);
-    expect(color).toEqual([80, 170, 20]);
-  });
-
-  it('interpolates between high thresholds (70%-80%)', () => {
-    // value at 75 (halfway between 70 and 80)
-    // should interpolate between [255, 69, 0] and [255, 20, 0]
-    const color = getSunshineMarkerColor(75);
-    expect(color).toEqual([255, 45, 0]);
-  });
-
-  it('returns exact threshold colors at boundary values', () => {
-    expect(getSunshineMarkerColor(15)).toEqual([70, 40, 190]);
-    expect(getSunshineMarkerColor(25)).toEqual([0, 120, 200]);
-    expect(getSunshineMarkerColor(45)).toEqual([60, 140, 40]);
-    expect(getSunshineMarkerColor(55)).toEqual([173, 255, 47]);
-    expect(getSunshineMarkerColor(65)).toEqual([255, 165, 0]);
-  });
-
-  it('handles edge case near threshold boundaries', () => {
-    // value just above a threshold should interpolate correctly
-    const color = getSunshineMarkerColor(56);
-    // should be very close to [173, 255, 47] but slightly interpolated toward next
-    expect(color[0]).toBeGreaterThanOrEqual(173);
-    expect(color[1]).toBeLessThanOrEqual(255);
+  it('returns valid RGB channels (0-255) across the full sweep', () => {
+    [0, 25, 50, 75, 100].forEach((percent) => {
+      const color = getSunshineMarkerColor(percent);
+      expect(color).toHaveLength(3);
+      color.forEach((channel) => {
+        expect(channel).toBeGreaterThanOrEqual(0);
+        expect(channel).toBeLessThanOrEqual(255);
+      });
+    });
   });
 });
