@@ -6,6 +6,7 @@ import useWeatherByDateAndBounds from '../api/dates/useWeatherByDateAndBounds';
 import useSunshineByMonthAndBounds from '../api/dates/useSunshineByMonthAndBounds';
 import WorldMap from '../components/Map/WorldMap';
 import FeedbackButton from '../components/Navigation/FeedbackButton';
+import { PerformanceDashboard } from '../components/PerformanceDashboard/PerformanceDashboard';
 import TopCommandBar from '../components/Navigation/TopCommandBar';
 import MobileTopCommandBar from '@/components/Navigation/Mobile/MobileTopCommandBar';
 import MobileDateScrubber from '@/components/Navigation/Mobile/MobileDateScrubber';
@@ -211,7 +212,8 @@ const MapPage: FC = () => {
       {isMobileOrSmall && <MobileDateScrubber selectedDate={selectedDate} />}
 
       {!isMobileOrSmall && (
-        <div className="absolute bottom-4 right-4 z-20">
+        <div className="absolute bottom-4 right-4 z-20 flex items-center gap-2">
+          <PerformanceDashboard />
           <FeedbackButton />
         </div>
       )}
