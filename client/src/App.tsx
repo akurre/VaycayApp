@@ -7,6 +7,7 @@ import { theme } from './theme';
 import MapPage from './pages/map';
 import { WelcomeModal } from './components/Shared/WelcomeModal';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
+
 const App = () => {
   return (
     <ErrorBoundary>
