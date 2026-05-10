@@ -209,7 +209,13 @@ const MapPage: FC = () => {
         />
       )}
 
-      {isMobileOrSmall && <MobileDateScrubber selectedDate={selectedDate} />}
+      {isMobileOrSmall && (
+        <MobileDateScrubber
+          selectedDate={selectedDate}
+          onDateChange={handleDateChange}
+          isMonthly={isSunshineSelected}
+        />
+      )}
 
       {!isMobileOrSmall && (
         <div className="absolute bottom-4 right-4 z-20 flex items-center gap-2">

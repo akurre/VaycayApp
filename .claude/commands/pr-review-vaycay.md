@@ -19,11 +19,13 @@ Fire all of these in parallel before reading any source files:
 - `git diff --stat origin/master...HEAD` — scope (files + line counts)
 - `git diff --name-only origin/master...HEAD` — file list
 - `git diff origin/master...HEAD` — the actual diff
-- `cd client && npm run lint -- --quiet 2>&1 | tail -50` (only if `client/` files changed)
-- `cd client && npm run type-check 2>&1 | tail -50` (only if `client/` files changed)
-- `cd server && npm run lint -- --quiet 2>&1 | tail -50` (only if `server/` files changed)
-- `cd server && npm run type-check 2>&1 | tail -50` (only if `server/` files changed)
-- `npm run knip 2>&1 | tail -50` (root — unused exports, dead code)
+- `cd "$(git rev-parse --show-toplevel)/client" && npm run lint -- --quiet 2>&1 | tail -50` (only if `client/` files changed)
+- `cd "$(git rev-parse --show-toplevel)/client" && npm run type-check 2>&1 | tail -50` (only if `client/` files changed)
+- `cd "$(git rev-parse --show-toplevel)/server" && npm run lint -- --quiet 2>&1 | tail -50` (only if `server/` files changed)
+- `cd "$(git rev-parse --show-toplevel)/server" && npm run type-check 2>&1 | tail -50` (only if `server/` files changed)
+- `cd "$(git rev-parse --show-toplevel)" && npm run knip 2>&1 | tail -50` (root — unused exports, dead code; knip script lives at repo root, NOT in client/ or server/)
+
+Note: Bash tool CWD persists across parallel tool calls. Always use absolute paths via `$(git rev-parse --show-toplevel)` so a concurrent `cd client` in one call doesn't leave the CWD wrong for another.
 
 Use lint + tsc + knip findings as a free first pass. Don't re-flag what they already caught — surface them in a "Static analysis" section of your report and move on.
 
@@ -79,6 +81,7 @@ Apply CLAUDE.md to each changed file. One-liners below are reminders, not the fu
 
 1. **File structure** — one function/component per file (HARD), filename matches, default export for components, constants in `constants.ts`/`const.ts`, types in `types/` (except component props).
    *Serena:* `get_symbols_overview` on each changed file — if it returns more than one top-level function/class/component export, flag it.
+   *ripgrep:* For any changed `.tsx` file, also run `rg -n 'const \w+ = \($' <file>` — a `const X = (` at end of line is the signature of an inline JSX sub-render that should be its own component file. Flag every hit.
 2. **Code duplication** — type guards consolidated in `utils/typeGuards.ts`; repeated logic extracted; near-duplicate components/hooks unified.
    *Serena:* before flagging "this looks duplicate", run `find_symbol` on the candidate name. Before flagging "extract this", run `find_referencing_symbols` to size blast radius.
 3. **State management** — no `useState`+`useEffect` for derived data; no `useMemo` around already-memoized fns; Zustand individual selectors only.

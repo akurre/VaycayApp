@@ -273,6 +273,10 @@ export const MONTH_FIELDS: Record<number, keyof SunshineData> = {
 // custom date slider thumb dimensions for positioning calculations
 export const SLIDER_THUMB_WIDTH = 14;
 
+// Tick mark dimensions rendered by SliderMarks beneath each mark value.
+export const SLIDER_MARK_TICK_WIDTH_PX = 1;
+export const SLIDER_MARK_TICK_HEIGHT_PX = 6;
+
 // days in each month (using 28.25 for February to account for leap years)
 export const DAYS_IN_MONTH = [
   31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31,
@@ -300,6 +304,23 @@ export const monthMarks = [
   { value: 335, label: 'Dec' },
 ];
 
+// Mobile date scrubber marks: tick for every month, text label only at the
+// quarter midpoints (Feb/May/Aug/Nov) — empty `label` renders a small tick.
+export const monthMarksMobile = [
+  { value: 1, label: '' },
+  { value: 32, label: 'Feb' },
+  { value: 60, label: '' },
+  { value: 91, label: '' },
+  { value: 121, label: 'May' },
+  { value: 152, label: '' },
+  { value: 182, label: '' },
+  { value: 213, label: 'Aug' },
+  { value: 244, label: '' },
+  { value: 274, label: '' },
+  { value: 305, label: 'Nov' },
+  { value: 335, label: '' },
+];
+
 // monthly marks for date slider when in monthly mode (sunshine data)
 export const monthlyMarks = [
   { value: 1, label: 'Jan' },
@@ -315,6 +336,23 @@ export const monthlyMarks = [
   { value: 11, label: 'Nov' },
   { value: 12, label: 'Dec' },
 ] as const;
+
+// Mobile monthly marks: tick for every month, text label only at the quarter
+// midpoints (Feb/May/Aug/Nov) — empty `label` renders a small tick.
+export const monthlyMarksMobile = [
+  { value: 1, label: '' },
+  { value: 2, label: 'Feb' },
+  { value: 3, label: '' },
+  { value: 4, label: '' },
+  { value: 5, label: 'May' },
+  { value: 6, label: '' },
+  { value: 7, label: '' },
+  { value: 8, label: 'Aug' },
+  { value: 9, label: '' },
+  { value: 10, label: '' },
+  { value: 11, label: 'Nov' },
+  { value: 12, label: '' },
+];
 
 // ============================================================================
 // CITY POPUP RIBBON CONSTANTS
@@ -456,6 +494,9 @@ export const MOBILE_ICON_BUTTON_SIZE_PX = 36;
 // Top offset for chrome that sits just below the mobile top bar (legend, loader).
 // = MOBILE_TOP_BAR_TOP_PX (16) + MOBILE_BAR_HEIGHT_PX (52) + 12px gap.
 export const MOBILE_BELOW_BAR_TOP_PX = 80;
+
+// Persistent mobile date scrubber: distance from viewport bottom.
+export const MOBILE_SCRUBBER_BOTTOM_PX = 16;
 
 // Desktop top offset for floating chrome elements (legend, loader).
 export const DESKTOP_TOP_OFFSET_PX = 16;
