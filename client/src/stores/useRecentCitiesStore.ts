@@ -20,9 +20,6 @@ export const useRecentCitiesStore = create<RecentCitiesState>()(
           };
         }),
     }),
-    {
-      name: 'recent-cities-storage',
-      partialize: (state) => ({ recentCities: state.recentCities }),
-    }
+    { name: 'recent-cities-storage' }
   )
 );

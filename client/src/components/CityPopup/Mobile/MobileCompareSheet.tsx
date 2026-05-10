@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import { ActionIcon, Loader, Modal, Text, TextInput } from '@mantine/core';
-import { useDebouncedValue } from '@mantine/hooks';
 import { IconPlus, IconSearch, IconX } from '@tabler/icons-react';
 
-import useCitySearch from '@/hooks/useCitySearch';
+import useCityComparisonSearch from '@/hooks/useCityComparisonSearch';
 import { useRecentCitiesStore } from '@/stores/useRecentCitiesStore';
-import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
-import { CITY_SEARCH_DEBOUNCE_MS, MIN_CITY_SEARCH_LENGTH } from '@/const';
+import { formatCityPopulationSuffix } from '@/utils/dataFormatting/formatCityPopulationSuffix';
+import { MIN_CITY_SEARCH_LENGTH } from '@/const';
 
 import type { SearchCitiesResult } from '@/types/userLocationType';
 import type { ExcludeCity } from '@/types/cityPopupTypes';
@@ -25,55 +24,15 @@ const MobileCompareSheet = ({
   excludeCity,
 }: MobileCompareSheetProps) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState<SearchCitiesResult[]>([]);
-  const [debouncedSearchTerm] = useDebouncedValue(
-    searchTerm,
-    CITY_SEARCH_DEBOUNCE_MS
-  );
 
-  const { searchCities, isLoading: isSearchLoading } = useCitySearch();
+  const { results: searchResults, isLoading: isSearchLoading } =
+    useCityComparisonSearch(searchTerm);
   const recentCities = useRecentCitiesStore((s) => s.recentCities);
   const pushRecentCity = useRecentCitiesStore((s) => s.pushRecentCity);
 
   useEffect(() => {
-    if (debouncedSearchTerm.trim().length < MIN_CITY_SEARCH_LENGTH) {
-      setSearchResults([]);
-      return undefined;
-    }
-
-    let cancelled = false;
-    searchCities(debouncedSearchTerm)
-      .then((results) => {
-        if (cancelled) return;
-        const filtered = excludeCity
-          ? results.filter(
-              (city) =>
-                !(
-                  city.name === excludeCity.name &&
-                  city.state === excludeCity.state &&
-                  city.country === excludeCity.country
-                )
-            )
-          : results;
-        setSearchResults(filtered);
-      })
-      .catch((error) => {
-        if (cancelled) return;
-        parseErrorAndNotify(
-          error,
-          `failed to search cities for "${debouncedSearchTerm}"`
-        );
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [debouncedSearchTerm, searchCities, excludeCity]);
-
-  useEffect(() => {
     if (!opened) {
       setSearchTerm('');
-      setSearchResults([]);
     }
   }, [opened]);
 
@@ -83,12 +42,23 @@ const MobileCompareSheet = ({
     onClose();
   };
 
+  const filteredResults = excludeCity
+    ? searchResults.filter(
+        (city) =>
+          !(
+            city.name === excludeCity.name &&
+            city.state === excludeCity.state &&
+            city.country === excludeCity.country
+          )
+      )
+    : searchResults;
+
   const trimmedSearch = searchTerm.trim();
   const isSearching = trimmedSearch.length >= MIN_CITY_SEARCH_LENGTH;
   const showSuggested = !isSearching && recentCities.length > 0;
   const showEmptyState = !isSearching && recentCities.length === 0;
   const noResults =
-    isSearching && !isSearchLoading && searchResults.length === 0;
+    isSearching && !isSearchLoading && filteredResults.length === 0;
 
   return (
     <Modal
@@ -177,9 +147,9 @@ const MobileCompareSheet = ({
               </div>
             )}
 
-            {!isSearchLoading && searchResults.length > 0 && (
+            {!isSearchLoading && filteredResults.length > 0 && (
               <ul className="list-none p-0 m-0">
-                {searchResults.map((city) => (
+                {filteredResults.map((city) => (
                   <li key={city.id}>
                     <button
                       type="button"
@@ -192,9 +162,7 @@ const MobileCompareSheet = ({
                       <span className="block text-xs text-[var(--mantine-color-dimmed)] truncate">
                         {city.state ? `${city.state}, ` : ''}
                         {city.country}
-                        {city.population
-                          ? ` • ${(city.population / 1_000_000).toFixed(1)}M`
-                          : ''}
+                        {formatCityPopulationSuffix(city.population)}
                       </span>
                     </button>
                   </li>
