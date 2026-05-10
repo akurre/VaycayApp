@@ -42,10 +42,6 @@ export const WelcomeModal = () => {
           inaccuracies might occur!
         </Text>
         <Text ta="center">
-          Furthermore, I'm still developing this app, so aesthetics and
-          functionality are projected to change a lot in the near future.
-        </Text>
-        <Text ta="center">
           If you have any nice ideas of how to make the app better, please
           submit the feedback via the button at the top. I'll get it in my
           email.
