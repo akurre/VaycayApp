@@ -10,9 +10,9 @@ export interface UseLoadingTierProps {
   isBasemapLoaded: boolean;
 }
 
-export type LoadingTier = 'none' | 'tier1' | 'tier2';
+type LoadingTier = 'none' | 'tier1' | 'tier2';
 
-export interface UseLoadingTierReturn {
+interface UseLoadingTierReturn {
   tier: LoadingTier;
   isDataChange: boolean;
   isPanLoad: boolean;

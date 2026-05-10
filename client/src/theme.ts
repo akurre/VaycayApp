@@ -17,7 +17,7 @@ import type {
 // Each palette has a "brand" anchor shade; other shades are picked relative to it.
 // Amber/sand/error anchor at 4 (brand pops); ocean anchors at 6 (brand recedes).
 export const AMBER_BRAND_SHADE = 4;
-export const OCEAN_BRAND_SHADE = 6;
+const OCEAN_BRAND_SHADE = 6;
 export const SAND_BRAND_SHADE = 4;
 export const ERROR_BRAND_SHADE = 4;
 
@@ -47,7 +47,7 @@ export const secondaryOceanShades: MantineColorsTuple = [
   '#071821',
 ];
 
-export const tertiarySandShades: MantineColorsTuple = [
+const tertiarySandShades: MantineColorsTuple = [
   '#FBF7EF',
   '#F4ECDB',
   '#ECE0C2',
@@ -60,7 +60,7 @@ export const tertiarySandShades: MantineColorsTuple = [
   '#211C12',
 ];
 
-export const successShades: MantineColorsTuple = [
+const successShades: MantineColorsTuple = [
   '#F1F5EB',
   '#DDE7CC',
   '#BFD09E',
@@ -73,7 +73,7 @@ export const successShades: MantineColorsTuple = [
   '#111B0A',
 ];
 
-export const errorShades: MantineColorsTuple = [
+const errorShades: MantineColorsTuple = [
   '#FBEEE9',
   '#F2D2C5',
   '#E5AC97',

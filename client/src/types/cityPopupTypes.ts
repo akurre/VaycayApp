@@ -28,7 +28,7 @@ export interface ExcludeCity {
 // renders at the grain it can display: temperature daily, sunshine monthly,
 // precip weekly. `subC*` is an optional sub-line under the headline (e.g.
 // rainy-day count under the weekly mm).
-export interface TodayValuePair {
+interface TodayValuePair {
   c1: number | null;
   c2: number | null;
   subC1?: number | null;

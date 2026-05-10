@@ -21,7 +21,7 @@ export const isSunshineData = (
 /**
  * Type guard for valid marker data with coordinates and temperature
  */
-export interface ValidWeatherMarkerData extends WeatherData {
+interface ValidWeatherMarkerData extends WeatherData {
   lat: number;
   long: number;
   avgTemperature: number;

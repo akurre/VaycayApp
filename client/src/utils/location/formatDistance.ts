@@ -20,5 +20,3 @@ export function formatDistance(
 
   return `${Math.round(distance).toLocaleString()} ${unit}`;
 }
-
-export default formatDistance;

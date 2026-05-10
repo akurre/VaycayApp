@@ -255,4 +255,3 @@ async function queryCityIds({ prisma, dateStr, bounds }: QueryCityIdsParams): Pr
 }
 
 export default queryCityIds;
-export { queryCityIdsWithGridDistribution, queryCityIdsWithCountryDistribution };

@@ -4,7 +4,7 @@ import type { WeatherRecordWithRelations } from '../utils/weatherDataMappers';
 /**
  * creates a mock city object for testing
  */
-export function createMockCity(overrides?: Partial<City>): City {
+function createMockCity(overrides?: Partial<City>): City {
   return {
     id: 123,
     name: 'Berlin',
@@ -27,7 +27,7 @@ export function createMockCity(overrides?: Partial<City>): City {
 /**
  * creates a mock weather station object for testing
  */
-export function createMockStation(overrides?: Partial<WeatherStation>): WeatherStation {
+function createMockStation(overrides?: Partial<WeatherStation>): WeatherStation {
   return {
     id: 456,
     name: 'Berlin Weather Station',
@@ -39,7 +39,7 @@ export function createMockStation(overrides?: Partial<WeatherStation>): WeatherS
 /**
  * creates a mock weather record object for testing
  */
-export function createMockWeatherRecord(overrides?: Partial<WeatherRecord>): WeatherRecord {
+function createMockWeatherRecord(overrides?: Partial<WeatherRecord>): WeatherRecord {
   return {
     id: 1,
     cityId: 123,
@@ -69,7 +69,7 @@ export function createMockWeatherRecord(overrides?: Partial<WeatherRecord>): Wea
 /**
  * creates a complete mock weather record with relations for testing
  */
-export function createMockWeatherRecordWithRelations(overrides?: {
+export default function createMockWeatherRecordWithRelations(overrides?: {
   record?: Partial<WeatherRecord>;
   city?: Partial<City>;
   station?: Partial<WeatherStation>;

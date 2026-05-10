@@ -13,7 +13,7 @@ const weatherCache = new NodeCache({
  * @param fetchFn function to execute if cache miss
  * @returns cached data or fresh data from fetchFn
  */
-export async function getCachedWeatherData<T>(
+export default async function getCachedWeatherData<T>(
   cacheKey: string,
   fetchFn: () => Promise<T>
 ): Promise<T> {
@@ -27,19 +27,4 @@ export async function getCachedWeatherData<T>(
   const data = await fetchFn();
   weatherCache.set(cacheKey, data);
   return data;
-}
-
-/**
- * clear all cached weather data (useful for testing or manual refresh)
- */
-export function clearWeatherCache(): void {
-  weatherCache.flushAll();
-  console.log('✓ weather cache cleared');
-}
-
-/**
- * get cache statistics
- */
-export function getCacheStats() {
-  return weatherCache.getStats();
 }

@@ -14,7 +14,7 @@ export interface MapViewport {
   zoom: number;
 }
 
-export enum MapTheme {
+enum MapTheme {
   Light = 'light',
   Dark = 'dark',
 }

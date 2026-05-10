@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { mapWeatherRecord, mapWeatherRecords } from '../../utils/weatherDataMappers';
-import { createMockWeatherRecordWithRelations } from '../test-utils';
+import createMockWeatherRecordWithRelations from '../test-utils';
 
 describe('weatherDataMappers', () => {
   describe('mapWeatherRecord', () => {
