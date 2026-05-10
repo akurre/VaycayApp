@@ -150,11 +150,7 @@ describe('MobileDateScrubber', () => {
 
   it('slides offscreen when hidden=true', () => {
     render(
-      <MobileDateScrubber
-        selectedDate="0410"
-        onDateChange={vi.fn()}
-        hidden
-      />
+      <MobileDateScrubber selectedDate="0410" onDateChange={vi.fn()} hidden />
     );
     const root = screen.getByTestId('mobile-date-scrubber');
     expect(root.style.transform).toBe('translateY(120%)');
