@@ -1,11 +1,25 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useMapInteractions } from '@/hooks/useMapInteractions';
 import type { WeatherData } from '@/types/cityWeatherDataType';
 import type { PickingInfo } from '@deck.gl/core';
 import { ViewMode, DataType } from '@/types/mapTypes';
 
+vi.mock('@/hooks/useIsMobileOrSmall', () => ({
+  default: vi.fn(() => false),
+}));
+
+import useIsMobileOrSmall from '@/hooks/useIsMobileOrSmall';
+
+// Helper to set the mocked mobile flag.
+const setMobile = (value: boolean) =>
+  vi.mocked(useIsMobileOrSmall).mockReturnValue(value);
+
 describe('useMapInteractions', () => {
+  beforeEach(() => {
+    setMobile(false); // default: desktop
+  });
+
   const createMockCity = (overrides?: Partial<WeatherData>): WeatherData => ({
     cityId: 215,
     city: 'Milan',
@@ -393,6 +407,141 @@ describe('useMapInteractions', () => {
       });
 
       expect(result.current.selectedCity?.city).toBe('Rome');
+    });
+  });
+
+  describe('mobile tap behavior', () => {
+    beforeEach(() => {
+      setMobile(true);
+    });
+
+    it('sets hoverInfo with embedded city on marker tap (does not open drawer)', () => {
+      const city = createMockCity();
+      const { result } = renderHook(() =>
+        useMapInteractions([city], ViewMode.Markers, DataType.Temperature)
+      );
+
+      act(() => {
+        result.current.handleClick(createMockPickingInfo({ object: city }));
+      });
+
+      expect(result.current.selectedCity).toBeNull();
+      expect(result.current.hoverInfo?.city).toEqual(city);
+      expect(result.current.hoverInfo?.x).toBe(100);
+      expect(result.current.hoverInfo?.y).toBe(200);
+    });
+
+    it('toggle-dismisses when tapping the same marker twice', () => {
+      const city = createMockCity();
+      const { result } = renderHook(() =>
+        useMapInteractions([city], ViewMode.Markers, DataType.Temperature)
+      );
+
+      act(() => {
+        result.current.handleClick(createMockPickingInfo({ object: city }));
+      });
+      expect(result.current.hoverInfo?.city).toEqual(city);
+
+      act(() => {
+        result.current.handleClick(createMockPickingInfo({ object: city }));
+      });
+      expect(result.current.hoverInfo).toBeNull();
+      expect(result.current.selectedCity).toBeNull();
+    });
+
+    it('swaps to a new city when a different marker is tapped', () => {
+      const milan = createMockCity({ cityId: 1, city: 'Milan' });
+      const rome = createMockCity({
+        cityId: 2,
+        city: 'Rome',
+        lat: 41.9028,
+        long: 12.4964,
+      });
+      const { result } = renderHook(() =>
+        useMapInteractions(
+          [milan, rome],
+          ViewMode.Markers,
+          DataType.Temperature
+        )
+      );
+
+      act(() => {
+        result.current.handleClick(createMockPickingInfo({ object: milan }));
+      });
+      expect(result.current.hoverInfo?.city?.city).toBe('Milan');
+
+      act(() => {
+        result.current.handleClick(createMockPickingInfo({ object: rome }));
+      });
+      expect(result.current.hoverInfo?.city?.city).toBe('Rome');
+    });
+
+    it('clears hoverInfo when tapping the map background', () => {
+      const city = createMockCity();
+      const { result } = renderHook(() =>
+        useMapInteractions([city], ViewMode.Markers, DataType.Temperature)
+      );
+
+      act(() => {
+        result.current.handleClick(createMockPickingInfo({ object: city }));
+      });
+      expect(result.current.hoverInfo?.city).toEqual(city);
+
+      act(() => {
+        result.current.handleClick(createMockPickingInfo({ object: null }));
+      });
+      expect(result.current.hoverInfo).toBeNull();
+    });
+
+    it('handleHover is a no-op on mobile (no synthetic hover overwrite)', () => {
+      const city = createMockCity();
+      const { result } = renderHook(() =>
+        useMapInteractions([city], ViewMode.Markers, DataType.Temperature)
+      );
+
+      // First, tap to set the tooltip via click.
+      act(() => {
+        result.current.handleClick(createMockPickingInfo({ object: city }));
+      });
+      const tappedHover = result.current.hoverInfo;
+      expect(tappedHover?.city).toEqual(city);
+
+      // A subsequent hover event must NOT alter the tap-set state.
+      act(() => {
+        result.current.handleHover(createMockPickingInfo({ object: null }));
+      });
+      expect(result.current.hoverInfo).toEqual(tappedHover);
+    });
+
+    it('openHoveredCity promotes the peeked city into selectedCity and clears hoverInfo', () => {
+      const city = createMockCity();
+      const { result } = renderHook(() =>
+        useMapInteractions([city], ViewMode.Markers, DataType.Temperature)
+      );
+
+      act(() => {
+        result.current.handleClick(createMockPickingInfo({ object: city }));
+      });
+
+      act(() => {
+        result.current.openHoveredCity();
+      });
+
+      expect(result.current.selectedCity).toEqual(city);
+      expect(result.current.hoverInfo).toBeNull();
+    });
+
+    it('openHoveredCity is a no-op when no city is peeked', () => {
+      const city = createMockCity();
+      const { result } = renderHook(() =>
+        useMapInteractions([city], ViewMode.Markers, DataType.Temperature)
+      );
+
+      act(() => {
+        result.current.openHoveredCity();
+      });
+
+      expect(result.current.selectedCity).toBeNull();
     });
   });
 });

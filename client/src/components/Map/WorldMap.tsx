@@ -23,6 +23,7 @@ import CityPopup from '../CityPopup/CityPopup';
 import MobileCityDrawer from '../CityPopup/Mobile/MobileCityDrawer';
 import useIsMobileOrSmall from '@/hooks/useIsMobileOrSmall';
 import MapTooltip from './MapTooltip';
+import { projectCityToScreen } from '@/utils/map/projectCityToScreen';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useWeatherStore } from '@/stores/useWeatherStore';
 import { useSunshineStore } from '@/stores/useSunshineStore';
@@ -64,6 +65,9 @@ const WorldMap = ({
 
   // Track basemap loading state
   const [isBasemapLoaded, setIsBasemapLoaded] = useState(false);
+
+  // Container ref for projecting tooltip lat/long → screen pixels.
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Track whether to show loader (delayed to avoid flash for quick loads)
   const [showLoader, setShowLoader] = useState(false);
@@ -150,6 +154,7 @@ const WorldMap = ({
     handleHover,
     handleClick,
     handleClosePopup,
+    openHoveredCity,
   } = useMapInteractions(cities, viewMode, dataType, selectedMonth);
 
   // Memoize controller config to prevent DeckGL from seeing it as a new object on every render
@@ -223,8 +228,31 @@ const WorldMap = ({
   // Use the current or last selected city for rendering during transition
   const cityToRender = selectedCity || lastSelectedCityRef.current;
 
+  // For mobile tap-tooltips (hoverInfo.city present), reproject the city's
+  // lat/long to screen pixels on every viewState change so the tooltip stays
+  // glued to the marker while the user pans/zooms. If the city has been
+  // panned off-screen, hide the tooltip. Desktop hover (no city) keeps its
+  // raw cursor-relative coords.
+  const tooltipPosition = useMemo(() => {
+    if (!hoverInfo) return null;
+    const city = hoverInfo.city;
+    if (!city || city.lat == null || city.long == null) {
+      return { x: hoverInfo.x, y: hoverInfo.y };
+    }
+    const container = containerRef.current;
+    if (!container) return { x: hoverInfo.x, y: hoverInfo.y };
+    const { width, height } = container.getBoundingClientRect();
+    return projectCityToScreen({
+      lat: city.lat,
+      long: city.long,
+      viewState,
+      width,
+      height,
+    });
+  }, [hoverInfo, viewState]);
+
   return (
-    <div className="relative h-full w-full">
+    <div ref={containerRef} className="relative h-full w-full">
       <div
         style={{
           opacity: mapOpacity,
@@ -272,11 +300,14 @@ const WorldMap = ({
         )}
       </Transition>
 
-      {hoverInfo && (
+      {hoverInfo && tooltipPosition && (
         <MapTooltip
-          x={hoverInfo.x}
-          y={hoverInfo.y}
+          x={tooltipPosition.x}
+          y={tooltipPosition.y}
           content={hoverInfo.content}
+          onView={
+            isMobileOrSmall && hoverInfo.city ? openHoveredCity : undefined
+          }
         />
       )}
 

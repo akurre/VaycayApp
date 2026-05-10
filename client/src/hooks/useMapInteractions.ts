@@ -3,16 +3,18 @@ import type { PickingInfo } from '@deck.gl/core';
 import type { DataType, ViewMode, WeatherDataUnion } from '@/types/mapTypes';
 import { getTooltipContent } from '../utils/map/getTooltipContent';
 import { useAppStore } from '@/stores/useAppStore';
+import useIsMobileOrSmall from '@/hooks/useIsMobileOrSmall';
 
 /**
- * hook to manage map interactions including hover tooltips and city selection.
- * handles both marker and heatmap view modes with appropriate interaction logic.
+ * Manages map interactions. On mobile, taps set hoverInfo with an embedded city
+ * so MapTooltip can render a "+" that promotes the city into the full drawer.
  */
 
 interface HoverInfo {
   x: number;
   y: number;
   content: string;
+  city?: WeatherDataUnion;
 }
 
 export const useMapInteractions = (
@@ -25,13 +27,19 @@ export const useMapInteractions = (
     null
   );
   const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null);
+  const isMobileOrSmall = useIsMobileOrSmall();
   const homeLocation = useAppStore((state) => state.homeLocation);
   const homeCityData = useAppStore((state) => state.homeCityData);
   const temperatureUnit = useAppStore((state) => state.temperatureUnit);
 
-  // Ref for stable callback identity — cities changes on every fetch but callbacks shouldn't recreate
+  // Refs for stable callback identity — these change frequently but DeckGL
+  // shouldn't see a new onClick / onHover on every state flip.
   const citiesRef = useRef(cities);
   citiesRef.current = cities;
+  const isMobileRef = useRef(isMobileOrSmall);
+  isMobileRef.current = isMobileOrSmall;
+  const hoverInfoRef = useRef(hoverInfo);
+  hoverInfoRef.current = hoverInfo;
 
   // Throttle hover updates to reduce re-renders from mouse movement
   const pendingHoverRef = useRef<HoverInfo | null>(null);
@@ -48,6 +56,10 @@ export const useMapInteractions = (
 
   const handleHover = useCallback(
     (info: PickingInfo) => {
+      // On mobile, hover events come from synthetic touch sequences and would
+      // overwrite the tap-set tooltip. The tooltip is tap-driven on mobile.
+      if (isMobileRef.current) return;
+
       let newHoverInfo: HoverInfo | null = null;
 
       // Handle home location hover
@@ -129,33 +141,70 @@ export const useMapInteractions = (
 
   const handleClick = useCallback(
     (info: PickingInfo) => {
-      // check if home location center was clicked
       if (info.layer?.id === 'home-center' && homeCityData) {
         setSelectedCity(homeCityData);
         return;
       }
 
+      let hitCity: WeatherDataUnion | null = null;
       if (viewMode === 'markers' && info.object) {
-        setSelectedCity(info.object as WeatherDataUnion);
+        hitCity = info.object as WeatherDataUnion;
       } else if (viewMode === 'heatmap' && info.coordinate) {
         const [longitude, latitude] = info.coordinate;
-        const city = citiesRef.current.find(
-          (c) =>
-            c.lat !== null &&
-            c.long !== null &&
-            Math.abs(c.lat - latitude) < 0.5 &&
-            Math.abs(c.long - longitude) < 0.5
-        );
-        if (city) {
-          setSelectedCity(city);
+        hitCity =
+          citiesRef.current.find(
+            (c) =>
+              c.lat !== null &&
+              c.long !== null &&
+              Math.abs(c.lat - latitude) < 0.5 &&
+              Math.abs(c.long - longitude) < 0.5
+          ) ?? null;
+      }
+
+      if (isMobileRef.current) {
+        // Mobile: tap shows the tooltip with a "+" button instead of opening
+        // the drawer. Tap-elsewhere or tap-same-marker dismisses it.
+        if (!hitCity) {
+          setHoverInfo(null);
+          return;
+        }
+        if (hoverInfoRef.current?.city?.cityId === hitCity.cityId) {
+          setHoverInfo(null);
+          return;
+        }
+        setHoverInfo({
+          x: info.x,
+          y: info.y,
+          content: getTooltipContent(
+            [hitCity],
+            hitCity.long!,
+            hitCity.lat!,
+            dataType,
+            selectedMonth,
+            temperatureUnit
+          )!,
+          city: hitCity,
+        });
+      } else {
+        if (hitCity) {
+          setSelectedCity(hitCity);
         }
       }
     },
-    [viewMode, homeCityData]
+    [viewMode, homeCityData, dataType, selectedMonth, temperatureUnit]
   );
 
   const handleClosePopup = useCallback(() => {
     setSelectedCity(null);
+  }, []);
+
+  // Promotes the city embedded in the current tooltip into the full drawer.
+  const openHoveredCity = useCallback(() => {
+    const city = hoverInfoRef.current?.city;
+    if (city) {
+      setHoverInfo(null);
+      setSelectedCity(city);
+    }
   }, []);
 
   return {
@@ -164,5 +213,6 @@ export const useMapInteractions = (
     handleHover,
     handleClick,
     handleClosePopup,
+    openHoveredCity,
   };
 };

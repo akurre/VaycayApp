@@ -1,16 +1,18 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Popover, Loader } from '@mantine/core';
-import { IconPlus, IconX } from '@tabler/icons-react';
+import { IconX } from '@tabler/icons-react';
 import useCityComparisonSearch from '@/hooks/useCityComparisonSearch';
 import type { SearchCitiesResult } from '@/types/userLocationType';
-import type { ExcludeCity } from '@/types/cityPopupTypes';
+import { PopupVariant, type ExcludeCity } from '@/types/cityPopupTypes';
 import {
   CITY2_PRIMARY_COLOR,
   COMPARISON_INPUT_FOCUS_DELAY_MS,
   MIN_CITY_SEARCH_LENGTH,
 } from '@/const';
-import { formatCityPopulationSuffix } from '@/utils/dataFormatting/formatCityPopulationSuffix';
+import formatCityFullName from '@/utils/dataFormatting/formatCityFullName';
 import CityNameRow from '@/components/CityPopup/Ribbon/CityNameRow';
+import CitySearchResultRow from '@/components/CityPopup/CitySearchResultRow';
+import AddComparisonCityButton from '@/components/CityPopup/AddComparisonCityButton';
 
 interface ComparisonCitySelectorProps {
   onCitySelect: (city: SearchCitiesResult) => void;
@@ -62,12 +64,7 @@ const ComparisonCitySelector = ({
     setOpened(false);
   };
 
-  const fullName = useMemo(() => {
-    if (!selectedCity) return '';
-    return [selectedCity.name, selectedCity.state, selectedCity.country]
-      .filter(Boolean)
-      .join(', ');
-  }, [selectedCity]);
+  const fullName = selectedCity ? formatCityFullName(selectedCity) : '';
 
   const showSuggested = !isSearching && filteredRecent.length > 0;
   const showSearchPrompt = !isSearching && filteredRecent.length === 0;
@@ -119,21 +116,10 @@ const ComparisonCitySelector = ({
             }
           />
         ) : (
-          <button
-            type="button"
+          <AddComparisonCityButton
             onClick={() => setOpened(true)}
-            aria-label="Add comparison city"
-            className="flex items-center gap-2 min-w-0 cursor-pointer text-[var(--mantine-color-dimmed)] hover:text-[var(--mantine-color-text)] transition-colors"
-          >
-            <span
-              className="w-2.5 h-2.5 rounded-full shrink-0 opacity-60"
-              style={{ background: CITY2_PRIMARY_COLOR }}
-            />
-            <span className="text-[17px] font-bold font-[Outfit_Variable]">
-              Compare
-            </span>
-            <IconPlus size={14} className="opacity-70 shrink-0" />
-          </button>
+            variant={PopupVariant.Desktop}
+          />
         )}
       </Popover.Target>
 
@@ -156,21 +142,12 @@ const ComparisonCitySelector = ({
                 Suggested
               </div>
               {filteredRecent.map((city) => (
-                <button
+                <CitySearchResultRow
                   key={city.id}
-                  type="button"
+                  city={city}
                   onClick={() => handleSelectCity(city)}
-                  className="w-full text-left px-3 py-2 text-sm transition-colors hover:bg-[var(--mantine-color-default-border)] cursor-pointer"
-                >
-                  <div className="font-medium text-[var(--mantine-color-text)]">
-                    {city.name}
-                  </div>
-                  <div className="text-xs text-[var(--mantine-color-dimmed)]">
-                    {city.state && `${city.state}, `}
-                    {city.country}
-                    {formatCityPopulationSuffix(city.population)}
-                  </div>
-                </button>
+                  variant={PopupVariant.Desktop}
+                />
               ))}
             </div>
           )}
@@ -190,21 +167,12 @@ const ComparisonCitySelector = ({
           {isSearching && !isSearchLoading && filteredResults.length > 0 && (
             <div className="max-h-60 overflow-y-auto py-1">
               {filteredResults.map((city) => (
-                <button
+                <CitySearchResultRow
                   key={city.id}
-                  type="button"
+                  city={city}
                   onClick={() => handleSelectCity(city)}
-                  className="w-full text-left px-3 py-2 text-sm transition-colors hover:bg-[var(--mantine-color-default-border)] cursor-pointer"
-                >
-                  <div className="font-medium text-[var(--mantine-color-text)]">
-                    {city.name}
-                  </div>
-                  <div className="text-xs text-[var(--mantine-color-dimmed)]">
-                    {city.state && `${city.state}, `}
-                    {city.country}
-                    {formatCityPopulationSuffix(city.population)}
-                  </div>
-                </button>
+                  variant={PopupVariant.Desktop}
+                />
               ))}
             </div>
           )}

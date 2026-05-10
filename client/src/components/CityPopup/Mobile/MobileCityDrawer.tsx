@@ -1,12 +1,14 @@
 import { ActionIcon, useMantineColorScheme } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useEffect, useMemo, useRef, useState, type PointerEvent } from 'react';
-import { IconPlus, IconX } from '@tabler/icons-react';
+import { IconX } from '@tabler/icons-react';
 
 import useWeatherDataForCity from '@/api/dates/useWeatherDataForCity';
 import useSunshineDataForCity from '@/api/dates/useSunshineDataForCity';
 import useWeeklyWeatherForCity from '@/api/dates/useWeeklyWeatherForCity';
 import CityNameRow from '@/components/CityPopup/Ribbon/CityNameRow';
+import AddComparisonCityButton from '@/components/CityPopup/AddComparisonCityButton';
+import formatCityFullName from '@/utils/dataFormatting/formatCityFullName';
 import TodayReadout from '@/components/CityPopup/Ribbon/TodayReadout';
 import DataChartTabs from '@/components/CityPopup/DataChartTabs';
 import MobileTabBar from '@/components/CityPopup/Mobile/MobileTabBar';
@@ -30,6 +32,7 @@ import {
 } from '@/components/CityPopup/Mobile/mobileDrawerHelpers';
 import { DataType } from '@/types/mapTypes';
 import { MobileTab } from '@/types/mobileTabType';
+import { PopupVariant } from '@/types/cityPopupTypes';
 import {
   CITY1_PRIMARY_COLOR,
   MONTH_MIDPOINT_DAY,
@@ -310,9 +313,7 @@ const MobileCityDrawer = ({
   }
 
   const comparisonName = comparisonCity
-    ? [comparisonCity.name, comparisonCity.state, comparisonCity.country]
-        .filter(Boolean)
-        .join(', ')
+    ? formatCityFullName(comparisonCity)
     : null;
 
   const transformValue = isDismissing
@@ -398,21 +399,10 @@ const MobileCityDrawer = ({
                 }
               />
             ) : (
-              <button
-                type="button"
+              <AddComparisonCityButton
                 onClick={openCompareSheet}
-                aria-label="Add comparison city"
-                className="flex items-center gap-2 cursor-pointer text-[var(--mantine-color-dimmed)] hover:text-[var(--mantine-color-text)] transition-colors self-start"
-              >
-                <span
-                  className="w-2.5 h-2.5 rounded-full opacity-60"
-                  style={{ background: CITY2_PRIMARY_COLOR }}
-                />
-                <span className="text-[15px] font-bold font-[Outfit_Variable]">
-                  Compare
-                </span>
-                <IconPlus size={14} className="opacity-70" />
-              </button>
+                variant={PopupVariant.Mobile}
+              />
             )}
           </div>
           <ActionIcon
@@ -426,47 +416,49 @@ const MobileCityDrawer = ({
         </header>
       </div>
 
-      <main
-        className="flex-1 min-h-0 flex flex-col px-4"
-        style={{ paddingBottom: MOBILE_DRAWER_BOTTOM_PAD_PX }}
-      >
+      <main className="flex-1 min-h-0 flex flex-col px-4">
         {visibleTab === MobileTab.Details ? (
           <MobileDetailsList stats={stats} hasComparison={!!comparisonCity} />
         ) : (
-          <>
-            <div
-              className="flex-1 min-h-0"
-              style={{ minHeight: MOBILE_DRAWER_CHART_MIN_PX }}
-            >
-              <DataChartTabs
-                tab={chartTabForDataChartTabs}
-                displaySunshineData={displaySunshineData}
-                sunshineLoading={sunshineLoading}
-                sunshineError={!!sunshineError}
-                selectedMonth={monthToUse}
-                selectedDate={dateToUse}
-                weeklyWeatherData={weeklyWeatherData}
-                weeklyWeatherLoading={weeklyWeatherLoading}
-                weeklyWeatherError={!!weeklyWeatherError}
-                comparisonSunshineData={comparisonSunshineData}
-                comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
-              />
-            </div>
-            <div data-testid="mobile-drawer-today-readout" className="shrink-0">
-              <TodayReadout
-                tab={chartTabForDataChartTabs}
-                c1Value={todayPair.c1}
-                c2Value={todayPair.c2}
-                subC1Value={todayPair.subC1 ?? null}
-                subC2Value={todayPair.subC2 ?? null}
-                hasComparison={!!comparisonCity}
-                selectedDate={dateToUse}
-                hover={null}
-              />
-            </div>
-          </>
+          <div
+            className="flex-1 min-h-0 overflow-hidden"
+            style={{ minHeight: MOBILE_DRAWER_CHART_MIN_PX }}
+          >
+            <DataChartTabs
+              tab={chartTabForDataChartTabs}
+              displaySunshineData={displaySunshineData}
+              sunshineLoading={sunshineLoading}
+              sunshineError={!!sunshineError}
+              selectedMonth={monthToUse}
+              selectedDate={dateToUse}
+              weeklyWeatherData={weeklyWeatherData}
+              weeklyWeatherLoading={weeklyWeatherLoading}
+              weeklyWeatherError={!!weeklyWeatherError}
+              comparisonSunshineData={comparisonSunshineData}
+              comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
+            />
+          </div>
         )}
       </main>
+
+      {visibleTab !== MobileTab.Details && (
+        <div
+          data-testid="mobile-drawer-today-readout"
+          className="shrink-0 px-4"
+          style={{ paddingBottom: MOBILE_DRAWER_BOTTOM_PAD_PX }}
+        >
+          <TodayReadout
+            tab={chartTabForDataChartTabs}
+            c1Value={todayPair.c1}
+            c2Value={todayPair.c2}
+            subC1Value={todayPair.subC1 ?? null}
+            subC2Value={todayPair.subC2 ?? null}
+            hasComparison={!!comparisonCity}
+            selectedDate={dateToUse}
+            hover={null}
+          />
+        </div>
+      )}
 
       <MobileTabBar
         tab={visibleTab}
