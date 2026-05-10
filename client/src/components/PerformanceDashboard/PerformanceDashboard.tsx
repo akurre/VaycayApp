@@ -23,7 +23,7 @@ interface MetricSummary {
   isOverBudget: boolean;
 }
 
-export function PerformanceDashboard() {
+export const PerformanceDashboard = () => {
   const isDevelopment = import.meta.env.DEV;
 
   const [metrics, setMetrics] = useState<MetricSummary[]>([]);
@@ -113,13 +113,7 @@ export function PerformanceDashboard() {
     return (
       <ActionIcon
         onClick={() => setIsVisible(true)}
-        style={{
-          position: 'fixed',
-          bottom: 20,
-          right: 20,
-          zIndex: 10000,
-          opacity: 0.1,
-        }}
+        style={{ opacity: 0.1 }}
         size="xs"
         variant="filled"
         color="dark"
@@ -235,7 +229,7 @@ export function PerformanceDashboard() {
       </Stack>
     </Card>
   );
-}
+};
 
 function formatMetricName(name: string): string {
   return name

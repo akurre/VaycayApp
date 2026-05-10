@@ -3,7 +3,12 @@ import { useWeatherStore } from '@/stores/useWeatherStore';
 import { useSunshineStore } from '@/stores/useSunshineStore';
 import { useAppStore } from '@/stores/useAppStore';
 import { DataType } from '@/types/mapTypes';
-import { MAP_DATA_LOADER_FADE_MS } from '@/const';
+import useIsMobileOrSmall from '@/hooks/useIsMobileOrSmall';
+import {
+  MAP_DATA_LOADER_FADE_MS,
+  MOBILE_BELOW_BAR_TOP_PX,
+  DESKTOP_TOP_OFFSET_PX,
+} from '@/const';
 
 interface MapDataLoaderProps {
   dataType: DataType;
@@ -13,6 +18,7 @@ const MapDataLoader = ({ dataType }: MapDataLoaderProps) => {
   const isLoadingWeather = useWeatherStore((s) => s.isLoadingWeather);
   const isLoadingSunshine = useSunshineStore((s) => s.isLoadingSunshine);
   const isGesturing = useAppStore((s) => s.isGesturing);
+  const isMobileOrSmall = useIsMobileOrSmall();
   const isLoading =
     dataType === DataType.Sunshine ? isLoadingSunshine : isLoadingWeather;
 
@@ -28,11 +34,16 @@ const MapDataLoader = ({ dataType }: MapDataLoaderProps) => {
     >
       {(styles) => (
         <div
-          style={styles}
+          style={{
+            ...styles,
+            top: isMobileOrSmall
+              ? MOBILE_BELOW_BAR_TOP_PX
+              : DESKTOP_TOP_OFFSET_PX,
+          }}
           role="status"
           aria-live="polite"
           aria-label="Loading map data"
-          className="absolute top-4 right-4 z-30 pointer-events-none"
+          className="absolute right-4 z-30 pointer-events-none"
         >
           <Loader size="sm" />
         </div>

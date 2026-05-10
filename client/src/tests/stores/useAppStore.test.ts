@@ -109,4 +109,27 @@ describe('useAppStore', () => {
       expect(useAppStore.getState().locationError).toBeNull();
     });
   });
+
+  describe('legendVisible', () => {
+    it('defaults to false', () => {
+      expect(useAppStore.getState().legendVisible).toBe(false);
+    });
+
+    it('can be set to true', () => {
+      useAppStore.getState().setLegendVisible(true);
+      expect(useAppStore.getState().legendVisible).toBe(true);
+    });
+
+    it('can be toggled back to false', () => {
+      useAppStore.getState().setLegendVisible(true);
+      useAppStore.getState().setLegendVisible(false);
+      expect(useAppStore.getState().legendVisible).toBe(false);
+    });
+
+    it('persists via app-storage key', () => {
+      useAppStore.getState().setLegendVisible(true);
+      const stored = JSON.parse(localStorage.getItem('app-storage') ?? '{}');
+      expect(stored.state.legendVisible).toBe(true);
+    });
+  });
 });

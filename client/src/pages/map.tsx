@@ -6,14 +6,23 @@ import useWeatherByDateAndBounds from '../api/dates/useWeatherByDateAndBounds';
 import useSunshineByMonthAndBounds from '../api/dates/useSunshineByMonthAndBounds';
 import WorldMap from '../components/Map/WorldMap';
 import FeedbackButton from '../components/Navigation/FeedbackButton';
+import { PerformanceDashboard } from '../components/PerformanceDashboard/PerformanceDashboard';
 import TopCommandBar from '../components/Navigation/TopCommandBar';
+import MobileTopCommandBar from '@/components/Navigation/Mobile/MobileTopCommandBar';
+import MobileDateScrubber from '@/components/Navigation/Mobile/MobileDateScrubber';
+import useIsMobileOrSmall from '@/hooks/useIsMobileOrSmall';
 import { getTodayAsMMDD } from '@/utils/dateFormatting/getTodayAsMMDD';
 import { useWeatherStore } from '../stores/useWeatherStore';
 import { useSunshineStore } from '../stores/useSunshineStore';
 import { useAppStore } from '../stores/useAppStore';
 import { DataType, ViewMode } from '@/types/mapTypes';
 import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
-import { INITIAL_VIEW_STATE, ZOOM_THRESHOLD } from '@/const';
+import {
+  INITIAL_VIEW_STATE,
+  ZOOM_THRESHOLD,
+  MOBILE_BELOW_BAR_TOP_PX,
+  DESKTOP_TOP_OFFSET_PX,
+} from '@/const';
 import ComponentErrorBoundary from '../components/ErrorBoundary/ComponentErrorBoundary';
 import MapColorLegend from '../components/Map/MapColorLegend';
 import MapDataLoader from '../components/Map/MapDataLoader';
@@ -91,6 +100,9 @@ const MapPage: FC = () => {
   const temperatureUnit = useAppStore((state) => state.temperatureUnit);
   const setTemperatureUnit = useAppStore((state) => state.setTemperatureUnit);
   const isGesturing = useAppStore((state) => state.isGesturing);
+  const legendVisible = useAppStore((state) => state.legendVisible);
+
+  const isMobileOrSmall = useIsMobileOrSmall();
 
   // Get the appropriate data based on the selected data type
   const displayedData = isSunshineSelected
@@ -159,27 +171,52 @@ const MapPage: FC = () => {
 
   return (
     <div className="relative w-full h-screen">
-      <div className="absolute top-4 left-4 z-20">
-        <MapColorLegend dataType={dataType} />
-      </div>
+      {(!isMobileOrSmall || legendVisible) && (
+        <div
+          className="absolute left-4 z-20"
+          style={{
+            top: isMobileOrSmall
+              ? MOBILE_BELOW_BAR_TOP_PX
+              : DESKTOP_TOP_OFFSET_PX,
+          }}
+        >
+          <MapColorLegend dataType={dataType} />
+        </div>
+      )}
 
       <MapDataLoader dataType={dataType} />
 
-      <TopCommandBar
-        selectedDate={selectedDate}
-        onDateChange={handleDateChange}
-        viewMode={viewMode}
-        onViewModeChange={setViewMode}
-        dataType={dataType}
-        onDataTypeChange={setDataType}
-        temperatureUnit={temperatureUnit}
-        onTemperatureUnitChange={setTemperatureUnit}
-        isMonthly={dataType === DataType.Sunshine}
-      />
+      {isMobileOrSmall ? (
+        <MobileTopCommandBar
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+          dataType={dataType}
+          onDataTypeChange={setDataType}
+          temperatureUnit={temperatureUnit}
+          onTemperatureUnitChange={setTemperatureUnit}
+        />
+      ) : (
+        <TopCommandBar
+          selectedDate={selectedDate}
+          onDateChange={handleDateChange}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+          dataType={dataType}
+          onDataTypeChange={setDataType}
+          temperatureUnit={temperatureUnit}
+          onTemperatureUnitChange={setTemperatureUnit}
+          isMonthly={dataType === DataType.Sunshine}
+        />
+      )}
 
-      <div className="absolute bottom-4 right-4 z-20">
-        <FeedbackButton />
-      </div>
+      {isMobileOrSmall && <MobileDateScrubber selectedDate={selectedDate} />}
+
+      {!isMobileOrSmall && (
+        <div className="absolute bottom-4 right-4 z-20 flex items-center gap-2">
+          <PerformanceDashboard />
+          <FeedbackButton />
+        </div>
+      )}
 
       {/* map */}
       <div className="h-full w-full">
