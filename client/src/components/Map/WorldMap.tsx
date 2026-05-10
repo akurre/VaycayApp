@@ -20,6 +20,8 @@ import {
   MAP_STYLES,
 } from '@/const';
 import CityPopup from '../CityPopup/CityPopup';
+import MobileCityDrawer from '../CityPopup/Mobile/MobileCityDrawer';
+import useIsMobileOrSmall from '@/hooks/useIsMobileOrSmall';
 import MapTooltip from './MapTooltip';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useWeatherStore } from '@/stores/useWeatherStore';
@@ -70,6 +72,7 @@ const WorldMap = ({
   const [mapOpacity, setMapOpacity] = useState(1);
 
   const colorScheme = useComputedColorScheme('dark');
+  const isMobileOrSmall = useIsMobileOrSmall();
   const isLoadingWeather = useWeatherStore((state) => state.isLoadingWeather);
   const isLoadingSunshine = useSunshineStore(
     (state) => state.isLoadingSunshine
@@ -293,17 +296,28 @@ const WorldMap = ({
               zIndex: 50,
             }}
           >
-            {cityToRender && (
-              <ComponentErrorBoundary componentName="CityPopup">
-                <CityPopup
-                  city={cityToRender}
-                  onClose={handleClosePopup}
-                  selectedMonth={selectedMonth}
-                  selectedDate={selectedDate}
-                  dataType={dataType}
-                />
-              </ComponentErrorBoundary>
-            )}
+            {cityToRender &&
+              (isMobileOrSmall ? (
+                <ComponentErrorBoundary componentName="MobileCityDrawer">
+                  <MobileCityDrawer
+                    city={cityToRender}
+                    onClose={handleClosePopup}
+                    selectedMonth={selectedMonth}
+                    selectedDate={selectedDate}
+                    dataType={dataType}
+                  />
+                </ComponentErrorBoundary>
+              ) : (
+                <ComponentErrorBoundary componentName="CityPopup">
+                  <CityPopup
+                    city={cityToRender}
+                    onClose={handleClosePopup}
+                    selectedMonth={selectedMonth}
+                    selectedDate={selectedDate}
+                    dataType={dataType}
+                  />
+                </ComponentErrorBoundary>
+              ))}
           </div>
         )}
       </Transition>

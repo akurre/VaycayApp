@@ -500,3 +500,21 @@ export const MOBILE_SCRUBBER_BOTTOM_PX = 16;
 
 // Desktop top offset for floating chrome elements (legend, loader).
 export const DESKTOP_TOP_OFFSET_PX = 16;
+
+// Mobile city drawer geometry.
+export const MOBILE_DRAWER_HEIGHT_CAP_PX = 380;
+export const MOBILE_DRAWER_HEIGHT_VH = 45;
+export const MOBILE_DRAWER_HEADER_PX = 52;
+export const MOBILE_DRAWER_CHART_MIN_PX = 180;
+export const MOBILE_DRAWER_TAB_BAR_PX = 44;
+export const MOBILE_DRAWER_BOTTOM_PAD_PX = 12;
+export const MOBILE_DRAWER_DRAG_HANDLE_W_PX = 36;
+export const MOBILE_DRAWER_DRAG_HANDLE_H_PX = 4;
+export const MOBILE_DRAWER_RADIUS_PX = 28;
+export const MOBILE_DRAWER_DISMISS_DRAG_FRACTION = 0.4;
+export const MOBILE_DRAWER_DISMISS_VELOCITY_PX_PER_S = 500;
+// Velocity-based dismissal is ignored if the drag duration is shorter than
+// this; real flicks span multiple frames, sub-frame deltas are noise.
+export const MOBILE_DRAWER_DISMISS_VELOCITY_MIN_DT_MS = 80;
+export const MOBILE_DRAWER_DISMISS_ANIM_MS = 200;
+export const MS_PER_SECOND = 1000;

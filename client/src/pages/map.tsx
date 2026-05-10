@@ -101,6 +101,7 @@ const MapPage: FC = () => {
   const setTemperatureUnit = useAppStore((state) => state.setTemperatureUnit);
   const isGesturing = useAppStore((state) => state.isGesturing);
   const legendVisible = useAppStore((state) => state.legendVisible);
+  const isCityDrawerOpen = useAppStore((state) => state.isCityDrawerOpen);
 
   const isMobileOrSmall = useIsMobileOrSmall();
 
@@ -214,6 +215,7 @@ const MapPage: FC = () => {
           selectedDate={selectedDate}
           onDateChange={handleDateChange}
           isMonthly={isSunshineSelected}
+          hidden={isCityDrawerOpen}
         />
       )}
 
