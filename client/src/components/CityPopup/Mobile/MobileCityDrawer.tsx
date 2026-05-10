@@ -32,6 +32,7 @@ import {
 } from '@/components/CityPopup/Mobile/mobileDrawerHelpers';
 import { DataType } from '@/types/mapTypes';
 import { MobileTab } from '@/types/mobileTabType';
+import { PopupVariant } from '@/types/cityPopupTypes';
 import {
   CITY1_PRIMARY_COLOR,
   MONTH_MIDPOINT_DAY,
@@ -400,7 +401,7 @@ const MobileCityDrawer = ({
             ) : (
               <AddComparisonCityButton
                 onClick={openCompareSheet}
-                variant="mobile"
+                variant={PopupVariant.Mobile}
               />
             )}
           </div>
@@ -416,7 +417,7 @@ const MobileCityDrawer = ({
       </div>
 
       <main
-        className="flex-1 min-h-0 flex flex-col px-4 pb-2"
+        className="flex-1 min-h-0 flex flex-col px-4"
         style={{ paddingBottom: MOBILE_DRAWER_BOTTOM_PAD_PX }}
       >
         {visibleTab === MobileTab.Details ? (
@@ -424,7 +425,7 @@ const MobileCityDrawer = ({
         ) : (
           <>
             <div
-              className="flex-1 min-h-0"
+              className="flex-1 min-h-0 overflow-hidden"
               style={{ minHeight: MOBILE_DRAWER_CHART_MIN_PX }}
             >
               <DataChartTabs

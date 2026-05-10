@@ -1,11 +1,12 @@
 import { IconPlus } from '@tabler/icons-react';
 import { formatCityPopulationSuffix } from '@/utils/dataFormatting/formatCityPopulationSuffix';
 import type { SearchCitiesResult } from '@/types/userLocationType';
+import { PopupVariant } from '@/types/cityPopupTypes';
 
 interface CitySearchResultRowProps {
   city: SearchCitiesResult;
   onClick: () => void;
-  variant: 'desktop' | 'mobile';
+  variant: PopupVariant;
   showAddIcon?: boolean;
 }
 
@@ -23,7 +24,7 @@ const CitySearchResultRow = ({
     </>
   );
 
-  if (variant === 'mobile') {
+  if (variant === PopupVariant.Mobile) {
     return (
       <button
         type="button"

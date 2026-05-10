@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@/test-utils';
 import CitySearchResultRow from '@/components/CityPopup/CitySearchResultRow';
 import type { SearchCitiesResult } from '@/types/userLocationType';
+import { PopupVariant } from '@/types/cityPopupTypes';
 
 const tokyo: SearchCitiesResult = {
   id: 1,
@@ -27,7 +28,7 @@ describe('CitySearchResultRow', () => {
   describe('desktop variant', () => {
     it('renders city name and country', () => {
       render(
-        <CitySearchResultRow city={tokyo} onClick={vi.fn()} variant="desktop" />
+        <CitySearchResultRow city={tokyo} onClick={vi.fn()} variant={PopupVariant.Desktop} />
       );
       expect(screen.getByText('Tokyo')).toBeInTheDocument();
       expect(screen.getByText(/Japan/)).toBeInTheDocument();
@@ -38,7 +39,7 @@ describe('CitySearchResultRow', () => {
         <CitySearchResultRow
           city={austin}
           onClick={vi.fn()}
-          variant="desktop"
+          variant={PopupVariant.Desktop}
         />
       );
       expect(screen.getByText(/Texas/)).toBeInTheDocument();
@@ -47,7 +48,7 @@ describe('CitySearchResultRow', () => {
     it('calls onClick when clicked', () => {
       const onClick = vi.fn();
       render(
-        <CitySearchResultRow city={tokyo} onClick={onClick} variant="desktop" />
+        <CitySearchResultRow city={tokyo} onClick={onClick} variant={PopupVariant.Desktop} />
       );
       fireEvent.click(screen.getByRole('button'));
       expect(onClick).toHaveBeenCalledOnce();
@@ -55,7 +56,7 @@ describe('CitySearchResultRow', () => {
 
     it('does not render add icon', () => {
       render(
-        <CitySearchResultRow city={tokyo} onClick={vi.fn()} variant="desktop" />
+        <CitySearchResultRow city={tokyo} onClick={vi.fn()} variant={PopupVariant.Desktop} />
       );
       expect(
         screen.queryByRole('img', { hidden: true })
@@ -66,7 +67,7 @@ describe('CitySearchResultRow', () => {
   describe('mobile variant', () => {
     it('renders city name and country', () => {
       render(
-        <CitySearchResultRow city={tokyo} onClick={vi.fn()} variant="mobile" />
+        <CitySearchResultRow city={tokyo} onClick={vi.fn()} variant={PopupVariant.Mobile} />
       );
       expect(screen.getByText('Tokyo')).toBeInTheDocument();
       expect(screen.getByText(/Japan/)).toBeInTheDocument();
@@ -74,7 +75,7 @@ describe('CitySearchResultRow', () => {
 
     it('does not render add icon by default', () => {
       const { container } = render(
-        <CitySearchResultRow city={tokyo} onClick={vi.fn()} variant="mobile" />
+        <CitySearchResultRow city={tokyo} onClick={vi.fn()} variant={PopupVariant.Mobile} />
       );
       expect(container.querySelector('svg')).not.toBeInTheDocument();
     });
@@ -84,7 +85,7 @@ describe('CitySearchResultRow', () => {
         <CitySearchResultRow
           city={tokyo}
           onClick={vi.fn()}
-          variant="mobile"
+          variant={PopupVariant.Mobile}
           showAddIcon
         />
       );
@@ -94,7 +95,7 @@ describe('CitySearchResultRow', () => {
     it('calls onClick when clicked', () => {
       const onClick = vi.fn();
       render(
-        <CitySearchResultRow city={tokyo} onClick={onClick} variant="mobile" />
+        <CitySearchResultRow city={tokyo} onClick={onClick} variant={PopupVariant.Mobile} />
       );
       fireEvent.click(screen.getByRole('button'));
       expect(onClick).toHaveBeenCalledOnce();

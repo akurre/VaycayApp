@@ -3,7 +3,7 @@ import { Popover, Loader } from '@mantine/core';
 import { IconX } from '@tabler/icons-react';
 import useCityComparisonSearch from '@/hooks/useCityComparisonSearch';
 import type { SearchCitiesResult } from '@/types/userLocationType';
-import type { ExcludeCity } from '@/types/cityPopupTypes';
+import { PopupVariant, type ExcludeCity } from '@/types/cityPopupTypes';
 import {
   CITY2_PRIMARY_COLOR,
   COMPARISON_INPUT_FOCUS_DELAY_MS,
@@ -118,7 +118,7 @@ const ComparisonCitySelector = ({
         ) : (
           <AddComparisonCityButton
             onClick={() => setOpened(true)}
-            variant="desktop"
+            variant={PopupVariant.Desktop}
           />
         )}
       </Popover.Target>
@@ -146,7 +146,7 @@ const ComparisonCitySelector = ({
                   key={city.id}
                   city={city}
                   onClick={() => handleSelectCity(city)}
-                  variant="desktop"
+                  variant={PopupVariant.Desktop}
                 />
               ))}
             </div>
@@ -171,7 +171,7 @@ const ComparisonCitySelector = ({
                   key={city.id}
                   city={city}
                   onClick={() => handleSelectCity(city)}
-                  variant="desktop"
+                  variant={PopupVariant.Desktop}
                 />
               ))}
             </div>

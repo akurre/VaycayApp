@@ -18,13 +18,9 @@ describe('formatCityFullName', () => {
     ).toBe('Tokyo, Japan');
   });
 
-  it('omits country when null', () => {
+  it('omits country when empty string', () => {
     expect(
-      formatCityFullName({
-        name: 'Austin',
-        state: 'Texas',
-        country: null as unknown as string,
-      })
+      formatCityFullName({ name: 'Austin', state: 'Texas', country: '' })
     ).toBe('Austin, Texas');
   });
 

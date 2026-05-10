@@ -6,7 +6,7 @@ import useCityComparisonSearch from '@/hooks/useCityComparisonSearch';
 import CitySearchResultRow from '@/components/CityPopup/CitySearchResultRow';
 
 import type { SearchCitiesResult } from '@/types/userLocationType';
-import type { ExcludeCity } from '@/types/cityPopupTypes';
+import { PopupVariant, type ExcludeCity } from '@/types/cityPopupTypes';
 
 interface MobileCompareSheetProps {
   opened: boolean;
@@ -104,7 +104,7 @@ const MobileCompareSheet = ({
                   <CitySearchResultRow
                     city={city}
                     onClick={() => handlePick(city)}
-                    variant="mobile"
+                    variant={PopupVariant.Mobile}
                     showAddIcon
                   />
                 </li>
@@ -128,7 +128,7 @@ const MobileCompareSheet = ({
                     <CitySearchResultRow
                       city={city}
                       onClick={() => handlePick(city)}
-                      variant="mobile"
+                      variant={PopupVariant.Mobile}
                     />
                   </li>
                 ))}

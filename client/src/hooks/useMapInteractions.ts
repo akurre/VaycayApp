@@ -6,9 +6,8 @@ import { useAppStore } from '@/stores/useAppStore';
 import useIsMobileOrSmall from '@/hooks/useIsMobileOrSmall';
 
 /**
- * Manages map interactions: hover tooltips (desktop) and tap-tooltip (mobile).
- * On mobile a marker tap sets hoverInfo with an embedded city so MapTooltip
- * can render a "+" button that promotes the city into the full drawer.
+ * Manages map interactions. On mobile, taps set hoverInfo with an embedded city
+ * so MapTooltip can render a "+" that promotes the city into the full drawer.
  */
 
 interface HoverInfo {
@@ -142,13 +141,11 @@ export const useMapInteractions = (
 
   const handleClick = useCallback(
     (info: PickingInfo) => {
-      // Home-center always opens the drawer directly on both mobile and desktop.
       if (info.layer?.id === 'home-center' && homeCityData) {
         setSelectedCity(homeCityData);
         return;
       }
 
-      // Resolve which city (if any) was hit.
       let hitCity: WeatherDataUnion | null = null;
       if (viewMode === 'markers' && info.object) {
         hitCity = info.object as WeatherDataUnion;
@@ -189,7 +186,6 @@ export const useMapInteractions = (
           city: hitCity,
         });
       } else {
-        // Desktop: open the drawer directly.
         if (hitCity) {
           setSelectedCity(hitCity);
         }

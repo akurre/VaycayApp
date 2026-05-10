@@ -36,3 +36,8 @@ export interface TodayValuePair {
 }
 
 export type TodayValuesByTab = Readonly<Record<DataType, TodayValuePair>>;
+
+export enum PopupVariant {
+  Desktop = 'desktop',
+  Mobile = 'mobile',
+}

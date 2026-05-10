@@ -1,16 +1,17 @@
 import { IconPlus } from '@tabler/icons-react';
 import { CITY2_PRIMARY_COLOR } from '@/const';
+import { PopupVariant } from '@/types/cityPopupTypes';
 
 interface AddComparisonCityButtonProps {
   onClick: () => void;
-  variant: 'desktop' | 'mobile';
+  variant: PopupVariant;
 }
 
 const AddComparisonCityButton = ({
   onClick,
   variant,
 }: AddComparisonCityButtonProps) => {
-  const isDesktop = variant === 'desktop';
+  const isDesktop = variant === PopupVariant.Desktop;
 
   return (
     <button
