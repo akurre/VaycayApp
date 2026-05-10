@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { FC } from 'react';
 import { Collapse, UnstyledButton, Text } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
-import { DataType } from '@/types/mapTypes';
+import type { DataType } from '@/types/mapTypes';
 import useGlassTokens from '@/hooks/useGlassTokens';
 import useIsMobileOrSmall from '@/hooks/useIsMobileOrSmall';
 import LegendSwatches from '@/components/Map/LegendSwatches';

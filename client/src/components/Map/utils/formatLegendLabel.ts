@@ -1,5 +1,5 @@
 import { TEMP_THRESHOLDS, SUNSHINE_THRESHOLDS } from '@/const';
-import { TemperatureUnit } from '@/types/mapTypes';
+import type { TemperatureUnit } from '@/types/mapTypes';
 import {
   convertTemperature,
   getTemperatureUnitSymbol,
