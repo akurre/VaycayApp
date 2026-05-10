@@ -13,6 +13,7 @@ import {
 } from '@/const';
 import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
 import CityNameRow from '@/components/CityPopup/Ribbon/CityNameRow';
+import { useRecentCitiesStore } from '@/stores/useRecentCitiesStore';
 
 interface ComparisonCitySelectorProps {
   onCitySelect: (city: SearchCitiesResult) => void;
@@ -37,6 +38,7 @@ const ComparisonCitySelector = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { searchCities, isLoading: isSearchLoading } = useCitySearch();
+  const pushRecentCity = useRecentCitiesStore((s) => s.pushRecentCity);
 
   useEffect(() => {
     if (debouncedSearchTerm.trim().length < MIN_CITY_SEARCH_LENGTH) {
@@ -85,6 +87,7 @@ const ComparisonCitySelector = ({
   }, [opened]);
 
   const handleSelectCity = (city: SearchCitiesResult) => {
+    pushRecentCity(city);
     onCitySelect(city);
     setSearchTerm('');
     setSearchResults([]);

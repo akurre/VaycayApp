@@ -1,4 +1,5 @@
 import { ActionIcon, useMantineColorScheme } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { useEffect, useMemo, useRef, useState, type PointerEvent } from 'react';
 import { IconPlus, IconX } from '@tabler/icons-react';
 
@@ -10,6 +11,7 @@ import TodayReadout from '@/components/CityPopup/Ribbon/TodayReadout';
 import DataChartTabs from '@/components/CityPopup/DataChartTabs';
 import MobileTabBar from '@/components/CityPopup/Mobile/MobileTabBar';
 import MobileDetailsList from '@/components/CityPopup/Mobile/MobileDetailsList';
+import MobileCompareSheet from '@/components/CityPopup/Mobile/MobileCompareSheet';
 import { useRibbonStats } from '@/components/CityPopup/hooks/useRibbonStats';
 import { useAppStore } from '@/stores/useAppStore';
 import { toTitleCase } from '@/utils/dataFormatting/toTitleCase';
@@ -68,6 +70,10 @@ const MobileCityDrawer = ({
   const [tab, setTab] = useState<MobileTab>(dataTypeToMobileTab(dataType));
   const [dragOffset, setDragOffset] = useState<number | null>(null);
   const [isDismissing, setIsDismissing] = useState(false);
+  const [
+    compareSheetOpened,
+    { open: openCompareSheet, close: closeCompareSheet },
+  ] = useDisclosure(false);
 
   const drawerRef = useRef<HTMLDivElement | null>(null);
   const dragStartRef = useRef<{ y: number; t: number } | null>(null);
@@ -379,6 +385,7 @@ const MobileCityDrawer = ({
                 color={CITY2_PRIMARY_COLOR}
                 name={comparisonName}
                 lat={comparisonCity?.lat ?? null}
+                onClick={openCompareSheet}
                 actions={
                   <button
                     type="button"
@@ -393,6 +400,7 @@ const MobileCityDrawer = ({
             ) : (
               <button
                 type="button"
+                onClick={openCompareSheet}
                 aria-label="Add comparison city"
                 className="flex items-center gap-2 cursor-pointer text-[var(--mantine-color-dimmed)] hover:text-[var(--mantine-color-text)] transition-colors self-start"
               >
@@ -464,6 +472,17 @@ const MobileCityDrawer = ({
         tab={visibleTab}
         onTab={setTab}
         availableTabs={availableTabs}
+      />
+
+      <MobileCompareSheet
+        opened={compareSheetOpened}
+        onClose={closeCompareSheet}
+        onCitySelect={setComparisonCity}
+        excludeCity={{
+          name: city.city ?? '',
+          state: city.state ?? null,
+          country: city.country ?? null,
+        }}
       />
     </div>
   );

@@ -29,6 +29,11 @@ vi.mock('@/components/CityPopup/DataChartTabs', () => ({
   ),
 }));
 
+vi.mock('@/components/CityPopup/Mobile/MobileCompareSheet', () => ({
+  default: ({ opened }: { opened: boolean }) =>
+    opened ? <div data-testid="mobile-compare-sheet" /> : null,
+}));
+
 import useWeatherDataForCity from '@/api/dates/useWeatherDataForCity';
 import useSunshineDataForCity from '@/api/dates/useSunshineDataForCity';
 import useWeeklyWeatherForCity from '@/api/dates/useWeeklyWeatherForCity';
@@ -320,6 +325,24 @@ describe('MobileCityDrawer', () => {
 
     expect(onClose).toHaveBeenCalledTimes(1);
     // beforeEach restores real timers — no need to restore here
+  });
+
+  it('opens MobileCompareSheet when "+ Compare" is tapped', () => {
+    render(
+      <MobileCityDrawer
+        city={weatherCity}
+        onClose={onClose}
+        selectedMonth={1}
+        selectedDate="01-15"
+        dataType={DataType.Temperature}
+      />
+    );
+
+    expect(screen.queryByTestId('mobile-compare-sheet')).toBeNull();
+
+    fireEvent.click(screen.getByLabelText('Add comparison city'));
+
+    expect(screen.getByTestId('mobile-compare-sheet')).toBeInTheDocument();
   });
 
   it('returns null when no city is provided', () => {

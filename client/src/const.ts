@@ -84,6 +84,10 @@ export const MIN_CITY_SEARCH_LENGTH = 2;
 // mid-word typing churn, short enough to feel responsive.
 export const CITY_SEARCH_DEBOUNCE_MS = 300;
 
+// Max entries kept in the persisted recent-cities list (used as the
+// "Suggested" section in MobileCompareSheet). Cap-based, no time TTL.
+export const RECENT_CITIES_MAX = 5;
+
 // map style urls for light and dark themes
 // Carto basemaps - using direct CDN URLs (no proxy needed, CORS-enabled)
 export const MAP_STYLES = {
