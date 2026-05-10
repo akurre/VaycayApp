@@ -457,5 +457,8 @@ export const MOBILE_ICON_BUTTON_SIZE_PX = 36;
 // = MOBILE_TOP_BAR_TOP_PX (16) + MOBILE_BAR_HEIGHT_PX (52) + 12px gap.
 export const MOBILE_BELOW_BAR_TOP_PX = 80;
 
+// Persistent mobile date scrubber: distance from viewport bottom.
+export const MOBILE_SCRUBBER_BOTTOM_PX = 16;
+
 // Desktop top offset for floating chrome elements (legend, loader).
 export const DESKTOP_TOP_OFFSET_PX = 16;
