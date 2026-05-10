@@ -21,9 +21,21 @@ const SliderMarks: FC<SliderMarksProps> = ({ marks, min, max }) => {
             className="absolute -translate-x-1/2"
             style={{ left: `${markPosition}%` }}
           >
-            <Text size="xs" style={{ color: glass.text, opacity: 0.7 }}>
-              {mark.label}
-            </Text>
+            {mark.label ? (
+              <Text size="xs" style={{ color: glass.text, opacity: 0.7 }}>
+                {mark.label}
+              </Text>
+            ) : (
+              <div
+                aria-hidden="true"
+                style={{
+                  width: 1,
+                  height: 6,
+                  background: glass.text,
+                  opacity: 0.35,
+                }}
+              />
+            )}
           </div>
         );
       })}

@@ -300,21 +300,21 @@ export const monthMarks = [
   { value: 335, label: 'Dec' },
 ];
 
-// Single-letter month marks used on the mobile date scrubber where the full
-// 3-letter labels overlap on phone-width tracks.
-export const monthMarksShort = [
-  { value: 1, label: 'J' },
-  { value: 32, label: 'F' },
-  { value: 60, label: 'M' },
-  { value: 91, label: 'A' },
-  { value: 121, label: 'M' },
-  { value: 152, label: 'J' },
-  { value: 182, label: 'J' },
-  { value: 213, label: 'A' },
-  { value: 244, label: 'S' },
-  { value: 274, label: 'O' },
-  { value: 305, label: 'N' },
-  { value: 335, label: 'D' },
+// Mobile date scrubber marks: tick for every month, text label only at the
+// quarter starts (Jan/Apr/Jul/Oct) — empty `label` renders a small tick.
+export const monthMarksMobile = [
+  { value: 1, label: 'Jan' },
+  { value: 32, label: '' },
+  { value: 60, label: '' },
+  { value: 91, label: 'Apr' },
+  { value: 121, label: '' },
+  { value: 152, label: '' },
+  { value: 182, label: 'Jul' },
+  { value: 213, label: '' },
+  { value: 244, label: '' },
+  { value: 274, label: 'Oct' },
+  { value: 305, label: '' },
+  { value: 335, label: '' },
 ];
 
 // monthly marks for date slider when in monthly mode (sunshine data)
@@ -333,21 +333,21 @@ export const monthlyMarks = [
   { value: 12, label: 'Dec' },
 ] as const;
 
-// Single-letter monthly marks used on the mobile date scrubber where the full
-// 3-letter labels overlap on phone-width tracks.
-export const monthlyMarksShort = [
-  { value: 1, label: 'J' },
-  { value: 2, label: 'F' },
-  { value: 3, label: 'M' },
-  { value: 4, label: 'A' },
-  { value: 5, label: 'M' },
-  { value: 6, label: 'J' },
-  { value: 7, label: 'J' },
-  { value: 8, label: 'A' },
-  { value: 9, label: 'S' },
-  { value: 10, label: 'O' },
-  { value: 11, label: 'N' },
-  { value: 12, label: 'D' },
+// Mobile monthly marks: tick for every month, text label only at the quarter
+// starts (Jan/Apr/Jul/Oct) — empty `label` renders a small tick.
+export const monthlyMarksMobile = [
+  { value: 1, label: 'Jan' },
+  { value: 2, label: '' },
+  { value: 3, label: '' },
+  { value: 4, label: 'Apr' },
+  { value: 5, label: '' },
+  { value: 6, label: '' },
+  { value: 7, label: 'Jul' },
+  { value: 8, label: '' },
+  { value: 9, label: '' },
+  { value: 10, label: 'Oct' },
+  { value: 11, label: '' },
+  { value: 12, label: '' },
 ];
 
 // ============================================================================

@@ -7,8 +7,8 @@ import formatSliderValueForLabel from '@/utils/dateFormatting/formatSliderValueF
 import CustomDateSlider from '@/components/Navigation/CustomDateSlider';
 import useGlassTokens from '@/hooks/useGlassTokens';
 import {
-  monthMarksShort,
-  monthlyMarksShort,
+  monthMarksMobile,
+  monthlyMarksMobile,
   MOBILE_BAR_INSET_PX,
   MOBILE_BAR_RADIUS_PX,
   MOBILE_SCRUBBER_BOTTOM_PX,
@@ -50,7 +50,7 @@ const MobileDateScrubber: FC<MobileDateScrubberProps> = ({
     onDateChange(newDate);
   };
 
-  const marks = isMonthly ? [...monthlyMarksShort] : [...monthMarksShort];
+  const marks = isMonthly ? [...monthlyMarksMobile] : [...monthMarksMobile];
   const maxValue = isMonthly ? 12 : 365;
 
   const labelValue = previewValue ?? sliderValue;

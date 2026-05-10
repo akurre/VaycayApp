@@ -165,26 +165,27 @@ describe('MobileDateScrubber', () => {
     expect(screen.getByTestId('mock-custom-date-slider')).toBeInTheDocument();
   });
 
-  it('passes single-letter month marks to the slider in daily mode', () => {
+  it('passes 12 marks with text labels only at the quarter starts in daily mode', () => {
     render(<MobileDateScrubber selectedDate="0410" onDateChange={vi.fn()} />);
-    const labels = captured.props?.marks.map((m) => m.label);
-    expect(labels).toEqual([
-      'J',
-      'F',
-      'M',
-      'A',
-      'M',
-      'J',
-      'J',
-      'A',
-      'S',
-      'O',
-      'N',
-      'D',
+    const marks = captured.props?.marks ?? [];
+    expect(marks).toHaveLength(12);
+    expect(marks.map((m) => m.label)).toEqual([
+      'Jan',
+      '',
+      '',
+      'Apr',
+      '',
+      '',
+      'Jul',
+      '',
+      '',
+      'Oct',
+      '',
+      '',
     ]);
   });
 
-  it('passes single-letter month marks to the slider in monthly mode', () => {
+  it('passes 12 marks with text labels only at the quarter starts in monthly mode', () => {
     render(
       <MobileDateScrubber
         selectedDate="07-15"
@@ -192,20 +193,24 @@ describe('MobileDateScrubber', () => {
         isMonthly
       />
     );
-    const labels = captured.props?.marks.map((m) => m.label);
-    expect(labels).toEqual([
-      'J',
-      'F',
-      'M',
-      'A',
-      'M',
-      'J',
-      'J',
-      'A',
-      'S',
-      'O',
-      'N',
-      'D',
+    const marks = captured.props?.marks ?? [];
+    expect(marks).toHaveLength(12);
+    expect(marks.map((m) => m.label)).toEqual([
+      'Jan',
+      '',
+      '',
+      'Apr',
+      '',
+      '',
+      'Jul',
+      '',
+      '',
+      'Oct',
+      '',
+      '',
+    ]);
+    expect(marks.map((m) => m.value)).toEqual([
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
     ]);
   });
 });
