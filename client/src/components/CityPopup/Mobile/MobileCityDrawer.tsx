@@ -21,6 +21,11 @@ import { dateToWeekOfYear } from '@/utils/dateFormatting/dateToWeekOfYear';
 import { extractMonthDay } from '@/utils/dateFormatting/extractMonthDay';
 import { extractMonthFromDate } from '@/utils/dateFormatting/extractMonthFromDate';
 import { isWeatherData } from '@/utils/typeGuards';
+import {
+  dataTypeToMobileTab,
+  isChartTab,
+  mobileTabToDataType,
+} from '@/components/CityPopup/Mobile/mobileDrawerHelpers';
 import { DataType } from '@/types/mapTypes';
 import { MobileTab } from '@/types/mobileTabType';
 import {
@@ -48,21 +53,6 @@ import type { CityPopupProps } from '@/types/mapTypes';
 import type { SearchCitiesResult } from '@/types/userLocationType';
 import type { TodayValuesByTab } from '@/types/cityPopupTypes';
 
-const dataTypeToMobileTab = (d: DataType): MobileTab => {
-  if (d === DataType.Sunshine) return MobileTab.Sunshine;
-  if (d === DataType.Precip) return MobileTab.Precip;
-  return MobileTab.Temperature;
-};
-
-const isChartTab = (t: MobileTab): t is Exclude<MobileTab, MobileTab.Details> =>
-  t !== MobileTab.Details;
-
-const mobileTabToDataType = (t: MobileTab): DataType => {
-  if (t === MobileTab.Sunshine) return DataType.Sunshine;
-  if (t === MobileTab.Precip) return DataType.Precip;
-  return DataType.Temperature;
-};
-
 const MobileCityDrawer = ({
   city,
   onClose,
@@ -82,10 +72,15 @@ const MobileCityDrawer = ({
   const drawerRef = useRef<HTMLDivElement | null>(null);
   const dragStartRef = useRef<{ y: number; t: number } | null>(null);
   const lastPointerRef = useRef<{ y: number; t: number } | null>(null);
+  const dismissTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setIsCityDrawerOpen(true);
-    return () => setIsCityDrawerOpen(false);
+    return () => {
+      setIsCityDrawerOpen(false);
+      if (dismissTimerRef.current !== null)
+        clearTimeout(dismissTimerRef.current);
+    };
   }, [setIsCityDrawerOpen]);
 
   useEffect(() => {
@@ -116,8 +111,7 @@ const MobileCityDrawer = ({
     skipFetch: !shouldFetchWeather,
   });
 
-  const shouldFetchSunshine =
-    !cityAsSunshine && monthToUse >= 1 && monthToUse <= 12;
+  const shouldFetchSunshine = !cityAsSunshine;
 
   const { sunshineData, sunshineLoading, sunshineError } =
     useSunshineDataForCity({
@@ -287,7 +281,7 @@ const MobileCityDrawer = ({
 
     if (shouldDismiss) {
       setIsDismissing(true);
-      window.setTimeout(() => {
+      dismissTimerRef.current = setTimeout(() => {
         onClose();
       }, MOBILE_DRAWER_DISMISS_ANIM_MS);
     } else {

@@ -319,7 +319,7 @@ describe('MobileCityDrawer', () => {
     });
 
     expect(onClose).toHaveBeenCalledTimes(1);
-    vi.useRealTimers();
+    // beforeEach restores real timers — no need to restore here
   });
 
   it('returns null when no city is provided', () => {
@@ -333,6 +333,8 @@ describe('MobileCityDrawer', () => {
       />
     );
 
-    expect(container.querySelector('[data-testid="mobile-city-drawer"]')).toBeNull();
+    expect(
+      container.querySelector('[data-testid="mobile-city-drawer"]')
+    ).toBeNull();
   });
 });

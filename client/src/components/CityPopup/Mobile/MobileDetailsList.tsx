@@ -6,7 +6,10 @@ interface MobileDetailsListProps {
   hasComparison: boolean;
 }
 
-const MobileDetailsList = ({ stats, hasComparison }: MobileDetailsListProps) => {
+const MobileDetailsList = ({
+  stats,
+  hasComparison,
+}: MobileDetailsListProps) => {
   return (
     <div
       data-testid="mobile-details-list"
