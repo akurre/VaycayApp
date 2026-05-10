@@ -418,45 +418,49 @@ const MobileCityDrawer = ({
 
       <main
         className="flex-1 min-h-0 flex flex-col px-4"
-        style={{ paddingBottom: MOBILE_DRAWER_BOTTOM_PAD_PX }}
       >
         {visibleTab === MobileTab.Details ? (
           <MobileDetailsList stats={stats} hasComparison={!!comparisonCity} />
         ) : (
-          <>
-            <div
-              className="flex-1 min-h-0 overflow-hidden"
-              style={{ minHeight: MOBILE_DRAWER_CHART_MIN_PX }}
-            >
-              <DataChartTabs
-                tab={chartTabForDataChartTabs}
-                displaySunshineData={displaySunshineData}
-                sunshineLoading={sunshineLoading}
-                sunshineError={!!sunshineError}
-                selectedMonth={monthToUse}
-                selectedDate={dateToUse}
-                weeklyWeatherData={weeklyWeatherData}
-                weeklyWeatherLoading={weeklyWeatherLoading}
-                weeklyWeatherError={!!weeklyWeatherError}
-                comparisonSunshineData={comparisonSunshineData}
-                comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
-              />
-            </div>
-            <div data-testid="mobile-drawer-today-readout" className="shrink-0">
-              <TodayReadout
-                tab={chartTabForDataChartTabs}
-                c1Value={todayPair.c1}
-                c2Value={todayPair.c2}
-                subC1Value={todayPair.subC1 ?? null}
-                subC2Value={todayPair.subC2 ?? null}
-                hasComparison={!!comparisonCity}
-                selectedDate={dateToUse}
-                hover={null}
-              />
-            </div>
-          </>
+          <div
+            className="flex-1 min-h-0 overflow-hidden"
+            style={{ minHeight: MOBILE_DRAWER_CHART_MIN_PX }}
+          >
+            <DataChartTabs
+              tab={chartTabForDataChartTabs}
+              displaySunshineData={displaySunshineData}
+              sunshineLoading={sunshineLoading}
+              sunshineError={!!sunshineError}
+              selectedMonth={monthToUse}
+              selectedDate={dateToUse}
+              weeklyWeatherData={weeklyWeatherData}
+              weeklyWeatherLoading={weeklyWeatherLoading}
+              weeklyWeatherError={!!weeklyWeatherError}
+              comparisonSunshineData={comparisonSunshineData}
+              comparisonWeeklyWeatherData={comparisonWeeklyWeatherData}
+            />
+          </div>
         )}
       </main>
+
+      {visibleTab !== MobileTab.Details && (
+        <div
+          data-testid="mobile-drawer-today-readout"
+          className="shrink-0 px-4"
+          style={{ paddingBottom: MOBILE_DRAWER_BOTTOM_PAD_PX }}
+        >
+          <TodayReadout
+            tab={chartTabForDataChartTabs}
+            c1Value={todayPair.c1}
+            c2Value={todayPair.c2}
+            subC1Value={todayPair.subC1 ?? null}
+            subC2Value={todayPair.subC2 ?? null}
+            hasComparison={!!comparisonCity}
+            selectedDate={dateToUse}
+            hover={null}
+          />
+        </div>
+      )}
 
       <MobileTabBar
         tab={visibleTab}
