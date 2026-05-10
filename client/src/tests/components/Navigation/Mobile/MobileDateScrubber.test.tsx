@@ -9,6 +9,7 @@ interface CapturedSliderProps {
   onValuePreview?: (value: number) => void;
   min: number;
   max: number;
+  marks: Array<{ value: number; label: string }>;
   isMonthly?: boolean;
 }
 
@@ -162,5 +163,49 @@ describe('MobileDateScrubber', () => {
   it('renders the CustomDateSlider', () => {
     render(<MobileDateScrubber selectedDate="0410" onDateChange={vi.fn()} />);
     expect(screen.getByTestId('mock-custom-date-slider')).toBeInTheDocument();
+  });
+
+  it('passes single-letter month marks to the slider in daily mode', () => {
+    render(<MobileDateScrubber selectedDate="0410" onDateChange={vi.fn()} />);
+    const labels = captured.props?.marks.map((m) => m.label);
+    expect(labels).toEqual([
+      'J',
+      'F',
+      'M',
+      'A',
+      'M',
+      'J',
+      'J',
+      'A',
+      'S',
+      'O',
+      'N',
+      'D',
+    ]);
+  });
+
+  it('passes single-letter month marks to the slider in monthly mode', () => {
+    render(
+      <MobileDateScrubber
+        selectedDate="07-15"
+        onDateChange={vi.fn()}
+        isMonthly
+      />
+    );
+    const labels = captured.props?.marks.map((m) => m.label);
+    expect(labels).toEqual([
+      'J',
+      'F',
+      'M',
+      'A',
+      'M',
+      'J',
+      'J',
+      'A',
+      'S',
+      'O',
+      'N',
+      'D',
+    ]);
   });
 });

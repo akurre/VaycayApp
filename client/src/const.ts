@@ -300,6 +300,23 @@ export const monthMarks = [
   { value: 335, label: 'Dec' },
 ];
 
+// Single-letter month marks used on the mobile date scrubber where the full
+// 3-letter labels overlap on phone-width tracks.
+export const monthMarksShort = [
+  { value: 1, label: 'J' },
+  { value: 32, label: 'F' },
+  { value: 60, label: 'M' },
+  { value: 91, label: 'A' },
+  { value: 121, label: 'M' },
+  { value: 152, label: 'J' },
+  { value: 182, label: 'J' },
+  { value: 213, label: 'A' },
+  { value: 244, label: 'S' },
+  { value: 274, label: 'O' },
+  { value: 305, label: 'N' },
+  { value: 335, label: 'D' },
+];
+
 // monthly marks for date slider when in monthly mode (sunshine data)
 export const monthlyMarks = [
   { value: 1, label: 'Jan' },
@@ -315,6 +332,23 @@ export const monthlyMarks = [
   { value: 11, label: 'Nov' },
   { value: 12, label: 'Dec' },
 ] as const;
+
+// Single-letter monthly marks used on the mobile date scrubber where the full
+// 3-letter labels overlap on phone-width tracks.
+export const monthlyMarksShort = [
+  { value: 1, label: 'J' },
+  { value: 2, label: 'F' },
+  { value: 3, label: 'M' },
+  { value: 4, label: 'A' },
+  { value: 5, label: 'M' },
+  { value: 6, label: 'J' },
+  { value: 7, label: 'J' },
+  { value: 8, label: 'A' },
+  { value: 9, label: 'S' },
+  { value: 10, label: 'O' },
+  { value: 11, label: 'N' },
+  { value: 12, label: 'D' },
+];
 
 // ============================================================================
 // CITY POPUP RIBBON CONSTANTS
