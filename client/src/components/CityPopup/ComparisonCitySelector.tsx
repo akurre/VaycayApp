@@ -1,17 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Popover, Loader } from '@mantine/core';
-import { useDebouncedValue } from '@mantine/hooks';
 import { IconPlus, IconX } from '@tabler/icons-react';
-import useCitySearch from '@/hooks/useCitySearch';
+import useCityComparisonSearch from '@/hooks/useCityComparisonSearch';
 import type { SearchCitiesResult } from '@/types/userLocationType';
 import type { ExcludeCity } from '@/types/cityPopupTypes';
 import {
   CITY2_PRIMARY_COLOR,
-  CITY_SEARCH_DEBOUNCE_MS,
   COMPARISON_INPUT_FOCUS_DELAY_MS,
   MIN_CITY_SEARCH_LENGTH,
 } from '@/const';
-import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
+import { formatCityPopulationSuffix } from '@/utils/dataFormatting/formatCityPopulationSuffix';
 import CityNameRow from '@/components/CityPopup/Ribbon/CityNameRow';
 
 interface ComparisonCitySelectorProps {
@@ -29,49 +27,15 @@ const ComparisonCitySelector = ({
 }: ComparisonCitySelectorProps) => {
   const [opened, setOpened] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState<SearchCitiesResult[]>([]);
-  const [debouncedSearchTerm] = useDebouncedValue(
-    searchTerm,
-    CITY_SEARCH_DEBOUNCE_MS
-  );
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { searchCities, isLoading: isSearchLoading } = useCitySearch();
-
-  useEffect(() => {
-    if (debouncedSearchTerm.trim().length < MIN_CITY_SEARCH_LENGTH) {
-      setSearchResults([]);
-      return undefined;
-    }
-
-    let cancelled = false;
-    searchCities(debouncedSearchTerm)
-      .then((results) => {
-        if (cancelled) return;
-        const filtered = excludeCity
-          ? results.filter(
-              (city) =>
-                !(
-                  city.name === excludeCity.name &&
-                  city.state === excludeCity.state &&
-                  city.country === excludeCity.country
-                )
-            )
-          : results;
-        setSearchResults(filtered);
-      })
-      .catch((error) => {
-        if (cancelled) return;
-        parseErrorAndNotify(
-          error,
-          `failed to search cities for "${debouncedSearchTerm}"`
-        );
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [debouncedSearchTerm, searchCities, excludeCity]);
+  const {
+    filteredResults,
+    filteredRecent,
+    isSearching,
+    isLoading: isSearchLoading,
+    pickCity,
+  } = useCityComparisonSearch(searchTerm, excludeCity);
 
   useEffect(() => {
     if (opened) {
@@ -85,9 +49,9 @@ const ComparisonCitySelector = ({
   }, [opened]);
 
   const handleSelectCity = (city: SearchCitiesResult) => {
+    pickCity(city);
     onCitySelect(city);
     setSearchTerm('');
-    setSearchResults([]);
     setOpened(false);
   };
 
@@ -95,7 +59,6 @@ const ComparisonCitySelector = ({
     e.stopPropagation();
     onCityRemove();
     setSearchTerm('');
-    setSearchResults([]);
     setOpened(false);
   };
 
@@ -105,6 +68,9 @@ const ComparisonCitySelector = ({
       .filter(Boolean)
       .join(', ');
   }, [selectedCity]);
+
+  const showSuggested = !isSearching && filteredRecent.length > 0;
+  const showSearchPrompt = !isSearching && filteredRecent.length === 0;
 
   return (
     <Popover
@@ -184,15 +150,12 @@ const ComparisonCitySelector = ({
         onMouseDown={(e) => e.preventDefault()}
       >
         <div className="w-72">
-          {isSearchLoading && (
-            <div className="flex justify-center py-3">
-              <Loader size="xs" />
-            </div>
-          )}
-
-          {!isSearchLoading && searchResults.length > 0 && (
+          {showSuggested && (
             <div className="max-h-60 overflow-y-auto py-1">
-              {searchResults.map((city) => (
+              <div className="px-3 pt-2 pb-1 text-[11px] font-semibold uppercase tracking-wide text-[var(--mantine-color-dimmed)]">
+                Suggested
+              </div>
+              {filteredRecent.map((city) => (
                 <button
                   key={city.id}
                   type="button"
@@ -205,26 +168,50 @@ const ComparisonCitySelector = ({
                   <div className="text-xs text-[var(--mantine-color-dimmed)]">
                     {city.state && `${city.state}, `}
                     {city.country}
-                    {city.population
-                      ? ` • ${(city.population / 1_000_000).toFixed(1)}M`
-                      : ''}
+                    {formatCityPopulationSuffix(city.population)}
                   </div>
                 </button>
               ))}
             </div>
           )}
 
-          {!isSearchLoading &&
-            searchTerm.trim().length >= MIN_CITY_SEARCH_LENGTH &&
-            searchResults.length === 0 && (
-              <div className="text-center py-3 text-xs text-[var(--mantine-color-dimmed)]">
-                No cities found
-              </div>
-            )}
-
-          {searchTerm.trim().length < MIN_CITY_SEARCH_LENGTH && (
+          {showSearchPrompt && (
             <div className="text-center py-3 text-xs text-[var(--mantine-color-dimmed)]">
               Type at least {MIN_CITY_SEARCH_LENGTH} characters
+            </div>
+          )}
+
+          {isSearching && isSearchLoading && (
+            <div className="flex justify-center py-3">
+              <Loader size="xs" />
+            </div>
+          )}
+
+          {isSearching && !isSearchLoading && filteredResults.length > 0 && (
+            <div className="max-h-60 overflow-y-auto py-1">
+              {filteredResults.map((city) => (
+                <button
+                  key={city.id}
+                  type="button"
+                  onClick={() => handleSelectCity(city)}
+                  className="w-full text-left px-3 py-2 text-sm transition-colors hover:bg-[var(--mantine-color-default-border)] cursor-pointer"
+                >
+                  <div className="font-medium text-[var(--mantine-color-text)]">
+                    {city.name}
+                  </div>
+                  <div className="text-xs text-[var(--mantine-color-dimmed)]">
+                    {city.state && `${city.state}, `}
+                    {city.country}
+                    {formatCityPopulationSuffix(city.population)}
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {isSearching && !isSearchLoading && filteredResults.length === 0 && (
+            <div className="text-center py-3 text-xs text-[var(--mantine-color-dimmed)]">
+              No cities found
             </div>
           )}
         </div>
