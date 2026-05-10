@@ -4,7 +4,11 @@ import formatCityFullName from '@/utils/dataFormatting/formatCityFullName';
 describe('formatCityFullName', () => {
   it('joins name, state, and country when all present', () => {
     expect(
-      formatCityFullName({ name: 'Austin', state: 'Texas', country: 'United States' })
+      formatCityFullName({
+        name: 'Austin',
+        state: 'Texas',
+        country: 'United States',
+      })
     ).toBe('Austin, Texas, United States');
   });
 
@@ -16,7 +20,11 @@ describe('formatCityFullName', () => {
 
   it('omits country when null', () => {
     expect(
-      formatCityFullName({ name: 'Austin', state: 'Texas', country: null as unknown as string })
+      formatCityFullName({
+        name: 'Austin',
+        state: 'Texas',
+        country: null as unknown as string,
+      })
     ).toBe('Austin, Texas');
   });
 

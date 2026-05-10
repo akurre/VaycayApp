@@ -35,7 +35,11 @@ describe('CitySearchResultRow', () => {
 
     it('renders state when present', () => {
       render(
-        <CitySearchResultRow city={austin} onClick={vi.fn()} variant="desktop" />
+        <CitySearchResultRow
+          city={austin}
+          onClick={vi.fn()}
+          variant="desktop"
+        />
       );
       expect(screen.getByText(/Texas/)).toBeInTheDocument();
     });
@@ -53,7 +57,9 @@ describe('CitySearchResultRow', () => {
       render(
         <CitySearchResultRow city={tokyo} onClick={vi.fn()} variant="desktop" />
       );
-      expect(screen.queryByRole('img', { hidden: true })).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('img', { hidden: true })
+      ).not.toBeInTheDocument();
     });
   });
 

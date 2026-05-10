@@ -39,7 +39,11 @@ const CitySearchResultRow = ({
           </span>
         </span>
         {showAddIcon && (
-          <IconPlus size={16} className="opacity-60 shrink-0" aria-hidden="true" />
+          <IconPlus
+            size={16}
+            className="opacity-60 shrink-0"
+            aria-hidden="true"
+          />
         )}
       </button>
     );
@@ -51,8 +55,12 @@ const CitySearchResultRow = ({
       onClick={onClick}
       className="w-full text-left px-3 py-2 text-sm transition-colors hover:bg-[var(--mantine-color-default-border)] cursor-pointer"
     >
-      <div className="font-medium text-[var(--mantine-color-text)]">{city.name}</div>
-      <div className="text-xs text-[var(--mantine-color-dimmed)]">{subtitle}</div>
+      <div className="font-medium text-[var(--mantine-color-text)]">
+        {city.name}
+      </div>
+      <div className="text-xs text-[var(--mantine-color-dimmed)]">
+        {subtitle}
+      </div>
     </button>
   );
 };

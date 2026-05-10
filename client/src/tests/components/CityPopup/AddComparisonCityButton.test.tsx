@@ -18,7 +18,9 @@ describe('AddComparisonCityButton', () => {
   it('calls onClick when clicked', () => {
     const onClick = vi.fn();
     render(<AddComparisonCityButton onClick={onClick} variant="desktop" />);
-    fireEvent.click(screen.getByRole('button', { name: 'Add comparison city' }));
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Add comparison city' })
+    );
     expect(onClick).toHaveBeenCalledOnce();
   });
 

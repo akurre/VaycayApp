@@ -22,12 +22,7 @@ describe('MapTooltip', () => {
   describe('with onView (mobile tap)', () => {
     it('renders a + button', () => {
       render(
-        <MapTooltip
-          x={50}
-          y={50}
-          content="Tokyo, Japan"
-          onView={vi.fn()}
-        />
+        <MapTooltip x={50} y={50} content="Tokyo, Japan" onView={vi.fn()} />
       );
       expect(
         screen.getByRole('button', { name: 'Open city details' })

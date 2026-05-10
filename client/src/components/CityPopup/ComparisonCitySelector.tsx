@@ -4,7 +4,11 @@ import { IconX } from '@tabler/icons-react';
 import useCityComparisonSearch from '@/hooks/useCityComparisonSearch';
 import type { SearchCitiesResult } from '@/types/userLocationType';
 import type { ExcludeCity } from '@/types/cityPopupTypes';
-import { CITY2_PRIMARY_COLOR, COMPARISON_INPUT_FOCUS_DELAY_MS, MIN_CITY_SEARCH_LENGTH } from '@/const';
+import {
+  CITY2_PRIMARY_COLOR,
+  COMPARISON_INPUT_FOCUS_DELAY_MS,
+  MIN_CITY_SEARCH_LENGTH,
+} from '@/const';
 import formatCityFullName from '@/utils/dataFormatting/formatCityFullName';
 import CityNameRow from '@/components/CityPopup/Ribbon/CityNameRow';
 import CitySearchResultRow from '@/components/CityPopup/CitySearchResultRow';
@@ -112,7 +116,10 @@ const ComparisonCitySelector = ({
             }
           />
         ) : (
-          <AddComparisonCityButton onClick={() => setOpened(true)} variant="desktop" />
+          <AddComparisonCityButton
+            onClick={() => setOpened(true)}
+            variant="desktop"
+          />
         )}
       </Popover.Target>
 

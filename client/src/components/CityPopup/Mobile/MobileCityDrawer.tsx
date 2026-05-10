@@ -311,7 +311,9 @@ const MobileCityDrawer = ({
     cityAndCountry += `, ${city.country}`;
   }
 
-  const comparisonName = comparisonCity ? formatCityFullName(comparisonCity) : null;
+  const comparisonName = comparisonCity
+    ? formatCityFullName(comparisonCity)
+    : null;
 
   const transformValue = isDismissing
     ? 'translateY(100%)'
@@ -396,7 +398,10 @@ const MobileCityDrawer = ({
                 }
               />
             ) : (
-              <AddComparisonCityButton onClick={openCompareSheet} variant="mobile" />
+              <AddComparisonCityButton
+                onClick={openCompareSheet}
+                variant="mobile"
+              />
             )}
           </div>
           <ActionIcon
