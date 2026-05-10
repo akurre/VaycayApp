@@ -19,12 +19,12 @@ interface AppState {
   setTemperatureUnit: (unit: TemperatureUnit) => void;
   mapViewport: MapViewport | null;
   setMapViewport: (viewport: MapViewport) => void;
-  // True while panning/zooming. Displayed-data writes skip while true so
-  // the gesture isn't blocked by a layer rebuild + transition.
   isGesturing: boolean;
   setIsGesturing: (gesturing: boolean) => void;
   legendVisible: boolean;
   setLegendVisible: (value: boolean) => void;
+  isCityDrawerOpen: boolean;
+  setIsCityDrawerOpen: (value: boolean) => void;
   resetHomeLocation: () => void;
 }
 
@@ -50,6 +50,8 @@ export const useAppStore = create<AppState>()(
       setIsGesturing: (isGesturing) => set({ isGesturing }),
       legendVisible: false,
       setLegendVisible: (legendVisible) => set({ legendVisible }),
+      isCityDrawerOpen: false,
+      setIsCityDrawerOpen: (isCityDrawerOpen) => set({ isCityDrawerOpen }),
       resetHomeLocation: () =>
         set({
           homeLocation: null,
