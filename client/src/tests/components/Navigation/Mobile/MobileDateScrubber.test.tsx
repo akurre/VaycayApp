@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { act } from 'react';
 import { render, screen } from '@/test-utils';
 import MobileDateScrubber from '@/components/Navigation/Mobile/MobileDateScrubber';
+import { MOBILE_SCRUBBER_BOTTOM_PX, MOBILE_BAR_INSET_PX } from '@/const';
 
 interface CapturedSliderProps {
   value: number;
@@ -137,9 +138,9 @@ describe('MobileDateScrubber', () => {
     render(<MobileDateScrubber selectedDate="0410" onDateChange={vi.fn()} />);
     const root = screen.getByTestId('mobile-date-scrubber');
     expect(root.style.position).toBe('fixed');
-    expect(root.style.bottom).toBe('16px');
-    expect(root.style.left).toBe('12px');
-    expect(root.style.right).toBe('12px');
+    expect(root.style.bottom).toBe(`${MOBILE_SCRUBBER_BOTTOM_PX}px`);
+    expect(root.style.left).toBe(`${MOBILE_BAR_INSET_PX}px`);
+    expect(root.style.right).toBe(`${MOBILE_BAR_INSET_PX}px`);
   });
 
   it('defaults to visible (translateY(0))', () => {

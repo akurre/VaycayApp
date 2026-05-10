@@ -50,7 +50,7 @@ const MobileDateScrubber: FC<MobileDateScrubberProps> = ({
     onDateChange(newDate);
   };
 
-  const marks = isMonthly ? [...monthlyMarksMobile] : [...monthMarksMobile];
+  const marks = isMonthly ? monthlyMarksMobile : monthMarksMobile;
   const maxValue = isMonthly ? 12 : 365;
 
   const labelValue = previewValue ?? sliderValue;

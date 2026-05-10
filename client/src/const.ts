@@ -273,6 +273,10 @@ export const MONTH_FIELDS: Record<number, keyof SunshineData> = {
 // custom date slider thumb dimensions for positioning calculations
 export const SLIDER_THUMB_WIDTH = 14;
 
+// Tick mark dimensions rendered by SliderMarks beneath each mark value.
+export const SLIDER_MARK_TICK_WIDTH_PX = 1;
+export const SLIDER_MARK_TICK_HEIGHT_PX = 6;
+
 // days in each month (using 28.25 for February to account for leap years)
 export const DAYS_IN_MONTH = [
   31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31,

@@ -19,11 +19,13 @@ Fire all of these in parallel before reading any source files:
 - `git diff --stat origin/master...HEAD` — scope (files + line counts)
 - `git diff --name-only origin/master...HEAD` — file list
 - `git diff origin/master...HEAD` — the actual diff
-- `cd client && npm run lint -- --quiet 2>&1 | tail -50` (only if `client/` files changed)
-- `cd client && npm run type-check 2>&1 | tail -50` (only if `client/` files changed)
-- `cd server && npm run lint -- --quiet 2>&1 | tail -50` (only if `server/` files changed)
-- `cd server && npm run type-check 2>&1 | tail -50` (only if `server/` files changed)
-- `npm run knip 2>&1 | tail -50` (root — unused exports, dead code)
+- `cd "$(git rev-parse --show-toplevel)/client" && npm run lint -- --quiet 2>&1 | tail -50` (only if `client/` files changed)
+- `cd "$(git rev-parse --show-toplevel)/client" && npm run type-check 2>&1 | tail -50` (only if `client/` files changed)
+- `cd "$(git rev-parse --show-toplevel)/server" && npm run lint -- --quiet 2>&1 | tail -50` (only if `server/` files changed)
+- `cd "$(git rev-parse --show-toplevel)/server" && npm run type-check 2>&1 | tail -50` (only if `server/` files changed)
+- `cd "$(git rev-parse --show-toplevel)" && npm run knip 2>&1 | tail -50` (root — unused exports, dead code; knip script lives at repo root, NOT in client/ or server/)
+
+Note: Bash tool CWD persists across parallel tool calls. Always use absolute paths via `$(git rev-parse --show-toplevel)` so a concurrent `cd client` in one call doesn't leave the CWD wrong for another.
 
 Use lint + tsc + knip findings as a free first pass. Don't re-flag what they already caught — surface them in a "Static analysis" section of your report and move on.
 
