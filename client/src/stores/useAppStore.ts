@@ -48,7 +48,7 @@ export const useAppStore = create<AppState>()(
       setMapViewport: (mapViewport) => set({ mapViewport }),
       isGesturing: false,
       setIsGesturing: (isGesturing) => set({ isGesturing }),
-      legendVisible: true,
+      legendVisible: false,
       setLegendVisible: (legendVisible) => set({ legendVisible }),
       resetHomeLocation: () =>
         set({

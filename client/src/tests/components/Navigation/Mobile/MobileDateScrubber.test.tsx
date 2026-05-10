@@ -9,14 +9,14 @@ describe('MobileDateScrubber', () => {
   });
 
   it('defaults to visible (translateY(0))', () => {
-    const { container } = render(<MobileDateScrubber selectedDate="05-15" />);
-    expect(container.firstChild).toHaveStyle({ transform: 'translateY(0)' });
+    render(<MobileDateScrubber selectedDate="05-15" />);
+    const scrubber = screen.getByText('DATE: 05-15').closest('div');
+    expect(scrubber?.style.transform).toBe('translateY(0)');
   });
 
   it('slides offscreen when hidden=true', () => {
-    const { container } = render(
-      <MobileDateScrubber selectedDate="05-15" hidden />
-    );
-    expect(container.firstChild).toHaveStyle({ transform: 'translateY(120%)' });
+    render(<MobileDateScrubber selectedDate="05-15" hidden />);
+    const scrubber = screen.getByText('DATE: 05-15').closest('div');
+    expect(scrubber?.style.transform).toBe('translateY(120%)');
   });
 });

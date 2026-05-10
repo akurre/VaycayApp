@@ -16,7 +16,11 @@ import { useSunshineStore } from '../stores/useSunshineStore';
 import { useAppStore } from '../stores/useAppStore';
 import { DataType, ViewMode } from '@/types/mapTypes';
 import { parseErrorAndNotify } from '@/utils/errors/parseErrorAndNotify';
-import { INITIAL_VIEW_STATE, ZOOM_THRESHOLD } from '@/const';
+import {
+  INITIAL_VIEW_STATE,
+  ZOOM_THRESHOLD,
+  MOBILE_BELOW_BAR_TOP_PX,
+} from '@/const';
 import ComponentErrorBoundary from '../components/ErrorBoundary/ComponentErrorBoundary';
 import MapColorLegend from '../components/Map/MapColorLegend';
 import MapDataLoader from '../components/Map/MapDataLoader';
@@ -166,7 +170,10 @@ const MapPage: FC = () => {
   return (
     <div className="relative w-full h-screen">
       {legendVisible && (
-        <div className="absolute top-4 left-4 z-20">
+        <div
+          className="absolute left-4 z-20"
+          style={{ top: isMobileOrSmall ? MOBILE_BELOW_BAR_TOP_PX : 16 }}
+        >
           <MapColorLegend dataType={dataType} />
         </div>
       )}

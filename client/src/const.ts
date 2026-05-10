@@ -452,3 +452,7 @@ export const MOBILE_BAR_HEIGHT_PX = 52;
 export const MOBILE_BAR_RADIUS_PX = 16;
 export const MOBILE_HAMBURGER_WIDTH_PX = 320;
 export const MOBILE_ICON_BUTTON_SIZE_PX = 36;
+
+// Top offset for chrome that sits just below the mobile top bar (legend, loader).
+// = MOBILE_TOP_BAR_TOP_PX (16) + MOBILE_BAR_HEIGHT_PX (52) + 12px gap.
+export const MOBILE_BELOW_BAR_TOP_PX = 80;
