@@ -492,10 +492,10 @@ export const MOBILE_SCRUBBER_BOTTOM_PX = 16;
 export const DESKTOP_TOP_OFFSET_PX = 16;
 
 // Mobile city drawer geometry.
-export const MOBILE_DRAWER_HEIGHT_CAP_PX = 380;
-export const MOBILE_DRAWER_HEIGHT_VH = 45;
+export const MOBILE_DRAWER_HEIGHT_CAP_PX = 420;
+export const MOBILE_DRAWER_HEIGHT_VH = 54;
 export const MOBILE_DRAWER_HEADER_PX = 52;
-export const MOBILE_DRAWER_CHART_MIN_PX = 180;
+export const MOBILE_DRAWER_CHART_MIN_PX = 150;
 export const MOBILE_DRAWER_TAB_BAR_PX = 44;
 export const MOBILE_DRAWER_BOTTOM_PAD_PX = 12;
 export const MOBILE_DRAWER_DRAG_HANDLE_W_PX = 36;
