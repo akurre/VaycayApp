@@ -27,7 +27,7 @@ const CityNameRow = ({
       />
       {/* plain h2 instead of Mantine Title — Mantine's text truncation conflicts with flex min-w-0 */}
       <h2
-        className={`text-[17px] font-bold font-[Outfit_Variable] text-[var(--mantine-color-text)] truncate min-w-0${onClick ? ' cursor-pointer hover:opacity-80' : ''}`}
+        className={`flex-1 text-[17px] font-bold font-[Outfit_Variable] text-[var(--mantine-color-text)] truncate min-w-0${onClick ? ' cursor-pointer hover:opacity-80' : ''}`}
         title={name}
         onClick={onClick}
         role={onClick ? 'button' : undefined}

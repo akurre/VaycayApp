@@ -36,7 +36,8 @@ import { PopupVariant } from '@/types/cityPopupTypes';
 import {
   CITY1_PRIMARY_COLOR,
   MONTH_MIDPOINT_DAY,
-  STATE_ABBREVIATION_MAX_LENGTH,
+  MOBILE_STATE_ABBREVIATION_MAX_LENGTH,
+  MOBILE_COUNTRY_ABBREVIATION_MAX_LENGTH,
   CITY2_PRIMARY_COLOR,
   MOBILE_DRAWER_HEIGHT_CAP_PX,
   MOBILE_DRAWER_HEIGHT_VH,
@@ -303,13 +304,17 @@ const MobileCityDrawer = ({
   let cityAndCountry = city.city ? toTitleCase(city.city) : 'Unknown City';
   if (city.state) {
     const state =
-      city.state.length > STATE_ABBREVIATION_MAX_LENGTH
-        ? city.state.substring(0, STATE_ABBREVIATION_MAX_LENGTH) + '.'
+      city.state.length > MOBILE_STATE_ABBREVIATION_MAX_LENGTH
+        ? city.state.substring(0, MOBILE_STATE_ABBREVIATION_MAX_LENGTH) + '.'
         : city.state;
     cityAndCountry += `, ${toTitleCase(state)}`;
   }
   if (city.country) {
-    cityAndCountry += `, ${city.country}`;
+    const country =
+      city.country.length > MOBILE_COUNTRY_ABBREVIATION_MAX_LENGTH
+        ? city.country.substring(0, MOBILE_COUNTRY_ABBREVIATION_MAX_LENGTH) + '.'
+        : city.country;
+    cityAndCountry += `, ${country}`;
   }
 
   const comparisonName = comparisonCity

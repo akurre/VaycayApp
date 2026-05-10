@@ -409,6 +409,10 @@ export const COMPARISON_INPUT_FOCUS_DELAY_MS = 10;
 // truncating with a trailing period (e.g. "California" → "Californ.").
 export const STATE_ABBREVIATION_MAX_LENGTH = 8;
 
+// Tighter limits for the mobile drawer header where horizontal space is scarcer.
+export const MOBILE_STATE_ABBREVIATION_MAX_LENGTH = 3;
+export const MOBILE_COUNTRY_ABBREVIATION_MAX_LENGTH = 4;
+
 // Day-of-month used as the default when only a month is known (e.g. sunshine
 // rows have no specific date). 15 lands roughly on the climatological mean.
 export const MONTH_MIDPOINT_DAY = 15;
