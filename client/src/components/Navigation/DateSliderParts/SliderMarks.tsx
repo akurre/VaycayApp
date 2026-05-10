@@ -18,23 +18,22 @@ const SliderMarks: FC<SliderMarksProps> = ({ marks, min, max }) => {
         return (
           <div
             key={mark.value}
-            className="absolute -translate-x-1/2"
+            className="absolute -translate-x-1/2 flex flex-col items-center"
             style={{ left: `${markPosition}%` }}
           >
-            {mark.label ? (
+            <div
+              aria-hidden="true"
+              style={{
+                width: 1,
+                height: 6,
+                background: glass.text,
+                opacity: 0.35,
+              }}
+            />
+            {mark.label && (
               <Text size="xs" style={{ color: glass.text, opacity: 0.7 }}>
                 {mark.label}
               </Text>
-            ) : (
-              <div
-                aria-hidden="true"
-                style={{
-                  width: 1,
-                  height: 6,
-                  background: glass.text,
-                  opacity: 0.35,
-                }}
-              />
             )}
           </div>
         );

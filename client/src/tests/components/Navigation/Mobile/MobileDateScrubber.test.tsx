@@ -165,27 +165,27 @@ describe('MobileDateScrubber', () => {
     expect(screen.getByTestId('mock-custom-date-slider')).toBeInTheDocument();
   });
 
-  it('passes 12 marks with text labels only at the quarter starts in daily mode', () => {
+  it('passes 12 marks with text labels only at the quarter midpoints in daily mode', () => {
     render(<MobileDateScrubber selectedDate="0410" onDateChange={vi.fn()} />);
     const marks = captured.props?.marks ?? [];
     expect(marks).toHaveLength(12);
     expect(marks.map((m) => m.label)).toEqual([
-      'Jan',
+      '',
+      'Feb',
       '',
       '',
-      'Apr',
+      'May',
       '',
       '',
-      'Jul',
+      'Aug',
       '',
       '',
-      'Oct',
-      '',
+      'Nov',
       '',
     ]);
   });
 
-  it('passes 12 marks with text labels only at the quarter starts in monthly mode', () => {
+  it('passes 12 marks with text labels only at the quarter midpoints in monthly mode', () => {
     render(
       <MobileDateScrubber
         selectedDate="07-15"
@@ -196,17 +196,17 @@ describe('MobileDateScrubber', () => {
     const marks = captured.props?.marks ?? [];
     expect(marks).toHaveLength(12);
     expect(marks.map((m) => m.label)).toEqual([
-      'Jan',
+      '',
+      'Feb',
       '',
       '',
-      'Apr',
+      'May',
       '',
       '',
-      'Jul',
+      'Aug',
       '',
       '',
-      'Oct',
-      '',
+      'Nov',
       '',
     ]);
     expect(marks.map((m) => m.value)).toEqual([

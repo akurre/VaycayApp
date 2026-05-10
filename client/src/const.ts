@@ -301,19 +301,19 @@ export const monthMarks = [
 ];
 
 // Mobile date scrubber marks: tick for every month, text label only at the
-// quarter starts (Jan/Apr/Jul/Oct) — empty `label` renders a small tick.
+// quarter midpoints (Feb/May/Aug/Nov) — empty `label` renders a small tick.
 export const monthMarksMobile = [
-  { value: 1, label: 'Jan' },
-  { value: 32, label: '' },
+  { value: 1, label: '' },
+  { value: 32, label: 'Feb' },
   { value: 60, label: '' },
-  { value: 91, label: 'Apr' },
-  { value: 121, label: '' },
+  { value: 91, label: '' },
+  { value: 121, label: 'May' },
   { value: 152, label: '' },
-  { value: 182, label: 'Jul' },
-  { value: 213, label: '' },
+  { value: 182, label: '' },
+  { value: 213, label: 'Aug' },
   { value: 244, label: '' },
-  { value: 274, label: 'Oct' },
-  { value: 305, label: '' },
+  { value: 274, label: '' },
+  { value: 305, label: 'Nov' },
   { value: 335, label: '' },
 ];
 
@@ -334,19 +334,19 @@ export const monthlyMarks = [
 ] as const;
 
 // Mobile monthly marks: tick for every month, text label only at the quarter
-// starts (Jan/Apr/Jul/Oct) — empty `label` renders a small tick.
+// midpoints (Feb/May/Aug/Nov) — empty `label` renders a small tick.
 export const monthlyMarksMobile = [
-  { value: 1, label: 'Jan' },
-  { value: 2, label: '' },
+  { value: 1, label: '' },
+  { value: 2, label: 'Feb' },
   { value: 3, label: '' },
-  { value: 4, label: 'Apr' },
-  { value: 5, label: '' },
+  { value: 4, label: '' },
+  { value: 5, label: 'May' },
   { value: 6, label: '' },
-  { value: 7, label: 'Jul' },
-  { value: 8, label: '' },
+  { value: 7, label: '' },
+  { value: 8, label: 'Aug' },
   { value: 9, label: '' },
-  { value: 10, label: 'Oct' },
-  { value: 11, label: '' },
+  { value: 10, label: '' },
+  { value: 11, label: 'Nov' },
   { value: 12, label: '' },
 ];
 
