@@ -11,7 +11,6 @@ import {
 } from '@/const';
 import { formatCityPopulationSuffix } from '@/utils/dataFormatting/formatCityPopulationSuffix';
 import CityNameRow from '@/components/CityPopup/Ribbon/CityNameRow';
-import { useRecentCitiesStore } from '@/stores/useRecentCitiesStore';
 
 interface ComparisonCitySelectorProps {
   onCitySelect: (city: SearchCitiesResult) => void;
@@ -30,10 +29,13 @@ const ComparisonCitySelector = ({
   const [searchTerm, setSearchTerm] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { results, isLoading: isSearchLoading } =
-    useCityComparisonSearch(searchTerm);
-  const recentCities = useRecentCitiesStore((s) => s.recentCities);
-  const pushRecentCity = useRecentCitiesStore((s) => s.pushRecentCity);
+  const {
+    filteredResults,
+    filteredRecent,
+    isSearching,
+    isLoading: isSearchLoading,
+    pickCity,
+  } = useCityComparisonSearch(searchTerm, excludeCity);
 
   useEffect(() => {
     if (opened) {
@@ -47,7 +49,7 @@ const ComparisonCitySelector = ({
   }, [opened]);
 
   const handleSelectCity = (city: SearchCitiesResult) => {
-    pushRecentCity(city);
+    pickCity(city);
     onCitySelect(city);
     setSearchTerm('');
     setOpened(false);
@@ -67,21 +69,6 @@ const ComparisonCitySelector = ({
       .join(', ');
   }, [selectedCity]);
 
-  const isExcluded = (city: SearchCitiesResult): boolean =>
-    excludeCity != null &&
-    city.name === excludeCity.name &&
-    city.state === excludeCity.state &&
-    city.country === excludeCity.country;
-
-  const filteredResults = excludeCity
-    ? results.filter((city) => !isExcluded(city))
-    : results;
-  const filteredRecent = excludeCity
-    ? recentCities.filter((city) => !isExcluded(city))
-    : recentCities;
-
-  const trimmedSearch = searchTerm.trim();
-  const isSearching = trimmedSearch.length >= MIN_CITY_SEARCH_LENGTH;
   const showSuggested = !isSearching && filteredRecent.length > 0;
   const showSearchPrompt = !isSearching && filteredRecent.length === 0;
 

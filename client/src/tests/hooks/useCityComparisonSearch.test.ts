@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { renderHook, waitFor } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import useCityComparisonSearch from '@/hooks/useCityComparisonSearch';
+import { useRecentCitiesStore } from '@/stores/useRecentCitiesStore';
 import type { SearchCitiesResult } from '@/types/userLocationType';
 
 const tokyo: SearchCitiesResult = {
@@ -11,6 +12,16 @@ const tokyo: SearchCitiesResult = {
   lat: 35.6762,
   long: 139.6503,
   population: 13_960_000,
+};
+
+const berlin: SearchCitiesResult = {
+  id: 101,
+  name: 'Berlin',
+  country: 'Germany',
+  state: null,
+  lat: 52.52,
+  long: 13.405,
+  population: 3_645_000,
 };
 
 const lisbon: SearchCitiesResult = {
@@ -38,6 +49,8 @@ vi.mock('@/hooks/useCitySearch', () => ({
 describe('useCityComparisonSearch', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    localStorage.clear();
+    useRecentCitiesStore.setState({ recentCities: [] });
     searchCitiesMock.mockResolvedValue([]);
   });
 
@@ -47,7 +60,8 @@ describe('useCityComparisonSearch', () => {
     // wait past the debounce window to be sure no call was scheduled
     await new Promise((r) => setTimeout(r, 350));
 
-    expect(result.current.results).toEqual([]);
+    expect(result.current.filteredResults).toEqual([]);
+    expect(result.current.isSearching).toBe(false);
     expect(searchCitiesMock).not.toHaveBeenCalled();
   });
 
@@ -59,8 +73,9 @@ describe('useCityComparisonSearch', () => {
       expect(searchCitiesMock).toHaveBeenCalledWith('Tok');
     });
     await waitFor(() => {
-      expect(result.current.results).toEqual([tokyo]);
+      expect(result.current.filteredResults).toEqual([tokyo]);
     });
+    expect(result.current.isSearching).toBe(true);
   });
 
   it('coalesces rapid term changes into a single search for the latest term', async () => {
@@ -107,11 +122,11 @@ describe('useCityComparisonSearch', () => {
     resolveFirst([tokyo]);
 
     await waitFor(() => {
-      expect(result.current.results).toEqual([lisbon]);
+      expect(result.current.filteredResults).toEqual([lisbon]);
     });
     // small grace window to confirm the stale response stayed ignored
     await new Promise((r) => setTimeout(r, 50));
-    expect(result.current.results).toEqual([lisbon]);
+    expect(result.current.filteredResults).toEqual([lisbon]);
   });
 
   it('clears results when the term drops back below MIN length', async () => {
@@ -122,13 +137,63 @@ describe('useCityComparisonSearch', () => {
     );
 
     await waitFor(() => {
-      expect(result.current.results).toEqual([tokyo]);
+      expect(result.current.filteredResults).toEqual([tokyo]);
     });
 
     rerender('');
 
     await waitFor(() => {
-      expect(result.current.results).toEqual([]);
+      expect(result.current.filteredResults).toEqual([]);
     });
+    expect(result.current.isSearching).toBe(false);
+  });
+
+  it('filters search results by excludeCity', async () => {
+    searchCitiesMock.mockResolvedValue([tokyo, berlin]);
+    const { result } = renderHook(() =>
+      useCityComparisonSearch('Tok', {
+        name: 'Tokyo',
+        state: null,
+        country: 'Japan',
+      })
+    );
+
+    await waitFor(() => {
+      expect(result.current.filteredResults).toEqual([berlin]);
+    });
+  });
+
+  it('filters recent cities by excludeCity', () => {
+    useRecentCitiesStore.setState({ recentCities: [tokyo, berlin, lisbon] });
+    const { result } = renderHook(() =>
+      useCityComparisonSearch('', {
+        name: 'Berlin',
+        state: null,
+        country: 'Germany',
+      })
+    );
+
+    expect(result.current.filteredRecent).toEqual([tokyo, lisbon]);
+  });
+
+  it('exposes recent cities unfiltered when no excludeCity is provided', () => {
+    useRecentCitiesStore.setState({ recentCities: [tokyo, berlin] });
+    const { result } = renderHook(() => useCityComparisonSearch(''));
+
+    expect(result.current.filteredRecent).toEqual([tokyo, berlin]);
+  });
+
+  it('pickCity pushes the city to the recent-cities store newest-first', () => {
+    useRecentCitiesStore.setState({ recentCities: [tokyo] });
+    const { result } = renderHook(() => useCityComparisonSearch(''));
+
+    act(() => {
+      result.current.pickCity(berlin);
+    });
+
+    expect(useRecentCitiesStore.getState().recentCities).toEqual([
+      berlin,
+      tokyo,
+    ]);
   });
 });

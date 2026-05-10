@@ -124,6 +124,34 @@ describe('MobileCompareSheet', () => {
     expect(useRecentCitiesStore.getState().recentCities[0]).toEqual(lisbon);
   });
 
+  it('filters Suggested cities by excludeCity prop', () => {
+    useRecentCitiesStore.setState({ recentCities: [tokyo, berlin, lisbon] });
+    render(
+      <MobileCompareSheet
+        opened
+        onClose={vi.fn()}
+        onCitySelect={vi.fn()}
+        excludeCity={{ name: 'Tokyo', state: null, country: 'Japan' }}
+      />
+    );
+
+    expect(screen.getByText('Berlin')).toBeInTheDocument();
+    expect(screen.getByText('Lisbon')).toBeInTheDocument();
+    expect(screen.queryByText('Tokyo')).not.toBeInTheDocument();
+  });
+
+  it('Suggested rows show the population suffix', () => {
+    useRecentCitiesStore.setState({ recentCities: [tokyo] });
+    render(
+      <MobileCompareSheet opened onClose={vi.fn()} onCitySelect={vi.fn()} />
+    );
+
+    // formatCityPopulationSuffix renders " • <n>M" — country + suffix sit in
+    // the same subtitle span so we assert the joined textContent.
+    const tokyoRow = screen.getByText('Tokyo').closest('button');
+    expect(tokyoRow).toHaveTextContent(/Japan\s+•\s+\d+(\.\d)?M/);
+  });
+
   it('filters search results by excludeCity prop', async () => {
     searchCitiesMock.mockResolvedValue([tokyo, berlin]);
     render(

@@ -3,9 +3,7 @@ import { ActionIcon, Loader, Modal, Text, TextInput } from '@mantine/core';
 import { IconPlus, IconSearch, IconX } from '@tabler/icons-react';
 
 import useCityComparisonSearch from '@/hooks/useCityComparisonSearch';
-import { useRecentCitiesStore } from '@/stores/useRecentCitiesStore';
 import { formatCityPopulationSuffix } from '@/utils/dataFormatting/formatCityPopulationSuffix';
-import { MIN_CITY_SEARCH_LENGTH } from '@/const';
 
 import type { SearchCitiesResult } from '@/types/userLocationType';
 import type { ExcludeCity } from '@/types/cityPopupTypes';
@@ -25,10 +23,13 @@ const MobileCompareSheet = ({
 }: MobileCompareSheetProps) => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  const { results: searchResults, isLoading: isSearchLoading } =
-    useCityComparisonSearch(searchTerm);
-  const recentCities = useRecentCitiesStore((s) => s.recentCities);
-  const pushRecentCity = useRecentCitiesStore((s) => s.pushRecentCity);
+  const {
+    filteredResults,
+    filteredRecent,
+    isSearching,
+    isLoading: isSearchLoading,
+    pickCity,
+  } = useCityComparisonSearch(searchTerm, excludeCity);
 
   useEffect(() => {
     if (!opened) {
@@ -37,26 +38,13 @@ const MobileCompareSheet = ({
   }, [opened]);
 
   const handlePick = (city: SearchCitiesResult) => {
-    pushRecentCity(city);
+    pickCity(city);
     onCitySelect(city);
     onClose();
   };
 
-  const filteredResults = excludeCity
-    ? searchResults.filter(
-        (city) =>
-          !(
-            city.name === excludeCity.name &&
-            city.state === excludeCity.state &&
-            city.country === excludeCity.country
-          )
-      )
-    : searchResults;
-
-  const trimmedSearch = searchTerm.trim();
-  const isSearching = trimmedSearch.length >= MIN_CITY_SEARCH_LENGTH;
-  const showSuggested = !isSearching && recentCities.length > 0;
-  const showEmptyState = !isSearching && recentCities.length === 0;
+  const showSuggested = !isSearching && filteredRecent.length > 0;
+  const showEmptyState = !isSearching && filteredRecent.length === 0;
   const noResults =
     isSearching && !isSearchLoading && filteredResults.length === 0;
 
@@ -111,7 +99,7 @@ const MobileCompareSheet = ({
               Suggested
             </Text>
             <ul className="list-none p-0 m-0">
-              {recentCities.map((city) => (
+              {filteredRecent.map((city) => (
                 <li key={city.id}>
                   <button
                     type="button"
@@ -125,6 +113,7 @@ const MobileCompareSheet = ({
                       <span className="block text-xs text-[var(--mantine-color-dimmed)] truncate">
                         {city.state ? `${city.state}, ` : ''}
                         {city.country}
+                        {formatCityPopulationSuffix(city.population)}
                       </span>
                     </span>
                     <IconPlus
