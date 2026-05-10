@@ -2,11 +2,10 @@ import { MOBILE_BAR_INSET_PX } from '@/const';
 
 interface MobileDateScrubberProps {
   selectedDate: string;
-  onDateChange: (date: string) => void;
   hidden?: boolean;
 }
 
-// Stub — full persistent scrubber lands in Task 4.
+// Stub — full date scrubber not yet implemented.
 const MobileDateScrubber = ({
   selectedDate,
   hidden = false,

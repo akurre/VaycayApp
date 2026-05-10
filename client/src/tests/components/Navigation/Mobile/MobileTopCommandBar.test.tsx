@@ -10,15 +10,12 @@ vi.mock('@/components/Navigation/Mobile/HamburgerSheet', () => ({
 }));
 
 const defaultProps = {
-  selectedDate: '05-09',
-  onDateChange: vi.fn(),
   viewMode: ViewMode.Markers,
   onViewModeChange: vi.fn(),
   dataType: DataType.Temperature,
   onDataTypeChange: vi.fn(),
   temperatureUnit: TemperatureUnit.Celsius,
   onTemperatureUnitChange: vi.fn(),
-  isMonthly: false,
 };
 
 describe('MobileTopCommandBar', () => {

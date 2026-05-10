@@ -13,17 +13,20 @@ interface HamburgerSheetProps {
   onClose: () => void;
 }
 
-type DrawerView = 'menu' | 'home';
+enum DrawerView {
+  Menu = 'menu',
+  Home = 'home',
+}
 
 const HamburgerSheet = ({ opened, onClose }: HamburgerSheetProps) => {
-  const [view, setView] = useState<DrawerView>('menu');
+  const [view, setView] = useState<DrawerView>(DrawerView.Menu);
   const glass = useGlassTokens();
   const homeLocation = useAppStore((s) => s.homeLocation);
   const legendVisible = useAppStore((s) => s.legendVisible);
   const setLegendVisible = useAppStore((s) => s.setLegendVisible);
 
   const handleClose = () => {
-    setView('menu');
+    setView(DrawerView.Menu);
     onClose();
   };
 
@@ -33,7 +36,7 @@ const HamburgerSheet = ({ opened, onClose }: HamburgerSheetProps) => {
       onClose={handleClose}
       position="left"
       size={`${MOBILE_HAMBURGER_WIDTH_PX}px`}
-      title={view === 'menu' ? 'Settings' : undefined}
+      title={view === DrawerView.Menu ? 'Settings' : undefined}
       closeButtonProps={{ 'aria-label': 'Close menu' }}
       styles={{
         content: {
@@ -47,8 +50,8 @@ const HamburgerSheet = ({ opened, onClose }: HamburgerSheetProps) => {
         header: { background: 'transparent', color: glass.text },
       }}
     >
-      {view === 'home' ? (
-        <HamburgerHomeSubview onBack={() => setView('menu')} />
+      {view === DrawerView.Home ? (
+        <HamburgerHomeSubview onBack={() => setView(DrawerView.Menu)} />
       ) : (
         <div className="flex flex-col gap-1">
           <div className="flex items-center justify-between py-3">
@@ -62,7 +65,7 @@ const HamburgerSheet = ({ opened, onClose }: HamburgerSheetProps) => {
 
           <UnstyledButton
             className="flex items-center justify-between py-3 w-full rounded"
-            onClick={() => setView('home')}
+            onClick={() => setView(DrawerView.Home)}
           >
             <div className="flex items-center gap-2">
               <IconHome size={16} style={{ color: glass.text }} />

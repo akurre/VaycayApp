@@ -17,15 +17,12 @@ import {
 } from '@/const';
 
 interface MobileTopCommandBarProps {
-  selectedDate: string;
-  onDateChange: (date: string) => void;
   viewMode: ViewMode;
   onViewModeChange: (mode: ViewMode) => void;
   dataType: DataType;
   onDataTypeChange: (type: DataType) => void;
   temperatureUnit: TemperatureUnit;
   onTemperatureUnitChange: (unit: TemperatureUnit) => void;
-  isMonthly: boolean;
 }
 
 const MobileTopCommandBar = ({

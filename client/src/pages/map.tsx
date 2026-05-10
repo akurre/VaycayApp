@@ -7,8 +7,8 @@ import useSunshineByMonthAndBounds from '../api/dates/useSunshineByMonthAndBound
 import WorldMap from '../components/Map/WorldMap';
 import FeedbackButton from '../components/Navigation/FeedbackButton';
 import TopCommandBar from '../components/Navigation/TopCommandBar';
-import MobileTopCommandBar from '../components/Navigation/Mobile/MobileTopCommandBar';
-import MobileDateScrubber from '../components/Navigation/Mobile/MobileDateScrubber';
+import MobileTopCommandBar from '@/components/Navigation/Mobile/MobileTopCommandBar';
+import MobileDateScrubber from '@/components/Navigation/Mobile/MobileDateScrubber';
 import useIsMobileOrSmall from '@/hooks/useIsMobileOrSmall';
 import { getTodayAsMMDD } from '@/utils/dateFormatting/getTodayAsMMDD';
 import { useWeatherStore } from '../stores/useWeatherStore';
@@ -175,15 +175,12 @@ const MapPage: FC = () => {
 
       {isMobileOrSmall ? (
         <MobileTopCommandBar
-          selectedDate={selectedDate}
-          onDateChange={handleDateChange}
           viewMode={viewMode}
           onViewModeChange={setViewMode}
           dataType={dataType}
           onDataTypeChange={setDataType}
           temperatureUnit={temperatureUnit}
           onTemperatureUnitChange={setTemperatureUnit}
-          isMonthly={dataType === DataType.Sunshine}
         />
       ) : (
         <TopCommandBar
@@ -199,12 +196,7 @@ const MapPage: FC = () => {
         />
       )}
 
-      {isMobileOrSmall && (
-        <MobileDateScrubber
-          selectedDate={selectedDate}
-          onDateChange={handleDateChange}
-        />
-      )}
+      {isMobileOrSmall && <MobileDateScrubber selectedDate={selectedDate} />}
 
       {!isMobileOrSmall && (
         <div className="absolute bottom-4 right-4 z-20">
