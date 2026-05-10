@@ -81,6 +81,7 @@ Apply CLAUDE.md to each changed file. One-liners below are reminders, not the fu
 
 1. **File structure** — one function/component per file (HARD), filename matches, default export for components, constants in `constants.ts`/`const.ts`, types in `types/` (except component props).
    *Serena:* `get_symbols_overview` on each changed file — if it returns more than one top-level function/class/component export, flag it.
+   *ripgrep:* For any changed `.tsx` file, also run `rg -n 'const \w+ = \($' <file>` — a `const X = (` at end of line is the signature of an inline JSX sub-render that should be its own component file. Flag every hit.
 2. **Code duplication** — type guards consolidated in `utils/typeGuards.ts`; repeated logic extracted; near-duplicate components/hooks unified.
    *Serena:* before flagging "this looks duplicate", run `find_symbol` on the candidate name. Before flagging "extract this", run `find_referencing_symbols` to size blast radius.
 3. **State management** — no `useState`+`useEffect` for derived data; no `useMemo` around already-memoized fns; Zustand individual selectors only.
