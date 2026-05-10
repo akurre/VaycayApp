@@ -4,7 +4,11 @@ import { useSunshineStore } from '@/stores/useSunshineStore';
 import { useAppStore } from '@/stores/useAppStore';
 import { DataType } from '@/types/mapTypes';
 import useIsMobileOrSmall from '@/hooks/useIsMobileOrSmall';
-import { MAP_DATA_LOADER_FADE_MS, MOBILE_BELOW_BAR_TOP_PX } from '@/const';
+import {
+  MAP_DATA_LOADER_FADE_MS,
+  MOBILE_BELOW_BAR_TOP_PX,
+  DESKTOP_TOP_OFFSET_PX,
+} from '@/const';
 
 interface MapDataLoaderProps {
   dataType: DataType;
@@ -32,7 +36,9 @@ const MapDataLoader = ({ dataType }: MapDataLoaderProps) => {
         <div
           style={{
             ...styles,
-            top: isMobileOrSmall ? MOBILE_BELOW_BAR_TOP_PX : 16,
+            top: isMobileOrSmall
+              ? MOBILE_BELOW_BAR_TOP_PX
+              : DESKTOP_TOP_OFFSET_PX,
           }}
           role="status"
           aria-live="polite"

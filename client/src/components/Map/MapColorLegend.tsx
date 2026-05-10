@@ -1,12 +1,6 @@
 import { useState } from 'react';
 import type { FC } from 'react';
-import {
-  Collapse,
-  ColorSwatch,
-  Group,
-  Text,
-  UnstyledButton,
-} from '@mantine/core';
+import { Collapse, ColorSwatch, Text, UnstyledButton } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import { TEMP_THRESHOLDS, SUNSHINE_THRESHOLDS } from '@/const';
 import { DataType } from '@/types/mapTypes';
@@ -75,7 +69,7 @@ const MapColorLegend: FC<MapColorLegendProps> = ({ dataType }) => {
           'temp' in threshold ? threshold.temp : threshold.percent;
 
         return (
-          <Group key={keyValue} gap="xs" wrap="nowrap">
+          <div key={keyValue} className="flex items-center gap-2 flex-nowrap">
             <ColorSwatch
               color={rgbToString(threshold.color)}
               size={16}
@@ -91,7 +85,7 @@ const MapColorLegend: FC<MapColorLegendProps> = ({ dataType }) => {
             >
               {formatLabel(index)}
             </Text>
-          </Group>
+          </div>
         );
       })}
     </div>

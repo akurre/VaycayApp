@@ -20,6 +20,7 @@ import {
   INITIAL_VIEW_STATE,
   ZOOM_THRESHOLD,
   MOBILE_BELOW_BAR_TOP_PX,
+  DESKTOP_TOP_OFFSET_PX,
 } from '@/const';
 import ComponentErrorBoundary from '../components/ErrorBoundary/ComponentErrorBoundary';
 import MapColorLegend from '../components/Map/MapColorLegend';
@@ -169,10 +170,14 @@ const MapPage: FC = () => {
 
   return (
     <div className="relative w-full h-screen">
-      {legendVisible && (
+      {(!isMobileOrSmall || legendVisible) && (
         <div
           className="absolute left-4 z-20"
-          style={{ top: isMobileOrSmall ? MOBILE_BELOW_BAR_TOP_PX : 16 }}
+          style={{
+            top: isMobileOrSmall
+              ? MOBILE_BELOW_BAR_TOP_PX
+              : DESKTOP_TOP_OFFSET_PX,
+          }}
         >
           <MapColorLegend dataType={dataType} />
         </div>

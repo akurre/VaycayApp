@@ -7,15 +7,11 @@ import HamburgerHomeSubview from './HamburgerHomeSubview';
 import { useAppStore } from '@/stores/useAppStore';
 import useGlassTokens from '@/hooks/useGlassTokens';
 import { MOBILE_HAMBURGER_WIDTH_PX } from '@/const';
+import { DrawerView } from '@/types/navigationTypes';
 
 interface HamburgerSheetProps {
   opened: boolean;
   onClose: () => void;
-}
-
-enum DrawerView {
-  Menu = 'menu',
-  Home = 'home',
 }
 
 const HamburgerSheet = ({ opened, onClose }: HamburgerSheetProps) => {

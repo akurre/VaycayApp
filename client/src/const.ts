@@ -456,3 +456,6 @@ export const MOBILE_ICON_BUTTON_SIZE_PX = 36;
 // Top offset for chrome that sits just below the mobile top bar (legend, loader).
 // = MOBILE_TOP_BAR_TOP_PX (16) + MOBILE_BAR_HEIGHT_PX (52) + 12px gap.
 export const MOBILE_BELOW_BAR_TOP_PX = 80;
+
+// Desktop top offset for floating chrome elements (legend, loader).
+export const DESKTOP_TOP_OFFSET_PX = 16;
