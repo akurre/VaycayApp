@@ -24,5 +24,3 @@ export function formatDateAsMonthDay(
 
   return `${MONTH_NAMES[month - 1]} ${day}`;
 }
-
-export default formatDateAsMonthDay;

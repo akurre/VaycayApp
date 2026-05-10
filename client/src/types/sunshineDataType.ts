@@ -25,7 +25,7 @@ export interface SunshineData {
 }
 
 // guaranteed non-null lat, long, and at least one month value
-export interface ValidSunshineMarkerData extends SunshineData {
+interface ValidSunshineMarkerData extends SunshineData {
   lat: number;
   long: number;
 }

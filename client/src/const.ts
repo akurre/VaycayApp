@@ -283,11 +283,6 @@ export const SLIDER_THUMB_WIDTH = 14;
 export const SLIDER_MARK_TICK_WIDTH_PX = 1;
 export const SLIDER_MARK_TICK_HEIGHT_PX = 6;
 
-// days in each month (using 28.25 for February to account for leap years)
-export const DAYS_IN_MONTH = [
-  31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31,
-];
-
 // calendar days in each month (non-leap year) - for iteration
 export const CALENDAR_DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
@@ -433,22 +428,11 @@ export const TODAY_READOUT_VALUE_LABEL: Partial<Record<DataType, string>> = {
 
 // Each city plots avg/max/min temp lines on the same chart. We pick three
 // shades from the brand palette: lighter = max temp, deeper = min temp.
-// City 2 swings wider because the ocean palette's mid shades read as similar
-// dark blues; the extra spread keeps min/avg/max distinguishable at a glance.
-const CITY1_MAX_OFFSET = -1;
-const CITY1_MIN_OFFSET = 2;
-
 // City 1 (main / warmest destination) — Amber family
 export const CITY1_PRIMARY_COLOR = primaryAmberShades[AMBER_BRAND_SHADE];
-export const CITY1_MAX_COLOR =
-  primaryAmberShades[AMBER_BRAND_SHADE + CITY1_MAX_OFFSET];
-export const CITY1_MIN_COLOR =
-  primaryAmberShades[AMBER_BRAND_SHADE + CITY1_MIN_OFFSET];
 
 // City 2 (comparison / home) — Ocean family, recedes visually
 export const CITY2_PRIMARY_COLOR = secondaryOceanShades[3]; // #6E9DB6
-export const CITY2_MAX_COLOR = secondaryOceanShades[2]; // #9DBED1
-export const CITY2_MIN_COLOR = secondaryOceanShades[4]; // #487D99
 export const CITY2_BADGE_BACKGROUND = `${CITY2_PRIMARY_COLOR}26`; // 15% opacity (0x26 = 38 ≈ 0.15 * 255)
 
 // Today-marker shades — distinctly deeper than the hover/primary swatch so

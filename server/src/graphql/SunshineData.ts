@@ -1,7 +1,7 @@
 import { objectType, queryField, nonNull, intArg, list, stringArg, floatArg } from 'nexus';
 import type { City, MonthlySunshine, PrismaClient } from '@prisma/client';
 import { MONTH_FIELDS } from '../const';
-import { getCachedWeatherData } from '../utils/cache';
+import getCachedWeatherData from '../utils/cache';
 import querySunshineCityIds from '../utils/sunshineQueries';
 import quantizeBoundsForCacheKey from '../utils/quantizeBoundsForCacheKey';
 import type { Bounds } from '../types/boundsTypes';

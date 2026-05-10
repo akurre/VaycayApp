@@ -23,7 +23,7 @@ const customRender = (
 ) => render(ui, { wrapper: AllTheProviders, ...options });
 
 // re-export everything from testing library
-export { screen, waitFor, within, fireEvent } from '@testing-library/react';
+export { screen, within, fireEvent } from '@testing-library/react';
 export { customRender as render };
 
 // mock data factories for common test data

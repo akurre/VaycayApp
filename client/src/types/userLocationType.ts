@@ -1,11 +1,11 @@
 // types for user location and home location functionality
 
-export interface Coordinates {
+interface Coordinates {
   lat: number;
   long: number;
 }
 
-export interface CityInfo {
+interface CityInfo {
   id: number;
   name: string;
   country: string;

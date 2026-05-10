@@ -179,4 +179,3 @@ async function querySunshineCityIds({
 }
 
 export default querySunshineCityIds;
-export { querySunshineCityIdsWithGridDistribution, querySunshineCityIdsWithPopulationSort };

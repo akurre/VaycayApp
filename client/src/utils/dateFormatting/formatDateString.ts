@@ -34,5 +34,3 @@ export function formatDateString(
   // Format the date
   return `${MONTH_NAMES[month - 1]} ${day}${getOrdinalSuffix(day)}`;
 }
-
-export default formatDateString;

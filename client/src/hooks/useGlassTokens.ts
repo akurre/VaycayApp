@@ -7,7 +7,7 @@ import { appColors } from '@/theme';
  * background in both light and dark mode but with different translucency
  * and accent contrasts.
  */
-export function useGlassTokens() {
+function useGlassTokens() {
   const scheme = useComputedColorScheme('dark');
   return scheme === 'light' ? appColors.glass.light : appColors.glass.dark;
 }

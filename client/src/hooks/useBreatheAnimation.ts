@@ -5,14 +5,14 @@ import {
   BREATHE_CYCLE_MS,
 } from '@/const';
 
-export interface UseBreatheAnimationProps {
+interface UseBreatheAnimationProps {
   isActive: boolean;
   minOpacity?: number;
   maxOpacity?: number;
   cycleDurationMs?: number;
 }
 
-export interface UseBreatheAnimationReturn {
+interface UseBreatheAnimationReturn {
   opacity: number;
 }
 

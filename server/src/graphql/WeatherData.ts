@@ -1,6 +1,6 @@
 import { objectType, queryField, nonNull, stringArg, intArg, floatArg, list } from 'nexus';
 import type { City } from '@prisma/client';
-import { getCachedWeatherData } from '../utils/cache';
+import getCachedWeatherData from '../utils/cache';
 import queryCityIds from '../utils/weatherQueries';
 import quantizeBoundsForCacheKey from '../utils/quantizeBoundsForCacheKey';
 import calculateDistance from '../utils/calculateDistance';

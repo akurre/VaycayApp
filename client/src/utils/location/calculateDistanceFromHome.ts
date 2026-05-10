@@ -19,5 +19,3 @@ export function calculateDistanceFromHome(
     long
   );
 }
-
-export default calculateDistanceFromHome;

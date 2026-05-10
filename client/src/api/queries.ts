@@ -144,28 +144,6 @@ export const SEARCH_CITIES = gql`
   }
 `;
 
-// Query to get weather data for a specific city
-export const GET_WEATHER_BY_CITY_NAME = gql`
-  query GetWeatherByCity($city: String!) {
-    weatherByCity(city: $city) {
-      city
-      country
-      state
-      suburb
-      date
-      lat
-      long
-      population
-      precipitation
-      snowDepth
-      avgTemperature
-      maxTemperature
-      minTemperature
-      stationName
-    }
-  }
-`;
-
 // Query to get weather data for a specific city on a specific date
 export const GET_WEATHER_BY_CITY_AND_DATE = gql`
   query GetWeatherByCityAndDate(
