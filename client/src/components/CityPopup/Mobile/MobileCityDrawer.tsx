@@ -1,12 +1,14 @@
 import { ActionIcon, useMantineColorScheme } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useEffect, useMemo, useRef, useState, type PointerEvent } from 'react';
-import { IconPlus, IconX } from '@tabler/icons-react';
+import { IconX } from '@tabler/icons-react';
 
 import useWeatherDataForCity from '@/api/dates/useWeatherDataForCity';
 import useSunshineDataForCity from '@/api/dates/useSunshineDataForCity';
 import useWeeklyWeatherForCity from '@/api/dates/useWeeklyWeatherForCity';
 import CityNameRow from '@/components/CityPopup/Ribbon/CityNameRow';
+import AddComparisonCityButton from '@/components/CityPopup/AddComparisonCityButton';
+import formatCityFullName from '@/utils/dataFormatting/formatCityFullName';
 import TodayReadout from '@/components/CityPopup/Ribbon/TodayReadout';
 import DataChartTabs from '@/components/CityPopup/DataChartTabs';
 import MobileTabBar from '@/components/CityPopup/Mobile/MobileTabBar';
@@ -309,11 +311,7 @@ const MobileCityDrawer = ({
     cityAndCountry += `, ${city.country}`;
   }
 
-  const comparisonName = comparisonCity
-    ? [comparisonCity.name, comparisonCity.state, comparisonCity.country]
-        .filter(Boolean)
-        .join(', ')
-    : null;
+  const comparisonName = comparisonCity ? formatCityFullName(comparisonCity) : null;
 
   const transformValue = isDismissing
     ? 'translateY(100%)'
@@ -398,21 +396,7 @@ const MobileCityDrawer = ({
                 }
               />
             ) : (
-              <button
-                type="button"
-                onClick={openCompareSheet}
-                aria-label="Add comparison city"
-                className="flex items-center gap-2 cursor-pointer text-[var(--mantine-color-dimmed)] hover:text-[var(--mantine-color-text)] transition-colors self-start"
-              >
-                <span
-                  className="w-2.5 h-2.5 rounded-full opacity-60"
-                  style={{ background: CITY2_PRIMARY_COLOR }}
-                />
-                <span className="text-[15px] font-bold font-[Outfit_Variable]">
-                  Compare
-                </span>
-                <IconPlus size={14} className="opacity-70" />
-              </button>
+              <AddComparisonCityButton onClick={openCompareSheet} variant="mobile" />
             )}
           </div>
           <ActionIcon
@@ -427,7 +411,7 @@ const MobileCityDrawer = ({
       </div>
 
       <main
-        className="flex-1 min-h-0 flex flex-col px-4"
+        className="flex-1 min-h-0 flex flex-col px-4 pb-2"
         style={{ paddingBottom: MOBILE_DRAWER_BOTTOM_PAD_PX }}
       >
         {visibleTab === MobileTab.Details ? (

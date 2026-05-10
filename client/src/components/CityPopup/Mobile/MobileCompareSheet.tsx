@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { ActionIcon, Loader, Modal, Text, TextInput } from '@mantine/core';
-import { IconPlus, IconSearch, IconX } from '@tabler/icons-react';
+import { IconSearch, IconX } from '@tabler/icons-react';
 
 import useCityComparisonSearch from '@/hooks/useCityComparisonSearch';
-import { formatCityPopulationSuffix } from '@/utils/dataFormatting/formatCityPopulationSuffix';
+import CitySearchResultRow from '@/components/CityPopup/CitySearchResultRow';
 
 import type { SearchCitiesResult } from '@/types/userLocationType';
 import type { ExcludeCity } from '@/types/cityPopupTypes';
@@ -101,27 +101,12 @@ const MobileCompareSheet = ({
             <ul className="list-none p-0 m-0">
               {filteredRecent.map((city) => (
                 <li key={city.id}>
-                  <button
-                    type="button"
+                  <CitySearchResultRow
+                    city={city}
                     onClick={() => handlePick(city)}
-                    className="w-full flex items-center justify-between text-left px-3 py-3 rounded-md transition-colors hover:bg-[var(--mantine-color-default-hover)] cursor-pointer"
-                  >
-                    <span className="min-w-0 flex-1 mr-2">
-                      <span className="block font-bold text-[15px] text-[var(--mantine-color-text)] truncate">
-                        {city.name}
-                      </span>
-                      <span className="block text-xs text-[var(--mantine-color-dimmed)] truncate">
-                        {city.state ? `${city.state}, ` : ''}
-                        {city.country}
-                        {formatCityPopulationSuffix(city.population)}
-                      </span>
-                    </span>
-                    <IconPlus
-                      size={16}
-                      className="opacity-60 shrink-0"
-                      aria-hidden="true"
-                    />
-                  </button>
+                    variant="mobile"
+                    showAddIcon
+                  />
                 </li>
               ))}
             </ul>
@@ -140,20 +125,11 @@ const MobileCompareSheet = ({
               <ul className="list-none p-0 m-0">
                 {filteredResults.map((city) => (
                   <li key={city.id}>
-                    <button
-                      type="button"
+                    <CitySearchResultRow
+                      city={city}
                       onClick={() => handlePick(city)}
-                      className="w-full text-left px-3 py-3 rounded-md transition-colors hover:bg-[var(--mantine-color-default-hover)] cursor-pointer"
-                    >
-                      <span className="block font-bold text-[15px] text-[var(--mantine-color-text)] truncate">
-                        {city.name}
-                      </span>
-                      <span className="block text-xs text-[var(--mantine-color-dimmed)] truncate">
-                        {city.state ? `${city.state}, ` : ''}
-                        {city.country}
-                        {formatCityPopulationSuffix(city.population)}
-                      </span>
-                    </button>
+                      variant="mobile"
+                    />
                   </li>
                 ))}
               </ul>

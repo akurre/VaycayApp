@@ -150,6 +150,7 @@ const WorldMap = ({
     handleHover,
     handleClick,
     handleClosePopup,
+    openHoveredCity,
   } = useMapInteractions(cities, viewMode, dataType, selectedMonth);
 
   // Memoize controller config to prevent DeckGL from seeing it as a new object on every render
@@ -277,6 +278,9 @@ const WorldMap = ({
           x={hoverInfo.x}
           y={hoverInfo.y}
           content={hoverInfo.content}
+          onView={
+            isMobileOrSmall && hoverInfo.city ? openHoveredCity : undefined
+          }
         />
       )}
 
